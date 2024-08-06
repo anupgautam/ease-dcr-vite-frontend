@@ -19,15 +19,15 @@ import {
     useCreateDoctorsEventsMutation
 } from '../../../api/MPOSlices/DoctorSlice'
 import Cookies from 'js-cookie'
-import NepaliDatePicker, {
-    NepaliDateConverter,
-} from "react-nepali-date-picker-lite";
+// import NepaliDatePicker, {
+//     NepaliDateConverter,
+// } from "react-nepali-date-picker-lite";
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
 
 const AddDoctorEvents = () => {
 
-
-    const today = NepaliDateConverter.getNepaliDate();
+    let today;
+    // const today = NepaliDateConverter.getNepaliDate();
     const [selectedDates, setSelectedDates] = useState(today);
 
     const DoctorData = useGetAllVisitedMpoWiseDoctorQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('company_user_id'), mpo_area: "" })
@@ -178,11 +178,11 @@ const AddDoctorEvents = () => {
                     </Box>
                     <Box marginBottom={2}>
                         <label htmlFor="date" style={{ fontSize: '13px', color: "grey", fontWeight: '600', marginBottom: "10px" }}>Event Date*</label><br />
-                        <NepaliDatePicker
+                        {/* <NepaliDatePicker
                             value={selectedDates}
                             onSelect={setSelectedDates}
                             renderInput={(props) => <input className='input-datepicker-fields1' value={selectedDates} type="text" {...props} />}
-                        />
+                        /> */}
                     </Box>
                     <Stack spacing={1} direction="row">
                         <Controls.SubmitButton

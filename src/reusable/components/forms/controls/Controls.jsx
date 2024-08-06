@@ -6,7 +6,7 @@ import DatePicker from "./DatePicker";
 import Button from "./Button";
 import MultiSelect from "./MultiSelect";
 import Search from "./searchBar";
-import Image from "./image";
+// import Image from "./image";
 import DateTimePicker from "./DateTimePicker";
 import DateTimePickerMUI from './DateTimePickerMUI';
 import Password from "./password";
@@ -29,7 +29,7 @@ const Controls = {
     Button,
     MultiSelect,
     Search,
-    Image,
+    // Image,
     DateTimePicker,
     DateTimePickerMUI,
     Password,
