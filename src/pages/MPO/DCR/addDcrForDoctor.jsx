@@ -1,0 +1,764 @@
+import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import Cookies from "js-cookie";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
+import { useGetShiftsQuery } from "@/api/DCRs Api Slice/TourPlanApiSlice";
+import { useGetShiftWiseDoctorDCRByIdQuery } from "@/api/DCRs Api Slice/doctorDCR/shiftWiseDoctorDCRSlice";
+import { useGetAllRewardsQuery } from "@/api/DCRs Api Slice/rewardsAPISlice";
+import { useUpdateTourPlansMutation } from "@/api/MPOSlices/TourPlanSlice";
+import { useGetAllVisitedMpoWiseDoctorQuery, useGetDoctorsByIdQuery } from "@/api/MPOSlices/doctorApiSlice";
+import { useCreateDcrWithNullValuesForDoctorMutation, useCreateMpoShiftWiseDcrForDoctorMutation, usePostToGetTheTourPlanQuery, useUpdateDcrForDoctorValuesMutation } from "@/api/MPOSlices/tourPlan&Dcr";
+import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSlices/companyProductSlice";
+import Scrollbar from "@/components/scrollbar/Scrollbar";
+import Controls from "@/reusable/forms/controls/Controls";
+import { useForm } from "@/reusable/forms/useForm";
+import { UserListHead } from "@/sections/@dashboard/user";
+
+const TABLE_HEAD = [
+    { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
+    { id: 'visited_with', label: 'Visited With', alignRight: false },
+    { id: 'promoted_product', label: 'Promoted Product', alignRight: false },
+    { id: 'rewards', label: 'Rewards', alignRight: false },
+    { id: 'expenses_name', label: 'Expenses Name', alignRight: false },
+    { id: 'expenses', label: 'Expense Cost', alignRight: false },
+    { id: 'expenses_resoning', label: 'Expenses Reasoning', alignRight: false },
+];
+
+const AddDcrForDoctor = () => {
+
+    const location = useLocation();
+    const id = new URLSearchParams(location.search).get('id');
+
+    const { data: tourplanData } = usePostToGetTheTourPlanQuery(Cookies.get('company_user_id'));
+    const [updateDcr] = useUpdateDcrForDoctorValuesMutation();
+    const [createMpoDcr] = useCreateMpoShiftWiseDcrForDoctorMutation();
+    const [DcrForDoctor] = useCreateDcrWithNullValuesForDoctorMutation();
+    const [updateTourplan] = useUpdateTourPlansMutation();
+    const [AllMutipleData, setAllMutipleData] = useState([]);
+
+    const [PromotedProduct, setPromotedProduct] = useState([]);
+
+    const handleProductChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setPromotedProduct(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    }
+
+    const [CompanyRoles, setCompanyRoles] = useState([]);
+
+    const handleRolesChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setCompanyRoles(value);
+    }
+
+    const [CompanyDoctor, setCompanyDoctor] = useState([]);
+    const [DoctorData, setDoctorData] = useState([]);
+
+    useEffect(() => {
+        setDoctorData([]);
+
+        CompanyDoctor.map(doctorId => {
+            createNullValuesForDoctor(doctorId);
+        });
+    }, [CompanyDoctor]);
+
+    const createNullValuesForDoctor = async (doctorId) => {
+        if (doctorId) {
+            try {
+                const response = await DcrForDoctor();
+                if (response.data) {
+                    const newData = { doctor_id: doctorId, dcr_id: response.data.id };
+                    // Check if the entry already exists in DoctorData before adding it
+                    const isDuplicate = DoctorData.some(item => item.doctor_id === newData.doctor_id && item.dcr_id === newData.dcr_id);
+                    if (!isDuplicate) {
+                        setDoctorData(prevData => [...prevData, newData]);
+                    }
+                }
+            } catch (error) {
+                console.error('Error creating null values for doctor:', error);
+            }
+        }
+    }
+
+    const handleDoctorChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+
+        setCompanyDoctor(value);
+
+        const removedDoctorIds = CompanyDoctor.filter(doctorId => !value.includes(doctorId));
+        setDoctorData(prevData => prevData.filter(item => !removedDoctorIds.includes(item.doctor_id)));
+    }
+
+    const [RewardOptions, setRewardsOptions] = useState([]);
+
+    const handleRewardsChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setRewardsOptions(value);
+    }
+
+    const { data: ShiftData } = useGetShiftsQuery()
+
+    const shiftAllData = useMemo(() => {
+        if (ShiftData !== undefined) {
+            return ShiftData?.map(key => ({ id: key.id, title: key.shift }))
+        }
+        return [];
+    }, [ShiftData])
+
+    const [initialFValues, setInitialFvalues] = useState({
+        edit: false,
+        tour_id: "",
+        id: "",
+        shift: '',
+        date: "",
+        visited_area: '',
+        visited_doctor: '',
+        expenses: '',
+        expenses_name: '',
+        expenses_reasoning: '',
+        visited_with: [],
+    })
+
+
+    const dcrForDoctor = useGetShiftWiseDoctorDCRByIdQuery(id);
+
+    const [NewTourPlanData, setNewTourPlanData] = useState('');
+
+
+
+    const selectTourPlanById = (key) => {
+        setNewTourPlanData(key);
+    }
+
+    const areaOptions = useMemo(() => {
+        if (NewTourPlanData !== undefined) {
+                return NewTourPlanData?.mpo_area_read?.map(key => ({ id: key.company_mpo_area_id.id, title: key.company_mpo_area_id.area_name }))
+        }
+        return [];
+    }, [NewTourPlanData])
+
+    useEffect(() => {
+        if (dcrForDoctor?.data || NewTourPlanData) {
+            setInitialFvalues({
+                edit: true,
+                tour_id: NewTourPlanData?.id,
+                id: id,
+                shift: "",
+                visited_with: dcrForDoctor?.data?.visited_with,
+                date: NewTourPlanData?.tour_plan?.tour_plan?.select_the_date_id,
+                visited_area: "",
+                visited_doctor: dcrForDoctor?.data?.visited_doctor,
+                expenses: dcrForDoctor?.data?.expenses,
+                expenses_name: dcrForDoctor?.data?.expenses_name,
+                expenses_reasoning: dcrForDoctor?.data?.expenses_reasoning,
+            });
+        }
+    }, [dcrForDoctor?.data, NewTourPlanData]);
+
+    const { values,
+        errors,
+        setErrors,
+        handleInputChange,
+        handleMultipleInput,
+        valueArray
+    } = useForm(
+        initialFValues,
+        true,
+        false,
+        true
+    )
+
+    const doctors = useGetAllVisitedMpoWiseDoctorQuery({ company_name: Cookies.get('company_id'), mpo_area: values.visited_area, mpo_name: Cookies.get('company_user_id') });
+
+    const doctorOptions = useMemo(() => {
+        if (doctors !== undefined) {
+            if (doctors.status === 'fulfilled') {
+                return doctors.data.map(key => ({ id: key.id, title: key.doctor_name.doctor_name }));
+            }
+        }
+        return [];
+    }, [doctors])
+
+    const [executiveOptions, setExecutiveOptions] = useState([]);
+    const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
+    useEffect(() => {
+        executiveUsers({ id: Cookies.get('company_user_id') })
+            .then(res => {
+                if (res.data) {
+                    const executive = [];
+                    res.data.forEach(keyData => {
+                        executive.push({
+                            id: keyData.id,
+                            title: keyData.user_name.first_name + " " + keyData.user_name.middle_name + " " + keyData.user_name.last_name,
+                        });
+                    });
+                    setExecutiveOptions(executive);
+                }
+            })
+            .catch(err => {
+
+            });
+    }, [Cookies.get('company_user_id')]);
+
+    const rewards = useGetAllRewardsQuery(Cookies.get('company_id'));
+
+    const rewardsOptions = useMemo(() => {
+        if (rewards !== undefined) {
+            if (rewards.status === 'fulfilled') {
+                return rewards?.data?.map(key => ({ id: key.id, title: key.reward }))
+            }
+        }
+        return [];
+    }, [rewards])
+
+    const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
+        Cookies.get('company_id')
+    );
+
+    const productOptions = useMemo(() => {
+        if (companyProduct !== undefined) {
+            if (companyProduct.status === 'fulfilled') {
+                return companyProduct.data.map(key =>
+                ({
+                    id: key.id,
+                    title: key.product_name.product_name,
+                })
+                );
+            }
+        }
+        return [];
+    }, [companyProduct])
+
+    const [LastData, setLastData] = useState(false);
+    const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
+    const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
+    const navigate = useNavigate();
+
+    const handlePostDcr = () => {
+
+        if (AllMutipleData.length !== []) {
+            for (const allData of AllMutipleData) {
+                let sendingData = { ...allData };
+                sendingData['id'] = allData.id;
+                if (sendingData['company_product']) {
+                    let companyProduct = allData.company_product;
+                    sendingData['company_product'] = [];
+                    companyProduct.map(key => {
+                        sendingData['company_product'].push({ id: key });
+                    });
+                } else {
+                    sendingData['company_product'] = [];
+                }
+                if (sendingData['rewards']) {
+                    let rewards = allData.rewards;
+
+                    sendingData['rewards'] = [];
+                    rewards.map(key => {
+                        sendingData['rewards'].push({ id: key });
+                    });
+                } else {
+                    sendingData['rewards'] = [];
+                }
+                if (sendingData['company_roles']) {
+                    let companyRoles = allData.visited_with;
+                    sendingData['company_roles'] = [];
+                    companyRoles.map(key => {
+                        sendingData['company_roles'].push({ id: key });
+                    });
+                } else {
+                    sendingData['company_roles'] = [];
+                }
+                if (
+                    sendingData['visited_area'] ||
+                    sendingData['shift'] ||
+                    sendingData['visited_doctor']
+                ) {
+                    sendingData['visited_area'] = sendingData['visited_area'];
+                    sendingData['shift'] = allData.shift;
+                    sendingData['visited_doctor'] = sendingData['visited_doctor'];
+                } else {
+                    sendingData['visited_area'] = null;
+                    sendingData['visited_doctor'] = null;
+                    sendingData['shift'] = null;
+                }
+                const mpoShiftData = {
+                    mpo_name: Cookies.get('company_user_id'),
+                    shift: allData.shift,
+                    dcr_id: allData.id,
+                };
+                updateDcr({ id: allData.id, value: sendingData })
+                    .then(res => {
+                        if (res.data) {
+                            createMpoDcr(mpoShiftData)
+                                .then(res => {
+                                    if (res.data) {
+                                        if (LastData === true) {
+                                            // updateTourplan({
+                                            //     id: values.tour_id,
+                                            //     value: { is_dcr_added: true, is_doctor_dcr_added: true },
+                                            // })
+                                            // .then(res => {
+                                            //     if (res.data) {
+                                            setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
+                                            setTimeout(() => {
+                                                setSuccessMessage({ show: false, message: '' });
+                                                navigate('/dashboard/admin/dcr');
+                                            }, 2000);
+                                            //     }
+                                            // })
+                                            // .catch(err => {
+                                            //     
+                                            // });
+                                        } else {
+                                            setSuccessMessage({ show: true, message: 'DCR Added Successfully Added.' });
+                                            setTimeout(() => {
+                                                setSuccessMessage({ show: false, message: '' });
+                                                // navigate('/dashboard/admin/dcr');
+                                            }, 2000);
+                                        }
+                                    }
+                                })
+                                .catch(err => {
+
+                                });
+                        } else {
+                            setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
+                            setTimeout(() => {
+                                setErrorMessage({ show: false, message: '' });
+                            }, 2000);
+                        }
+                    })
+                    .catch(err => {
+                        setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                        setTimeout(() => {
+                            setErrorMessage({ show: false, message: '' });
+                        }, 2000);
+                    });
+            }
+        }
+    }
+
+    return (
+        <Box style={{ padding: "10px" }}>
+            <Typography style={{ fontWeight: '600', fontSize: '18px' }}>
+                Add Dcr For Doctor
+            </Typography>
+            <Box style={{ marginTop: "20px" }}>
+                <Grid container spacing={2}>
+                    <Grid item md={4} xs={12}>
+                        <Card >
+                            <Box style={{ padding: "15px" }}>
+                                <Typography style={{ color: "black", fontSize: '15px', fontWeight: "600" }}>Select Tour Plan*</Typography>
+                                <Box style={{ marginTop: "15px" }}>
+                                    {
+                                        tourplanData !== undefined ?
+                                            <>
+                                                {
+                                                    tourplanData.length !== 0 ?
+                                                        <Box style={{ marginBottom: '20px' }}>
+
+                                                            <Box style={{ width: "100%", overflowX: "auto", whiteSpace: 'nowrap', cursor: "pointer" }}>
+                                                                {
+                                                                    tourplanData.map((key, index) => (
+                                                                        <Box style={{ width: '220px', display: "inline-block", marginRight: "10px" }} key={index} onClick={(e) => selectTourPlanById(key)}>
+                                                                            <Box style={{ borderRadius: '5px', border: '1.2px solid #dbe0e4', padding: "5px", paddingTop: "10px", paddingLeft: "10px", paddingRight: '10px' }}>
+                                                                                <Grid container spacing={2}>
+                                                                                    <Grid item xs={3.5}>
+                                                                                        <Box style={{ padding: '5px', textAlign: 'center', border: '1.2px solid #2d8960', borderRadius: "5px", marginTop: '11px', marginBottom: "11px" }}>
+                                                                                            <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{key.tour_plan.tour_plan.select_the_date_id.slice(8)}</Typography>
+                                                                                            {/* <Typography style={{ fontSize: '13px', color: "black", marginTop: "-5px" }}>{key.tour_plan.tour_plan.select_the_month.slice(0, 3)}</Typography> */}
+                                                                                        </Box>
+                                                                                    </Grid>
+                                                                                    <Grid item xs={8.5}>
+                                                                                        <Box >
+                                                                                            <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
+                                                                                                {key.tour_plan.tour_plan.select_the_month}
+                                                                                            </span>
+                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px",fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.company_mpo_area_id.area_name)
+                                                                                                .join(', ')}</Typography>
+                                                                                        </Box>
+                                                                                    </Grid>
+                                                                                </Grid>
+                                                                            </Box>
+                                                                        </Box>
+                                                                    ))
+                                                                }
+                                                            </Box>
+                                                        </Box>
+                                                        : null
+                                                }
+                                            </> : null
+                                    }
+                                </Box>
+                                <Box style={{ marginTop: "15px" }}>
+                                    <Box marginBottom={2}>
+                                        <Controls.Input
+                                            // name="select_the_date"
+                                            label="Select the Date*"
+                                            value={values.date}
+                                            onChange={handleInputChange}
+                                            // error={errors.select_the_date}
+                                            // className={"drawer-first-name-input"}
+                                            disable={true}
+                                        />
+                                    </Box>
+                                    <Box marginBottom={2}>
+                                        <Controls.Select
+                                            name={`shift`}
+                                            disable={false}
+                                            label="Select the Shift*"
+                                            value={values.shift}
+                                            onChange={handleInputChange}
+                                            options={shiftAllData}
+                                        />
+                                    </Box>
+                                    <Box marginBottom={2}>
+                                        <Controls.Select
+                                            name={`visited_area`}
+                                            disable={false}
+                                            label="Select the Area*"
+                                            value={values.visited_area}
+                                            onChange={handleInputChange}
+                                            options={areaOptions}
+                                        />
+                                    </Box>
+                                    <Box marginBottom={2}>
+                                        <FormControl sx={{ m: 1, width: 300 }}>
+                                            <InputLabel>{"Select the Doctor*"}</InputLabel>
+                                            <Select
+                                                multiple
+                                                name="visited_with"
+                                                value={CompanyDoctor}
+                                                onChange={handleDoctorChange}
+                                                label="Select the Doctor*"
+                                                // MenuProps={MenuProps}
+                                                sx={{ width: '100%' }}
+                                                style={{
+                                                    borderBlockColor: "white",
+                                                    width: "100%",
+                                                    textAlign: 'start'
+                                                }}
+                                            >
+                                                {doctorOptions.map((item) => (
+                                                    <MenuItem key={item.id} value={item.id}>
+                                                        {item.title}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </Card>
+                    </Grid>
+                    <Grid item md={8} xs={12}>
+                        <Card >
+                            <Box style={{ paddingTop: "15px", paddingBottom: "15px" }}>
+                                <Scrollbar>
+                                    <TableContainer sx={{ minWidth: 2000 }}>
+                                        <Table>
+                                            <UserListHead
+                                                headLabel={TABLE_HEAD}
+                                            />
+                                            <TableBody>
+                                                {
+                                                    DoctorData.map((key, index) => (
+                                                        <TableRow key={index}>
+                                                            <DoctorDcr sn={index} data={key} values={values} setAllMutipleData={setAllMutipleData} AllMutipleData={AllMutipleData} />
+                                                        </TableRow>
+                                                    ))
+                                                }
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Scrollbar>
+                            </Box>
+                        </Card>
+                    </Grid>
+                </Grid>
+                <Box style={{ marginTop: '15px' }}>
+                    <Checkbox name="remember" label="Remember me" checked={LastData} onChange={(e) => setLastData(e.target.checked)} />
+                    <label style={{ textAlign: 'start', flex: 1, fontWeight: "600", marginLeft: "4px", fontSize: "14px" }}>Last DCR for Doctor</label>
+                </Box>
+                <Box style={{ marginTop: "10px" }}>
+                    <Button
+                        variant="contained"
+                        className="summit-button"
+                        onClick={(e) => handlePostDcr(e)}
+                    >
+                        Submit Dcr
+                    </Button>
+                </Box>
+            </Box>
+            {
+                ErrorMessage.show === true ? (
+                    <Grid>
+                        <Box className="messageContainer errorMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                ) : null
+            }
+            {
+                SuccessMessage.show === true ? (
+                    <Grid>
+                        <Box className="messageContainer successMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                ) : null
+            }
+        </Box>
+    )
+}
+
+const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
+    const Doctor = useGetDoctorsByIdQuery(data.doctor_id);
+    const [executiveOptions, setExecutiveOptions] = useState([]);
+    const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
+    useEffect(() => {
+        executiveUsers({ id: Cookies.get('company_user_id') })
+            .then(res => {
+                if (res.data) {
+                    const executive = [];
+                    res.data.forEach(keyData => {
+                        executive.push({
+                            id: keyData.id,
+                            title: keyData.user_name.first_name + " " + keyData.user_name.middle_name + " " + keyData.user_name.last_name,
+                        });
+                    });
+                    setExecutiveOptions(executive);
+                }
+            })
+            .catch(err => {
+
+            });
+    }, [Cookies.get('company_user_id')]);
+
+
+    const [CompanyRoles, setCompanyRoles] = useState([]);
+
+    const handleRolesChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setCompanyRoles(value);
+    }
+
+
+    const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
+        Cookies.get('company_id')
+    );
+
+    const productOptions = useMemo(() => {
+        if (companyProduct !== undefined) {
+            if (companyProduct.status === 'fulfilled') {
+                return companyProduct.data.map(key =>
+                ({
+                    id: key.id,
+                    title: key.product_name.product_name,
+                })
+                );
+            }
+        }
+        return [];
+    }, [companyProduct])
+
+    const [PromotedProduct, setPromotedProduct] = useState([]);
+
+    const handleProductChange = useCallback((event) => {
+        const {
+            target: { value },
+        } = event;
+        setPromotedProduct(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    }, [])
+
+    const rewards = useGetAllRewardsQuery(Cookies.get('company_id'));
+
+    const rewardsOptions = useMemo(() => {
+        if (rewards !== undefined) {
+            if (rewards.status === 'fulfilled') {
+                return rewards.data.map(key => ({ id: key.id, title: key.reward }));
+            }
+        }
+        return [];
+    }, [rewards])
+
+    const [RewardOptions, setRewardsOptions] = useState([]);
+
+    const handleRewardsChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setRewardsOptions(value);
+    }
+
+    const [Formdata, setFormData] = useState({
+        expenses_name: "",
+        expenses: "",
+        expenses_reasoning: "",
+    })
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        const newData = { ...Formdata, [name]: value };
+        setFormData(newData);
+    }
+
+    useEffect(() => {
+        setAllMutipleData(prevData => {
+            const updatedData = [...prevData];
+            updatedData[sn] = {
+                ...updatedData[sn],
+                id: data.dcr_id,
+                edit: true,
+                shift: values.shift,
+                date: values.date,
+                visited_area: values.visited_area,
+                visited_doctor: data.doctor_id,
+                Formdata,
+                rewards: RewardOptions,
+                visited_with: CompanyRoles,
+                company_product: PromotedProduct,
+                context: {
+                    request: 'PATCH',
+                    company_product: 'select',
+                    company_roles: 'select',
+                    rewards: 'select',
+                },
+            };
+            return updatedData;
+        });
+    }, [Formdata, RewardOptions, CompanyRoles, PromotedProduct])
+    return (
+        <>
+            <TableCell style={{ width: "50px" }}>{sn + 1}</TableCell>
+            <TableCell style={{ width: "200px" }}>{Doctor?.data?.doctor_name.doctor_name}</TableCell>
+            <TableCell align="left" style={{ width: "300px" }}>
+                <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel>{"Select the Visited With*"}</InputLabel>
+                    <Select
+                        multiple
+                        name="visited_with"
+                        value={CompanyRoles}
+                        onChange={handleRolesChange}
+                        label="Select the Visited With*"
+                        // MenuProps={MenuProps}
+                        sx={{ width: '100%' }}
+                        style={{
+                            borderBlockColor: "white",
+                            width: "100%",
+                            textAlign: 'start'
+                        }}
+                    >
+                        {executiveOptions.map((item) => (
+                            <MenuItem key={item.id} value={item.id}>
+                                {item.title}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </TableCell>
+            <TableCell align="left" style={{ width: "300px" }}>
+                <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel>{"Select the Promoted Product*"}</InputLabel>
+                    <Select
+                        labelId="demo-multiple-chip-label"
+                        id="demo-multiple-chip"
+                        multiple
+                        value={PromotedProduct}
+                        onChange={handleProductChange}
+                        input={<OutlinedInput id="select-multiple-chip" label="Select the Promoted Product*" />}
+                        // MenuProps={MenuProps}
+                        sx={{ width: '100%' }}
+                        style={{
+                            borderBlockColor: "white",
+                            width: "100%",
+                            textAlign: 'start'
+                        }}
+                    >
+                        {productOptions.map((item) => (
+                            <MenuItem key={item.id} value={item.id}>
+                                {item.title}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </TableCell>
+            <TableCell align="left" style={{ width: "300px" }}>
+                <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel>{"Select the Rewards*"}</InputLabel>
+                    <Select
+                        labelId="demo-multiple-name-label"
+                        id="demo-multiple-name"
+                        multiple
+                        value={RewardOptions}
+                        onChange={handleRewardsChange}
+                        input={<OutlinedInput label="Select the Rewards*" />}
+                        // MenuProps={MenuProps}
+                        sx={{ width: '100%' }}
+                        style={{
+                            borderBlockColor: "white",
+                            width: "100%",
+                            textAlign: 'start'
+                        }}
+                    >
+                        {rewardsOptions.map((item) => (
+                            <MenuItem key={item.id} value={item.id}>
+                                {item.title}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </TableCell>
+            <TableCell align="left">
+                <Controls.Input
+                    name="expenses_name"
+                    label="Expenses Name"
+                    value={Formdata.expenses_name || ""}
+                    onChange={handleInputChange}
+                    // error={errors.select_the_date}
+                    // className={"drawer-first-name-input"}
+                    disable={false}
+                />
+            </TableCell>
+            <TableCell align="left">
+                <Controls.Input
+                    name="expenses"
+                    label="Expenses"
+                    value={Formdata.expenses || ""}
+                    onChange={handleInputChange}
+                    // error={errors.select_the_date}
+                    // className={"drawer-first-name-input"}
+                    disable={false}
+                />
+            </TableCell>
+            <TableCell align="left">
+                <Controls.Input
+                    name="expenses_reasoning"
+                    label="Expenses Reasoning*"
+                    value={Formdata.expenses_reasoning || ""}
+                    onChange={handleInputChange}
+                    // error={errors.select_the_date}
+                    // className={"drawer-first-name-input"}
+                    disable={false}
+                />
+            </TableCell>
+        </>
+    )
+}
+
+
+export default React.memo(AddDcrForDoctor);
