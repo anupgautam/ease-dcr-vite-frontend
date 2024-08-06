@@ -1,0 +1,535 @@
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import {
+    Card,
+    Badge,
+    Table,
+    Paper,
+    Button,
+    TableRow,
+    MenuItem,
+    TableBody,
+    TableCell,
+    Typography,
+    IconButton,
+    TableContainer,
+    Box,
+    Select,
+    FormControl,
+    InputLabel,
+    Grid,
+    Pagination
+} from '@mui/material';
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import Cookies from 'js-cookie'
+import DefaultTourPlan from './DefaultTourPlan';
+import EditTourPlan from './EditTourPlan'
+import 'react-datepicker/dist/react-datepicker.css';
+import 'react-datepicker/dist/react-datepicker.css';
+import "nepali-datepicker-reactjs/dist/index.css"
+
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import Iconify from '@/components/iconify/Iconify';
+import { UserListHead } from '../../../sections/@dashboard/user';
+import SelectDataDCR from '../DCR/SelectDataDCR';
+
+import {
+    useDeleteTourPlansByIdMutation,
+    useGetTourplanOfMpoByDateMonthQuery
+} from '@/api/MPOSlices/TourPlanSlice';
+import {
+    useGetUsersMPOWalaQuery
+} from '@/api/MPOSlices/UserSlice';
+import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRolesSlice';
+import { useGetUsersByCompanyRoleIdQuery } from '@/api/MPOSlices/UserSlice';
+
+import { useDispatch } from 'react-redux';
+import FilteredHOTourPlan from './higherOrderTourPlan/FilterHOTourPlan';
+import { BSDate } from "nepali-datepicker-react";
+import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
+import Scrollbar from '@/components/scrollbar/Scrollbar';
+import moment from 'moment';
+import ApprovedTP from '../dashboard/myExecutivesTp/approveTp';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+const TABLE_HEAD = [
+    { id: 'mpo_name', label: 'Name', alignRight: false },
+    { id: 'area_name', label: 'Area', alignRight: false },
+    { id: 'date', label: 'Date', alignRight: false },
+    { id: 'is_approved', label: 'Approved', alignRight: false },
+    { id: 'hulting_station', label: 'Hulting Station', alignRight: false },
+    { id: '' },
+];
+
+const FilteredTourPlan = () => {
+
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const id = searchParams.get('id');
+    const role = searchParams.get('role');
+
+    const now = new BSDate().now();
+
+    const monthData = getNepaliMonthName(now._date.month);
+    const yearData = now._date.year;
+
+    //! For drawer 
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const dispatch = useDispatch();
+
+    const [selectedId, setSelectedId] = useState(null);
+    const [selectedUpdateId, setSelectedUpdateId] = useState(null);
+
+    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+
+    const [companyRoleList, setCompanyRoleList] = useState([]);
+    const [roleSelect, setRoleSelect] = useState('');
+
+    useEffect(() => {
+        let dataList = []
+        if (roleList?.data) {
+            roleList.data.map((key) => {
+                // dataList.push({ id: key.id, title: key.role_name_value })
+                dataList.push({ id: key.id, title: key.role_name.role_name })
+            })
+        }
+        setCompanyRoleList(dataList);
+    }, [roleList])
+
+
+    // const [companyUserList, setCompanyUserList] = useState([]);
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: '' });
+
+    const companyUserList = [];
+
+    if (userList !== undefined) {
+        userList?.data?.map((key) => {
+            const roleName = key.role_name && key.role_name.role_name && key.role_name.role_name.role_name;
+            companyUserList.push({ id: key.id, title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`, role: roleName });
+        })
+    }
+
+    const [selectedOption, setSelectedOption] = useState();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (selectedOption) {
+            navigate(`/dashboard/admin/tourplan?id=${selectedOption?.id}&role=${selectedOption?.role}`)
+        }
+    }, [selectedOption])
+
+
+    const handleOptionChange = useCallback((event, value) => {
+        setSelectedOption(value);
+    }, []);
+
+
+
+    // useEffect(() => {
+    //     let dataList1 = []
+    //     if (userList?.data) {
+    //         userList.data.forEach((key) => {
+    //             // Perform null/undefined check for 'role_name' and 'role' properties
+    //             const roleName = key.role_name && key.role_name.role_name && key.role_name.role_name.role_name;
+    //             dataList1.push({ id: key.id, title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`, role: roleName });
+    //         });
+    //     }
+    //     setCompanyUserList(dataList1);
+    //     dispatch(addUserList(dataList1));
+    // }, [userList]);
+
+    const onEdit = useCallback((id) => {
+        setSelectedUpdateId(id);
+        setIsDrawerOpen(true);
+    }, []);
+
+    const onCloseDrawer = useCallback(() => {
+        setIsDrawerOpen(false);
+    }, []);
+
+    //! Get User roles wala
+    const { data, isLoading, isSuccess, isError, error } = useGetUsersMPOWalaQuery()
+
+    const rolesOptions = useMemo(() => {
+        if (isSuccess) {
+            return data?.results?.map((key) => ({
+                id: key.id,
+                title: key.user_name.email
+            }));
+        }
+        return [];
+    }, [data])
+
+
+    //! Options
+
+    const [page, setPage] = useState(1);
+
+    const [selectedYear, setSelectedYear] = useState(yearData);
+    const yearList = ['2075', '2076', '2077', '2078', '2079', '2080', '2081', '2082', '2083', '2084', '2085', '2086', '2087', '2088', '2089', '2090']
+
+    const months = [
+        { value: 'Baisakh', label: 'Baisakh' },
+        { value: 'Jesth', label: 'Jestha' },
+        { value: 'Asadh', label: 'Asadh' },
+        { value: 'Shrawan', label: 'Shrawan' },
+        { value: 'Bhadra', label: 'Bhadra' },
+        { value: 'Ashwin', label: 'Ashwin' },
+        { value: 'Kartik', label: 'Kartik' },
+        { value: 'Mangsir', label: 'Mangsir' },
+        { value: 'Poush', label: 'Poush' },
+        { value: 'Magh', label: 'Magh' },
+        { value: 'Falgun', label: 'Falgun' },
+        { value: 'Chaitra', label: 'Chaitra' },
+    ]
+    const [selectedMonth, setSelectedMonth] = useState(monthData)
+
+    const handleNepaliMonthChange = (event) => {
+        setSelectedMonth(event.target.value);
+    };
+    const handleChangePage = useCallback((e) => {
+        const data = e.target.ariaLabel
+        let thisArray = data.split(" ")
+        setPage(thisArray[3]);
+    }, [])
+
+    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: Cookies.get('company_id'), date: selectedYear, month: selectedMonth, mpo_name: Cookies.get('user_role') === 'admin' ? id : Cookies.get('company_user_id'), page: page, role_data: Cookies.get('user_role') === 'admin' ? "" : '' })
+
+    //! Search results
+
+    const [mpoName, setMPOName] = useState('');
+
+    const handleInputMPOChange = (event) => {
+        const { name, value } = event.target;
+
+        setMPOName(event.target.value)
+    }
+
+    const handleRoleSelect = (e, value) => {
+        setRoleSelect(value);
+    }
+
+
+
+    //! Date Format 
+    const [startDate, setStartDate] = useState();
+    const [dateData, setDateData] = useState()
+
+    const handleDateChange = (date) => {
+        setStartDate(date)
+        if (date) {
+            const nextDate = new Date(date.getTime());
+            nextDate.setDate(nextDate.getDate() + 1);
+            const dateValue = nextDate.toISOString().split('T')[0];
+            setDateData(dateValue);
+        }
+    }
+
+    //! onSearch
+
+
+    // useEffect(() => {
+    //     if (selectedOption || selectedMonth || dateData) {
+    //         searchMPOFilter(FilteredData)
+    //     }
+    // }, [selectedOption, selectedMonth, dateData])
+
+
+    // !Delete TourPlan
+    const [deleteTourPlan] = useDeleteTourPlansByIdMutation()
+
+    //! Dialogue 
+    const [openDialogue, setOpenDialogue] = useState(false);
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+    const handleClickOpen = useCallback(() => {
+        setOpenDialogue(true)
+    }, [])
+
+    const handleClose = useCallback(() => {
+        setOpenDialogue(false)
+    }, [])
+
+    const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+
+
+    return (
+        <>
+            <SelectDataDCR />
+            <Card>
+                <Box style={{ padding: "20px" }}>
+                    <Grid container spacing={2}>
+                        <Grid item md={2}>
+                            <FormControl>
+                                <InputLabel id="mpo-select-label">Year</InputLabel>
+                                <Select
+                                    labelId="mpo-select-label"
+                                    id="mpo-select"
+                                    value={selectedYear}
+                                    onChange={(e) => setSelectedYear(e.target.value)}
+                                    label="Year"
+                                >
+                                    <MenuItem value="">None</MenuItem>
+                                    {yearList.map((year) => (
+                                        <MenuItem key={year} value={year}>
+                                            {year}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item md={2}>
+                            <FormControl fullWidth>
+                                <InputLabel>Month</InputLabel>
+                                <Select
+                                    value={selectedMonth}
+                                    onChange={handleNepaliMonthChange}
+                                    label="Month"
+                                >
+                                    {months.map((month) => (
+                                        <MenuItem key={month.value} value={month.value}>
+                                            {month.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        {/* <Grid item md={2.5}>
+                            {
+                                Cookies.get('user_role') === 'admin' &&
+                                <FormControl>
+                                    <Autocomplete
+                                        options={companyRoleList}
+                                        getOptionLabel={(option) => option.title}
+                                        onChange={handleRoleSelect}
+                                        renderInput={(params) => (
+                                            <TextField {...params} label="Company Roles" />
+                                        )}
+                                         renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                    />
+                                </FormControl>
+                            }
+                        </Grid> */}
+                        {/* <Grid item md={2.5}>
+                            {
+                                Cookies.get('user_role') === 'admin' &&
+                                <FormControl>
+                                    <Autocomplete
+                                        options={companyUserList}
+                                        value={selectedOption}
+                                        getOptionLabel={(option) => option.title}
+                                        onChange={handleOptionChange}
+                                        renderInput={(params) => (
+                                            <TextField {...params} label="User" />
+                                        )}
+                                         renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                    />
+                                </FormControl>
+                            }
+                        </Grid> */}
+                        <Grid item xs={5.5}>
+                        </Grid>
+                        {
+                            Cookies.get('user_role') === 'admin' &&
+                            <Grid item md={2.5} xs={6}>
+                                <ApprovedTP mpoName={id} role={role} />
+                            </Grid>
+                        }
+                        {/* <Grid item xs={2.85}>
+                            <NepaliDatePicker
+                                inputClassName="form-control-design"
+                                value={dateData}
+                                onChange={(value) => setDateData(value)}
+                                options={{ calenderLocale: "en", valueLocale: "en" }}
+                            />
+                        </Grid> */}
+                    </Grid>
+                </Box>
+                <>
+                    {
+                        role === "MPO" || Cookies.get('user_role') === "MPO" ?
+                            <>
+                                {
+                                    selectedMonth || selectedYear ?
+                                        <Card>
+                                            <Scrollbar>
+                                                <TableContainer sx={{ minWidth: 800 }}>
+                                                    <Table>
+                                                        <UserListHead
+                                                            headLabel={TABLE_HEAD}
+                                                        />
+                                                        <TableBody>
+                                                            <>
+                                                                {
+
+                                                                    TourPlanSearch === undefined ? <>
+                                                                        {
+                                                                            eightArrays.map((key) => {
+                                                                                return (
+                                                                                    <TableRow key={key} tabIndex={-1} role="checkbox" >
+                                                                                        <TableCell padding="checkbox" >
+                                                                                            <Skeleton />
+                                                                                        </TableCell>
+                                                                                        <TableCell><Skeleton /></TableCell>
+                                                                                        <TableCell><Skeleton /></TableCell>
+                                                                                        <TableCell><Skeleton /></TableCell>
+                                                                                        <TableCell><Skeleton /></TableCell>
+                                                                                        <TableCell><Skeleton /></TableCell>
+                                                                                        <TableCell><Skeleton /></TableCell>
+                                                                                        <TableCell><Skeleton /></TableCell>
+                                                                                        <TableCell><Skeleton /></TableCell>
+                                                                                    </TableRow>
+                                                                                )
+                                                                            })}
+                                                                    </> :
+                                                                        <>
+                                                                            {TourPlanSearch && TourPlanSearch.count == 0 ?
+                                                                                <TableRow>
+                                                                                    <TableCell align="center" colSpan={7.5} sx={{ py: 3 }}>
+                                                                                        <Paper
+                                                                                            sx={{
+                                                                                                textAlign: 'center',
+                                                                                            }}
+                                                                                        >
+                                                                                            <Typography variant="h6" paragraph>
+                                                                                                Not found
+                                                                                            </Typography>
+                                                                                            <Typography variant="body2">
+                                                                                                <strong>Requested Data Not found</strong>.
+                                                                                                <br /> Try checking for typos or using complete words.
+                                                                                                <br />
+                                                                                                <br />
+                                                                                                <br />
+                                                                                                <br />
+                                                                                                <br />
+                                                                                            </Typography>
+                                                                                        </Paper>
+                                                                                    </TableCell>
+                                                                                </TableRow>
+                                                                                :
+                                                                                TourPlanSearch.results.map((tourplan, index) => {
+                                                                                    return (
+                                                                                        <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}
+                                                                                        >
+                                                                                            <TableCell>{index + 1}</TableCell>
+                                                                                            <TableCell component="th" scope="row" align="left">
+                                                                                                <Typography variant="subtitle2" noWrap>
+                                                                                                    {tourplan.mpo_name.user_name.first_name + " " + tourplan.mpo_name.user_name.middle_name + " " + tourplan.mpo_name.user_name.last_name}
+                                                                                                </Typography>
+                                                                                            </TableCell>
+                                                                                            <TableCell align="left">
+                                                                                                {
+                                                                                                    tourplan.mpo_area_read.map((key, index) => (
+                                                                                                        <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }} key={index}>{key.company_mpo_area_id.area_name},</Typography>
+                                                                                                    ))
+
+                                                                                                }
+                                                                                            </TableCell>
+                                                                                            <TableCell align="left">{moment(tourplan.tour_plan.tour_plan.select_the_date_id).format('DD')}</TableCell>
+                                                                                            <TableCell align="left">{tourplan.is_approved === true ? "Approved" : "Not Approved"}</TableCell>
+                                                                                            <TableCell align="left">{tourplan.tour_plan.tour_plan.hulting_station}</TableCell>
+                                                                                            {/* //! Edit  */}
+                                                                                            <TableCell align="left">
+                                                                                                {
+                                                                                                    Cookies.get('user_role') === 'admin' &&
+                                                                                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
+                                                                                                        <Badge>
+                                                                                                            <Iconify icon="eva:edit-fill" />
+                                                                                                        </Badge>
+                                                                                                    </IconButton>
+                                                                                                }
+                                                                                                {
+                                                                                                    Cookies.get('user_role') === "MPO" &&
+                                                                                                    <>
+                                                                                                        {
+                                                                                                            tourplan.is_approved === false ?
+                                                                                                                <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
+                                                                                                                    <Badge>
+                                                                                                                        <Iconify icon="eva:edit-fill" />
+                                                                                                                    </Badge>
+                                                                                                                </IconButton> : null
+                                                                                                        }
+                                                                                                    </>
+                                                                                                }
+                                                                                                {/* //! Delete  */}
+                                                                                                {
+                                                                                                    Cookies.get('user_role') === 'admin' &&
+                                                                                                    <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
+                                                                                                        <Badge>
+                                                                                                            <Iconify icon="eva:trash-2-outline" />
+                                                                                                        </Badge>
+                                                                                                    </IconButton>
+                                                                                                }
+                                                                                            </TableCell>
+                                                                                            <Dialog
+                                                                                                fullScreen={fullScreen}
+                                                                                                open={openDialogue}
+                                                                                                onClose={handleClose}
+                                                                                                aria-labelledby="responsive-dialog-title"
+                                                                                            >
+                                                                                                <DialogTitle id="responsive-dialog-title">
+                                                                                                    {"Are you sure want to delete?"}
+                                                                                                </DialogTitle>
+                                                                                                <DialogActions>
+                                                                                                    <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
+                                                                                                        Yes
+                                                                                                    </Button>
+                                                                                                    <Button
+                                                                                                        onClick={handleClose}
+                                                                                                        autoFocus>
+                                                                                                        No
+                                                                                                    </Button>
+                                                                                                </DialogActions>
+                                                                                            </Dialog>
+                                                                                        </TableRow>
+                                                                                    )
+                                                                                })
+
+                                                                            }
+                                                                        </>}
+                                                            </>
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
+                                                {isDrawerOpen && <EditTourPlan
+                                                    idharu={selectedUpdateId} onClose={onCloseDrawer}
+                                                />
+                                                }
+                                            </Scrollbar>
+                                            <Box justifyContent={'center'} alignItems='center' display={'flex'}
+                                                sx={{ margin: "20px 0px" }} >
+                                                {TourPlanSearch ?
+                                                    <Pagination
+                                                        count={parseInt(TourPlanSearch?.count / 200) + 1}
+                                                        onChange={handleChangePage}
+                                                    /> : <></>}
+                                            </Box>
+                                        </Card> : <DefaultTourPlan />
+                                }
+                            </> : <FilteredHOTourPlan
+                                selectedUser={id}
+                                selectedMonth={selectedMonth}
+                                selectedDate={selectedYear}
+                                role={''}
+                            />
+                    }
+                </>
+            </Card>
+        </>
+    )
+}
+
+export default React.memo(FilteredTourPlan)

@@ -1,0 +1,17 @@
+/* YourComponent.css */
+
+.animated-label .MuiInputLabel-root {
+    transform: translateY(-100px);
+    /* Initial position for the label */
+    transition: transform 0.3s ease;
+    /* Transition animation */
+}
+
+.MuiInputLabel-outlined.MuiInputLabel-shrink {
+    transform: translate(14px, -60px) scale(0.75);
+}
+
+.animated-label .MuiInputLabel-shrink {
+    transform: translateY(10);
+    /* Shrink position for the label */
+}

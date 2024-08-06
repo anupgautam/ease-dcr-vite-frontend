@@ -1,0 +1,656 @@
+@media (max-width: 575.98px) {
+  .image-container {
+    display: none !important;
+  }
+
+  .res-display {
+    display: none !important;
+  }
+
+  .nav-bar-design-for-res {
+    background: #f9fafb !important;
+    width: 100% !important;
+    margin-top: 13px !important;
+    position: absolute !important;
+    top: 59px !important;
+  }
+
+  .display-all {
+    display: block !important;
+  }
+}
+
+@media (min-width: 414px) and (max-width: 896px) {
+  .image-container {
+    display: none !important;
+  }
+
+  .res-display {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .image-container {
+    display: none !important;
+  }
+
+  .nav-bar-design-for-res {
+    background: #f9fafb;
+    width: 100%;
+    margin-top: 13px;
+    position: absolute;
+    top: 56px;
+  }
+
+  .nav-item {
+    width: 100% !important;
+  }
+
+  .res-display {
+    visibility: hidden !important;
+  }
+
+  .display-icons {
+    display: block !important;
+    text-align: right !important;
+  }
+
+  .res-align {
+    text-align: right !important;
+  }
+}
+
+
+
+.image-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 400px;
+}
+
+.image-container img {
+  max-width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.input-datepicker-fields {
+  padding: 16px !important;
+  font-size: 15px !important;
+  border: 1px solid #dbe0e4 !important;
+  border-radius: 5px !important;
+  width: 100% !important;
+  margin-bottom: 5px !important;
+}
+
+.input-datepicker-fields1 {
+  padding: 16px !important;
+  font-size: 15px !important;
+  border: 1px solid #dbe0e4 !important;
+  border-radius: 5px !important;
+  width: 22.4rem !important;
+  margin-bottom: 5px !important;
+}
+
+.nepali-date-picker input {
+  display: none !important;
+}
+
+.nepali-date-picker .calendar {
+  display: block !important;
+}
+
+.loginbutton {
+  background-color: #007bff !important;
+  color: white !important;
+  border-radius: 4px !important;
+  margin-top: 5px !important;
+}
+
+
+
+.loginbutton:hover {
+  background-color: #103996 !important;
+  color: white !important;
+  border-radius: 4px !important;
+}
+
+/* datepicker.css */
+.react-datepicker__input-container input {
+  /* Customize the styles of the input boxes here */
+  /* For example: */
+  padding: 8px;
+  border: 1.5px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.new-date-picker-design {
+  width: 100% !important;
+  height: 55px !important;
+}
+
+.react-datepicker__input-container input:focus {
+  /* Customize the styles of the focused input box */
+  /* For example: */
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.fi .messageContainer {
+  position: fixed;
+  padding: 0.2rem;
+  width: 30%;
+  right: 1rem;
+  top: 2rem;
+  border-radius: 5px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  z-index: 1 !important;
+}
+
+.errorMessage {
+  background-color: #ab0403;
+  padding: 15px;
+  border-radius: 10px;
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+  z-index: 1 !important;
+}
+
+.successMessage {
+  background-color: #32b79c;
+  padding: 15px;
+  border-radius: 10px;
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+}
+
+.select-holidays {
+  padding: 11px !important;
+  background: #2165d1 !important;
+  width: 100% !important;
+  color: white !important;
+}
+
+.rl-nepali-date-panel-wrapper {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  position: absolute !important;
+}
+
+.add-product-design {
+  background: #32b79c;
+  color: white;
+  padding: 8px;
+  font-size: 13px !important;
+  text-align: center;
+  border-radius: 29px;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  margin-bottom: 5px !important;
+}
+
+.css-1jm5j2j-MuiButtonBase-root-MuiButton-root {
+  background-color: #2e8960 !important;
+  color: white !important;
+}
+
+.css-7nzas3 {
+  line-height: 1.8375em !important;
+  font-size: .8rem !important;
+}
+
+.select-styles {
+  padding: 7px;
+  border: 1px solid #dbe0e4;
+  border-radius: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+
+.add-btn-design {
+  background-color: #ab0403 !important;
+}
+
+.successMessage {
+  background-color: #32b79c;
+  padding: 15px;
+  border-radius: 10px;
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+  z-index: 1 !important;
+}
+
+.form-label-design {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+
+.MuiFormControl-root {
+  border: 0 !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  padding: 0 !important;
+  position: relative !important;
+  min-width: 0 !important;
+  flex-direction: column !important;
+  vertical-align: top !important;
+  width: 100% !important;
+}
+
+.css-1eivsbx-MuiInputBase-input-MuiOutlinedInput-input {
+  height: 1.5em !important;
+}
+
+/* .MuiInputLabel-outlined {
+  font-size: 13px !important;
+} */
+
+.MuiInputLabel-outlined.MuiInputLabel-shrink {
+  transform: translate(14px, -8px) scale(0.75) !important;
+}
+
+.css-388y4j-MuiFormLabel-root-MuiInputLabel-root {
+  font-size: .8rem !important;
+  padding-top: 4px !important;
+}
+
+.my-datepicker {
+  font-size: 14px !important;
+  width: 100% !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+  cursor: text !important;
+  display: inline-flex !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+  align-items: center !important;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
+  font-weight: 400 !important;
+  line-height: 1.1876em !important;
+  letter-spacing: 0.00938em !important;
+  height: 55px !important;
+}
+
+input[type='file'] {
+  display: none;
+}
+
+.custom-file-upload {
+  border: 0.075rem solid #ddd;
+  display: inline-block;
+  padding: 0px 0px;
+  cursor: pointer;
+  width: 100% !important;
+  border-radius: 0.25rem;
+  background-color: #fff !important;
+  box-shadow: inset 0 0.2rem 0.4rem rgba(0, 0, 0, 0.05);
+}
+
+.choose-file-text {
+  background: #eee;
+  color: #555;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 16px 7px;
+  border-radius: 0px 5px 5px 0px;
+  text-align: center;
+}
+
+.nav-bar-design-for-res {
+  background: #f9fafb;
+  width: 100%;
+  margin-top: 13px;
+}
+
+.file-name-display-design {
+  font-size: 12px !important;
+  padding: 16px 10px !important;
+  font-weight: 600 !important;
+}
+
+/* //! Chat Styles  */
+.chat-list-design {
+  /* background-color: white; */
+  /* padding: 15px !important; */
+  height: calc(63.26vh - 0rem) !important;
+  overflow-y: scroll !important;
+}
+
+.chat-main-list-design {
+  background-color: #ebedf7;
+  padding: 15px !important;
+  border-radius: 5px !important;
+  cursor: pointer;
+  margin-top: 9px !important;
+}
+
+.chat-data-design {
+  background: #bdc4cb;
+}
+
+.user-icon-design {
+  background-color: #abcfe6 !important;
+  height: 40px !important;
+  width: 40px !important;
+  color: #145a87 !important;
+  border-radius: 50% !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  padding-top: 10px !important;
+  padding-left: 9px !important;
+}
+
+.chat-sending-design {
+  height: calc(69vh - 0rem) !important;
+}
+
+.chat-link-design:hover {
+  background: white;
+  padding: 15px;
+  position: fixed;
+  z-index: 888;
+  right: 20px;
+  bottom: 20px;
+  border-radius: 51px;
+  color: #038542;
+  box-shadow: 0 0 32px -10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.chat-design-home-page {
+  width: 375px;
+  position: fixed;
+  bottom: 7rem;
+  line-height: 1.5;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 12px 24px 0px;
+  transform: scale(1);
+  transform-origin: right bottom;
+  transition: transform 0.3s ease 0s;
+  background: white;
+  right: 20px !important;
+  z-index: 2147483647 !important;
+  height: 200px;
+  padding: 20px;
+}
+
+.emailtext {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+
+.chat-design-home-page1 {
+  width: 375px;
+  position: fixed;
+  bottom: 7rem;
+  line-height: 1.5;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 12px 24px 0px;
+  transform: scale(1);
+  transform-origin: right bottom;
+  transition: transform 0.3s ease 0s;
+  background: white;
+  right: 20px !important;
+  z-index: 2147483647 !important;
+  height: 400px;
+  padding: 20px;
+}
+
+.chat-down-text {
+  color: rgb(55, 65, 81);
+  font-size: 16px;
+  font-weight: 400;
+  height: fit-content;
+}
+
+.chat-button-design {
+  background: #038542;
+  width: 100%;
+  margin-top: 12px;
+  border: none;
+  padding: 11px;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  border-radius: 10px;
+}
+
+.chat-text-design {
+  max-width: 60%;
+  overflow-wrap: break-word;
+  padding: 7px 20px;
+  font-size: 0.88rem;
+  width: fit-content;
+  white-space: pre-line;
+  /* background-color: gainsboro !important; */
+  margin-top: 10px;
+  font-size: 15px;
+  color: white !important;
+  border-radius: 30px !important;
+  text-align: end;
+  background-color: #145a87 !important;
+}
+
+.chat-scroll-design {
+  padding: 10px;
+}
+
+.c5 {
+  background: #038542;
+  padding: 15px;
+  position: fixed;
+  z-index: 888;
+  right: 20px;
+  bottom: 20px;
+  border-radius: 51px;
+  color: white;
+  box-shadow: 0 0 32px -10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.input-container {
+  width: 95%;
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background-color: #e5e5e7 !important;
+  /* padding: 12px; */
+}
+
+.content-sended {
+  background-color: white !important;
+  padding: 10px !important;
+  margin-left: 10px !important;
+  border-radius: 20px !important;
+  color: black;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  overflow-wrap: break-word;
+}
+
+.content {
+  display: flex;
+  justify-content: flex-end !important;
+}
+
+.content1 {
+  display: flex;
+  justify-content: flex-start !important;
+}
+
+.content-recieved {
+  background-color: #e5e5e7 !important;
+  padding: 10px !important;
+  margin-left: 10px !important;
+  border-radius: 20px !important;
+  color: black;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  justify-content: flex-start !important;
+}
+
+#chat-message-submit {
+  background: #145a87;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  font-weight: 700;
+  width: 24%;
+  border-radius: 69px;
+  text-align: center;
+}
+
+#chat-message-input {
+  width: 100%;
+  height: 60%;
+  background-color: transparent;
+  color: black;
+  border: none;
+  padding-left: 1rem;
+  font-size: 1.2rem;
+}
+
+.chat-messages {
+  height: 65.2vh !important;
+  overflow-y: scroll !important;
+}
+
+.dashboard-background-color1 {
+  max-height: 90vh !important;
+  /* background-color: #ebedf7 !important; */
+  padding: 0rem;
+  position: fixed !important;
+  width: 76%;
+}
+
+.chat-link-design:hover {
+  background: white;
+  padding: 15px;
+  position: fixed;
+  z-index: 888;
+  right: 20px;
+  bottom: 20px;
+  border-radius: 51px;
+  color: #2065d1;
+  box-shadow: 0 0 32px -10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.rl-nepali-date-panel {
+  width: 71.2rem !important;
+  z-index: 4;
+  background-color: white;
+}
+
+.rl-nepali-date-content thead th {
+  font-size: 39px !important;
+}
+
+.rl-nepali-date-body {
+  padding: 13px 12px !important;
+  height: 35rem !important;
+  background: white !important;
+}
+
+.rl-picker-cell .rl-picker-cell-inner .BS {
+  font-size: 23px !important;
+}
+
+.rl-picker-cell .rl-picker-cell-inner .AD {
+  position: absolute;
+  right: 2px;
+  bottom: 0px;
+  font-size: 15px !important;
+}
+
+.rl-picker-cell {
+  /* border-radius: 2px; */
+  padding: 0px !important;
+  cursor: pointer;
+  padding-top: 28px !important;
+}
+
+.image-design-data {
+  height: 50px !important;
+  width: 50px !important;
+  background: white;
+  margin-top: 5px;
+  padding: 4px;
+  border-radius: 47px;
+}
+
+.date-background {
+  background: #3851a3 !important;
+  color: white !important;
+  padding: 8px;
+  font-size: 17px;
+  font-weight: 600;
+  padding-left: 25px;
+  padding-right: 25px;
+  border-radius: 20px;
+  margin-right: 7px;
+}
+
+.rl-picker-cell .rl-picker-cell-inner {
+  position: relative;
+  /* z-index: 2; */
+  margin: auto;
+  min-width: 30px;
+  width: inherit;
+  text-align: center;
+  height: 48px !important;
+  line-height: 100%;
+  border-radius: 2px;
+  transition: background 0.3s, border 0.3s;
+  font-size: 14;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rl-nepali-date-content {
+  width: 100%;
+  text-align: center !important;
+}
+
+.chat-link-design {
+  background: #2065d1;
+  padding: 15px;
+  position: fixed;
+  z-index: 888;
+  right: 20px;
+  bottom: 20px;
+  border-radius: 51px;
+  color: white;
+  box-shadow: 0 0 32px -10px rgba(0, 0, 0, 0.5) !important;
+  height: 80px;
+  width: 80px;
+}
+
+
+/* .sidebar_app {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar_app {
+    display: block;
+
+  }
+} */
