@@ -1,7 +1,6 @@
 import { useRoutes } from 'react-router-dom';
 
 import Login from './pages/Common/LoginComponent/LoginPage';
-// MPO
 import MPODashboardLayout from './pages/MPO/dashboard/MPODashboardLayout';
 import MPOSettingsLayout from './pages/MPO/dashboard/MPOSettingsLayout';
 import DashboardAppPage from './pages/MPO/dashboard/DashboardAppPage';
@@ -10,7 +9,7 @@ import ListofDoctorController from './pages/MPO/Doctor/ListOfDoctorController';
 import ListofStockistController from './pages/MPO/Stockist/ListOfStockistController';
 import ListofUserController from './pages/MPO/User/ListOfUserController';
 import ListofProductController from './pages/MPO/Product/ListOfProductController';
-import ListofApplicationController from './pages/MPO/Application/ListofApplicationController';
+// import ListofApplicationController from './pages/MPO/Application/ListofApplicationController';
 import Page404 from './pages/Common/Page404';
 import Authentication from './routing/Authentication';
 import TargetController from './pages/MPO/Target/TargetController';
@@ -30,12 +29,10 @@ import ForgotPassword from './pages/Common/ForgotPassword';
 import NewPassword from './pages/Common/NewPassword';
 import ListofLeaveUserController from './pages/MPO/Leaves/ListofLeaveUserController';
 import ListOfSalesController from './pages/MPO/Sales/ListOfSalesController';
-import ListOfDoctorCategory from './pages/MPO/Category/Doctor/ListOfDoctorSpecialization';
-import ListOfChemistCategory from './pages/MPO/Category/Chemist/ListOfChemistCategory';
 import UploadsDetail from './sections/@dashboard/uploads/UploadsDetail';
 import ListOfRewardsController from './pages/MPO/Rewards/ListOfRewardsController';
 import ListOfCompanyRolesController from './pages/MPO/CompanyRoles/ListOfCompanyRolesController';
-import LandingController from './pages/Common/Landing/LandingController';
+// import LandingController from './pages/Common/Landing/LandingController';
 import OTP from './pages/Common/OTP';
 import ChangePassword from './pages/Common/ChangePassword';
 import Profile from './pages/Common/Profile/Profile';
@@ -43,7 +40,6 @@ import ListOfMissedCallsController from './pages/MPO/MissedCalls/ListOfMissedCal
 import ListOfPrimarySalesController from './pages/MPO/Sales/PrimarySales/ListOfPrimarySalesController';
 import ListOfSecondarySalesController from './pages/MPO/Sales/SecondarySales/ListOfSecondarySalesController';
 import ListOfCollectionsController from './pages/MPO/Collections/ListOfCollectionsController';
-import DCRValidDateController from './pages/MPO/DCRValidDate/DCRValidDateController';
 import ListofDoctorEventsController from './pages/MPO/DoctorEvents/ListofDoctorEventsController';
 import ListOfDoctorSpecialization from './pages/MPO/Category/Doctor/ListOfDoctorSpecialization';
 import ListOfTravelAllowancesController from './pages/MPO/Travel Allowances/ListOfTravelAllowancesController';
@@ -52,7 +48,6 @@ import ListOfMPOAreasController from './pages/MPO/MPOAreas/ListOfMPOAreasControl
 import AddDcrForDoctor from './pages/MPO/DCR/addDcrForDoctor';
 import AddDCRforChemist from './pages/MPO/DCR/addDcrForChemist';
 import AddDCRForStockist from './pages/MPO/DCR/addDcrForStockist';
-import ListOfAsignStokist from './pages/MPO/DCR/assignStockist/listofAsignStockist';
 import MyExecutives from './pages/MPO/dashboard/myExecutives/myExecutives';
 import MyExecutiveTp from './pages/MPO/dashboard/myExecutivesTp/myExecutivesTp';
 import MyExecutivesDcr from './pages/MPO/dashboard/myExecutivesDcr/myExecutivesDcr';
@@ -70,10 +65,10 @@ import ListOfMpoController from './pages/MPO/DoctorEvents/ListOfMpoController';
 
 export default function Router() {
   const routes = useRoutes([
-    {
-      path: '/',
-      element: <LandingController />,
-    },
+    // {
+    //   path: '/',
+    //   element: <LandingController />,
+    // },
     {
       path: '/login',
       element: <Login />,
@@ -94,7 +89,6 @@ export default function Router() {
       path: '/uploadnewtab/:id',
       element: <UploadsDetail />,
     },
-    //! Default
     {
       path: '/dashboard',
       element: <Authentication component={MPODashboardLayout} allowRoles={['admin', 'MPO', 'other-roles']} />,
@@ -107,7 +101,7 @@ export default function Router() {
           element: <Authentication component={ListofUserController} allowRoles={['admin']} />,
         },
 
-        //!  Company
+        // //!  Company
         {
           path: 'admin/listofdoctor',
           element: <Authentication component={ListofDoctorController} allowRoles={['admin', 'MPO']} />,
@@ -184,10 +178,10 @@ export default function Router() {
           path: 'admin/target',
           element: <Authentication component={TargetController} allowRoles={['admin']} />,
         },
-        {
-          path: 'admin/application',
-          element: <Authentication component={ListofApplicationController} allowRoles={['admin', 'MPO', 'other-roles']} />,
-        },
+        // {
+        //   path: 'admin/application',
+        //   element: <Authentication component={ListofApplicationController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        // },
         {
           path: 'admin/upload',
           element: <Authentication component={ListOfUploadController} allowRoles={['admin', 'MPO']} />,
@@ -261,81 +255,81 @@ export default function Router() {
           path: 'admin/locked/user',
           element: <Authentication component={ListofLockedUserController} allowRoles={['admin']} />,
         },
-        {
-          path: 'admin/dcr/for/doctor',
-          element: <Authentication component={AddDcrForDoctor} allowRoles={['MPO']} />,
-        },
-        {
-          path: 'admin/dcr/for/chemist',
-          element: <Authentication component={AddDCRforChemist} allowRoles={['MPO']} />,
-        },
-        {
-          path: 'admin/dcr/for/stockist',
-          element: <Authentication component={AddDCRForStockist} allowRoles={['MPO']} />,
-        },
-        {
-          path: 'admin/profile',
-          // element: <Authentication component={Profile} allowRoles={['mpo']} />,
-          element: <Profile />,
-        },
+        // {
+        //   path: 'admin/dcr/for/doctor',
+        //   element: <Authentication component={AddDcrForDoctor} allowRoles={['MPO']} />,
+        // },
+        // {
+        //   path: 'admin/dcr/for/chemist',
+        //   element: <Authentication component={AddDCRforChemist} allowRoles={['MPO']} />,
+        // },
+        // {
+        //   path: 'admin/dcr/for/stockist',
+        //   element: <Authentication component={AddDCRForStockist} allowRoles={['MPO']} />,
+        // },
+        // {
+        //   path: 'admin/profile',
+        //   // element: <Authentication component={Profile} allowRoles={['mpo']} />,
+        //   element: <Profile />,
+        // },
       ],
     },
 
-    //!Settings 
-    {
-      path: '/dashboard/settings',
-      element: <Authentication component={MPOSettingsLayout} allowRoles={['admin']} />,
-      // element: <MPOSettingsLayout />,
-      children: [
-        // {
-        //   path: 'admin/chemistcategory',
-        //   element: <Authentication component={ListOfChemistCategory} allowRoles={['mpo']} />,
-        // },
-        {
-          path: 'admin/companyareas',
-          element: <Authentication component={ListOfCompanyAreaController} allowRoles={['admin']} />,
-        },
-        {
-          path: 'admin/companyareawiseexpense',
-          element: <Authentication component={CompanyAreaWiseExpensesController} allowRoles={['admin']} />,
-        },
-        {
-          path: 'admin/travelallowances',
-          element: <Authentication component={ListOfTravelAllowancesController} allowRoles={['admin']} />,
-        },
-        {
-          path: 'admin/doctorspecialization',
-          element: <Authentication component={ListOfDoctorSpecialization} allowRoles={['admin']} />,
-          // element: <ListOfDoctorSpecialization />,
-        },
-        {
-          path: 'admin/divisions',
-          element: <Authentication component={ListOfDivisionController} allowRoles={['admin']} />,
-        },
-        {
-          path: 'admin/roles',
-          element: <Authentication component={ListOfCompanyRolesController} allowRoles={['admin']} />,
-        },
-        {
-          path: 'admin/holiday',
-          element: <Authentication component={HolidayController} allowRoles={['admin']} />,
-        },
-        {
-          path: 'admin/holidayarea',
-          element: <Authentication component={HolidayAreaController} allowRoles={['admin']} />,
-        },
-        {
-          path: 'admin/rewards',
-          element: <Authentication component={ListOfRewardsController} allowRoles={['admin']} />,
-        },
+    // //!Settings 
+    // {
+    //   path: '/dashboard/settings',
+    //   element: <Authentication component={MPOSettingsLayout} allowRoles={['admin']} />,
+    //   // element: <MPOSettingsLayout />,
+    //   children: [
+    //     // {
+    //     //   path: 'admin/chemistcategory',
+    //     //   element: <Authentication component={ListOfChemistCategory} allowRoles={['mpo']} />,
+    //     // },
+    //     {
+    //       path: 'admin/companyareas',
+    //       element: <Authentication component={ListOfCompanyAreaController} allowRoles={['admin']} />,
+    //     },
+    //     {
+    //       path: 'admin/companyareawiseexpense',
+    //       element: <Authentication component={CompanyAreaWiseExpensesController} allowRoles={['admin']} />,
+    //     },
+    //     {
+    //       path: 'admin/travelallowances',
+    //       element: <Authentication component={ListOfTravelAllowancesController} allowRoles={['admin']} />,
+    //     },
+    //     {
+    //       path: 'admin/doctorspecialization',
+    //       element: <Authentication component={ListOfDoctorSpecialization} allowRoles={['admin']} />,
+    //       // element: <ListOfDoctorSpecialization />,
+    //     },
+    //     {
+    //       path: 'admin/divisions',
+    //       element: <Authentication component={ListOfDivisionController} allowRoles={['admin']} />,
+    //     },
+    //     {
+    //       path: 'admin/roles',
+    //       element: <Authentication component={ListOfCompanyRolesController} allowRoles={['admin']} />,
+    //     },
+    //     {
+    //       path: 'admin/holiday',
+    //       element: <Authentication component={HolidayController} allowRoles={['admin']} />,
+    //     },
+    //     {
+    //       path: 'admin/holidayarea',
+    //       element: <Authentication component={HolidayAreaController} allowRoles={['admin']} />,
+    //     },
+    //     {
+    //       path: 'admin/rewards',
+    //       element: <Authentication component={ListOfRewardsController} allowRoles={['admin']} />,
+    //     },
 
-      ]
-    },
+    //   ]
+    // },
   
-    {
-      path: '*',
-      element: <Authentication component={Page404} />,
-    },
+    // {
+    //   path: '*',
+    //   element: <Authentication component={Page404} />,
+    // },
   ]);
 
   return routes;

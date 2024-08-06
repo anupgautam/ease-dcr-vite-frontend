@@ -263,11 +263,9 @@ const UserSearch = () => {
                                                                         <TableRow hover tabIndex={-1} key={index}>
                                                                             <TableCell>{index + 1}</TableCell>
                                                                             <TableCell component="th" scope="row" align="left" >
-                                                                                {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                                                 <Typography variant="subtitle2" noWrap>
                                                                                     {usersearch.user_name.first_name + " " + usersearch.user_name.middle_name + " " + usersearch.user_name.last_name}
                                                                                 </Typography>
-                                                                                {/* </Stack> */}
                                                                             </TableCell>
                                                                             <TableCell align="left">{usersearch.user_name.phone_number}</TableCell>
                                                                             <TableCell align="left">{usersearch.user_name.email}</TableCell>
@@ -290,14 +288,12 @@ const UserSearch = () => {
                                                                                     <Button>Locked</Button>
                                                                                 </Link>
                                                                             </TableCell>
-                                                                            {/* //! Edit  */}
                                                                             <TableCell align="left">
                                                                                 <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(usersearch.id)} >
                                                                                     <Badge>
                                                                                         <Iconify icon="eva:edit-fill" />
                                                                                     </Badge>
                                                                                 </IconButton>
-                                                                                {/* //! Delete  */}
                                                                                 <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(usersearch.id); handleClickOpen() }}>
                                                                                     <Badge>
                                                                                         <Iconify icon="eva:trash-2-outline" />

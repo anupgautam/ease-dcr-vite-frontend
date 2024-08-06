@@ -12,7 +12,6 @@ const UserCount = () => {
         setPage(thisArray[3]);
     }, [])
 
-    // !  Get all user 
     const { data } = useGetAllcompanyUserRolesQuery({ company_name: Cookies.get('company_id'), page: page });
     return (
         <>

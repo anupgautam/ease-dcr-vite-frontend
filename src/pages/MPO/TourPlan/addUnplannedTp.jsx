@@ -2,9 +2,9 @@ import { Close } from "@material-ui/icons";
 import { Box, Button, Drawer, Grid, IconButton, Stack, Typography } from "@mui/material";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Iconify from "@/components/iconify/Iconify";
-import NepaliDatePicker, {
-    NepaliDateConverter,
-} from "react-nepali-date-picker-lite";
+// import NepaliDatePicker, {
+//     NepaliDateConverter,
+// } from "react-nepali-date-picker-lite";
 import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
 import Cookies from "js-cookie";
 import Controls from "@/reusable/forms/controls/Controls";
@@ -25,7 +25,8 @@ const AddUnplannedTp = () => {
         setIsDrawerOpen(false);
     }, []);
 
-    const today = NepaliDateConverter.getNepaliDate();
+    let today;
+    // const today = NepaliDateConverter.getNepaliDate();
 
     const [selectedDates, setSelectedDates] = useState(today);
 
@@ -192,11 +193,11 @@ const AddUnplannedTp = () => {
                         <Box style={{ marginTop: '20px', textAlign: "left" }}>
                             <Box marginBottom={2}>
                                 <label htmlFor="date" style={{ fontSize: '17px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Select Date*</label><br />
-                                <NepaliDatePicker
+                                {/* <NepaliDatePicker
                                     value={selectedDates}
                                     onSelect={setSelectedDates}
                                     renderInput={(props) => <input className='input-datepicker-fields1' value={selectedDates} type="text" {...props} />}
-                                />
+                                /> */}
                             </Box>
                             {
                                 Cookies.get('user_role') === "MPO" ?

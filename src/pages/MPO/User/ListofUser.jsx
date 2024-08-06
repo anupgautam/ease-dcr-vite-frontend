@@ -3,10 +3,6 @@ import {
     Container,
     Grid,
     Box,
-    TableContainer,
-    Table,
-    TableHead,
-    TableRow
 } from '@mui/material';
 import Cookies from 'js-cookie'
 import UserCount from './UserCount';
@@ -18,7 +14,6 @@ import {
 import ExportToExcel from '@/reusable/utils/exportSheet';
 
 const ListofUser = () => {
-    // ! Get all users wala
     const { data } = useGetAllDefaultUsersQuery({ company_name: Cookies.get('company_id') });
 
     const headers = [
@@ -45,27 +40,6 @@ const ListofUser = () => {
         role_name: values?.role_name?.role_name_value
     }))
 
-
-
-    const data1 = () => {
-        return (
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow style={{ backgroundColor: "#2e8960" }}>
-                            {
-                                headers.map((key, index) => (
-                                    <TableCell style={{ color: "white" }} key={index}>
-                                        {key.label}
-                                    </TableCell>
-                                ))
-                            }
-                        </TableRow>
-                    </TableHead>
-                </Table>
-            </TableContainer>
-        )
-    }
 
 
 
@@ -101,4 +75,4 @@ const ListofUser = () => {
 }
 
 
-export default React.memo(ListofUser);
+export default ListofUser;
