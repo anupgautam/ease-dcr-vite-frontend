@@ -2,7 +2,10 @@ import React from 'react'
 import {
     Container,
     Grid,
-    Box
+    Box,
+    Stack,
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 
 import UploadCount from './UploadCount';
@@ -11,24 +14,37 @@ import AddUpload from './addUpload';
 import Cookies from 'js-cookie';
 
 const ListOfUpload = () => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
     return (
         <>
             <Container>
                 <Box style={{ marginBottom: '30px' }}>
-                    <Grid container>
-                        <Grid item xs={10}>
-                            <UploadCount />
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={9}>
+                            <Box style={{ marginTop: '10px' }}>
+                                <UploadCount />
+                            </Box>
                         </Grid>
-                        <Grid item xs={2}>
-                            {
-                                Cookies.get('user_role') === 'MPO' &&
-                                <Box style={{ float: 'right' }}>
+
+                        <Grid item xs={12} md={3}>
+                            <Stack
+                                direction={isSmallScreen ? 'column' : 'row'}
+                                spacing={2}
+                                alignItems="center"
+                                justifyContent="flex-end"
+                            >
+                                {
+                                    Cookies.get('user_role') === 'MPO' &&
                                     <AddUpload />
-                                </Box>
-                            }
+                                }
+                            </Stack>
                         </Grid>
                     </Grid>
-                    <UploadSearch />
+                    <Box marginTop="20px">
+                        <UploadSearch />
+                    </Box>
                 </Box>
             </Container>
         </>

@@ -1,7 +1,10 @@
 import React from 'react'
 import {
     Container,
-    Grid, Box
+    Grid, Box,
+    Stack,
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 import DefaultList from './DefaultList'
 import AddRewards from './AddRewards';
@@ -13,6 +16,9 @@ import Cookies from 'js-cookie'
 import ExportToExcel from '@/reusable/utils/exportSheet';
 
 const ListOfRewards = () => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
     const { data } = useGetAllRewardsQuery(Cookies.get('company_id'))
 
     const headers = [
@@ -31,22 +37,26 @@ const ListOfRewards = () => {
         <>
             <Container>
                 <Box style={{ marginBottom: '30px' }}>
-                    <Grid container>
-                        <Grid item xs={9}>
-                            <RewardCount />
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={9}>
+                            <Box style={{ marginTop: '10px' }}>
+                                <RewardCount />
+                            </Box>
                         </Grid>
-                        <Grid item xs={2}>
-                            <Box style={{ float: 'right' }}>
+
+                        <Grid item xs={12} md={3}>
+                            <Stack
+                                direction={isSmallScreen ? 'column' : 'row'}
+                                spacing={2}
+                                alignItems="center"
+                                justifyContent="flex-end"
+                            >
                                 {data ?
                                     <>
                                         <ExportToExcel headers={headers} fileName={`Rewards`} data={templateData} />
                                     </> : <></>}
-                            </Box>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Box style={{ float: 'right' }}>
                                 <AddRewards />
-                            </Box>
+                            </Stack>
                         </Grid>
                     </Grid>
                 </Box>

@@ -205,7 +205,7 @@ const ChemistSearch = () => {
                     {
                         Cookies.get('user_role') === "admin" &&
                         <Grid container spacing={2}>
-                            <Grid item xs={2}>
+                            <Grid item xs={3}>
                                 <TextField
                                     label="Search Chemist"
                                     variant="outlined"
@@ -221,7 +221,7 @@ const ChemistSearch = () => {
                                     sx={{ m: 2 }}
                                 />
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2.5}>
                                 <Autocomplete
                                     options={mpoNames}
                                     getOptionLabel={(option) => option.title}

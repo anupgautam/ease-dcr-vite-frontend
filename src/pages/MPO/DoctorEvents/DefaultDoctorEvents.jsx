@@ -129,9 +129,6 @@ const DefaultDoctorEvents = () => {
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
                                                     </TableRow>
                                                 ))}
                                         </> :

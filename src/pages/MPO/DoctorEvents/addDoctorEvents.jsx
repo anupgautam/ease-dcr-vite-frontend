@@ -19,9 +19,10 @@ import {
     useCreateDoctorsEventsMutation
 } from '../../../api/MPOSlices/DoctorSlice'
 import Cookies from 'js-cookie'
-// import NepaliDatePicker, {
-//     NepaliDateConverter,
-// } from "react-nepali-date-picker-lite";
+import {
+    NepaliDateConverter,
+} from "react-nepali-date-picker-lite";
+import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
 
 const AddDoctorEvents = () => {
@@ -93,7 +94,7 @@ const AddDoctorEvents = () => {
         try {
             const response = await createDoctors(formData)
             if (response.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Doctor.' });
+                setSuccessMessage({ show: true, message: 'Successfully Added Doctor Event.' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
@@ -183,6 +184,10 @@ const AddDoctorEvents = () => {
                             onSelect={setSelectedDates}
                             renderInput={(props) => <input className='input-datepicker-fields1' value={selectedDates} type="text" {...props} />}
                         /> */}
+                        <NepaliDatePicker
+                            value={selectedDates}
+                            format="YYYY-MM-DD"
+                            onChange={(value) => setSelectedDates(value)} />
                     </Box>
                     <Stack spacing={1} direction="row">
                         <Controls.SubmitButton

@@ -43,8 +43,7 @@ const TABLE_HEAD = [
     { id: 'leave_status', label: 'Leave Status', alignRight: false },
     { id: 'submission_date', label: 'Submission Date', alignRight: false },
     { id: 'is_approved', label: 'Is Approved', alignRight: false },
-    { id: '' },
-    { id: '' },
+    { id: '' }
 ];
 
 const DefaultApplication = () => {
@@ -136,10 +135,6 @@ const DefaultApplication = () => {
                                             {
                                                 eightArrays.map((key) => (
                                                     <TableRow key={key} >
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>

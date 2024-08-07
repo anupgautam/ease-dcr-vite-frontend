@@ -105,6 +105,10 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
                                 <TableCell><Skeleton /></TableCell>
                                 <TableCell><Skeleton /></TableCell>
                                 <TableCell><Skeleton /></TableCell>
+                                <TableCell><Skeleton /></TableCell>
+                                <TableCell><Skeleton /></TableCell>
+                                <TableCell><Skeleton /></TableCell>
+                                <TableCell><Skeleton /></TableCell>
                             </TableRow>
                         ))}
                 </> :

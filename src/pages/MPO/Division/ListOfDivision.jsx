@@ -2,7 +2,10 @@ import React from 'react'
 import {
     Container,
     Grid,
-    Box
+    Box,
+    Stack,
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 
 import DivisionCount from './DivisionCount';
@@ -14,6 +17,9 @@ import Cookies from 'js-cookie'
 import ExportToExcel from '@/reusable/utils/exportSheet';
 
 const ListOfDivision = () => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
     const { data } = useGetAllCompanyDivisionsQuery(Cookies.get('company_id'))
 
     const headers = [
@@ -30,22 +36,26 @@ const ListOfDivision = () => {
         <>
             <Container>
                 <Box style={{ marginBottom: '30px' }}>
-                    <Grid container>
-                        <Grid item xs={9}>
-                            <DivisionCount />
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={9}>
+                            <Box style={{ marginTop: '10px' }}>
+                                <DivisionCount />
+                            </Box>
                         </Grid>
-                        <Grid item xs={2}>
-                            <Box style={{ float: 'right' }}>
+
+                        <Grid item xs={12} md={3}>
+                            <Stack
+                                direction={isSmallScreen ? 'column' : 'row'}
+                                spacing={2}
+                                alignItems="center"
+                                justifyContent="flex-end"
+                            >
                                 {data ?
                                     <>
                                         <ExportToExcel headers={headers} fileName={`Company Division`} data={templateData} />
                                     </> : <></>}
-                            </Box>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Box style={{ float: 'right' }}>
                                 <AddDivision />
-                            </Box>
+                            </Stack>
                         </Grid>
                     </Grid>
                 </Box>

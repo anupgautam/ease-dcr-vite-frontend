@@ -38,7 +38,6 @@ const TABLE_HEAD = [
     { id: 'shift', label: 'Shift', alignRight: false },
     { id: 'month', label: 'Month', alignRight: false },
     { id: 'date', label: 'Date', alignRight: false },
-    { id: '' },
 ];
 
 const DefaultDCR = () => {
@@ -105,7 +104,6 @@ const DefaultDCR = () => {
                                             {
                                                 eightArrays.map((key) => (
                                                     <TableRow key={key} >
-                                                        <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>

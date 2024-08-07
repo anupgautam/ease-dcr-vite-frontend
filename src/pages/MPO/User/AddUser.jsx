@@ -325,7 +325,11 @@ const AddUser = () => {
 
                     <Box marginBottom={2}>
                         <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Date of Joining*</label><br />
-                        <NepaliDatePicker value={dateData} format="YYYY-MM-DD" onChange={(value) => setDateData(value)} />
+
+                        <NepaliDatePicker 
+                        value={dateData} 
+                        format="YYYY-MM-DD" 
+                        onChange={(value) => setDateData(value)} />
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Select

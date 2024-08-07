@@ -51,7 +51,7 @@ const ExportToExcel = ({ headers, data, fileName }) => {
     };
 
     return (
-        <Button color="success" variant="contained" startIcon={<Iconify icon="mdi:microsoft-excel" />} onClick={exportExcelFile} >Export to Excel</Button>
+        <Button color="success" variant="contained" startIcon={<Iconify icon="mdi:microsoft-excel" />} onClick={exportExcelFile} >Export</Button>
     );
 };
 

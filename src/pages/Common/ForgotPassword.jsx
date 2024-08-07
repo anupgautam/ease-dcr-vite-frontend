@@ -83,7 +83,7 @@ export default function ForgotPassword() {
     useEffect(() => {
         validate();
         setEmail(values.email)
-    }, [values.email, validate])
+    }, [values.email])
 
 
     const handleSubmission = async (e) => {

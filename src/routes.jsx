@@ -9,7 +9,7 @@ import ListofDoctorController from './pages/MPO/Doctor/ListOfDoctorController';
 import ListofStockistController from './pages/MPO/Stockist/ListOfStockistController';
 import ListofUserController from './pages/MPO/User/ListOfUserController';
 import ListofProductController from './pages/MPO/Product/ListOfProductController';
-// import ListofApplicationController from './pages/MPO/Application/ListofApplicationController';
+import ListofApplicationController from './pages/MPO/Application/ListofApplicationController';
 import Page404 from './pages/Common/Page404';
 import Authentication from './routing/Authentication';
 import TargetController from './pages/MPO/Target/TargetController';
@@ -178,10 +178,10 @@ export default function Router() {
           path: 'admin/target',
           element: <Authentication component={TargetController} allowRoles={['admin']} />,
         },
-        // {
-        //   path: 'admin/application',
-        //   element: <Authentication component={ListofApplicationController} allowRoles={['admin', 'MPO', 'other-roles']} />,
-        // },
+        {
+          path: 'admin/application',
+          element: <Authentication component={ListofApplicationController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
         {
           path: 'admin/upload',
           element: <Authentication component={ListOfUploadController} allowRoles={['admin', 'MPO']} />,
@@ -233,7 +233,7 @@ export default function Router() {
         },
         {
           path: 'admin/notification',
-          element: <Authentication component={NotificationController} allowRoles={['admin']} />,
+          element: <Authentication component={NotificationController} allowRoles={['admin', 'MPO', 'other-roles']} />,
         },
         {
           path: 'admin/changepassword',
@@ -255,81 +255,81 @@ export default function Router() {
           path: 'admin/locked/user',
           element: <Authentication component={ListofLockedUserController} allowRoles={['admin']} />,
         },
-        // {
-        //   path: 'admin/dcr/for/doctor',
-        //   element: <Authentication component={AddDcrForDoctor} allowRoles={['MPO']} />,
-        // },
-        // {
-        //   path: 'admin/dcr/for/chemist',
-        //   element: <Authentication component={AddDCRforChemist} allowRoles={['MPO']} />,
-        // },
-        // {
-        //   path: 'admin/dcr/for/stockist',
-        //   element: <Authentication component={AddDCRForStockist} allowRoles={['MPO']} />,
-        // },
-        // {
-        //   path: 'admin/profile',
-        //   // element: <Authentication component={Profile} allowRoles={['mpo']} />,
-        //   element: <Profile />,
-        // },
+        {
+          path: 'admin/dcr/for/doctor',
+          element: <Authentication component={AddDcrForDoctor} allowRoles={['MPO']} />,
+        },
+        {
+          path: 'admin/dcr/for/chemist',
+          element: <Authentication component={AddDCRforChemist} allowRoles={['MPO']} />,
+        },
+        {
+          path: 'admin/dcr/for/stockist',
+          element: <Authentication component={AddDCRForStockist} allowRoles={['MPO']} />,
+        },
+        {
+          path: 'admin/profile',
+          // element: <Authentication component={Profile} allowRoles={['mpo']} />,
+          element: <Profile />,
+        },
       ],
     },
 
     // //!Settings 
-    // {
-    //   path: '/dashboard/settings',
-    //   element: <Authentication component={MPOSettingsLayout} allowRoles={['admin']} />,
-    //   // element: <MPOSettingsLayout />,
-    //   children: [
-    //     // {
-    //     //   path: 'admin/chemistcategory',
-    //     //   element: <Authentication component={ListOfChemistCategory} allowRoles={['mpo']} />,
-    //     // },
-    //     {
-    //       path: 'admin/companyareas',
-    //       element: <Authentication component={ListOfCompanyAreaController} allowRoles={['admin']} />,
-    //     },
-    //     {
-    //       path: 'admin/companyareawiseexpense',
-    //       element: <Authentication component={CompanyAreaWiseExpensesController} allowRoles={['admin']} />,
-    //     },
-    //     {
-    //       path: 'admin/travelallowances',
-    //       element: <Authentication component={ListOfTravelAllowancesController} allowRoles={['admin']} />,
-    //     },
-    //     {
-    //       path: 'admin/doctorspecialization',
-    //       element: <Authentication component={ListOfDoctorSpecialization} allowRoles={['admin']} />,
-    //       // element: <ListOfDoctorSpecialization />,
-    //     },
-    //     {
-    //       path: 'admin/divisions',
-    //       element: <Authentication component={ListOfDivisionController} allowRoles={['admin']} />,
-    //     },
-    //     {
-    //       path: 'admin/roles',
-    //       element: <Authentication component={ListOfCompanyRolesController} allowRoles={['admin']} />,
-    //     },
-    //     {
-    //       path: 'admin/holiday',
-    //       element: <Authentication component={HolidayController} allowRoles={['admin']} />,
-    //     },
-    //     {
-    //       path: 'admin/holidayarea',
-    //       element: <Authentication component={HolidayAreaController} allowRoles={['admin']} />,
-    //     },
-    //     {
-    //       path: 'admin/rewards',
-    //       element: <Authentication component={ListOfRewardsController} allowRoles={['admin']} />,
-    //     },
+    {
+      path: '/dashboard/settings',
+      element: <Authentication component={MPOSettingsLayout} allowRoles={['admin']} />,
+      // element: <MPOSettingsLayout />,
+      children: [
+        // {
+        //   path: 'admin/chemistcategory',
+        //   element: <Authentication component={ListOfChemistCategory} allowRoles={['mpo']} />,
+        // },
+        {
+          path: 'admin/companyareas',
+          element: <Authentication component={ListOfCompanyAreaController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/companyareawiseexpense',
+          element: <Authentication component={CompanyAreaWiseExpensesController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/travelallowances',
+          element: <Authentication component={ListOfTravelAllowancesController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/doctorspecialization',
+          element: <Authentication component={ListOfDoctorSpecialization} allowRoles={['admin']} />,
+          // element: <ListOfDoctorSpecialization />,
+        },
+        {
+          path: 'admin/divisions',
+          element: <Authentication component={ListOfDivisionController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/roles',
+          element: <Authentication component={ListOfCompanyRolesController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/holiday',
+          element: <Authentication component={HolidayController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/holidayarea',
+          element: <Authentication component={HolidayAreaController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/rewards',
+          element: <Authentication component={ListOfRewardsController} allowRoles={['admin']} />,
+        },
 
-    //   ]
-    // },
-  
-    // {
-    //   path: '*',
-    //   element: <Authentication component={Page404} />,
-    // },
+      ]
+    },
+
+    {
+      path: '*',
+      element: <Authentication component={Page404} />,
+    },
   ]);
 
   return routes;

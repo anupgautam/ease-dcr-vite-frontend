@@ -2,9 +2,10 @@ import { Close } from "@material-ui/icons";
 import { Box, Button, Drawer, Grid, IconButton, Stack, Typography } from "@mui/material";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Iconify from "@/components/iconify/Iconify";
-// import NepaliDatePicker, {
-//     NepaliDateConverter,
-// } from "react-nepali-date-picker-lite";
+import {
+    NepaliDateConverter,
+} from "react-nepali-date-picker-lite";
+import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
 import Cookies from "js-cookie";
 import Controls from "@/reusable/forms/controls/Controls";
@@ -198,6 +199,10 @@ const AddUnplannedTp = () => {
                                     onSelect={setSelectedDates}
                                     renderInput={(props) => <input className='input-datepicker-fields1' value={selectedDates} type="text" {...props} />}
                                 /> */}
+                                <NepaliDatePicker
+                                    value={selectedDates}
+                                    format="YYYY-MM-DD"
+                                    onChange={(value) => setSelectedDates(value)} />
                             </Box>
                             {
                                 Cookies.get('user_role') === "MPO" ?

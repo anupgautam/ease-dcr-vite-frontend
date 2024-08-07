@@ -218,7 +218,7 @@ const FilterTravelAllowances = () => {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={2.5}>
                             <Autocomplete
                                 options={usersoptions}
                                 getOptionLabel={(option) => option.title}
@@ -233,7 +233,7 @@ const FilterTravelAllowances = () => {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={1.5}>
                             <FormControl fullWidth>
                                 <InputLabel>Year</InputLabel>
                                 <Select

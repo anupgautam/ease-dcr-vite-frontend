@@ -113,11 +113,10 @@ export default function OTP() {
         setEmail(values.email)
 
 
-    }, [values.email, validate])
+    }, [values.email])
 
 
     const handleSubmission = async (e) => {
-        e.preventDefault()
         try {
             const res = await otpVerify({ 'email': Cookies.get('OTPgmail'), 'otp': otp })
             if (res?.data) {
