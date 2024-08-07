@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react'
 import Navbar from '../../new-landing/Navbar'
 import FirstPage from '../../new-landing/FirstPage'
@@ -14,5 +15,21 @@ const LandingController = () => {
         </div>
     )
 }
+=======
+import React from "react";
+import NewFeature from "../../new-landing/NewFeatures";
+import NewPricing from "../../new-landing/NewPricing";
+import NewTestimonials from "../../new-landing/NewTestimonials";
 
-export default LandingController
+const LandingController = () => {
+  return (
+    <>
+      <NewFeature />
+      <NewPricing />
+      {/* <NewTestimonials /> */}
+    </>
+  );
+};
+>>>>>>> 0f92706 (added components)
+
+export default LandingController;
