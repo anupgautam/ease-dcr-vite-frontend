@@ -32,7 +32,7 @@ import ListOfSalesController from './pages/MPO/Sales/ListOfSalesController';
 import UploadsDetail from './sections/@dashboard/uploads/UploadsDetail';
 import ListOfRewardsController from './pages/MPO/Rewards/ListOfRewardsController';
 import ListOfCompanyRolesController from './pages/MPO/CompanyRoles/ListOfCompanyRolesController';
-// import LandingController from './pages/Common/Landing/LandingController';
+import LandingController from './pages/Common/Landing/LandingController';
 import OTP from './pages/Common/OTP';
 import ChangePassword from './pages/Common/ChangePassword';
 import Profile from './pages/Common/Profile/Profile';
@@ -65,10 +65,10 @@ import ListOfMpoController from './pages/MPO/DoctorEvents/ListOfMpoController';
 
 export default function Router() {
   const routes = useRoutes([
-    // {
-    //   path: '/',
-    //   element: <LandingController />,
-    // },
+    {
+      path: '/',
+      element: <LandingController />,
+    },
     {
       path: '/login',
       element: <Login />,

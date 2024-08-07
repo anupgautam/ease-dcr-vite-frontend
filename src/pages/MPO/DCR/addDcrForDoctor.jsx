@@ -142,7 +142,7 @@ const AddDcrForDoctor = () => {
 
     const areaOptions = useMemo(() => {
         if (NewTourPlanData !== undefined) {
-                return NewTourPlanData?.mpo_area_read?.map(key => ({ id: key.company_mpo_area_id.id, title: key.company_mpo_area_id.area_name }))
+            return NewTourPlanData?.mpo_area_read?.map(key => ({ id: key.company_mpo_area_id.id, title: key.company_mpo_area_id.area_name }))
         }
         return [];
     }, [NewTourPlanData])
@@ -246,7 +246,8 @@ const AddDcrForDoctor = () => {
 
     const handlePostDcr = () => {
 
-        if (AllMutipleData.length !== []) {
+        // if (AllMutipleData.length !== []) {
+        if (AllMutipleData.length !== 0) {
             for (const allData of AllMutipleData) {
                 let sendingData = { ...allData };
                 sendingData['id'] = allData.id;
@@ -384,7 +385,7 @@ const AddDcrForDoctor = () => {
                                                                                             <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
                                                                                                 {key.tour_plan.tour_plan.select_the_month}
                                                                                             </span>
-                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px",fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.company_mpo_area_id.area_name)
+                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.company_mpo_area_id.area_name)
                                                                                                 .join(', ')}</Typography>
                                                                                         </Box>
                                                                                     </Grid>

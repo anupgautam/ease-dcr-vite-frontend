@@ -400,7 +400,8 @@ const AddDCRforChemist = () => {
                 })
         }
 
-        if (AllMutipleData.length !== []) {
+        // if (AllMutipleData.length !== []) {
+            if (AllMutipleData.length !== 0) {
             for (const allData of AllMutipleData) {
                 let sendingData = { ...allData };
                 sendingData['id'] = allData.id;
