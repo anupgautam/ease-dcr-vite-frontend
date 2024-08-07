@@ -90,7 +90,7 @@ export default function NotificationsPopover() {
 
   const navigate = useNavigate();
   const Redirect = () => {
-    navigate("/dashboard/admin/notification")
+    navigate("admin/notification")
   }
 
   //! Notification

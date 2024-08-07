@@ -179,7 +179,7 @@ const StockistSearch = () => {
                     {
                         Cookies.get('user_role') === 'admin' &&
                         <Grid container spacing={2}>
-                            <Grid item xs={2}>
+                            <Grid item xs={3}>
                                 <TextField
                                     label="Search Stockist"
                                     variant="outlined"

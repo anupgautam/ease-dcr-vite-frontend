@@ -1,4 +1,4 @@
-import React, { useState,useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -104,7 +104,6 @@ const DefaultCompanyAreaWiseExpense = () => {
                                             {
                                                 eightArrays.map((key) => (
                                                     <TableRow id={key} >
-                                                        <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>

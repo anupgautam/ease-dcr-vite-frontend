@@ -19,7 +19,7 @@ const TourPlanCount = () => {
                 data ?
                     <Typography style={{ fontSize: '18px', fontWeight: "600" }}>
                         Tour Plans {data.count}
-                    </Typography> : <Typography style={{ fontSize: '18px', fontWeight: "600" }}>Tour Plan Count</Typography>
+                    </Typography> : <Typography style={{ fontSize: '18px', fontWeight: "600" }}>Tour Plan</Typography>
             }
         </>
     )

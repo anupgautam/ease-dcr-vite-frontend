@@ -20,6 +20,7 @@ import Scrollbar from '@/components/scrollbar';
 import { UserListHead } from '@/sections/@dashboard/user';
 import {
     useGetAllCompanyAreasQuery,
+    useDeleteCompanyAreaByIdMutation
 } from "../../../api/CompanySlices/companyAreaSlice";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -89,11 +90,6 @@ const DefaultList = () => {
                                             {
                                                 eightArrays.map((key) => (
                                                     <TableRow key={key} >
-                                                        <TableCell></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>

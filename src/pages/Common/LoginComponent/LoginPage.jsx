@@ -1,12 +1,12 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Container, Typography} from '@mui/material';
+import { Container, Typography, Link } from '@mui/material';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
 // components
 // sections
 import LoginForm from './LoginForm';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -72,7 +72,20 @@ export default function LoginPage() {
 
                         <Typography variant="body2" sx={{ mb: 5 }}>
                             Don’t have an account? {''}
-                            <Link to="/" variant="subtitle2">Get started</Link>
+                            <Link
+                                component={RouterLink}
+                                to="/"
+                                variant="subtitle3"
+                                sx={{
+                                    textDecoration: 'none',
+                                    color: '#007bff', 
+                                    '&:hover': {
+                                        color: '#0056b3',
+                                    }
+                                }}
+                            >
+                                Get started
+                            </Link>
                         </Typography>
 
                         {/* <Stack direction="row" spacing={2}>

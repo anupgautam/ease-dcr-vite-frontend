@@ -3,6 +3,9 @@ import {
     Grid,
     Box,
     Container,
+    Stack,
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 
 import DoctorCount from './DoctorCount';
@@ -12,25 +15,34 @@ import AddDoctor from './AddDoctor';
 import Cookies from 'js-cookie';
 
 const ListOfDoctor = () => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     return (
         <>
             <Container>
                 <Box style={{ marginBottom: '30px' }}>
-                    <Grid container>
-                        <Grid item xs={9}>
-                            <DoctorCount />
-                        </Grid>
-                        <Grid item xs={2}>
-                            {
-                                Cookies.get('user_role') === "admin" &&
-                                <ExportDoctor />
-                            }
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Box style={{ float: "right" }}>
-                                <AddDoctor />
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={9}>
+                            <Box style={{ marginTop: '10px' }}>
+                                <DoctorCount />
                             </Box>
                         </Grid>
+                        
+                        <Grid item xs={12} md={3}>
+                            <Stack
+                                direction={isSmallScreen ? 'column' : 'row'}
+                                spacing={2}
+                                alignItems="center"
+                                justifyContent="flex-end"
+                            >
+                                {
+                                    Cookies.get('user_role') === "admin" &&
+                                    <ExportDoctor />
+                                }
+                                <AddDoctor />
+                            </Stack>
+                        </Grid>
+
                     </Grid>
                 </Box>
                 <DoctorSearch />

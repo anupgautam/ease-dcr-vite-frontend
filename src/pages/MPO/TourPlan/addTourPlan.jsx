@@ -19,14 +19,15 @@ import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import Cookies from 'js-cookie'
 import { useGetShiftsQuery } from '@/api/DCRs Api Slice/TourPlanApiSlice';
-// import NepaliDatePicker, {
-//     NepaliDateConverter,
-// } from "react-nepali-date-picker-lite";
+import {
+    NepaliDateConverter,
+} from "react-nepali-date-picker-lite";
+import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from '@/api/MPOSlices/tourPlan&Dcr';
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '@/api/MPOSlices/UserSlice';
-
+import moment from 'moment';
 
 const AddTourPlan = () => {
 
@@ -71,9 +72,8 @@ const AddTourPlan = () => {
         return [];
     }, [mpoAccordingToExecutiveLevel])
 
-    let today;
 
-    // const today = NepaliDateConverter.getNepaliDate();
+    const today = NepaliDateConverter.getNepaliDate();
 
     const [TourPlanTodos, setTourPlanTodos] = useState([]);
     const [formValuesArray, setFormValuesArray] = useState([]);
@@ -326,6 +326,10 @@ const AddTourPlan = () => {
                             onSelect={setSelectedDates}
                             renderInput={(props) => <input className='input-datepicker-fields1' value={selectedDates} type="text" {...props} />}
                         /> */}
+                        <NepaliDatePicker
+                            value={selectedDates}
+                            format="YYYY-MM-DD"
+                            onChange={(value) => setSelectedDates(value)} />
                     </Box>
                     {
                         Cookies.get('user_role') === "MPO" ?

@@ -81,6 +81,7 @@ const DefaultList = () => {
                             <TableCell><Skeleton /></TableCell>
                             <TableCell><Skeleton /></TableCell>
                             <TableCell><Skeleton /></TableCell>
+                            <TableCell><Skeleton /></TableCell>
                         </TableRow>
                     ))}
                 </>

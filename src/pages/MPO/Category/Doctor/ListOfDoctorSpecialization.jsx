@@ -2,7 +2,9 @@ import React from 'react'
 import DefaultSpecialization from './DefaultSpecialization';
 import {
     Container,
-    Grid, Box
+    Grid, Box, Stack,
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 import {
     useGetDoctorsSpecializationQuery,
@@ -15,6 +17,9 @@ import ExportToExcel from '@/reusable/utils/exportSheet';
 
 
 const ListOfDoctorSpecialization = () => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
     const { data } = useGetDoctorsSpecializationQuery(Cookies.get('company_id'))
     const headers = [
         { label: 'S.No.', key: 'sno' },
@@ -30,22 +35,26 @@ const ListOfDoctorSpecialization = () => {
         <>
             <Container>
                 <Box style={{ marginBottom: '30px' }}>
-                    <Grid container>
-                        <Grid item xs={9}>
-                            <SpecializationCount />
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={9}>
+                            <Box style={{ marginTop: '10px' }}>
+                                <SpecializationCount />
+                            </Box>
                         </Grid>
-                        <Grid item xs={2}>
-                            <Box style={{ float: 'right' }}>
+
+                        <Grid item xs={12} md={3}>
+                            <Stack
+                                direction={isSmallScreen ? 'column' : 'row'}
+                                spacing={2}
+                                alignItems="center"
+                                justifyContent="flex-end"
+                            >
                                 {data ?
                                     <>
                                         <ExportToExcel headers={headers} fileName={`Doctor Specialization`} data={templateData} />
                                     </> : <></>}
-                            </Box>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Box style={{ float: 'right' }}>
                                 <AddDoctorSpecialization />
-                            </Box>
+                            </Stack>
                         </Grid>
                     </Grid>
                 </Box>

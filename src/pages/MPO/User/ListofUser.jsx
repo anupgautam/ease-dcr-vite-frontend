@@ -1,19 +1,15 @@
-import React from 'react'
-import {
-    Container,
-    Grid,
-    Box,
-} from '@mui/material';
-import Cookies from 'js-cookie'
+import React from 'react';
+import { Container, Grid, Box, Stack, useMediaQuery, useTheme } from '@mui/material';
+import Cookies from 'js-cookie';
 import UserCount from './UserCount';
 import UserSearch from './UserSearch';
 import AddUser from './AddUser';
-import {
-    useGetAllDefaultUsersQuery,
-} from '@/api/CompanySlices/companyUserRoleSlice';
+import { useGetAllDefaultUsersQuery } from '@/api/CompanySlices/companyUserRoleSlice';
 import ExportToExcel from '@/reusable/utils/exportSheet';
 
 const ListofUser = () => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const { data } = useGetAllDefaultUsersQuery({ company_name: Cookies.get('company_id') });
 
     const headers = [
@@ -38,41 +34,37 @@ const ListofUser = () => {
         head_quarter: values?.company_area?.company_area,
         phone_number: values?.user_name?.phone_number,
         role_name: values?.role_name?.role_name_value
-    }))
-
-
-
+    }));
 
     return (
         <>
             <Container>
                 <Box style={{ marginBottom: '30px' }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={9}>
+                        <Grid item xs={12} md={9}>
                             <Box style={{ marginTop: '10px' }}>
                                 <UserCount />
                             </Box>
                         </Grid>
-                        <Grid item xs={2}>
-                            <Box style={{ float: 'right' }}>
-                                {data ?
-                                    <>
-                                        <ExportToExcel headers={headers} fileName={'UserLists'} data={templateData} />
-                                    </> : <></>}
-                            </Box>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Box style={{ float: 'right' }}>
+                        <Grid item xs={12} md={3}>
+                            <Stack
+                                direction={isSmallScreen ? 'column' : 'row'}
+                                spacing={2}
+                                alignItems="center"
+                                justifyContent="flex-end"
+                            >
+                                {data && (
+                                    <ExportToExcel headers={headers} fileName={'UserLists'} data={templateData} />
+                                )}
                                 <AddUser />
-                            </Box>
+                            </Stack>
                         </Grid>
                     </Grid>
                 </Box>
                 <UserSearch />
             </Container>
         </>
-    )
-}
-
+    );
+};
 
 export default ListofUser;

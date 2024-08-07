@@ -15,12 +15,15 @@ import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "../../../reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 import Cookies from 'js-cookie'
-import NepaliDatePicker, {
-    NepaliDateConverter,
+import {
+    NepaliDateConverter
 } from "react-nepali-date-picker-lite";
+
+import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useCreateApplicationsMutation } from '../../../api/ApplicationSlices/ApplicationSlices';
 
 const AddApplication = () => {
+
     const today = NepaliDateConverter.getNepaliDate();
     const [selectedDates, setSelectedDates] = useState(today);
     const [selectedDatesTo, setSelectedDatesTo] = useState(today);
@@ -147,19 +150,27 @@ const AddApplication = () => {
                     </Box>
                     <Box marginBottom={0}>
                         <label htmlFor="date" style={{ fontSize: '13px', color: "grey", fontWeight: '600', marginBottom: "15px" }}>Leave From*</label><br />
-                        <NepaliDatePicker
+                        {/* <NepaliDatePicker
                             value={selectedDates}
                             onSelect={setSelectedDates}
                             renderInput={(props) => <input className='input-datepicker-fields1' value={selectedDates} type="text" {...props} />}
-                        />
+                        /> */}
+                        <NepaliDatePicker
+                            value={selectedDates}
+                            format="YYYY-MM-DD"
+                            onChange={(value) => setSelectedDates(value)} />
                     </Box>
                     <Box marginBottom={2}>
                         <label htmlFor="date" style={{ fontSize: '13px', color: "grey", fontWeight: '600', marginBottom: "15px" }}>Leave To*</label><br />
-                        <NepaliDatePicker
+                        {/* <NepaliDatePicker
                             value={selectedDatesTo}
                             onSelect={setSelectedDatesTo}
                             renderInput={(props) => <input className='input-datepicker-fields1' value={selectedDatesTo} type="text" {...props} />}
-                        />
+                        /> */}
+                        <NepaliDatePicker
+                            value={selectedDatesTo}
+                            format="YYYY-MM-DD"
+                            onChange={(value) => setSelectedDatesTo(value)} />
                     </Box>
                     <Box marginBottom={2}>
                         {/* <Controls.Input

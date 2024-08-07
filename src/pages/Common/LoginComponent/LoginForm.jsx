@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // redux
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../../../api/RTK query/authSlice';
 import { useLoginUserMutation } from '../../../api/MPOSlices/UserSlice';
 // @mui
-import { Stack, Checkbox, Box, Grid, } from '@mui/material';
+import { Stack, Checkbox, Box, Grid, Link } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useForm } from '../../../reusable/forms/useForm';
 import { returnValidation } from '../../../validation';
@@ -183,10 +183,21 @@ const LoginFormInputs = () => {
                     </Box>
                 </Stack>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-                    <Checkbox defaultChecked name="remember" label="Remember me" />
+                    <Checkbox name="remember" label="Remember me" />
                     <label style={{ textAlign: 'start', flex: 1, fontWeight: "600", marginLeft: "4px", fontSize: "16px" }}>Remember me</label>
-                    <Link to="/forgetpassword" variant="subtitle2" underline="hover">
-                        Forgot password?
+                    <Link
+                        component={RouterLink}
+                        to="/forgetpassword"
+                        variant="subtitle3"
+                        sx={{
+                            textDecoration: 'none',
+                            color: '#007bff',
+                            '&:hover': {
+                                color: '#0056b3',
+                            }
+                        }}
+                    >
+                        Forgot Password?
                     </Link>
                 </Stack>
                 <LoadingButton className="loginbutton" fullWidth size="large" type="submit" variant="contained" onClick={handleSubmission} >

@@ -1,7 +1,11 @@
 import React from 'react'
 import {
+    Stack,
     Container,
-    Grid, Box
+    Grid,
+    Box,
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 
 import FilterMPOAreas from './FilterMPOAreas';
@@ -10,24 +14,30 @@ import AddMpoArea from './addMpoArea';
 import TransferMpoArea from './transferMpoArea';
 
 const ListOfLockedUsers = () => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     return (
         <>
             <Container>
-                <Grid container spacing={4}>
-                    <Grid item xs={10}>
-                        <MPOAreasCount />
+                <Box style={{ marginBottom: '30px' }}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={10} md={9}>
+                            <MPOAreasCount />
+                        </Grid>
+
+                        <Grid item xs={12} md={3}>
+                            <Stack
+                                direction={isSmallScreen ? 'column' : 'row'}
+                                spacing={2}
+                                alignItems="center"
+                                justifyContent="flex-end"
+                            >
+                                <TransferMpoArea />
+                                <AddMpoArea />
+                            </Stack>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={1}>
-                        <Box style={{ float: "right", marginBottom: "15px" }}>
-                            <TransferMpoArea />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Box style={{ float: "right", marginBottom: "15px" }}>
-                            <AddMpoArea />
-                        </Box>
-                    </Grid>
-                </Grid>
+                </Box>
                 <FilterMPOAreas />
             </Container>
         </>

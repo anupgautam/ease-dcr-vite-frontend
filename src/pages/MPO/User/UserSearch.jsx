@@ -92,7 +92,7 @@ const UserSearch = () => {
     const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: roleSelect === null ? undefined : roleSelect });
 
     useEffect(() => {
-        let dataList = []
+        let dataList = [{ id: '', title: 'None' }]
         if (roleList?.data) {
             roleList.data.map((key) => {
                 dataList.push({ id: key.id, title: key.role_name_value })
@@ -100,9 +100,7 @@ const UserSearch = () => {
         }
         setCompanyRoleList(dataList);
     }, [roleList])
-    // 
-
-
+    
     const [searchResults, setSearchResults] = useState({ search: "" });
     const [searchUser, results] = useSearchCompanyUserRolesMutation();
 
@@ -126,7 +124,8 @@ const UserSearch = () => {
     }
 
     const handleRoleSelect = useCallback((e, value) => {
-        setRoleSelect(value.id === null ? "" : value.id);
+        // setRoleSelect(value.id === null ? "" : value.id);
+        setRoleSelect(value?.id || '');
     }, [])
     const handleClear = useCallback(() => {
         setRoleSelect('');

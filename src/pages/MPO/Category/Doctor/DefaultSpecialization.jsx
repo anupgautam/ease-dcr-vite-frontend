@@ -18,7 +18,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import Iconify from '@/components/iconify/Iconify';
 import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';

@@ -157,7 +157,7 @@ const FilteredApplication = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             {
                                 Cookies.get('user_role') === "admin" &&
                                 <Autocomplete

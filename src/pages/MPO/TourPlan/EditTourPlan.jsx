@@ -314,6 +314,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                 onChange={(value) => setDateData(value)}
                                 options={{ calenderLocale: "en", valueLocale: "en" }}
                             /> */}
+                            <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Select the Date*</label><br />
                             <NepaliDatePicker value={dateData} format="YYYY-MM-DD" onChange={(value) => setDateData(value)} />
                         </Box>
                         <Box marginBottom={2}>
