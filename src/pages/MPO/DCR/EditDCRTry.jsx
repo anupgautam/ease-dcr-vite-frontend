@@ -285,14 +285,14 @@ const EditDCR = ({ idharu, onClose }) => {
 
                     <Box marginBottom={4}>
                         <InputLabel>{"date"}</InputLabel>
-                        <Controls.DatePicker
+                        {/* <Controls.DatePicker
                             name="date"
                             showIcon
                             selectedDate={values.date}
                             onChange={handleInputChange}
                             dateFormat="yyyy-MM-dd"
                             placeholderText="Select the Date"
-                        />
+                        /> */}
                     </Box>
                     <Box marginBottom={4}>
                         <Controls.MultiSelect

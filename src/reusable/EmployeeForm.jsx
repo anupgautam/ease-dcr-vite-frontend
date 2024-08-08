@@ -144,12 +144,12 @@ export default function EmployeeForm() {
                         options={employeeService.getDivisionCollection()}
                         error={errors.departmentId}
                     />
-                    <Controls.DatePicker
+                    {/* <Controls.DatePicker
                         name="hireDate"
                         label="Hire Date"
                         value={values.hireDate}
                         onChange={handleInputChange}
-                    />
+                    /> */}
                     <Controls.Checkbox
                         name="isPermanent"
                         label="Permanent Employee"
