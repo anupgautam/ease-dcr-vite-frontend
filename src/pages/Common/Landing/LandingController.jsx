@@ -5,6 +5,7 @@ import AboutUs from "../../new-landing/AboutUs";
 import FooterTwo from "../../new-landing/FooterTwo";
 import NewFeatures from "../../new-landing/NewFeatures";
 import NewPricing from "../../new-landing/NewPricing";
+import NewTestimonials from "../../new-landing/NewTestimonials";
 
 const LandingController = () => {
   return (
@@ -14,6 +15,7 @@ const LandingController = () => {
       <NewFeatures />
       <AboutUs />
       <NewPricing />
+      <NewTestimonials />
       <FooterTwo />
     </div>
   );

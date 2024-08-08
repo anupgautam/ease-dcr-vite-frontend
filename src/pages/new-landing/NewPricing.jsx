@@ -2,11 +2,20 @@ import { CheckCircle, Star } from "@material-ui/icons";
 import { Diamond } from "@mui/icons-material";
 import React from "react";
 
-const icons = {
-  Basic: <CheckCircle className="w-6 h-6 mr-2 text-[#66b3c5]" />,
-  Premium: <Star className="w-6 h-6 mr-2 text-[#f38b23]" />,
-  Enterprise: <Diamond className="w-6 h-6 mr-2 text-[#f15050]" />,
-};
+const features = [
+  "Tour Plan",
+  "Daily Calls Report",
+  "Expense Management",
+  "Sales Report",
+  "Leave Application",
+  "Missed Call",
+  "Unplanned Tour",
+  "Order Product",
+  "Target",
+  "Real time chat",
+  "Real time notification",
+  "24/7 Months support",
+];
 
 const NewPricing = () => {
   const Tick = () => (
@@ -57,58 +66,30 @@ const NewPricing = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-10">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
             {/* Basic Plan */}
             <div className="bg-black rounded-2xl shadow-xl transform hover:scale-105 transition-transform relative">
               <div className="customRibbionWrapepr">
-                <div className="customRibbon bg-[#66b3c5] text-white text-sm font-semibold rounded-bl-lg flex items-center shadow-lg">
-                  {icons.Basic}
-                </div>
+                <div className="customRibbon bg-[#66b3c5] text-white text-sm font-semibold rounded-bl-lg flex items-center shadow-lg"></div>
               </div>
-              <div className="p-8 text-white mt-4">
-                <span className="text-[#66b3c5]">Basic</span>
-                <h4 className="text-xl font-semibold">
-                  $4.99<span className="text-sm">/month</span>
-                </h4>
+              <div className="p-8 text-white mt-4 text-center">
+                <span className="text-[#66b3c5] text-2xl font-bold uppercase ">
+                  Quarterly
+                </span>
+
                 <ul className="mt-10 space-y-4">
-                  <li className="flex items-center">
-                    <Tick />
-                    Tour Plan
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Daily Calls Report
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Expense Management
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Sales Report
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Leave Application
-                  </li>
-                  <li className="flex items-center">
-                    <Cross />
-                    Missed Call
-                  </li>
-                  <li className="flex items-center">
-                    <Cross />
-                    Unplanned Tour
-                  </li>
-                  <li className="flex items-center">
-                    <Cross />
-                    Order Product
-                  </li>
+                  {features.map((feature, index) => (
+                    <li key={index} className="flex items-center">
+                      <Tick />
+                      {feature}
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="p-8 text-center">
                 <a
                   href="#"
-                  className="inline-block text-black bg-[#1d383a] font-semibold rounded-full py-3 px-6 hover:bg-[#66b3c5] transition"
+                  className="inline-block text-black bg-[#66b3c5] font-semibold rounded-full py-3 px-6"
                 >
                   Order Now
                 </a>
@@ -120,55 +101,28 @@ const NewPricing = () => {
 
             <div className="bg-black rounded-2xl shadow-xl transform hover:scale-105 transition-transform relative ">
               <div className="customRibbionWrapepr">
-                <div className="customRibbon bg-[#f38b23] text-white text-sm font-semibold rounded-bl-lg flex items-center shadow-lg">
-                  {icons.Premium}
-                </div>
+                <div className="customRibbon bg-[#f38b23] text-white text-sm font-semibold rounded-bl-lg flex items-center shadow-lg"></div>
               </div>
-
-              <div className="p-8 text-white mt-4">
-                <span className="text-[#f38b23]">Premium</span>
-                <h4 className="text-xl font-semibold">
-                  $9.99<span className="text-sm">/month</span>
-                </h4>
+              {/* <div className="absolute top-0 right-0 bg-yellow-500 text-white text-xs font-bold px-8 py-1 p-8 rotate-90  uppercase font-public_sans">
+                Popular
+              </div> */}
+              <div className="p-8 text-white mt-4 text-center">
+                <span className="text-[#f38b23] text-2xl font-bold uppercase ">
+                  Semi Yearly
+                </span>
                 <ul className="mt-10 space-y-4">
-                  <li className="flex items-center">
-                    <Tick />
-                    Tour Plan
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Daily Calls Report
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Expense Management
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Sales Report
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Leave Application
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Missed Call
-                  </li>
-                  <li className="flex items-center">
-                    <Cross />
-                    Unplanned Tour
-                  </li>
-                  <li className="flex items-center">
-                    <Cross />
-                    Order Product
-                  </li>
+                  {features.map((feature, index) => (
+                    <li key={index} className="flex items-center ">
+                      <Tick />
+                      {feature}
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="p-8 text-center">
                 <a
                   href="#"
-                  className="inline-block text-black bg-[#311a04] font-semibold rounded-full py-3 px-6 hover:bg-[#f38b23] transition"
+                  className="inline-block text-black bg-[#f38b23] font-semibold rounded-full py-3 px-6"
                 >
                   Order Now
                 </a>
@@ -181,55 +135,26 @@ const NewPricing = () => {
             {/* Enterprise Plan */}
             <div className="bg-black rounded-2xl shadow-xl transform hover:scale-105 transition-transform relative ">
               <div className="customRibbionWrapepr">
-                <div className="customRibbon bg-[#f15050] text-white text-sm font-semibold rounded-bl-lg flex items-center shadow-lg">
-                  {icons.Enterprise}
-                </div>
+                <div className="customRibbon bg-[#f15050] text-white text-sm font-semibold rounded-bl-lg flex items-center shadow-lg"></div>
               </div>
 
-              <div className="p-8 text-white mt-4">
-                <span className="text-[#f15050]">Enterprise</span>
-                <h4 className="text-xl font-semibold">
-                  $15.99<span className="text-sm">/month</span>
-                </h4>
+              <div className="p-8 text-white mt-4 text-center">
+                <span className="text-[#f15050] text-2xl font-bold uppercase ">
+                  Yearly
+                </span>
                 <ul className="mt-10 space-y-4">
-                  <li className="flex items-center">
-                    <Tick />
-                    Tour Plan
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Daily Calls Report
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Expense Management
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Sales Report
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Leave Application
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Missed Call
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Unplanned Tour
-                  </li>
-                  <li className="flex items-center">
-                    <Tick />
-                    Order Product
-                  </li>
+                  {features.map((feature, index) => (
+                    <li key={index} className="flex items-center">
+                      <Tick />
+                      {feature}
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="p-8 text-center">
                 <a
                   href="#"
-                  className="inline-block text-black bg-[#350c0e] font-semibold rounded-full py-3 px-6 hover:bg-[#f15050] transition"
+                  className="inline-block text-black bg-[#f15050] font-semibold rounded-full py-3 px-6 "
                 >
                   Order Now
                 </a>
