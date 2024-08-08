@@ -38,7 +38,7 @@ const NewFeature = () => {
           <h1 className="text-4xl md:text-5xl font-bold mt-2 text-gray-800">
             Features of Ease SFA
           </h1>
-          <p className="text-xs pt-3 text-gray-400">
+          <p className="mt-4 max-w-2xl mx-auto text-gray-600">
             All our features are the best in Sales Management to date,
             <br />
             learn now to be more confident

@@ -643,7 +643,79 @@ input[type="file"] {
   height: 80px;
   width: 80px;
 }
+.customRibbionWrapepr {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+}
+.customRibbionWrapepr:before {
+  content: "";
+  height: 21px;
+  width: 19px;
+  display: block;
+  position: absolute;
+  background-color: #000;
+  left: 0px;
+  top: 0;
+  transform: rotate(-90deg);
+}
+.customRibbionWrapepr:after {
+  content: "";
+  height: 10px;
+  width: 10px;
+  display: block;
+  position: absolute;
+  background-color: #000;
+  right: 1px;
+  bottom: -3px;
+  transform: rotate(0deg);
+  z-index: -1;
+}
+.customRibbon {
+  clip-path: polygon(0 0, 100% 100%, 99% 0);
+  height: 100px;
+  width: 120px;
+}
 
+/* Small devices (phones, less than 768px) */
+@media (max-width: 767px) {
+  .customRibbionWrapepr {
+    top: -5px;
+    right: -4px;
+  }
+  .customRibbionWrapepr:before {
+    height: 15px;
+    width: 14px;
+  }
+  .customRibbionWrapepr:after {
+    height: 7px;
+    width: 7px;
+  }
+  .customRibbon {
+    height: 60px;
+    width: 80px;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .customRibbionWrapepr {
+    top: -6px;
+    right: -5px;
+  }
+  .customRibbionWrapepr:before {
+    height: 18px;
+    width: 16px;
+  }
+  .customRibbionWrapepr:after {
+    height: 8px;
+    width: 8px;
+  }
+  .customRibbon {
+    height: 80px;
+    width: 100px;
+  }
+}
 /* .sidebar_app {
   display: none;
 }
