@@ -1,6 +1,5 @@
-import { Box, Typography, Grid, Card } from "@material-ui/core";
+import { Slider,Box, Typography, Grid, Card } from "@mui/material";
 import React from "react";
-import Slider from '@mui/material/Slider';
 import { BiFilterAlt } from "react-icons/bi";
 
 const RentFilter = () =>{

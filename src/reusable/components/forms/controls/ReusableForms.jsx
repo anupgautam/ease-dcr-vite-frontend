@@ -5,9 +5,8 @@ import { FaPlus } from "react-icons/fa";
 import { useEffect } from "react";
 import Controls from "./Controls";
 import useDebounce from "../utils/debounce";
-import { Box } from "@material-ui/core";
 import BlobToBase64 from "../utils/blobToBase64";
-import { Grid, Tooltip } from "@mui/material";
+import { Grid, Tooltip, Box } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
@@ -64,8 +63,8 @@ const ReusableForms = ({
     if (data.data) {
 
       setOriginalData(data.data);
-      
-      
+
+
       setThisData(data.data[fieldName]);
     }
   }, [data.data]);

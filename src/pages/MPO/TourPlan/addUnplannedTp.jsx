@@ -1,4 +1,4 @@
-import { Close } from "@material-ui/icons";
+import { Close } from "@mui/icons-material";
 import { Box, Button, Drawer, Grid, IconButton, Stack, Typography } from "@mui/material";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Iconify from "@/components/iconify/Iconify";
@@ -157,7 +157,7 @@ const AddUnplannedTp = () => {
     return (
         <>
             <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={toggleDrawer} >
-                Add Uplanned TP
+                Add Unplanned TP
             </Button>
             <Drawer
                 anchor="right"

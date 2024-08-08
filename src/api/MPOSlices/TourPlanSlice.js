@@ -19,8 +19,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                 url: `mpo/company-mpo-tour-plan/?company_name=${page.id}&page=${page.page}`,
                 method: 'GET'
             }),
-            providesTags:
-                ['TourPlan']
+            providesTags: ['Tourplan']
         }),
 
         getMpoArea: builder.query({

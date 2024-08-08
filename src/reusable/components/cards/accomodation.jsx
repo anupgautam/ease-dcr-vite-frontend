@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { Box, Typography, Grid,} from "@mui/material";
-import { Card } from "@material-ui/core";
+import { Card } from "@mui/material";
 import {BsChevronDown} from "react-icons/bs"
 import SimpleCarousel from "../Carousel/simplecarousel";
 import Adventure2 from "../../static/images/adventure.avif"

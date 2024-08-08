@@ -11,7 +11,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: value,
                 };
             },
-            invalidatesTags: ['PostTourplan'],
+            invalidatesTags: ['Tourplan'],
         }),
         addHigherTourPlan: builder.mutation({
             query: value => {
@@ -21,7 +21,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: value,
                 }
             },
-            invalidatesTags: ['PostTourplan'],
+            invalidatesTags: ['Tourplan'],
         }),
         getHigherOrderTourPlanUsingId: builder.mutation({
             query: value => {

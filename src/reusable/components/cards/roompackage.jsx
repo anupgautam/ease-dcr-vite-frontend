@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Grid, Card } from "@material-ui/core";
+import { Box, Typography, Grid, Card } from "@mui/material";
 import Room from "../../static/images/room.jpeg"
 import {FaBed} from "react-icons/fa";
 import { MdOutlineViewModule, MdDone} from "react-icons/md"

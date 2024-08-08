@@ -299,47 +299,6 @@ const FilteredTourPlan = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {/* <Grid item md={2.5}>
-                            {
-                                Cookies.get('user_role') === 'admin' &&
-                                <FormControl>
-                                    <Autocomplete
-                                        options={companyRoleList}
-                                        getOptionLabel={(option) => option.title}
-                                        onChange={handleRoleSelect}
-                                        renderInput={(params) => (
-                                            <TextField {...params} label="Company Roles" />
-                                        )}
-                                         renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
-                                    />
-                                </FormControl>
-                            }
-                        </Grid> */}
-                        {/* <Grid item md={2.5}>
-                            {
-                                Cookies.get('user_role') === 'admin' &&
-                                <FormControl>
-                                    <Autocomplete
-                                        options={companyUserList}
-                                        value={selectedOption}
-                                        getOptionLabel={(option) => option.title}
-                                        onChange={handleOptionChange}
-                                        renderInput={(params) => (
-                                            <TextField {...params} label="User" />
-                                        )}
-                                         renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
-                                    />
-                                </FormControl>
-                            }
-                        </Grid> */}
                         <Grid item xs={5.5}>
                         </Grid>
                         {
@@ -348,14 +307,6 @@ const FilteredTourPlan = () => {
                                 <ApprovedTP mpoName={id} role={role} />
                             </Grid>
                         }
-                        {/* <Grid item xs={2.85}>
-                            <NepaliDatePicker
-                                inputClassName="form-control-design"
-                                value={dateData}
-                                onChange={(value) => setDateData(value)}
-                                options={{ calenderLocale: "en", valueLocale: "en" }}
-                            />
-                        </Grid> */}
                     </Grid>
                 </Box>
                 <>

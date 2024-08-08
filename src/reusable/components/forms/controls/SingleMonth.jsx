@@ -7,7 +7,7 @@ import {
     FormControl,
     InputLabel,
     FormHelperText,
-} from "@material-ui/core";
+} from "@mui/material";
 
 const SingleMonth = (props) => {
     const { name, label, defaultValue, onChange, error } = props;

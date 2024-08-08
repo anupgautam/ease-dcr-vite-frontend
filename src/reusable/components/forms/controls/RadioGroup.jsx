@@ -5,7 +5,7 @@ import {
   RadioGroup as MuiRadioGroup,
   FormControlLabel,
   Radio,
-} from "@material-ui/core";
+} from "@mui/material";
 
 export default function RadioGroup(props) {
   const { name, label, value, onChange, items } = props;
@@ -19,7 +19,7 @@ export default function RadioGroup(props) {
           color: "black",
           marginTop: "5px",
           marginBottom: "10px",
-          textAlign:'start'
+          textAlign: 'start'
         }}
       >
         {label}

@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Box, Grid, Typography } from "@mui/material";
 import RoundButton from "@/reusable/components/button/roundbutton";
 import { FaPlus } from "react-icons/fa";
 import React, { useState, useCallback, useMemo } from "react";

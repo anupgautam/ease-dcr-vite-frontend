@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Grid, Box, Typography, Button } from '@mui/material';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const File = ({ setFile }) => {
     const [imgSrc, setImgSrc] = useState("");

@@ -53,7 +53,7 @@ export default function LoginPage() {
                     }}
                 /> */}
 
-                <img src="/assets/images/EASE_SFA/ease.png" height='120px' width='120px' alt="Ease SFA Logo" />
+                <img src="/assets/images/EASE_SFA/ease.png" className='h-16' alt="Ease SFA Logo" />
 
                 {mdUp && (
                     <StyledSection>

@@ -1,6 +1,5 @@
 import React from "react";
-import { Box,Typography, Card, Grid  } from "@material-ui/core";
-import Slider from '@mui/material/Slider';
+import { Slider,Box,Typography, Card, Grid  } from "@mui/material";
 import { BiFilterAlt } from "react-icons/bi";
 
 const TravelAdventureFilter = () =>{

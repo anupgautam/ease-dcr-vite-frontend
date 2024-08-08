@@ -10,7 +10,7 @@ import {
     MenuItem,
     FormHelperText,
     Box
-} from "@material-ui/core";
+} from "@mui/material";
 
 const MultiMonth = (propsharu) => {
 
@@ -35,15 +35,15 @@ const MultiMonth = (propsharu) => {
         <FormControl variant="outlined" {...(error && { error: true })}>
             <InputLabel>{label}</InputLabel>
 
-                <DatePicker
+            <DatePicker
                 multiple
                 onlyMonthPicker
                 name={name}
                 label={label}
                 values={value}
                 // onChange={dataValues}
-                onChange={(e)=>dataValues(e,name)}
-                sort    
+                onChange={(e) => dataValues(e, name)}
+                sort
                 plugins={[
                     <DatePanel
                         // position={isRTL ? "left" : "right"}

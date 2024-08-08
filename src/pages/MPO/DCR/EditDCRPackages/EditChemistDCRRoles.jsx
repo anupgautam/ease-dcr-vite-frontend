@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Box, Grid, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import ReusableFormsSelect from "@/reusable/components/forms/controls/ReusableFormSelect";
 import {

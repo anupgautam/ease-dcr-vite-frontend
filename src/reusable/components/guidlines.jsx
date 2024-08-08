@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Card, Typography } from "@material-ui/core";
+import { Box, Card, Typography } from "@mui/material";
 import Safety from "../static/pack up/safety.png"
 import { Link } from "react-router-dom";
 import {MdCancel} from "react-icons/md"

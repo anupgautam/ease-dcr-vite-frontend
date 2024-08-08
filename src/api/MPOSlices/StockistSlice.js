@@ -18,202 +18,195 @@ export const StockistSlice = apiSlice.injectEndpoints({
                 url: `stockist/company-stockist/?company_name=${page.id}&page=${page.page}&stockist_name__stockist_territory=${page.company_area}`,
                 method: 'GET'
             }),
-            providesTags: (result, error, arg) =>
-                [
-                    'Stockist'
-                ]
+            providesTags: ['Stockist']
         }),
+
         getAllAssignStockists: builder.query({
-            query: (page) => ({
-                url: `stockist/company-stockist-mpo/?company_name=${page.id}&page=${page.page}&mpo_name=${page.mpo_name}&stockist_name__stockist_name__stockist_territory=${page.company_area}`,
-                method: 'GET'
+                query: (page) => ({
+                    url: `stockist/company-stockist-mpo/?company_name=${page.id}&page=${page.page}&mpo_name=${page.mpo_name}&stockist_name__stockist_name__stockist_territory=${page.company_area}`,
+                    method: 'GET'
+                }),
+                providesTags: (result, error, arg) =>
+                    [
+                        'Stockist'
+                    ]
             }),
-            providesTags: (result, error, arg) =>
-                [
-                    'Stockist'
-                ]
-        }),
 
-        //! GET all the stockist no paginate
-        getAllStockistsNoPaginate: builder.query({
-            query: () => ({
-                url: `stockist/company-stockist`,
-                method: 'GET'
+            //! GET all the stockist no paginate
+            getAllStockistsNoPaginate: builder.query({
+                query: () => ({
+                    url: `stockist/company-stockist`,
+                    method: 'GET'
+                }),
+                providesTags: (result, error, arg) =>
+                    [
+                        'Stockist'
+                    ]
             }),
-            providesTags: (result, error, arg) =>
-                [
-                    'Stockist'
-                ]
-        }),
 
-        getAllStockistsWithoutPagination: builder.query({
-            query: (page) =>
-                    ({
-                        url: `stockist/company-stockist-with-out-pagination/?company_name=${page.company_name}&stockist_name__stockist_territory=${page.company_area}`,
-                        method: 'GET'
-                    }),
-            providesTags: ['Stockist']
-        }),
-
-        //! GET stockist by id
-        getStockistsById: builder.query({
-            query: (id) => ({
-                url: `stockist/company-stockist/${id}/`,
-                method: 'GET'
+            getAllStockistsWithoutPagination: builder.query({
+                query: (page) =>
+                ({
+                    url: `stockist/company-stockist-with-out-pagination/?company_name=${page.company_name}&stockist_name__stockist_territory=${page.company_area}`,
+                    method: 'GET'
+                }),
+                providesTags: ['Stockist']
             }),
-            providesTags: ['Stockist']
-        }),
-        getAssignStockistsById: builder.query({
-            query: (id) => ({
-                url: `stockist/company-stockist-mpo/${id}/`,
-                method: 'GET'
+
+            //! GET stockist by id
+            getStockistsById: builder.query({
+                query: (id) => ({
+                    url: `stockist/company-stockist/${id}/`,
+                    method: 'GET'
+                }),
+                providesTags: ['Stockist']
             }),
-            providesTags: ['Stockist']
-        }),
-
-        getStockistsByCompanyArea: builder.query({
-            query: (id) => ({
-                url: `stockist/company-stockist/?company_name=${id.company_name}&stockist_name__stockist_territory=${id.company_area}`,
-                method: 'GET'
+            getAssignStockistsById: builder.query({
+                query: (id) => ({
+                    url: `stockist/company-stockist-mpo/${id}/`,
+                    method: 'GET'
+                }),
+                providesTags: ['Stockist']
             }),
-            providesTags: ['Stockist']
-        }),
 
-        //! DELETE stockist by id
-        deleteStockistsById: builder.mutation({
-            query: (id) => ({
-                url: `stockist/company-stockist/${id}/`,
-                method: 'DELETE',
-                body: id
+            getStockistsByCompanyArea: builder.query({
+                query: (id) => ({
+                    url: `stockist/company-stockist/?company_name=${id.company_name}&stockist_name__stockist_territory=${id.company_area}`,
+                    method: 'GET'
+                }),
+                providesTags: ['Stockist']
             }),
-            invalidatesTags: ['Stockist']
-        }),
 
-        deleteStockistsAssignById: builder.mutation({
-            query: (id) => ({
-                url: `stockist/company-stockist-mpo/${id}/`,
-                method: 'DELETE',
-                body: id
+            //! DELETE stockist by id
+            deleteStockistsById: builder.mutation({
+                query: (id) => ({
+                    url: `stockist/company-stockist/${id}/`,
+                    method: 'DELETE',
+                    body: id
+                }),
+                invalidatesTags: ['Stockist']
             }),
-            invalidatesTags: ['Stockist']
-        }),
 
-        //! POST stockist   
-        createStockists: builder.mutation({
-            query: (newStockist) => {
-                newStockist.company_id = Cookies.get("company_id")
-                return {
-                    url: `stockist/company-stockist/create_stockist/`,
-                    method: 'POST',
-                    body: newStockist,
-                }
-            },
-            invalidatesTags: ['Stockist']
-        }),
+            deleteStockistsAssignById: builder.mutation({
+                query: (id) => ({
+                    url: `stockist/company-stockist-mpo/${id}/`,
+                    method: 'DELETE',
+                    body: id
+                }),
+                invalidatesTags: ['Stockist']
+            }),
 
-        createAssignStockists: builder.mutation({
-            query: (newStockist) => {
-                return {
-                    url: `stockist/company-stockist-mpo/`,
-                    method: 'POST',
-                    body: newStockist,
-                }
-            },
-            invalidatesTags: ['Stockist']
-        }),
-
-
-        //! Search Stockist wala post
-        searchStockists: builder.mutation({
-            query: (searchStockist) => {
-                // 
-                return {
-                    url: 'stockist/company-stockist/search_stockist/',
-                    method: 'POST',
-                    body: searchStockist,
-                    headers: {
-                        'Content-type': 'application/json; charset = UTF-8',
+            //! POST stockist   
+            createStockists: builder.mutation({
+                query: (newStockist) => {
+                    newStockist.company_id = Cookies.get("company_id")
+                    return {
+                        url: `stockist/company-stockist/create_stockist/`,
+                        method: 'POST',
+                        body: newStockist,
                     }
-                }
-            },
-            invalidatesTags: ['Stockist']
-        }),
+                },
+                invalidatesTags: ['Stockist']
+            }),
 
-        //! Update stockist data by id
-        updateStockists: builder.mutation({
-            query: (updateStockist) => {
-                return {
-                    url: `stockist/company-stockist/${updateStockist.get('id')}/update_stockist/`,
-                    method: 'PUT',
-                    body: updateStockist
-                }
-            },
-            invalidatesTags: ['Stockist'],
-            async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-                const patchResult = dispatch(
-                    apiSlice.util.updateQueryData('getAllStockists', id, (draft) => {
-                        Object.assign(draft, patch)
-                    })
-                )
-                try {
-                    await queryFulfilled
-                } catch {
-                    patchResult.undo()
+            createAssignStockists: builder.mutation({
+                query: (newStockist) => {
+                    return {
+                        url: `stockist/company-stockist-mpo/`,
+                        method: 'POST',
+                        body: newStockist,
+                    }
+                },
+                invalidatesTags: ['Stockist']
+            }),
 
-                    /**
-                     * Alternatively, on failure you can invalidate the corresponding cache tags
-                     * to trigger a re-fetch:
-                     * dispatch(api.util.invalidateTags(['Post']))
-                     */
-                }
-            },
-        }),
 
-        updateAssignStockists: builder.mutation({
-            query: (updateStockist) => {
-                return {
-                    url: `stockist/company-stockist-mpo/${updateStockist.id}/`,
-                    method: 'PATCH',
-                    body: updateStockist.data
-                }
-            },
-        }),
+            //! Search Stockist wala post
+            searchStockists: builder.mutation({
+                query: (searchStockist) => {
+                    // 
+                    return {
+                        url: 'stockist/company-stockist/search_stockist/',
+                        method: 'POST',
+                        body: searchStockist,
+                        headers: {
+                            'Content-type': 'application/json; charset = UTF-8',
+                        }
+                    }
+                },
+                invalidatesTags: ['Stockist']
+            }),
 
+            //! Update stockist data by id
+            updateStockists: builder.mutation({
+                query: (updateStockist) => {
+                    return {
+                        url: `stockist/company-stockist/${updateStockist.get('id')}/update_stockist/`,
+                        method: 'PUT',
+                        body: updateStockist
+                    }
+                },
+                invalidatesTags: ['Stockist'],
+                async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+                    const patchResult = dispatch(
+                        apiSlice.util.updateQueryData('getAllStockists', id, (draft) => {
+                            Object.assign(draft, patch)
+                        })
+                    )
+                    try {
+                        await queryFulfilled
+                    } catch {
+                        patchResult.undo()
+                    }
+                },
+            }),
+
+            updateAssignStockists: builder.mutation({
+                query: (updateStockist) => {
+                    return {
+                        url: `stockist/company-stockist-mpo/${updateStockist.id}/`,
+                        method: 'PATCH',
+                        body: updateStockist.data
+                    }
+                },
+                invalidatesTags: ['Stockist'],
+            }),
+
+        })
     })
-})
 
 export const {
-    useGetAllStockistsQuery,
-    useGetAllStockistsNoPaginateQuery,
-    useGetStockistsByIdQuery,
-    useDeleteStockistsByIdMutation,
-    useCreateStockistsMutation,
-    useUpdateStockistsMutation,
-    useSearchStockistsMutation,
-    useGetAllStockistsWithoutPaginationQuery,
-    useGetStockistsByCompanyAreaQuery,
-    useGetAllAssignStockistsQuery,
-    useCreateAssignStockistsMutation,
-    useDeleteStockistsAssignByIdMutation,
-    useUpdateAssignStockistsMutation,
-    useGetAssignStockistsByIdQuery,
-} = StockistSlice
+        useGetAllStockistsQuery,
+        useGetAllStockistsNoPaginateQuery,
+        useGetStockistsByIdQuery,
+        useDeleteStockistsByIdMutation,
+        useCreateStockistsMutation,
+        useUpdateStockistsMutation,
+        useSearchStockistsMutation,
+        useGetAllStockistsWithoutPaginationQuery,
+        useGetStockistsByCompanyAreaQuery,
+        useGetAllAssignStockistsQuery,
+        useCreateAssignStockistsMutation,
+        useDeleteStockistsAssignByIdMutation,
+        useUpdateAssignStockistsMutation,
+        useGetAssignStockistsByIdQuery,
+    } = StockistSlice
 
 //! returns the query result object
 export const selectStockistsResult = StockistSlice.endpoints.getAllStockists.select()
 
 //!Creates memoized selector
 const selectStockistsData = createSelector(
-    selectStockistsResult,
-    stockistResult => stockistResult.data // normalized state object with ids & entities
-)
+        selectStockistsResult,
+        stockistResult => stockistResult.data // normalized state object with ids & entities
+    )
 
 //!getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
-    selectAll: selectAllStockists,
-    selectById: selectStockistsById,
-    // Pass in a selector that returns the posts slice of state
-} = stockistAdapter.getSelectors(state => selectStockistsData(state) ?? initialState)
+        selectAll: selectAllStockists,
+        selectById: selectStockistsById,
+        // Pass in a selector that returns the posts slice of state
+    } = stockistAdapter.getSelectors(state => selectStockistsData(state) ?? initialState)
 
 
 
