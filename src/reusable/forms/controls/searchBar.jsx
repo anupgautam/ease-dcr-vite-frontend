@@ -1,23 +1,29 @@
-import React from "react";
-import SearchBar from "material-ui-search-bar";
+import React from 'react';
+import { TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
+const Search = (props) => {
+    const { onChange, name } = props;
 
-const Search = (props) =>{
-    
-
-    const {onChange, name } = props;
-return(
-        <SearchBar
-            style={{
-                    height: "34px",
-                    borderRadius: "5px",
-                    // marginRight: "1rem",
-                    }}
+    return (
+        <TextField
+            variant="outlined"
+            placeholder="Search..."
+            size="small"
             onChange={onChange}
-            name={name}        
-            />
-            
-    )
-}
+            name={name}
+            InputProps={{
+                startAdornment: (
+                    <SearchIcon sx={{ color: 'action.active', mr: 1 }} />
+                ),
+                sx: {
+                    height: '34px',
+                    borderRadius: '5px',
+                },
+            }}
+            fullWidth
+        />
+    );
+};
 
 export default Search;

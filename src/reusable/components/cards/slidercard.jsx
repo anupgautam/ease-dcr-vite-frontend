@@ -1,11 +1,10 @@
 import React from "react";
-import { Box, Card} from "@material-ui/core";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import Image1 from "../../static/pack up/badimaika.jpeg"
-import { Typography } from "@mui/material";
+import { Typography, Box, Card } from "@mui/material";
 
-const SliderCard = ({}) =>{
+const SliderCard = ({ }) => {
   const responsive = {
     sdesktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -23,93 +22,93 @@ const SliderCard = ({}) =>{
       slidesToSlide: 1 // optional, default to 1.
     }
   };
-  return(
+  return (
     <Carousel responsive={responsive} >
-        <Box className="Carousel-space">
+      <Box className="Carousel-space">
         <Card className="carousel-card">
-            <img src={Image1} alt="Images" className="carousel-image" />
-            <Box className="bg-color-carousel">
+          <img src={Image1} alt="Images" className="carousel-image" />
+          <Box className="bg-color-carousel">
             <Box className="round-text-icon">
-            <Box className="round-position">
-              <img src={Image1} alt="Images" className="small-round-image" />
+              <Box className="round-position">
+                <img src={Image1} alt="Images" className="small-round-image" />
+              </Box>
+              <Typography className="Badimaika">Badimalika</Typography>
+              <Typography className="team-leader-name">Team Colleen</Typography>
             </Box>
-            <Typography className="Badimaika">Badimalika</Typography>
-            <Typography className="team-leader-name">Team Colleen</Typography>
-            </Box>
-            </Box>
+          </Box>
         </Card>
-       </Box>
-       <Box className="Carousel-space">
+      </Box>
+      <Box className="Carousel-space">
         <Card className="carousel-card">
-            <img src={Image1} alt="Images" className="carousel-image" />
-            <Box className="bg-color-carousel">
+          <img src={Image1} alt="Images" className="carousel-image" />
+          <Box className="bg-color-carousel">
             <Box className="round-text-icon">
-            <Box className="round-position">
-              <img src={Image1} alt="Images" className="small-round-image" />
+              <Box className="round-position">
+                <img src={Image1} alt="Images" className="small-round-image" />
+              </Box>
+              <Typography className="Badimaika">Badimalika</Typography>
+              <Typography className="team-leader-name">Team Colleen</Typography>
             </Box>
-            <Typography className="Badimaika">Badimalika</Typography>
-            <Typography className="team-leader-name">Team Colleen</Typography>
-            </Box>
-            </Box>
+          </Box>
         </Card>
-       </Box>
-       <Box className="Carousel-space">
+      </Box>
+      <Box className="Carousel-space">
         <Card className="carousel-card">
-            <img src={Image1} alt="Images" className="carousel-image" />
-            <Box className="bg-color-carousel">
+          <img src={Image1} alt="Images" className="carousel-image" />
+          <Box className="bg-color-carousel">
             <Box className="round-text-icon">
-            <Box className="round-position">
-              <img src={Image1} alt="Images" className="small-round-image" />
+              <Box className="round-position">
+                <img src={Image1} alt="Images" className="small-round-image" />
+              </Box>
+              <Typography className="Badimaika">Badimalika</Typography>
+              <Typography className="team-leader-name">Team Colleen</Typography>
             </Box>
-            <Typography className="Badimaika">Badimalika</Typography>
-            <Typography className="team-leader-name">Team Colleen</Typography>
-            </Box>
-            </Box>
+          </Box>
         </Card>
-       </Box>
-       <Box className="Carousel-space">
+      </Box>
+      <Box className="Carousel-space">
         <Card className="carousel-card">
-            <img src={Image1} alt="Images" className="carousel-image" />
-            <Box className="bg-color-carousel">
+          <img src={Image1} alt="Images" className="carousel-image" />
+          <Box className="bg-color-carousel">
             <Box className="round-text-icon">
-            <Box className="round-position">
-              <img src={Image1} alt="Images" className="small-round-image" />
+              <Box className="round-position">
+                <img src={Image1} alt="Images" className="small-round-image" />
+              </Box>
+              <Typography className="Badimaika">Badimalika</Typography>
+              <Typography className="team-leader-name">Team Colleen</Typography>
             </Box>
-            <Typography className="Badimaika">Badimalika</Typography>
-            <Typography className="team-leader-name">Team Colleen</Typography>
-            </Box>
-            </Box>
+          </Box>
         </Card>
-       </Box>
-       <Box className="Carousel-space">
+      </Box>
+      <Box className="Carousel-space">
         <Card className="carousel-card">
-            <img src={Image1} alt="Images" className="carousel-image" />
-            <Box  className="bg-color-carousel">
+          <img src={Image1} alt="Images" className="carousel-image" />
+          <Box className="bg-color-carousel">
             <Box className="round-text-icon">
-            <Box className="round-position">
-              <img src={Image1} alt="Images" className="small-round-image" />
+              <Box className="round-position">
+                <img src={Image1} alt="Images" className="small-round-image" />
+              </Box>
+              <Typography className="Badimaika">Badimalika</Typography>
+              <Typography className="team-leader-name">Team Colleen</Typography>
             </Box>
-            <Typography className="Badimaika">Badimalika</Typography>
-            <Typography className="team-leader-name">Team Colleen</Typography>
-            </Box>
-            </Box>
+          </Box>
         </Card>
-       </Box>
-       <Box className="Carousel-space">
+      </Box>
+      <Box className="Carousel-space">
         <Card className="carousel-card">
-            <img src={Image1} alt="Images" className="carousel-image" />
-            <Box  className="bg-color-carousel">
+          <img src={Image1} alt="Images" className="carousel-image" />
+          <Box className="bg-color-carousel">
             <Box className="round-text-icon">
-            <Box className="round-position">
-              <img src={Image1} alt="Images" className="small-round-image" />
+              <Box className="round-position">
+                <img src={Image1} alt="Images" className="small-round-image" />
+              </Box>
+              <Typography className="Badimaika">Badimalika</Typography>
+              <Typography className="team-leader-name">Team Colleen</Typography>
             </Box>
-            <Typography className="Badimaika">Badimalika</Typography>
-            <Typography className="team-leader-name">Team Colleen</Typography>
-            </Box>
-            </Box>
+          </Box>
         </Card>
-       </Box>
-       
+      </Box>
+
     </Carousel>
   )
 }

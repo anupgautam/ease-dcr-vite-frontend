@@ -1,6 +1,5 @@
 import React from "react";
-import { Box,Card } from "@mui/material";
-import { Typography } from "@material-ui/core";
+import { Typography,Box,Card } from "@mui/material";
 import Offer from "../../static/pack up/offer.png"
 
 const HomeCard = () =>{

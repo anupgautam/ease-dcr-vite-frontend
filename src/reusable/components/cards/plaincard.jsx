@@ -1,4 +1,4 @@
-import { Card, Box, Typography } from "@material-ui/core";
+import { Card, Box, Typography } from "@mui/material";
 import React from "react";
 
 //this component contains a plain card with image and image text

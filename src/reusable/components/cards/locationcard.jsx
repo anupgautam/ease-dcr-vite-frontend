@@ -1,10 +1,10 @@
-import { Box, Typography, Card, Grid } from "@material-ui/core";
-import React, {useState} from "react";
+import { Box, Typography, Card, Grid } from "@mui/material";
+import React, { useState } from "react";
 import Map from "../../static/pack up/map.png"
-import {BsChevronDown} from "react-icons/bs"
+import { BsChevronDown } from "react-icons/bs"
 
-const LocationCard = () =>{
-    return(
+const LocationCard = () => {
+    return (
         <Box>
             <Box>
                 <Typography className="our-rooms-head location-head">Location</Typography>
@@ -13,9 +13,9 @@ const LocationCard = () =>{
                 <Grid container spacing={0}>
                     <Grid item xs={3}>
                         <Card className="surroundings-card">
-                                <Box className="loacation-box">
+                            <Box className="loacation-box">
                                 <Typography className="key-surroundings">Surroundings of hotels or resort</Typography>
-                            </Box> 
+                            </Box>
                             <Box className="key-landmark-box">
                                 <Typography className="landmark-txt">Key Landmarks</Typography>
                                 <BsChevronDown className="bs-chevron-down" />
@@ -40,9 +40,9 @@ const LocationCard = () =>{
                     </Grid>
                     <Grid item xs={9}>
                         <Card className="surroundings-card">
-                                <Box>
+                            <Box>
                                 <img src={Map} alt="Location-map" className="map-image" />
-                                </Box>
+                            </Box>
                         </Card>
                     </Grid>
                 </Grid>

@@ -3,7 +3,9 @@ import {
     Stack,
     Grid,
     Box,
-    Container
+    Container,
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 
 import TourPlanCount from './TourPlanCount';
@@ -14,31 +16,38 @@ import AddTourPlan from './addTourPlan';
 import AddUnplannedTp from './addUnplannedTp';
 
 const ListOfTourPlan = () => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
     return (
         <Container>
             <Box style={{ marginBottom: '30px' }}>
-                <Grid container>
-                    <Grid item xs={Cookies.get('user_role') === 'admin' ? 10 : 9}>
+                <Grid container spacing={2}>
+                    <Grid item xs={Cookies.get('user_role') === 'admin' ? 12 : 9} md={9}>
                         <TourPlanCount />
                     </Grid>
-                    {
-                        Cookies.get('user_role') !== 'admin' &&
-                        <Grid item xs={2}>
-                            <Box style={{ float: "right" }}>
-                                <AddUnplannedTp />
-                            </Box>
-                        </Grid>
-                    }
-                    <Grid item xs={Cookies.get('user_role') === 'admin' ? 2 : 1}>
-                        {
-                            Cookies.get('user_role') === 'admin' ?
-                                <Box style={{ float: "right" }}>
-                                    <ExcelCSVTourPlan />
-                                </Box> :
-                                <Box style={{ float: "right" }}>
-                                    <AddTourPlan />
+
+                    <Grid item xs={12} md={3}>
+                        <Stack
+                            direction={isSmallScreen ? 'column' : 'row'}
+                            spacing={2}
+                            alignItems={isSmallScreen ? 'flex-start' : 'center'}
+                            justifyContent={isSmallScreen ? 'flex-start' : 'flex-end'}
+                        >
+                            {
+                                Cookies.get('user_role') !== 'admin' &&
+                                <Box>
+                                    <AddUnplannedTp />
                                 </Box>
-                        }
+                            }
+                            <Box>
+                                {
+                                    Cookies.get('user_role') === 'admin' ?
+                                        <ExcelCSVTourPlan /> :
+                                        <AddTourPlan />
+                                }
+                            </Box>
+                        </Stack>
                     </Grid>
                 </Grid>
             </Box>

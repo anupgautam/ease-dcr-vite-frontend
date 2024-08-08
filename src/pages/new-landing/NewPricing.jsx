@@ -1,5 +1,4 @@
-import { CheckCircle, Star } from "@material-ui/icons";
-import { Diamond } from "@mui/icons-material";
+import { CheckCircle, Star, Diamond } from "@mui/icons-material";
 import React from "react";
 
 const icons = {

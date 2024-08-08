@@ -1,23 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import RoundButton from "../../components/button/roundbutton";
-import { TableBody } from "@material-ui/core";
-import { Box, Container, Grid, Typography,Card, Table, TableHead, TableRow, TableCell} from "@mui/material";
+import { TableBody, Box, Container, Grid, Typography, Card, Table, TableHead, TableRow, TableCell } from "@mui/material";
 
-const FlightBaggageInfo = () =>{
-    return(
+const FlightBaggageInfo = () => {
+    return (
         <Box>
             <Table>
                 <TableHead className="fare-tbl-head">
                     <TableRow>
-                    <TableCell className="fares-tb-cell">Fares</TableCell>
-                    <TableCell className="fares-tb-cell">Handcarry</TableCell>
-                    <TableCell className="fares-tb-cell">Check_In</TableCell>
-                    <TableCell className="fares-tb-cell">Cancellation Fee</TableCell>
-                    <TableCell className="fares-tb-cell">Date Change Fee</TableCell>
-                    <TableCell className="fares-tb-cell">Seat</TableCell>
-                    <TableCell className="fares-tb-cell">Meal</TableCell>
-                    <TableCell className="fares-tb-cell">Price and Booking</TableCell>
+                        <TableCell className="fares-tb-cell">Fares</TableCell>
+                        <TableCell className="fares-tb-cell">Handcarry</TableCell>
+                        <TableCell className="fares-tb-cell">Check_In</TableCell>
+                        <TableCell className="fares-tb-cell">Cancellation Fee</TableCell>
+                        <TableCell className="fares-tb-cell">Date Change Fee</TableCell>
+                        <TableCell className="fares-tb-cell">Seat</TableCell>
+                        <TableCell className="fares-tb-cell">Meal</TableCell>
+                        <TableCell className="fares-tb-cell">Price and Booking</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody className="card-tbl-width">
@@ -34,7 +33,7 @@ const FlightBaggageInfo = () =>{
                         <TableCell className="txt-saver-tbi-body">No meal</TableCell>
                         <TableCell>
                             <Typography className="rs-price-flight">Rs.5000</Typography>
-                            <RoundButton 
+                            <RoundButton
                                 backgroundColor='#55AAFF'
                                 color='white'
                                 buttonText='Book'
@@ -56,7 +55,7 @@ const FlightBaggageInfo = () =>{
                         <TableCell className="txt-saver-tbi-body">No meal</TableCell>
                         <TableCell>
                             <Typography className="rs-price-flight">Rs.5000</Typography>
-                            <RoundButton 
+                            <RoundButton
                                 backgroundColor='#55AAFF'
                                 color='white'
                                 buttonText='Book'

@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import {
     Box, Grid,
-    Typography, Button
+    Typography, Button, InputLabel
 } from '@mui/material'
-import {
-    InputLabel,
-} from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -21,7 +18,7 @@ import {
     useGetUpperLevelCompanyUserRoleByIdMutation,
     useUpdateApplicationsMutation,
 } from '@/api/ApplicationSlices/ApplicationSlices'
-import { NepaliDatePicker} from "nepali-datepicker-react";
+import { NepaliDatePicker } from "nepali-datepicker-react";
 
 import Cookies from 'js-cookie'
 

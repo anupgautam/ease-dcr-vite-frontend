@@ -1,10 +1,10 @@
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 import React from "react";
-const NewCard = () =>{
-    return(
-       <Box>
+const NewCard = () => {
+    return (
+        <Box>
 
-       </Box>
+        </Box>
     )
 }
 

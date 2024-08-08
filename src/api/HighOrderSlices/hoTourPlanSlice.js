@@ -19,7 +19,7 @@ export const HOTourPlanSlice = apiSlice.injectEndpoints({
                 url: `other-roles/higher-order-tourplan-with-pagination/?page=${page.page}&visited_with__company_name=${page.company_name}`,
                 method: 'GET'
             }),
-            providesTags: ['HOTourPlan']
+            providesTags: ['HOTourPlan','PostTourplan']
         }),
 
         //! Get all HOTourPlans By id

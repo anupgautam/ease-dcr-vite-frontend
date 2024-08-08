@@ -1,28 +1,26 @@
-import React from 'react'
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import React from 'react';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
-export default function DatePicker(props) {
-
-    const { name, label, value, onChange } = props
-
+export default function DatePickerComponent(props) {
+    const { name, label, value, onChange } = props;
 
     const convertToDefEventPara = (name, value) => ({
         target: {
             name, value
         }
-    })
+    });
 
-    return ( 
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker disableToolbar variant="inline" inputVariant="outlined"
+    return (
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
                 label={label}
-                format="MMM/dd/yyyy"
-                name={name}
                 value={value}
-                onChange={date =>onChange(convertToDefEventPara(name,date))}
-
+                onChange={date => onChange(convertToDefEventPara(name, date))}
+                renderInput={(params) => <TextField {...params} variant="outlined" />}
+                format="MMM/dd/yyyy"
             />
-        </MuiPickersUtilsProvider>
-    )
+        </LocalizationProvider>
+    );
 }

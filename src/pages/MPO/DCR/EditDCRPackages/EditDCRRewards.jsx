@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Box, Grid, Typography } from "@mui/material";
 import React, { useState, useMemo } from "react";
 import { useTransition } from 'react-transition-state';
 import { FaPlus } from "react-icons/fa";

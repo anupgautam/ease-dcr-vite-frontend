@@ -1,28 +1,20 @@
-import { makeStyles } from '@mui/styles';
-import React, { useEffect, useState } from 'react'
-
+import React, { useEffect, useState } from 'react';
+import { styled } from '@mui/material/styles';
 
 export function useForm(initialFValues, validateOnChange = false, validate, edit) {
-
-    // 
     const [values, setValues] = useState(initialFValues);
-
     const [valueArray, setValueArray] = useState({});
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        // 
         if (edit) {
             setValues(initialFValues);
             setValueArray(initialFValues);
         }
-    }, [initialFValues])
-
+    }, [initialFValues, edit]);
 
     const handleMultipleInput = (e) => {
         const { name, value } = e.target;
-
-        // setValueArray(typeof value === 'string' ? value.split(',') : value)
         setValueArray(values => ({
             ...values,
             [name]: typeof value === 'string' ? value.split(',') : value
@@ -30,82 +22,48 @@ export function useForm(initialFValues, validateOnChange = false, validate, edit
         setValues({
             ...values,
             [name]: value
-        })
-    }
-
-
-
-    //
+        });
+    };
 
     const handleSearchClick = (e) => {
         const keys = Object.keys(values);
         setValues({
             ...values,
             [keys[0]]: e
-        })
-    }
+        });
+    };
 
     const handleImageUpload = (name, file) => {
         setValues({
             ...values,
             [name]: file
-        })
-    }
+        });
+    };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target
+        const { name, value } = e.target;
         setValues({
             ...values,
             [name]: value
-        })
+        });
         // if (validateOnChange)
-        //     validate({ [name]: value })
-    }
-
-    // const handleMultipleDate = (dateValues, dateNames) => {
-    //     
-    //     // const {  value } = e.target
-    //     // 
-    //     setValues({
-    //         ...values,
-    //         // [name]: value
-    //     })
-    // }
-
-
-    // const handleMultipleDate = (e) => {
-    //     const { name, value } = e.target
-    //     if (Array.isArray(e)) {
-    //         
-    //     // const finalValue = e.join(", ");
-    //     setValues({
-    //         ...values,
-    //         [name]: value
-    //     })  
-    //     
-    //     }
-    // }
+        //     validate({ [name]: value });
+    };
 
     const resetForm = () => {
         setValues(initialFValues);
-        setErrors({})
-    }
+        setErrors({});
+    };
 
-    // ! Date function
     let dateValue = "";
-    const dataValues = e => {
-        dateValue = e.join(", ")
-    }
-
     const handleDateChange = e => {
-        const { name, value } = e.target
+        const { name, value } = e.target;
         setValues({
             ...values,
             [name]: value
-        })
-        dateValue = e.join(", ")
-
-    }
+        });
+        dateValue = e.join(", ");
+    };
 
     return {
         values,
@@ -120,26 +78,22 @@ export function useForm(initialFValues, validateOnChange = false, validate, edit
         valueArray,
         handleSearchClick,
         handleImageUpload,
-    }
+    };
 }
 
-
-const useStyles = makeStyles(theme => ({
-    root: {
-        '& .MuiFormControl-root': {
-            width: '80%',
-            margin: theme.spacing(1)
-        }
+// Use styled from @mui/material/styles
+const StyledForm = styled('form')(({ theme }) => ({
+    '& .MuiFormControl-root': {
+        width: '80%',
+        margin: theme.spacing(1),
     }
-}))
+}));
 
 export function Form(props) {
-
-    const classes = useStyles();
     const { children, ...other } = props;
     return (
-        <form className={classes.root} {...other}>
-            {props.children}
-        </form>
-    )
+        <StyledForm {...other}>
+            {children}
+        </StyledForm>
+    );
 }

@@ -51,6 +51,16 @@ const AddTourPlan = () => {
         return [];
     }, [MpoArea])
 
+    // const mpoAreaData = useMemo(() => {
+    //     const noneOption = { id: '', title: 'None' };
+
+    //     if (MpoArea?.data) {
+    //         return [noneOption, ...MpoArea.data.map(key => ({ id: key.id, title: key.area_name }))];
+    //     }
+
+    //     return [noneOption];
+    // }, [MpoArea]);
+
 
     const { data: ShiftData } = useGetShiftsQuery();
 

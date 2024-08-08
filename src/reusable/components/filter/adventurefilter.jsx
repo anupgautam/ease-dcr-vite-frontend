@@ -1,6 +1,5 @@
 import React from "react";
-import { Box, Grid, Typography,Card } from "@material-ui/core";
-import Slider from '@mui/material/Slider';
+import { Box, Grid, Typography,Card,Slider } from "@mui/material";
 
 const AdventureFilter = () =>{
     const marks = [

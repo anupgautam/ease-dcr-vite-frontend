@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Grid, Card } from "@material-ui/core";
+import { Box, Typography, Grid, Card } from "@mui/material";
 import Room from "../../static/images/room.jpeg"
 import {GiMountainClimbing} from "react-icons/gi";
 import {MdDone, MdDownhillSkiing, MdNordicWalking, MdOutlineCalendarToday} from "react-icons/md";

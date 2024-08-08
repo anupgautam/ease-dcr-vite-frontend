@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Box } from '@mui/material';
 
-
 export default function InputPassword(props) {
-
     const [visible, setVisible] = useState(false);
 
     const toggleVisibility = () => {
@@ -29,20 +27,19 @@ export default function InputPassword(props) {
             type={visible ? 'text' : 'password'}
             InputProps={{
                 endAdornment: (
-                    <InputAdornment position="end" style={{ marginRight: '0px' }}>
-                        <Box onClick={toggleVisibility}>
-                            {visible ? <VisibilityIcon style={{ color: "#2065d1" }} /> : <VisibilityOffIcon style={{ color: "#2065d1" }} />}
-                        </Box>
+                    <InputAdornment position="end">
+                        <IconButton onClick={toggleVisibility} edge="end">
+                            {visible ? <Visibility style={{ color: "#2065d1" }} /> : <VisibilityOff style={{ color: "#2065d1" }} />}
+                        </IconButton>
                     </InputAdornment>
                 ),
             }}
-            style={{
-                borderBlockColor: 'white',
+            sx={{
+                borderColor: 'white',
                 width: '100%',
             }}
-            {...(error && { error: true, helperText: error })}
+            error={!!error}
+            helperText={error || ''}
         />
-    )
+    );
 }
-
-

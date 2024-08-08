@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Grid, } from '@material-ui/core';
+import { Grid, } from '@mui/material';
 // import Controls from '../components/forms/controls/Controls';
 // import { useForm, Form } from '../components/forms/useForm';
 // import * as employeeService from '../services/employeeServices';
@@ -72,7 +72,7 @@ export default function EmployeeForm() {
         }
     }
 
-    
+
     return (
         <Form onSubmit={handleSubmit}>
             <Grid container>

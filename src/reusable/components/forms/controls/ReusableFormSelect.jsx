@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import Controls from "./Controls";
 import { useForm1 } from "../useForm";
 import useDebounce from "../utils/debounce";
-import { Box } from "@material-ui/core";
 import {
   CSSTransition,
   TransitionGroup,
@@ -15,7 +14,8 @@ import {
   Drawer,
   Modal,
   Typography,
-  Popover
+  Popover,
+  Box
 } from '@mui/material';
 
 const ReusableFormsSelect = ({

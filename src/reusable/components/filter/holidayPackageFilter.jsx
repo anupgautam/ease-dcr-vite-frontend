@@ -1,6 +1,5 @@
-import { Box, Card, Typography, Grid } from "@material-ui/core";
+import { Slider,Box, Card, Typography, Grid } from "@mui/material";
 import React from "react";
-import Slider from '@mui/material/Slider';
 
 const HolidayPackageFilter = () =>{
     const marks = [

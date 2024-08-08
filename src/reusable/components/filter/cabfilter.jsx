@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, Card } from "@material-ui/core";
+import { Box, Typography, Grid, Card } from "@mui/material";
 import React from "react";
 
 const CabFilter = () =>{

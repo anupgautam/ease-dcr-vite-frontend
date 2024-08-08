@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import React, {useState} from "react";
 
 // This component contains a icon and text inside button.

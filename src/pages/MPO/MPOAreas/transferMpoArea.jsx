@@ -1,4 +1,4 @@
-import { Close } from "@material-ui/icons";
+import { Close } from "@mui/icons-material";
 import { Box, Button, Drawer, Grid, IconButton, Stack, Typography } from "@mui/material";
 import Cookies from "js-cookie";
 import React, { useEffect, useState, useMemo } from "react";

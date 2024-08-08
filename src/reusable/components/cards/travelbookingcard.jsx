@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Grid, Card } from "@material-ui/core";
+import { Box, Typography, Grid, Card } from "@mui/material";
 import RoundButton from "../button/roundbutton";
 import Yeti from "../../static/pack up/yeti.png"
 

@@ -1,9 +1,9 @@
 import React from 'react'
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 
 export default function Password(props) {
 
-    const { name, label, value,error=null, onChange } = props;
+    const { name, label, value, error = null, onChange } = props;
     return (
         <TextField
             variant="outlined"
@@ -15,9 +15,9 @@ export default function Password(props) {
             autoComplete="current-password"
             style={{
                 borderBlockColor: 'white',
-                width:'100%',
+                width: '100%',
             }}
-            {...(error && {error:true,helperText:error})}
+            {...(error && { error: true, helperText: error })}
         />
     )
 }
