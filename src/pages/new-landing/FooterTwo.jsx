@@ -4,6 +4,7 @@ import { FaFacebookF } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { RiInstagramFill } from "react-icons/ri";
 import { FaLinkedin } from "react-icons/fa";
+import {Link} from "react-router-dom"
 
 const FooterTwo = () => {
   const medias = [
@@ -25,11 +26,11 @@ const FooterTwo = () => {
     },
   ];
   return (
-    <div className="bg-[#000000] text-white">
+    <div className="bg-blue-950 text-white">
      <section className=" relative z-0">
         <img src="assets/images/footer/shape-1.svg" alt="shape1" className=" absolute h-[280px] z-0"/>
         <img src="assets/images/footer/shape-2.svg" alt="shape2" className=" absolute right-0 "/>
-        <img src="assets/images/footer/shape-3.svg" alt="shape3" className=" absolute right-0 top-0 h-[342px] z-0"/>
+        <img src="assets/images/footer/shape-3.svg" alt="shape3" className="hidden lg:block absolute right-0 top-0 h-[342px] z-0"/>
      </section>
       <div className=" container grid lg:grid-cols-5 grid-cols-3  justify-between py-8 lg:py-16">
         <div className=" col-span-2 z-50">
@@ -37,25 +38,25 @@ const FooterTwo = () => {
             <img src={logo} alt="logo" className=" h-16" />
             <h2 className=" font-semibold">Ease SFA</h2>
           </section>
-          <p className=" text-[#797979] text-[16px] mt-4">
+          <p className=" text-gray-400 text-[14px] lg:text-[16px] mt-4">
             EaseSFA-Streaming Sales Force Automation
           </p>
-          <h2 className=" flex gap-x-3 my-8">
+          <div className=" flex gap-x-3 my-8">
             {medias.map((item) => {
               return (
-                <h2
+                <h3
                   className=" text-white bg-[#161616] text-[20px] rounded-full p-3"
                   key={item.id}
                 >
                   {item.icon}
-                </h2>
+                </h3>
               );
             })}
-          </h2>
+          </div>
         </div>
         <div>
           <h2 className=" text-lg font-semibold">About us</h2>
-          <ul className=" text-[#797979] mt-5 text-[16px]">
+          <ul className=" text-gray-400 mt-5 text-[16px]">
             <li>Home</li>
             <li>Features</li>
             <li>About</li>
@@ -64,16 +65,16 @@ const FooterTwo = () => {
         </div>
         <div>
           <h2 className=" text-lg font-semibold">Features</h2>
-          <ul className=" text-[#797979] mt-5 text-[16px]">
+          <ul className=" text-gray-400 mt-5 text-[16px]">
             <li>How it works</li>
             <li>Privacy</li>
             <li>Terms of services</li>
           </ul>
         </div>
-        <div className=" col-span-2 lg:col-span-1 z-50">
+        <div className=" col-span-2 lg:col-span-1 z-50 mx-auto lg:mx-0">
           <h2 className=" text-lg font-semibold">Download Now</h2>
-          <img src="/assets/google-play-store.png" className=" h-16 lg:h-20 mt-7" />
-          <img src="/assets/app-store.png" className=" h-16 lg:h-20 z-50" />
+          <Link to="*"><img src="/assets/google-play-store.png" className=" h-16 lg:h-20 mt-7" /></Link>
+          <Link to="*"><img src="/assets/app-store.png" className=" h-16 lg:h-20 z-50" /></Link>
         </div>
       </div>
     </div>

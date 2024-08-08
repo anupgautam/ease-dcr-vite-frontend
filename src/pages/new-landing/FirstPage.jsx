@@ -5,7 +5,7 @@ import dots from "/assets/dots2.png"
 
 const FirstPage = () => {
   return (
-    <div className=' py-5 md:py-12 bg-no-repeat ' style={{backgroundImage:`url(${dots})`}}>
+    <div className=' py-5 md:py-12 mt-16 bg-no-repeat ' style={{backgroundImage:`url(${dots})`}} id='home'>
     <div className='lg:flex container justify-between items-center'>
       <section className=' lg:w-[35%] font-public_sans'>
       <h1 className=' text-[28px] md:text-[38px] font-semibold text-[#3e3d48] leading-tight my-2'>EASESFA-Streamlining Sales Force Automation</h1>
