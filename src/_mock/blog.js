@@ -1,6 +1,3 @@
-import { faker } from '@faker-js/faker';
-
-// ----------------------------------------------------------------------
 
 const POST_TITLES = [
   'Whiteboard Templates By Industry Leaders',
@@ -30,16 +27,15 @@ const POST_TITLES = [
 ];
 
 const posts = [...Array(23)].map((_, index) => ({
-  id: faker.datatype.uuid(),
+  id: 1,
   cover: `/assets/images/covers/cover_${index + 1}.jpg`,
   title: POST_TITLES[index + 1],
-  createdAt: faker.date.past(),
-  view: faker.datatype.number(),
-  comment: faker.datatype.number(),
-  share: faker.datatype.number(),
-  favorite: faker.datatype.number(),
+  view: 1,
+  comment: 1,
+  share: 1,
+  favorite: 1,
   author: {
-    name: faker.name.fullName(),
+    name: FullName,
     avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
   },
 }));

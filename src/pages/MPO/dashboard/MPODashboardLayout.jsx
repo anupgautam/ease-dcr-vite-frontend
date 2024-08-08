@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Helmet } from 'react-helmet-async';
-import { faker } from '@faker-js/faker';
-import { BsFillChatFill } from "react-icons/bs";
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 import Header from './header';
@@ -168,7 +166,7 @@ function DashboardAppPage() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate
+            {/* <AppNewsUpdate
               title="News Update"
               list={[...Array(5)].map((_, index) => ({
                 id: faker.datatype.uuid(),
@@ -177,7 +175,7 @@ function DashboardAppPage() {
                 image: `/assets/images/covers/cover_${index + 1}.jpg`,
                 postedAt: faker.date.recent(),
               }))}
-            />
+            /> */}
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
