@@ -1,7 +1,7 @@
-import Img1 from "../../../public/assets/images/features/invoice-create.png";
-import Img2 from "../../../public/assets/images/features/chatbox.png";
-import Img3 from "../../../public/assets/images/features/dashboard.png";
-import Img4 from "../../../public/assets/images/features/leads.png";
+import Img1 from "/assets/images/features/invoice-create.png";
+import Img2 from "/assets/images/features/chatbox.png";
+import Img3 from "/assets/images/features/dashboard.png";
+import Img4 from "/assets/images/features/leads.png";
 
 const images = [
   {
