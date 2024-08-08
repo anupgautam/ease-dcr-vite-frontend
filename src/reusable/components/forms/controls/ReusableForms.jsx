@@ -215,14 +215,14 @@ const ReusableForms = ({
                     <></>
                   )}
                   {key1["field_form"] === "date" ? (
-                    <Box style={{ marginBottom: "20px" }}>
+                    {/* <Box style={{ marginBottom: "20px" }}>
                       <Controls.DatePickerWithYear
                         name={key1["field_name"]}
                         defaultValue={key[key1["field_name"]]}
                         label={key1["label"]}
                         onChange={(e) => editChange(e, key)}
                       />
-                    </Box>
+                    </Box> */}
                   ) : (
                     <></>
                   )}
