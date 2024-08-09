@@ -146,7 +146,15 @@ const Chat = () => {
                         <Grid item xs={3}>
                             <div style={{ padding: "20px" }}>
                                 <div>
-                                    <Typography style={{ fontSize: '18px', color: "black", fontWeight: "600", paddingBottom: '15px' }}>User List{' '} <BsFillChatDotsFill style={{ fontSize: '15px' }} /></Typography>
+                                    {
+                                        Cookies.get('user_role') === 'admin' &&
+                                        <Typography
+                                            style={{ fontSize: '18px', color: "black", fontWeight: "600", paddingBottom: '15px' }}>
+                                            User List{' '}
+                                            <BsFillChatDotsFill style={{ fontSize: '15px' }} />
+                                        </Typography>
+                                    }
+
                                 </div>
                                 <div className="chat-list-design">
                                     <EventUserList setGroupName={setGroupName} setUserId={setUserId} />

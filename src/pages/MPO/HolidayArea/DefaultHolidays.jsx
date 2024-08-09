@@ -23,17 +23,16 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Cookies from 'js-cookie';
 
-import { useLazyFilterGetHolidaysAreaQuery, useGetCompanyHolidaysQuery, useDeleteHolidayAreasByIdMutation } from '@/api/HolidaySlices/holidaySlices';
+import { useGetHolidayNamesQuery, useDeleteHolidayAreasByIdMutation } from '@/api/HolidaySlices/holidaySlices';
 
-import EditHolidayArea from './EditHolidayArea';
+import EditHolidayName from './EditHolidayName';
 
 const TABLE_HEAD = [
-    { id: 'holiday_type', label: 'Holiday Type', alignRight: false },
-    { id: 'company_area', label: 'Company Area', alignRight: false },
+    { id: 'holiday_name', label: 'Holiday Names', alignRight: false },
     { id: '' },
 ];
 
-const DefaultHolidayArea = () => {
+const DefaultHolidays = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
@@ -68,77 +67,11 @@ const DefaultHolidayArea = () => {
     }, []);
 
     //! Company holidays
-    const Holidays = useGetCompanyHolidaysQuery(Cookies.get("company_id"));
-    const holidays = useMemo(() => {
-        if (Holidays.data) {
-            return Holidays.data.map((key) => (key.holiday_name));
-        }
-        return [];
-    }, [Holidays]);
+    const Holidays = useGetHolidayNamesQuery(Cookies.get("company_id"));
 
-    const holidaysId = useMemo(() => {
-        if (Holidays.data) {
-            return Holidays.data.map((key) => (key.id));
-        }
-        return [];
-    }, [Holidays]);
-
-    // Use lazy query for on-demand API calls
-    const [triggerFilterGetHolidaysAreaQuery] = useLazyFilterGetHolidaysAreaQuery();
-
-    useEffect(() => {
-        const fetchHolidayAreas = async () => {
-            const results = [];
-            for (const holidayName of holidays) {
-                try {
-                    const response = await triggerFilterGetHolidaysAreaQuery({ holidayName, companyId: Cookies.get('company_id') }).unwrap();
-                    if (Array.isArray(response)) {
-                        if (response.length > 0) {
-                            results.push(...response);
-                        } else {
-                            console.warn(`No data returned for ${holidayName} (empty array)`);
-                        }
-                    } else {
-                        console.error(`Unexpected data format for ${holidayName}:`, data);
-                    }
-                } catch (error) {
-                    console.error(`API call failed for: ${holidayName}`, error);
-                }
-            }
-            setHolidayTypes(results);
-        };
-
-        if (holidays.length > 0) {
-            fetchHolidayAreas();
-        }
-    }, [holidays, triggerFilterGetHolidaysAreaQuery]);
-
-    const [deleteHolidayArea] = useDeleteHolidayAreasByIdMutation();
+    const [deleteHolidayName] = useDeleteHolidayAreasByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7];
 
-    const holidayData = holidayTypes.reduce((acc, item) => {
-        const holidayName = item.holiday_type.holiday_name;
-        const holidayId = item.holiday_type.id;
-
-        if (!acc[holidayId]) {
-            acc[holidayId] = {
-                holidayName,
-                holidayId,
-                companyAreas: []
-            };
-        }
-
-        acc[holidayId].companyAreas.push(item.company_area.company_area);
-
-        return acc;
-    }, {});
-
-    const holidayArray = Object.values(holidayData).map(({ holidayName, holidayId, companyAreas }) => ({
-        holidayName,
-        holidayId,
-        companyAreas: companyAreas.join(', ')
-    }));
-    console.log(holidayArray)
     return (
         <>
             <Card>
@@ -150,11 +83,10 @@ const DefaultHolidayArea = () => {
                             />
 
                             <TableBody>
-                                {holidayArray.length === 0 ? (
+                                {Holidays.length === 0 ? (
                                     <>
                                         {eightArrays.map((key) => (
                                             <TableRow key={key}>
-                                                <TableCell><Skeleton /></TableCell>
                                                 <TableCell><Skeleton /></TableCell>
                                                 <TableCell><Skeleton /></TableCell>
                                             </TableRow>
@@ -162,22 +94,21 @@ const DefaultHolidayArea = () => {
                                     </>
                                 ) : (
                                     <>
-                                        {holidayArray.map((companyroles, index) => (
-                                            <TableRow key={companyroles.holidayId} hover tabIndex={-1} role="checkbox">
+                                        {Holidays?.data?.map((companyroles, index) => (
+                                            <TableRow key={companyroles.id} hover tabIndex={-1} role="checkbox">
                                                 <TableCell>{index + 1}</TableCell>
                                                 <TableCell component="th" scope="row" align="left">
                                                     <Typography variant="subtitle2" noWrap>
-                                                        {companyroles.holidayName}
+                                                        {companyroles.holiday_name}
                                                     </Typography>
                                                 </TableCell>
-                                                <TableCell align="left">{companyroles.companyAreas}</TableCell>
                                                 <TableCell align="right">
-                                                    <IconButton color={'primary'} onClick={() => onEdit(companyroles.holidayId)}>
+                                                    <IconButton color={'primary'} onClick={() => onEdit(companyroles.id)}>
                                                         <Badge>
                                                             <Iconify icon="eva:edit-fill" />
                                                         </Badge>
                                                     </IconButton>
-                                                    <IconButton color={'error'} onClick={() => { setSelectedId(companyroles.holidayId); handleClickOpen(); }}>
+                                                    <IconButton color={'error'} onClick={() => { setSelectedId(companyroles.id); handleClickOpen(); }}>
                                                         <Badge>
                                                             <Iconify icon="eva:trash-2-outline" />
                                                         </Badge>
@@ -202,7 +133,7 @@ const DefaultHolidayArea = () => {
                     {"Are you sure want to delete?"}
                 </DialogTitle>
                 <DialogActions>
-                    <Button autoFocus onClick={() => { deleteHolidayArea(selectedId); handleClose(); }}>
+                    <Button autoFocus onClick={() => { deleteHolidayName(selectedId); handleClose(); }}>
                         Yes
                     </Button>
                     <Button onClick={handleClose} autoFocus>
@@ -210,9 +141,9 @@ const DefaultHolidayArea = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            {isDrawerOpen && <EditHolidayArea idharu={selectedUpdateId} onClose={onCloseDrawer} />}
+            {isDrawerOpen && <EditHolidayName idharu={selectedUpdateId} onClose={onCloseDrawer} />}
         </>
     );
 };
 
-export default React.memo(DefaultHolidayArea);
+export default React.memo(DefaultHolidays);

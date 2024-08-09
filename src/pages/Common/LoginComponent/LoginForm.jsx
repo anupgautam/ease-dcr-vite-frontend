@@ -6,6 +6,8 @@ import { setCredentials } from '../../../api/RTK query/authSlice';
 import { useLoginUserMutation } from '../../../api/MPOSlices/UserSlice';
 // @mui
 import { Stack, Checkbox, Box, Grid, Link, useTheme, useMediaQuery, TextField, InputAdornment } from '@mui/material';
+import { MdOutlineRemoveRedEye } from 'react-icons/md';
+import { FaRegEyeSlash } from 'react-icons/fa';
 import { LoadingButton } from '@mui/lab';
 //! Authentication  
 import Cookies from 'js-cookie';
@@ -55,7 +57,7 @@ const LoginFormInputs = () => {
     };
 
     const validatePassword = (password) => {
-        if (password.length < 6) {
+        if (password.length < 4) {
             setPasswordError(true);
             setPasswordHelperText('Password must be at least 8 characters');
         } else {
@@ -85,26 +87,18 @@ const LoginFormInputs = () => {
                             setSuccessMessage({ show: true, message: 'Successfully Logged In' })
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                 Cookies.set('user_role', 'admin')
-                                setTimeout(() => {
-                                    navigate('/dashboard/admin');
-                                }, [3000])
+                                navigate('/dashboard/admin');
                                 dispatch(setCredentials({ ...res, email }))
                             } else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
                                 Cookies.set('user_role', 'MPO')
-                                setTimeout(() => {
-                                    navigate('/dashboard/admin/listofdoctor');
-                                }, [3000])
+                                navigate('/dashboard/admin/listofdoctor');
                             } else if (res.data.role === "ASM") {
                                 Cookies.set('user_role', 'other-roles')
-                                setTimeout(() => {
-                                    navigate('/dashboard/admin/tourplan');
-                                }, [3000])
+                                navigate('/dashboard/admin/tourplan');
                             } else if (res.data.role === "RSM" || res.data.role === "SM" || res.data.role === "MM" || res.data.role === "CH") {
                                 Cookies.set('user_role', 'other-roles')
                                 Cookies.set('role', 'other')
-                                setTimeout(() => {
-                                    navigate('/dashboard/admin/tourplan');
-                                }, [3000])
+                                navigate('/dashboard/admin/tourplan');
                             }
                             else {
                                 setErrorMessage({ show: true, message: "User Does not exist." });
@@ -152,7 +146,11 @@ const LoginFormInputs = () => {
         };
     }, [email, password]);
 
+    const [visible, setVisible] = useState(false);
 
+    const toggleVisibility = () => {
+        setVisible(!visible);
+    };
 
     return (
         <>
@@ -175,13 +173,22 @@ const LoginFormInputs = () => {
                         <Box marginBottom={0.25}>
                             <TextField
                                 label="Password"
-                                type="password"
                                 value={password}
                                 onChange={handlePasswordChange}
                                 error={passwordError}
                                 helperText={passwordHelperText}
                                 fullWidth
                                 margin="normal"
+                                type={visible ? 'text' : 'password'}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end" style={{ marginRight: '0px' }}>
+                                            <Box onClick={toggleVisibility}>
+                                                {visible ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
+                                            </Box>
+                                        </InputAdornment>
+                                    ),
+                                }}
                             />
                         </Box>
                     </Stack>

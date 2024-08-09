@@ -1,10 +1,34 @@
 import React from "react";
 import logo from "/assets/logo.png";
-import { Link, Events, scrollSpy } from "react-scroll";
+import { Link as ScrollLink, Events, scrollSpy } from "react-scroll";
+import { Link as RouterLink } from "react-router-dom";
 import "./Navbar.css";
-import { navItems } from "./Elements";
+import Cookies from 'js-cookie'
 
 const Navbar = () => {
+  const login = Cookies.get('user_role');
+  const navItems = [
+    {
+      id: 0,
+      title: "Home",
+      path: "home",
+    },
+    {
+      id: 1,
+      title: "About",
+      path: "about",
+    },
+    {
+      id: 2,
+      title: "Book a Demo",
+      path: "demo",
+    },
+    {
+      id: 3,
+      title: "Contact",
+      path: "contact",
+    },
+  ];
 
   return (
     <div className=" container cursor-pointer">
@@ -15,7 +39,7 @@ const Navbar = () => {
         </div>
         <div className="flex gap-x-2.5 lg:gap-x-8 text-xl">
           {navItems.map((item, idx) => (
-            <Link
+            <ScrollLink
               to={item.path}
               smooth={true}
               spy={true}
@@ -24,15 +48,24 @@ const Navbar = () => {
               key={idx}
               activeClass="active-path"
             >
-              <h2 className=" py-1.5 lg:py-3 text-[9.5px] sm:text-[11px] md:text-sm lg:text-[19px] hover:translate-y-1 duration-500 ">
-                {item.title}
-              </h2>
-            </Link>
+              <h2 className="py-3 text-[11px] md:text-sm lg:text-[23px] ">{item.title}</h2>
+            </ScrollLink>
           ))}
         </div>
-        <button className="bg-[#6364f2] px-2 py-1.5 lg:px-5 lg:py-2.5 rounded-[30px] text-[10px] md:text-[18px] text-white hover:scale-105 hover:bg-violet-800 duration-300">
-          Go to Dashboard
-        </button>
+        {login ?
+          <button className="bg-[#6364f2] p-2 lg:p-3 rounded-lg text-[11px] md:text-xl text-white">
+            <RouterLink to={Cookies.get('user_role') === 'admin' ? "/dashboard/admin" : "/dashboard/admin/listofdoctor"} className="ud-main-btn ud-white-btn">
+              Go to Dashboard
+            </RouterLink>
+          </button>
+          :
+          <button className="bg-[#6364f2] p-2 lg:p-3 rounded-lg text-[11px] md:text-xl text-white">
+            <RouterLink to="/login" className="ud-main-btn ud-white-btn">
+              Login
+            </RouterLink>
+          </button>
+        }
+
       </div>
     </div>
   );

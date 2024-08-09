@@ -15,15 +15,19 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 import Cookies from 'js-cookie'
 //! Api Slices 
-import { useGetHolidayAreasQuery, useGetHolidaysAreaByIdQuery, useUpdateHolidayAreaMutation } from '@/api/HolidaySlices/holidaySlices';
+import { useGetCompanyHolidaysQuery, useGetHolidaysAreaByIdQuery, useUpdateHolidayAreaMutation } from '@/api/HolidaySlices/holidaySlices';
+import {
+    useGetAllCompanyAreasQuery,
+} from '@/api/CompanySlices/companyAreaSlice';
 
 const EditHolidayArea = ({ idharu, onClose }) => {
 
     //! Getting  by ID
     const HolidayArea = useGetHolidaysAreaByIdQuery(idharu);
+    console.log(HolidayArea?.data)
 
-    //! Get all holidays 
-    const Areas = useGetHolidayAreasQuery(Cookies.get('company_id'))
+    //! Company Area
+    const Areas = useGetAllCompanyAreasQuery(Cookies.get("company_id"));
 
     const areas = useMemo(() => {
         if (Areas.data) {
@@ -31,12 +35,22 @@ const EditHolidayArea = ({ idharu, onClose }) => {
         }
         return [];
     }, [Areas])
-
     const [areaOptions, setAreaOptions] = useState([])
     //! Options
-    const handleHolidayAreas = useCallback((event, value) => {
-        setAreaOptions(value.map(option => option.id));
-    }, []);
+    const handleHolidayAreas = (event, value) => {
+        const selectedIds = value.map(option => option.id);
+        setAreaOptions(selectedIds);
+    };
+
+    //! Company holidays
+    const Holidays = useGetCompanyHolidaysQuery(Cookies.get("company_id"));
+    const holidays = useMemo(() => {
+        if (Holidays.data) {
+            return Holidays.data.map((key) => ({ id: key.id, title: key.holiday_name }))
+        }
+        return [];
+    }, [Holidays])
+
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
@@ -63,8 +77,8 @@ const EditHolidayArea = ({ idharu, onClose }) => {
     useEffect(() => {
         if (HolidayArea.data) {
             setInitialFValues({
-                holiday_type: HolidayArea.data.holiday_type,
-                company_area: HolidayArea.data.company_area,
+                holiday_type: HolidayArea.data.holiday_type.holiday_type,
+                company_area: HolidayArea.data.company_area.company_area,
             });
         }
     }, [HolidayArea.data])
@@ -95,17 +109,18 @@ const EditHolidayArea = ({ idharu, onClose }) => {
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append("holiday_type", values.holiday_type);
-        areaOptions.forEach(areaId => {
-            formData.append("company_area", areaId);
-        });
-        formData.append('id', idharu);
-        formData.append("company_name", Cookies.get('company_id'));
-        formData.append('refresh', Cookies.get('refresh'))
-        formData.append('access', Cookies.get('access'));
+
+        // const formData = new FormData();
+        // formData.append("holiday_type", values.holiday_type);
+        // areaOptions.forEach(areaId => {
+        //     formData.append("company_area", areaId);
+        // });
+        // formData.append('id', idharu);
+        // formData.append("company_name", Cookies.get('company_id'));
+        // formData.append('refresh', Cookies.get('refresh'))
+        // formData.append('access', Cookies.get('access'));
         try {
-            const response = await updateHolidayArea(formData).unwrap();
+            const response = await updateHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptions }).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited CompanyRoles' });
             setTimeout(() => {
                 setSuccessMessage({ show: false, message: '' });
@@ -118,10 +133,8 @@ const EditHolidayArea = ({ idharu, onClose }) => {
             }, 3000);
         }
         onClose();
-        // setIsDrawerOpen(false)
     }, [updateHolidayArea, values])
 
-    // const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     return (
         <>
@@ -162,14 +175,14 @@ const EditHolidayArea = ({ idharu, onClose }) => {
                                     <TextField {...params} label="Company Areas" />
                                 )}
                                 renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
                             />
                         </Box>
                         <Box marginBottom={2}>
-                            <Controls.Input
+                            <Controls.Select
                                 id="focus"
                                 name="holiday_type"
                                 label="Holiday Type*"
@@ -177,6 +190,7 @@ const EditHolidayArea = ({ idharu, onClose }) => {
                                 onChange={handleInputChange}
                                 error={errors.holiday_type}
                                 autoFocus
+                                options={holidays}
                             />
                         </Box>
                         <Stack spacing={1} direction="row">
