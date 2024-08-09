@@ -2,25 +2,29 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import PersonIcon from "@mui/icons-material/Person";
+import PlaceIcon from "@mui/icons-material/Place";
 const TestimonialData = [
   {
     id: 1,
     name: "Rakesh",
+    place: "London",
     text: "  Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quasi dignissimos nihil quo voluptates tenetur aspernatur earum recusandae et aliquid.",
-    img: "https://picsum.photos/101/101",
+    // img: "https://picsum.photos/101/101",
   },
   {
     id: 2,
     name: "Rameshwor",
+    place: "Belgium",
     text: "  Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quasi dignissimos nihil quo voluptates tenetur aspernatur earum recusandae et aliquid.",
-    img: "https://picsum.photos/102/102",
+    // img: "https://picsum.photos/102/102",
   },
   {
     id: 3,
     name: "Jaydev",
+    place: "Dubai",
     text: "  Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quasi dignissimos nihil quo voluptates tenetur aspernatur earum recusandae et aliquid.",
-    img: "https://picsum.photos/103/103",
+    // img: "https://picsum.photos/103/103",
   },
 ];
 
@@ -78,17 +82,18 @@ const Testimonial = () => {
         </div>
 
         <Slider {...settings}>
-          {TestimonialData.map(({ id, name, text, img }) => {
+          {TestimonialData.map(({ id, name, text, place }) => {
             return (
               <div key={id} className="my-6">
-                <div className="flex flex-col justify-center items-center gap-4 text-center shadow-lg p-4 mx-4 rounded-xl bg-primary/10 relative">
-                  <img
-                    src={img}
-                    alt=""
-                    className="rounded-full block mx-auto"
-                  />
+                <div className="flex flex-col justify-center items-center gap-1 text-center shadow-lg p-4 mx-4 rounded-xl relative">
+                  <PersonIcon className="rounded-full text-8xl   mx-auto" />
+
                   <h1 className="text-xl font-bold "> {name}</h1>
-                  <p className="text-gray-500 text-sm">{text}</p>
+                  <div className="flex gap-1 justify-start items-center text-gray-500">
+                    <PlaceIcon fontSize="30px" />
+                    <h3>{place}</h3>
+                  </div>
+                  <p className="text-gray-500 text-sm mt-4">{text}</p>
                   <p className=" text-black/20 text-9xl font-serif absolute top-0 right-0">
                     ,,
                   </p>

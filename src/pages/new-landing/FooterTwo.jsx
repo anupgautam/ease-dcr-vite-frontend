@@ -4,13 +4,14 @@ import { FaFacebookF } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { RiInstagramFill } from "react-icons/ri";
 import { FaLinkedin } from "react-icons/fa";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 
 const FooterTwo = () => {
   const medias = [
     {
       id: 0,
       icon: <FaFacebookF />,
+      href: "https://www.facebook.com/profile.php?id=61557314434333",
     },
     {
       id: 1,
@@ -19,6 +20,7 @@ const FooterTwo = () => {
     {
       id: 3,
       icon: <RiInstagramFill />,
+      href: "https://www.instagram.com/ease_sfa_/",
     },
     {
       id: 4,
@@ -27,11 +29,23 @@ const FooterTwo = () => {
   ];
   return (
     <div className="bg-blue-950 text-white">
-     <section className=" relative z-0">
-        <img src="assets/images/footer/shape-1.svg" alt="shape1" className=" absolute h-[280px] z-0"/>
-        <img src="assets/images/footer/shape-2.svg" alt="shape2" className=" absolute right-0 "/>
-        <img src="assets/images/footer/shape-3.svg" alt="shape3" className="hidden lg:block absolute right-0 top-0 h-[342px] z-0"/>
-     </section>
+      <section className=" relative z-0">
+        <img
+          src="assets/images/footer/shape-1.svg"
+          alt="shape1"
+          className=" absolute h-[280px] z-0"
+        />
+        <img
+          src="assets/images/footer/shape-2.svg"
+          alt="shape2"
+          className=" absolute right-0 "
+        />
+        <img
+          src="assets/images/footer/shape-3.svg"
+          alt="shape3"
+          className="hidden lg:block absolute right-0 top-0 h-[342px] z-0"
+        />
+      </section>
       <div className=" container grid lg:grid-cols-5 grid-cols-3  justify-between py-8 lg:py-16">
         <div className=" col-span-2 z-50">
           <section className="flex items-center">
@@ -48,7 +62,7 @@ const FooterTwo = () => {
                   className=" text-white bg-[#161616] text-[20px] rounded-full p-3"
                   key={item.id}
                 >
-                  {item.icon}
+                  <a href={item.href}>{item.icon}</a>
                 </h3>
               );
             })}
@@ -73,8 +87,15 @@ const FooterTwo = () => {
         </div>
         <div className=" col-span-2 lg:col-span-1 z-50 mx-auto lg:mx-0">
           <h2 className=" text-lg font-semibold">Download Now</h2>
-          <Link to="*"><img src="/assets/google-play-store.png" className=" h-16 lg:h-20 mt-7" /></Link>
-          <Link to="*"><img src="/assets/app-store.png" className=" h-16 lg:h-20 z-50" /></Link>
+          <Link to="*">
+            <img
+              src="/assets/google-play-store.png"
+              className=" h-16 lg:h-20 mt-7"
+            />
+          </Link>
+          <Link to="*">
+            <img src="/assets/app-store.png" className=" h-16 lg:h-20 z-50" />
+          </Link>
         </div>
       </div>
     </div>
