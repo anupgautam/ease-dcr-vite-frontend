@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IoLocationSharp, IoMail } from "react-icons/io5";
 import { useCreateLandingsMutation } from "../../api/MPOSlices/LandingSlice";
-import {Grid,Box} from "@mui/material"
+import { Grid, Box } from "@mui/material";
 
 const Contact = () => {
   const [createLandings] = useCreateLandingsMutation();
@@ -16,8 +16,14 @@ const Contact = () => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
-  const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
-  const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
+  const [SuccessMessage, setSuccessMessage] = useState({
+    show: false,
+    message: "",
+  });
+  const [ErrorMessage, setErrorMessage] = useState({
+    show: false,
+    message: "",
+  });
   const [errors, setErrors] = useState({});
   const validate = () => {
     let tempErrors = {};
@@ -43,28 +49,35 @@ const Contact = () => {
     if (validate()) {
       console.log("values:", form);
       const response = await createLandings(form).unwrap();
-      console.log("rp:",response);
-      
-      try{
+      console.log("rp:", response);
+
+      try {
         if (response) {
-          setSuccessMessage({ show: true, message: 'Successfully Message Sent' });
+          setSuccessMessage({
+            show: true,
+            message: "Successfully Message Sent",
+          });
           setTimeout(() => {
-              setSuccessMessage({ show: false, message: '' });
+            setSuccessMessage({ show: false, message: "" });
+          }, 3000);
+        } else {
+          setErrorMessage({
+            show: true,
+            message: "Some Error Occurred. Try again later",
+          });
+          setTimeout(() => {
+            setErrorMessage({ show: false, message: "" });
           }, 3000);
         }
-        else{
-          setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-          setTimeout(() => {
-              setErrorMessage({ show: false, message: '' });
-          }, 3000);
-        }
-       }
-        catch(error){
-          setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
-        } 
+      } catch (error) {
+        setErrorMessage({
+          show: true,
+          message: "Some Error Occurred. Try again later",
+        });
+        setTimeout(() => {
+          setErrorMessage({ show: false, message: "" });
+        }, 3000);
+      }
     }
   };
 
@@ -72,55 +85,56 @@ const Contact = () => {
     <div
       className="bg-[#f3f4fe] py-10 lg:py-24 font-public_sans relative"
       id="contact"
-    >  
-     
-      {
-                ErrorMessage.show === true ? (
-                  <Grid>
-                        <Box className=" z-50 bg-red-700 p-3 rounded-lg fixed right-5 top-24 w-fit ">
-                            <h1 style={{ fontSize: '14px', color: 'white',zIndex:"999" }}>{ErrorMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
-                    <Grid>
-                        <Box className=" z-50 bg-emerald-500 p-3 rounded-lg fixed right-5 top-24 w-fit ">
-                            <h1 style={{ fontSize: '14px', color: 'white',zIndex:"999" }}>{SuccessMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                ) : null
-            }
-            
-      <div className=" container lg:flex justify-between items-center">
-        <div className=" lg:w-[55%]">
+    >
+      {ErrorMessage.show === true ? (
+        <Grid>
+          <Box className=" z-50 bg-red-700 p-3 rounded-lg fixed right-5 top-24 w-fit ">
+            <h1 style={{ fontSize: "14px", color: "white", zIndex: "999" }}>
+              {ErrorMessage.message}
+            </h1>
+          </Box>
+        </Grid>
+      ) : null}
+      {SuccessMessage.show === true ? (
+        <Grid>
+          <Box className=" z-50 bg-emerald-500 p-3 rounded-lg fixed right-5 top-24 w-fit ">
+            <h1 style={{ fontSize: "14px", color: "white", zIndex: "999" }}>
+              {SuccessMessage.message}
+            </h1>
+          </Box>
+        </Grid>
+      ) : null}
+
+      <div className=" container space-y-3 lg:space-y-0 lg:flex justify-between items-center">
+        <div className=" xl:w-[45%] px-5 lg:px-12 py-6 lg:py-12 bg-white rounded-xl drop-shadow-md">
           <h3 className=" font-semibold text-sm">CONTACT US</h3>
-          <h1 className=" text-[22px] lg:text-[34px] font-bold leading-tight my-2">
+          <h1 className=" text-[22px] lg:text-[30px] font-bold leading-tight my-2">
             Let's talk about
             <br /> Love to hear from you!
           </h1>
-          <div className=" xl:flex justify-between my-1 lg:my-5 py-4 lg:py-8 space-y-3 xl:space-y-0 text-sm lg:text-[16px] xl:text-[18px] bg-white px-8 rounded-lg drop-shadow-md">
-            <section className=" flex gap-x-3">
-              <IoLocationSharp className=" text-[#6364f2] text-3xl mt-1" />
-              <section className=" space-y-0.5">
-                <h2 className=" font-semibold">Our Location</h2>
-                <h3>Kalanki-14,Kathmandu,Nepal</h3>
+          <div className=" my-5 lg:my-10 space-y-8 text-sm lg:text-[16px] xl:text-[18px]">
+            <section className=" flex gap-x-3 hover:translate-x-4 duration-300">
+              <IoLocationSharp className=" text-[#6364f2] text-3xl" />
+              <section className=" space-y-2">
+                <h2 className=" font-bold text-[24px] mb-3">Our Location</h2>
+                <h3 className=" text-[20px]">Kalanki-14,Kathmandu,Nepal</h3>
               </section>
             </section>
-            <section className=" flex gap-x-3">
-              <IoMail className=" text-[#6364f2] text-3xl mt-1" />
-              <section className=" space-y-0.5">
-                <h2 className=" font-semibold">How Can We Help?</h2>
+            <section className=" flex gap-x-3 hover:translate-x-4 duration-300">
+              <IoMail className=" text-[#6364f2] text-3xl" />
+              <section className=" space-y-2 text-[20px]">
+                <h2 className=" font-bold text-[24px] mb-3">
+                  How Can We Help?
+                </h2>
                 <h3>info@easesfa.com</h3>
                 <h3>contact@easesfa.com</h3>
               </section>
             </section>
           </div>
         </div>
-        <div className=" lg:w-[55%] xl:w-[40%]">
+        <div className=" xl:w-[45%]">
           <section className=" px-5 lg:px-12 py-6 lg:py-12 bg-white rounded-xl drop-shadow-md">
-            <h2 className=" font-bold text-[26px] pb-7">Send us a Message</h2>
+            <h2 className=" font-bold text-[30px] pb-7">Send us a Message</h2>
             <form className="flex-col flex gap-y-5" onSubmit={handleSubmit}>
               <input
                 placeholder="Full Name*"
@@ -159,7 +173,9 @@ const Contact = () => {
                 }`}
               />
               {errors.phone_number && (
-                <span className="text-red-500 text-sm">{errors.phone_number}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.phone_number}
+                </span>
               )}
 
               <input
@@ -179,15 +195,13 @@ const Contact = () => {
 
               <button
                 className="rounded-md bg-[#6364f2] p-3 text-white lg:w-[40%] xl:w-[45%]"
-                type="submit"
-              >
+                type="submit">
                 Send Message
               </button>
             </form>
           </section>
         </div>
       </div>
-     
     </div>
   );
 };

@@ -56,7 +56,7 @@ const NewPricing = () => {
       <section className="py-10">
         <div className="container">
           <div className="md:text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mt-2 text-gray-800">
+            <h2 className="text-[28px] md:text-[38px] font-bold mt-2 text-[#3e3d48]">
               Our Pricing Plans
             </h2>
             <p className="mt-4 max-w-2xl mx-auto text-gray-600">

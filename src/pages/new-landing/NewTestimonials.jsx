@@ -71,7 +71,7 @@ const Testimonial = () => {
     <div className="py-10">
       <div className="container">
         <div className=" md:text-center font-public_sans">
-          <h1 className="text-4xl md:text-5xl font-bold mt-2 text-gray-800">
+          <h1 className="text-[28px] md:text-[38px] font-bold mt-2 text-[#3e3d48]">
             What Our Customer Says
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-gray-600 ">
