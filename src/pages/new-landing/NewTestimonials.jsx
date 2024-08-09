@@ -74,7 +74,7 @@ const Testimonial = () => {
           <h1 className="text-4xl md:text-5xl font-bold mt-2 text-gray-800">
             What Our Customer Says
           </h1>
-          <p className="text-xs text-gray-400 pt-4 ">
+          <p className="mt-4 max-w-2xl mx-auto text-gray-600 ">
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima
             voluptas ex sint? Praesentium, dolor odio veritatis laudantium
             pariatur inventore voluptates obcaecati illum accusantium a culpa.
