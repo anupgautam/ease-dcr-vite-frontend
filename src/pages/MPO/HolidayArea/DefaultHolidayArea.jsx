@@ -76,6 +76,7 @@ const DefaultHolidayArea = () => {
 
     //! Get Holiday Areas
     const { data } = useGetHolidayAreasQuery(Cookies.get('company_id'));
+    console.log(data)
 
     // !Delete TourPlan
     const [deleteHolidayArea] = useDeleteHolidayAreasByIdMutation();
@@ -108,10 +109,10 @@ const DefaultHolidayArea = () => {
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {companyroles.holiday_type}
+                                                            {companyroles.holiday_type.holiday_name}
                                                         </Typography>
                                                     </TableCell>
-                                                    <TableCell align="left">{companyroles.company_area.company_area}</TableCell>
+                                                    {/* <TableCell align="left">{companyroles.company_area}</TableCell> */}
                                                     <TableCell align="right">
                                                         <IconButton color={'primary'} onClick={(e) => onEdit(companyroles.id)}>
                                                             <Badge>

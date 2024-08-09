@@ -23,8 +23,17 @@ export const HolidaySlices = apiSlice.injectEndpoints({
 
         //! Get all Holiday Areas
         getHolidayAreas: builder.query({
-            query: () => ({
-                url: `company/company-holiday-area/`,
+            query: (page) => ({
+                url: `company/company-holiday-area/?company_area=${page}`,
+                method: 'GET'
+            }),
+            providesTags: ['Holiday']
+        }),
+
+        //! Get all Holidays
+        getCompanyHolidays: builder.query({
+            query: (page) => ({
+                url: `company/company-holiday/?company_id=${page}`,
                 method: 'GET'
             }),
             providesTags: ['Holiday']
@@ -87,7 +96,7 @@ export const HolidaySlices = apiSlice.injectEndpoints({
             query: (id) => {
                 return {
                     // url: `company/bulk-create-company-holiday-area/`,
-                    url: `company/company-holiday-area/`,
+                    url: `company/company-holiday-area/bulk_create_company_holiday/`,
                     method: 'POST',
                     body: id
                 }
@@ -207,6 +216,7 @@ export const {
     useFilterGetHolidaysQuery,
     useGetHolidayByMonthAndYearMutation,
 
+    useGetCompanyHolidaysQuery,
     useGetHolidayAreasQuery,
     useGetHolidaysAreaByIdQuery,
     useCreateHolidayAreasMutation,

@@ -14,7 +14,6 @@
     "@date-io/date-fns": "^3.0.0",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
-    "@faker-js/faker": "^8.4.1",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@iconify/react": "^5.0.2",

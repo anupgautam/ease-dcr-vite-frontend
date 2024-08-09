@@ -21,7 +21,7 @@ import {
     useGetAllCompanyAreasQuery,
 } from '@/api/CompanySlices/companyAreaSlice';
 import Cookies from 'js-cookie'
-import { useCreateHolidayAreasMutation } from '@/api/HolidaySlices/holidaySlices';
+import { useGetCompanyHolidaysQuery, useCreateHolidayAreasMutation } from '@/api/HolidaySlices/holidaySlices';
 
 const AddHolidayArea = () => {
 
@@ -45,6 +45,14 @@ const AddHolidayArea = () => {
         setAreaOptions(selectedIds);
     };
 
+    //! Company holidays
+    const Holidays = useGetCompanyHolidaysQuery(Cookies.get("company_id"));
+    const holidays = useMemo(() => {
+        if (Holidays.data) {
+            return Holidays.data.map((key) => ({ id: key.id, title: key.holiday_name }))
+        }
+        return [];
+    }, [Holidays])
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
@@ -156,14 +164,14 @@ const AddHolidayArea = () => {
                                 <TextField {...params} label="Company Areas" />
                             )}
                             renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                <li {...props} key={option.id}>
+                                    {option.title}
+                                </li>
+                            )}
                         />
                     </Box>
                     <Box marginBottom={2}>
-                        <Controls.Input
+                        <Controls.Select
                             id="focus"
                             name="holiday_type"
                             label="Holiday Type*"
@@ -171,6 +179,7 @@ const AddHolidayArea = () => {
                             onChange={handleInputChange}
                             error={errors.holiday_type}
                             autoFocus
+                            options={holidays}
                         />
                     </Box>
                     <Stack spacing={1} direction="row">
