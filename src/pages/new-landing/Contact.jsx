@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { IoLocationSharp, IoMail } from "react-icons/io5";
-import { useContactInfoMutation } from "../../api/contactSlice";
+import { useCreateLandingsMutation } from "../../api/MPOSlices/LandingSlice";
+import {Grid,Box} from "@mui/material"
 
 const Contact = () => {
-  const [contactInfo] = useContactInfoMutation();
+  const [createLandings] = useCreateLandingsMutation();
   const [form, setForm] = useState({
     full_name: "",
     email: "",
@@ -15,7 +16,8 @@ const Contact = () => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
-
+  const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
+  const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
   const [errors, setErrors] = useState({});
   const validate = () => {
     let tempErrors = {};
@@ -40,15 +42,29 @@ const Contact = () => {
     e.preventDefault();
     if (validate()) {
       console.log("values:", form);
-      try {
-        const response = await contactInfo(form).unwrap();
-        if (response.status === 200) {
-          alert("Email sent");
+      const response = await createLandings(form).unwrap();
+      console.log("rp:",response);
+      
+      try{
+        if (response) {
+          setSuccessMessage({ show: true, message: 'Successfully Message Sent' });
+          setTimeout(() => {
+              setSuccessMessage({ show: false, message: '' });
+          }, 3000);
         }
-      } catch (error) {
-        console.error("Failed to send email:", error);
-        alert("Email not sent");
-      }
+        else{
+          setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+          setTimeout(() => {
+              setErrorMessage({ show: false, message: '' });
+          }, 3000);
+        }
+       }
+        catch(error){
+          setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            setTimeout(() => {
+                setErrorMessage({ show: false, message: '' });
+            }, 3000);
+        } 
     }
   };
 
@@ -56,7 +72,27 @@ const Contact = () => {
     <div
       className="bg-[#f3f4fe] py-10 lg:py-24 font-public_sans relative"
       id="contact"
-    >
+    >  
+     
+      {
+                ErrorMessage.show === true ? (
+                  <Grid>
+                        <Box className=" z-50 bg-red-700 p-3 rounded-lg fixed right-5 top-24 w-fit ">
+                            <h1 style={{ fontSize: '14px', color: 'white',zIndex:"999" }}>{ErrorMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                ) : null
+            }
+            {
+                SuccessMessage.show === true ? (
+                    <Grid>
+                        <Box className=" z-50 bg-emerald-500 p-3 rounded-lg fixed right-5 top-24 w-fit ">
+                            <h1 style={{ fontSize: '14px', color: 'white',zIndex:"999" }}>{SuccessMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                ) : null
+            }
+            
       <div className=" container lg:flex justify-between items-center">
         <div className=" lg:w-[55%]">
           <h3 className=" font-semibold text-sm">CONTACT US</h3>
@@ -151,6 +187,7 @@ const Contact = () => {
           </section>
         </div>
       </div>
+     
     </div>
   );
 };
