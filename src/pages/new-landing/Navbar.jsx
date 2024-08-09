@@ -2,37 +2,16 @@ import React from "react";
 import logo from "/assets/logo.png";
 import { Link, Events, scrollSpy } from "react-scroll";
 import "./Navbar.css";
+import { navItems } from "./Elements";
 
 const Navbar = () => {
-  const navItems = [
-    {
-      id: 0,
-      title: "Home",
-      path: "home",
-    },
-    {
-      id: 1,
-      title: "About",
-      path: "about",
-    },
-    {
-      id: 2,
-      title: "Book a Demo",
-      path: "demo",
-    },
-    {
-      id: 3,
-      title: "Contact",
-      path: "contact",
-    },
-  ];
 
   return (
-    <div className="bg-[#ffffff] fixed w-full top-0 z-50 left-0 right-0 drop-shadow-md">
-      <div className="font-public_sans flex items-center container justify-between py-3 font-semibold">
+    <div className=" container cursor-pointer">
+      <div className=" font-public_sans flex items-center justify-between py-2.5 font-semibold lg:font-bold">
         <div className="flex items-center">
           <img src={logo} alt="logo" className="h-10 md:h-14" />
-          <p className="hidden md:block text-[21px]">Ease SFA</p>
+          <p className="hidden md:block text-[19px]">Ease SFA</p>
         </div>
         <div className="flex gap-x-2.5 lg:gap-x-8 text-xl">
           {navItems.map((item, idx) => (
@@ -43,15 +22,15 @@ const Navbar = () => {
               offset={-100}
               duration={800}
               key={idx}
-              activeClass="active-link"
+              activeClass="active-path"
             >
-              <h2 className="py-3 text-[11px] md:text-sm lg:text-[23px] ">
+              <h2 className=" py-1.5 lg:py-3 text-[9.5px] sm:text-[11px] md:text-sm lg:text-[19px] hover:translate-y-1 duration-500 ">
                 {item.title}
               </h2>
             </Link>
           ))}
         </div>
-        <button className="bg-[#6364f2] p-2 lg:p-3 rounded-lg text-[11px] md:text-xl text-white">
+        <button className="bg-[#6364f2] px-2 py-1.5 lg:px-5 lg:py-2.5 rounded-[30px] text-[10px] md:text-[18px] text-white hover:scale-105 hover:bg-violet-800 duration-300">
           Go to Dashboard
         </button>
       </div>

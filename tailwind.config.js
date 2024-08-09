@@ -16,6 +16,7 @@ export default {
     },
     fontFamily: {
       public_sans: ["Public Sans", "sans-serif"],
+      sofia:["Sofia Sans Semi Condensed","sans-serif"],
     },
   },
   plugins: [],
