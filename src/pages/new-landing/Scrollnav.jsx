@@ -4,8 +4,10 @@ import { Link as RouterLink } from "react-router-dom";
 import logo from "/assets/logo.png"
 import "./Scrollnav.css"
 import { navItems } from "./Elements";
+import Cookies from 'js-cookie'
 
 const Scrollnav = () => {
+  const login = Cookies.get('user_role');
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
