@@ -35,7 +35,7 @@ const Navbar = () => {
           <p className="hidden md:block text-[21px]">Ease SFA</p>
         </div>
         <div className="flex gap-x-2.5 lg:gap-x-8 text-xl">
-          {navItems.map((item,idx) => (
+          {navItems.map((item, idx) => (
             <Link
               to={item.path}
               smooth={true}
@@ -45,7 +45,9 @@ const Navbar = () => {
               key={idx}
               activeClass="active-link"
             >
-             <h2 className="py-3 text-[11px] md:text-sm lg:text-[23px] ">{item.title}</h2>
+              <h2 className="py-3 text-[11px] md:text-sm lg:text-[23px] ">
+                {item.title}
+              </h2>
             </Link>
           ))}
         </div>

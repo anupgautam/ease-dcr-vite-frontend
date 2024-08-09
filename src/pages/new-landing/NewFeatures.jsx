@@ -1,39 +1,76 @@
-import Img1 from "/assets/images/features/invoice-create.png";
-import Img2 from "/assets/images/features/chatbox.png";
-import Img3 from "/assets/images/features/dashboard.png";
-import Img4 from "/assets/images/features/leads.png";
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTable,
+  faRoute,
+  faDollarSign,
+  faBullseye,
+  faChartLine,
+  faCalendarAlt,
+  faComments,
+  faBell,
+} from "@fortawesome/free-solid-svg-icons";
+import "tailwindcss/tailwind.css";
 
-const images = [
+const services = [
   {
-    src: Img1,
-    title: "Interesting quotes in two clicks",
+    icon: faTable,
+    title: "DCR",
     description:
-      "Create professional-looking quotations quickly using a user-friendly interface.",
+      "The Daily Call Report (DCR) helps you maintain a log of all your daily calls",
+    bgColor: "bg-blue-500",
   },
   {
-    src: Img2,
-    title: "Seamless communication",
+    icon: faRoute,
+    title: "Tour Plan",
     description:
-      "Communication is key. Incoming emails are automatically added to your pipeline, and all contact with your team and customers is made from one place.",
+      "Plan your tours efficiently with our comprehensive Tour Plan feature",
+    bgColor: "bg-green-500",
   },
   {
-    src: Img3,
-    title: "Efficient Dashboard",
-    description:
-      "Manage and analyze your sales data effectively with a comprehensive dashboard.",
+    icon: faDollarSign,
+    title: "Expenses",
+    description: "Keep track of all your expenses with ease",
+    bgColor: "bg-yellow-500",
   },
   {
-    src: Img4,
-    title: "Lead Management",
+    icon: faBullseye,
+    title: "Targets",
+    description: "Set and track your goals with the Targets feature",
+    bgColor: "bg-red-500",
+  },
+  {
+    icon: faChartLine,
+    title: "Sales",
     description:
-      "Organize and track your leads to convert more prospects into customers.",
+      "Track your sales activities and performance with our Sales feature",
+    bgColor: "bg-purple-500",
+  },
+  {
+    icon: faCalendarAlt,
+    title: "Events",
+    description: "Stay on top of your schedule with our Events feature.",
+    bgColor: "bg-teal-500",
+  },
+  {
+    icon: faComments,
+    title: "Real Time Chat",
+    description: "Enhance communication with our Real Time Chat feature.",
+    bgColor: "bg-pink-500",
+  },
+  {
+    icon: faBell,
+    title: "Real Time Notification",
+    description:
+      "Receive real-time notifications to stay updated on important events and activities",
+    bgColor: "bg-orange-500",
   },
 ];
 
 const NewFeature = () => {
   return (
     <div className="py-10">
-      <div className="container ">
+      <div className="container mx-auto">
         <div className="md:text-center font-public_sans">
           <h1 className="text-4xl md:text-5xl font-bold mt-2 text-gray-800">
             Features of Ease SFA
@@ -45,24 +82,23 @@ const NewFeature = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1  lg:grid-cols-3 gap-8 mt-4 md:mt-10">
-          {images.map((image, index) => (
+        <div className="cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-6 mt-10">
+          {services.map((service, index) => (
             <div
               key={index}
-              className={`border p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ${
-                index === 1 || index === 2 ? "lg:col-span-2" : "lg:col-span-1"
-              }`}
+              className="card items-center p-4 shadow-lg cursor-default "
             >
-              <img
-                src={image.src}
-                alt={`Feature ${index}`}
-                className="w-full object-cover h-40 sm:h-48 md:h-56 lg:h-64 rounded-t-lg"
-              />
-              <div className="p-4 text-left">
-                <h2 className="text-lg font-semibold">{image.title}</h2>
-                <p className="text-sm text-gray-500 mt-2">
-                  {image.description}
-                </p>
+              <div
+                className={`flex items-center justify-center w-16 h-16 rounded-full ${service.bgColor} mb-4`}
+              >
+                <FontAwesomeIcon
+                  icon={service.icon}
+                  className="text-white text-3xl"
+                />
+              </div>
+              <div className=" card-content text-center">
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
               </div>
             </div>
           ))}

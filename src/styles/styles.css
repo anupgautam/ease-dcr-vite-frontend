@@ -677,6 +677,57 @@ input[type="file"] {
   width: 120px;
 }
 
+.cards .card {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background: #ffff;
+  position: relative;
+  border-radius: 10px;
+}
+
+.cards .card:hover {
+  background: #151515;
+}
+
+.cards .card:hover h3 {
+  color: #fff;
+}
+
+.cards .card:hover .card-content p {
+  color: #c1c1c1;
+}
+
+.cards .card::before {
+  position: absolute;
+  content: "";
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 10px;
+  background: #f36946;
+  transition: 0.6s;
+  transform: rotate(0deg);
+  z-index: -1;
+}
+
+.cards .card:hover.card::before {
+  transform: rotate(10deg);
+}
+
+.cards .card h3 {
+  font-size: 1.2rem;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.cards .card .card-content p {
+  color: rgba(7, 7, 7, 0.5);
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
 /* Small devices (phones, less than 768px) */
 @media (max-width: 767px) {
   .customRibbionWrapepr {
