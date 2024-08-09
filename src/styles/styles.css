@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Sofia+Sans+Semi+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Sofia+Sans+Semi+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -174,7 +174,7 @@
   right: 20px !important;
   padding-left: 25px !important;
   padding-right: 25px !important;
-  z-index:9999 !important;
+  z-index: 9999 !important;
 }
 
 .select-holidays {
@@ -707,7 +707,7 @@ input[type="file"] {
   top: 0;
   left: 0;
   border-radius: 10px;
-  background: #f36946;
+  background: #5b21b6;
   transition: 0.6s;
   transform: rotate(0deg);
   z-index: -1;

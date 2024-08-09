@@ -3,10 +3,10 @@ import logo from "/assets/logo.png";
 import { Link as ScrollLink, Events, scrollSpy } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
 import "./Navbar.css";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 
 const Navbar = () => {
-  const login = Cookies.get('user_role');
+  const login = Cookies.get("user_role");
   const navItems = [
     {
       id: 0,
@@ -37,7 +37,7 @@ const Navbar = () => {
           <img src={logo} alt="logo" className="h-10 md:h-14" />
           <p className="hidden md:block text-[19px]">Ease SFA</p>
         </div>
-        <div className="flex gap-x-2.5 lg:gap-x-8 text-xl">
+        <div className="flex gap-x-2.5 md:gap-x-8 text-xl">
           {navItems.map((item, idx) => (
             <ScrollLink
               to={item.path}
@@ -48,24 +48,32 @@ const Navbar = () => {
               key={idx}
               activeClass="active-path"
             >
-              <h2 className="py-3 text-[11px] md:text-sm lg:text-[23px] ">{item.title}</h2>
+              <h2 className="py-3 text-[11px] md:text-lg lg:text-[23px] ">
+                {item.title}
+              </h2>
             </ScrollLink>
           ))}
         </div>
-        {login ?
-          <button className="bg-[#6364f2] p-2 lg:p-3 rounded-lg text-[11px] md:text-xl text-white">
-            <RouterLink to={Cookies.get('user_role') === 'admin' ? "/dashboard/admin" : "/dashboard/admin/listofdoctor"} className="ud-main-btn ud-white-btn">
+        {login ? (
+          <button className="bg-[#6364f2] p-2  px-4 md:px-8  rounded-[30px] text-[11px] md:text-xl text-white hover:scale-105 hover:bg-violet-800 duration-300">
+            <RouterLink
+              to={
+                Cookies.get("user_role") === "admin"
+                  ? "/dashboard/admin"
+                  : "/dashboard/admin/listofdoctor"
+              }
+              className="ud-main-btn ud-white-btn"
+            >
               Go to Dashboard
             </RouterLink>
           </button>
-          :
-          <button className="bg-[#6364f2] p-2 lg:p-3 rounded-lg text-[11px] md:text-xl text-white">
+        ) : (
+          <button className="bg-[#6364f2] p-2 px-4 md:px-8 rounded-[30px] text-[11px] md:text-xl text-white hover:scale-105 hover:bg-violet-800 duration-300">
             <RouterLink to="/login" className="ud-main-btn ud-white-btn">
               Login
             </RouterLink>
           </button>
-        }
-
+        )}
       </div>
     </div>
   );
