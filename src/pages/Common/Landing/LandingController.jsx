@@ -6,16 +6,20 @@ import FooterTwo from "../../new-landing/FooterTwo";
 import NewFeatures from "../../new-landing/NewFeatures";
 import NewPricing from "../../new-landing/NewPricing";
 import NewTestimonials from "../../new-landing/NewTestimonials";
+import Scrollnav from "../../new-landing/Scrollnav";
+import Contact from "../../new-landing/Contact";
 
 const LandingController = () => {
   return (
     <div>
       <Navbar />
+      <Scrollnav/>
       <FirstPage />
       <NewFeatures />
       <AboutUs />
       <NewPricing />
       <NewTestimonials />
+      <Contact/>
       <FooterTwo />
     </div>
   );
