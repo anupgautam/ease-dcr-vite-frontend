@@ -48,14 +48,14 @@ const Navbar = () => {
               key={idx}
               activeClass="active-path"
             >
-              <h2 className="py-3 text-[11px] md:text-lg lg:text-[23px] ">
+              <h2 className="py-3 text-[11px] md:text-[16px] ">
                 {item.title}
               </h2>
             </ScrollLink>
           ))}
         </div>
         {login ? (
-          <button className="bg-[#6364f2] p-2  px-4 md:px-8  rounded-[30px] text-[11px] md:text-xl text-white hover:scale-105 hover:bg-violet-800 duration-300">
+          <button className="bg-[#6364f2] p-2  px-4 md:px-8  rounded-[30px] text-[9px] md:text-[18px] text-white hover:scale-105 hover:bg-violet-800 duration-300">
             <RouterLink
               to={
                 Cookies.get("user_role") === "admin"
@@ -68,7 +68,7 @@ const Navbar = () => {
             </RouterLink>
           </button>
         ) : (
-          <button className="bg-[#6364f2] p-2 px-4 md:px-8 rounded-[30px] text-[11px] md:text-xl text-white hover:scale-105 hover:bg-violet-800 duration-300">
+          <button className="bg-[#6364f2] p-2 px-4 md:px-8 rounded-[30px] text-[9px] md:text-[18px] text-white hover:scale-105 hover:bg-violet-800 duration-300">
             <RouterLink to="/login" className="ud-main-btn ud-white-btn">
               Login
             </RouterLink>

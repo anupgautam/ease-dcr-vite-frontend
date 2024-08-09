@@ -55,7 +55,7 @@ const Scrollnav = () => {
                 key={idx}
                 activeClass="active-link"
               >
-                <h1 className=" font-poppins text-[11px] md:text-[16px] py-2 hover:translate-y-1 duration-500 cursor-pointer">
+                <h1 className=" font-public_sans text-[11px] md:text-[16px] py-2 hover:translate-y-1 duration-500 cursor-pointer">
                   {item.title}
                 </h1>
               </ScrollLink>
