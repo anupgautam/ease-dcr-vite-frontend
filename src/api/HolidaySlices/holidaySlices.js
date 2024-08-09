@@ -20,6 +20,15 @@ export const HolidaySlices = apiSlice.injectEndpoints({
             providesTags: ['Holiday']
         }),
 
+        //! Get all Holidays
+        getHolidayNames: builder.query({
+            query: (page) => ({
+                url: `company/company-holiday/?company_id=${page}`,
+                method: 'GET'
+            }),
+            providesTags: ['Holiday']
+        }),
+
 
         //! Get all Holiday Areas
         getHolidayAreas: builder.query({
@@ -48,6 +57,17 @@ export const HolidaySlices = apiSlice.injectEndpoints({
             providesTags: ['Holiday']
         }),
 
+        filterGetHolidaysArea: builder.query({
+            query: ({ holidayName, companyId }) => {
+                return {
+                    url: `company/company-holiday-area/?holiday_type__holiday_name=${holidayName}&company_area__company_name=${companyId}`,
+                    method: 'GET',
+                };
+            },
+            providesTags: ['Holiday'],
+        }),
+
+
         //! Get all Holidays By id
         getHolidaysById: builder.query({
             query: (id) => ({
@@ -60,7 +80,16 @@ export const HolidaySlices = apiSlice.injectEndpoints({
         //! Get all Holidays Areas By id
         getHolidaysAreaById: builder.query({
             query: (id) => ({
-                url: `mpo/working-day/${id}/`,
+                url: `company/company-holiday-area/${id}/`,
+                method: 'GET'
+            }),
+            providesTags: ['Holiday']
+        }),
+
+        //! Get Holiday Names by id
+        getHolidayNamesById: builder.query({
+            query: (id) => ({
+                url: `company/company-holiday/${id}/`,
                 method: 'GET'
             }),
             providesTags: ['Holiday']
@@ -92,10 +121,22 @@ export const HolidaySlices = apiSlice.injectEndpoints({
         }),
 
         //! Create Holiday Areas
+        createHolidayNames: builder.mutation({
+            query: (id) => {
+                return {
+                    url: `company/company-holiday/`,
+                    method: 'POST',
+                    body: id
+                }
+            },
+            invalidatesTags: ['Holiday']
+        }),
+
+
+        //! Create Holiday Areas
         createHolidayAreas: builder.mutation({
             query: (id) => {
                 return {
-                    // url: `company/bulk-create-company-holiday-area/`,
                     url: `company/company-holiday-area/bulk_create_company_holiday/`,
                     method: 'POST',
                     body: id
@@ -121,7 +162,7 @@ export const HolidaySlices = apiSlice.injectEndpoints({
         //! Delete Holiday Areas by id
         deleteHolidayAreasById: builder.mutation({
             query: (id) => ({
-                url: `company/company-holiday-area/${id}/`,
+                url: `company/company-holiday/${id}/`,
                 method: 'DELETE',
                 body: id
             }),
@@ -144,7 +185,7 @@ export const HolidaySlices = apiSlice.injectEndpoints({
         updateHolidays: builder.mutation({
             query: (updateHoliday) => {
                 return {
-                    url: `company/company-holiday-area/${updateHoliday.get('id')}/`,
+                    url: `company/company-holiday-area/bulk_update_company_holiday/${updateHoliday.get('id')}/`,
                     method: 'PATCH',
                     body: updateHoliday,
                 }
@@ -188,6 +229,30 @@ export const HolidaySlices = apiSlice.injectEndpoints({
             },
         }),
 
+        //! Update Holiday Names
+        updateHolidayName: builder.mutation({
+            query: (updateHolidayName) => {
+                return {
+                    url: `company/company-holiday/${updateHolidayName.get('id')}/`,
+                    method: 'PUT',
+                    body: updateHolidayName
+                }
+            },
+            invalidatesTags: ['Holiday'],
+            async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    apiSlice.util.updateQueryData('getAllRewards', id, (draft) => {
+                        Object.assign(draft, patch)
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
+        }),
+
         //! Filter Holiday Area
         searchHolidayAreas: builder.mutation({
             query: (FilteredData) => {
@@ -209,20 +274,26 @@ export const HolidaySlices = apiSlice.injectEndpoints({
 export const {
     useGetHolidaysQuery,
     useGetHolidaysByIdQuery,
+    useGetHolidayNamesQuery,
+    useGetHolidayNamesByIdQuery,
     useUpdateHolidaysMutation,
     useDeleteHolidaysByIdMutation,
     useCreateHolidaysMutation,
     useBulkHolidayAddMutation,
     useFilterGetHolidaysQuery,
+    useFilterGetHolidaysAreaQuery,
+    useLazyFilterGetHolidaysAreaQuery,
     useGetHolidayByMonthAndYearMutation,
 
     useGetCompanyHolidaysQuery,
     useGetHolidayAreasQuery,
     useGetHolidaysAreaByIdQuery,
     useCreateHolidayAreasMutation,
+    useCreateHolidayNamesMutation,
     useUpdateHolidayAreaMutation,
     useDeleteHolidayAreasByIdMutation,
-    useSearchHolidayAreasMutation
+    useSearchHolidayAreasMutation,
+    useUpdateHolidayNameMutation,
 } = HolidaySlices
 
 //! returns the query result object

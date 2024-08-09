@@ -176,9 +176,6 @@ const EditUser = ({ idharu, onClose }) => {
         }
     }, [User])
 
-
-
-
     //! Edit user
     const [updateUsers] = useUpdateUsersMutation();
     const history = useNavigate()
