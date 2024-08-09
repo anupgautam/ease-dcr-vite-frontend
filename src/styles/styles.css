@@ -687,7 +687,7 @@ input[type="file"] {
 }
 
 .cards .card:hover {
-  background: #151515;
+  background: #6364f2;
 }
 
 .cards .card:hover h3 {
@@ -695,7 +695,7 @@ input[type="file"] {
 }
 
 .cards .card:hover .card-content p {
-  color: #c1c1c1;
+  color: #dfdcdc;
 }
 
 .cards .card::before {
