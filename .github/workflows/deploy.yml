@@ -1,0 +1,24 @@
+name: Deployment on server
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy_master:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    name: Deploy Production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connecting SSH And Executing Deployment Scripts
+        uses: appleboy/ssh-action@main
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: root
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd /var/www/ease-dcr-vite-frontend/
+            rm -rf dist
+            git fetch --all
+            git checkout main
+            git reset --hard origin/main
