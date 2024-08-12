@@ -1,4 +1,4 @@
-import React, { useState, useCallback} from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     Badge,
     Button,
@@ -54,6 +54,8 @@ const DefaultList = () => {
         page: page,
         mpo_name: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_user_id')
     });
+
+    console.log(data)
 
     const [deleteDoctor] = useDeleteDoctorsByIdMutation();
 
