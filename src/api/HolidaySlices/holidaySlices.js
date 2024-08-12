@@ -171,9 +171,9 @@ export const HolidaySlices = apiSlice.injectEndpoints({
 
         bulkHolidayAdd: builder.mutation({
             query: (id) => {
-
+                console.log(id)
                 return {
-                    url: `mpo/working-days/`,
+                    url: `company/company-holiday-date/bulk_create_holiday_date/`,
                     method: 'POST',
                     body: id
                 }

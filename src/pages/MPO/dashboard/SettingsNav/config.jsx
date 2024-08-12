@@ -46,6 +46,12 @@ const navsettingsConfig = [
   },
 
   {
+    title: 'TourPlan Locks',
+    path: 'admin/tplocks',
+    icon: <Icon icon="material-symbols:lock" style={{ fontSize: '20px' }} />,
+  },
+
+  {
     title: 'back to dashboard',
     path: '/dashboard/admin',
     icon: <Icon icon="lucide:arrow-left" style={{ fontSize: '20px' }} />,

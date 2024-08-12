@@ -51,9 +51,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log("values:", form);
       const response = await createLandings(form).unwrap();
-      console.log("rp:", response);
       try {
         if (response) {
           setSuccessMessage({
