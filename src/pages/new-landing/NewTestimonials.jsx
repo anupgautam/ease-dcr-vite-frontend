@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import PersonIcon from "@mui/icons-material/Person";
 import PlaceIcon from "@mui/icons-material/Place";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 const TestimonialData = [
   {
     id: 1,
@@ -86,7 +87,7 @@ const Testimonial = () => {
             return (
               <div key={id} className="my-6">
                 <div className="flex flex-col justify-center items-center gap-1 text-center shadow-lg p-4 mx-4 rounded-xl relative">
-                  <PersonIcon className="rounded-full text-8xl   mx-auto" />
+                  <AccountCircleIcon className="rounded-full text-8xl   mx-auto" />
 
                   <h1 className="text-xl font-bold "> {name}</h1>
                   <div className="flex gap-1 justify-start items-center text-gray-500">

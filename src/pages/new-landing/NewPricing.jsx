@@ -1,4 +1,3 @@
-import { CheckCircle, Star, Diamond } from "@mui/icons-material";
 import React from "react";
 
 const features = [
@@ -11,8 +10,8 @@ const features = [
   "Unplanned Tour",
   "Order Product",
   "Target",
-  "Real time chat",
-  "Real time notification",
+  "Real-time chat",
+  "Real-time notification",
   "24/7 Months support",
 ];
 
@@ -34,23 +33,6 @@ const NewPricing = () => {
     </svg>
   );
 
-  const Cross = () => (
-    <svg
-      className="w-4 h-4 text-red-500 mr-2.5"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M6 18L18 6M6 6l12 12"
-      ></path>
-    </svg>
-  );
-
   return (
     <div>
       <section className="py-10">
@@ -66,16 +48,11 @@ const NewPricing = () => {
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
-            {/* Basic Plan */}
-            <div className="bg-black rounded-2xl shadow-xl transform hover:scale-105 transition-transform relative">
-              <div className="customRibbionWrapepr">
-                <div className="customRibbon bg-[#66b3c5] text-white text-sm font-semibold rounded-bl-lg flex items-center shadow-lg"></div>
-              </div>
-              <div className="p-8 text-white mt-4 text-center">
-                <span className="text-[#66b3c5] text-2xl font-bold uppercase ">
+            <div className="CustomWrapper rounded-2xl shadow-xl transform hover:scale-105 text-balck  overflow-hidden transition-transform relative ">
+              <div className="p-8 mt-4 text-center">
+                <span className="text-[#6364f2] text-2xl font-bold uppercase">
                   Quarterly
                 </span>
-
                 <ul className="mt-10 space-y-4">
                   {features.map((feature, index) => (
                     <li key={index} className="flex items-center">
@@ -88,30 +65,27 @@ const NewPricing = () => {
               <div className="p-8 text-center">
                 <a
                   href="#"
-                  className="inline-block text-black bg-[#66b3c5] font-semibold rounded-full py-3 px-6"
+                  className="inline-block text-white bg-[#6364f2] hover:scale-105 duration-300  font-semibold rounded-full py-3 px-6"
                 >
                   Order Now
                 </a>
               </div>
-              <div className="text-center text-gray-400 py-4">
+              <div className="text-center text-gray-400 ">
                 Free Trial 14 Days
               </div>
             </div>
 
-            <div className="bg-black rounded-2xl shadow-xl transform hover:scale-105 transition-transform relative ">
-              <div className="customRibbionWrapepr">
-                <div className="customRibbon bg-[#f38b23] text-white text-sm font-semibold rounded-bl-lg flex items-center shadow-lg"></div>
-              </div>
-              {/* <div className="absolute top-0 right-0 bg-yellow-500 text-white text-xs font-bold px-8 py-1 p-8 rotate-90  uppercase font-public_sans">
+            <div className="rounded-2xl shadow-xl transform scale-105 hover:scale-110 bg-[#6364f2] text-white  transition-transform relative">
+              <div className="absolute -top-6 right-2 mt-4 mr-4 bg-yellow-400 text-xs text-gray-800 font-semibold py-1 px-4 rounded-full uppercase">
                 Popular
-              </div> */}
-              <div className="p-8 text-white mt-4 text-center">
-                <span className="text-[#f38b23] text-2xl font-bold uppercase ">
+              </div>
+              <div className="p-8 mt-4 text-center">
+                <span className="text-2xl font-bold uppercase">
                   Semi Yearly
                 </span>
                 <ul className="mt-10 space-y-4">
                   {features.map((feature, index) => (
-                    <li key={index} className="flex items-center ">
+                    <li key={index} className="flex items-center">
                       <Tick />
                       {feature}
                     </li>
@@ -121,7 +95,7 @@ const NewPricing = () => {
               <div className="p-8 text-center">
                 <a
                   href="#"
-                  className="inline-block text-black bg-[#f38b23] font-semibold rounded-full py-3 px-6"
+                  className="inline-block text-black bg-[#fff] hover:bg-[#5b21b6] hover:text-white font-semibold rounded-full py-3 px-6"
                 >
                   Order Now
                 </a>
@@ -131,14 +105,9 @@ const NewPricing = () => {
               </div>
             </div>
 
-            {/* Enterprise Plan */}
-            <div className="bg-black rounded-2xl shadow-xl transform hover:scale-105 transition-transform relative ">
-              <div className="customRibbionWrapepr">
-                <div className="customRibbon bg-[#f15050] text-white text-sm font-semibold rounded-bl-lg flex items-center shadow-lg"></div>
-              </div>
-
-              <div className="p-8 text-white mt-4 text-center">
-                <span className="text-[#f15050] text-2xl font-bold uppercase ">
+            <div className="CustomWrapper rounded-2xl shadow-xl transform hover:scale-105  overflow-hidden transition-transform relative">
+              <div className="p-8 mt-4 text-center">
+                <span className="text-[#6364f2] text-2xl font-bold uppercase">
                   Yearly
                 </span>
                 <ul className="mt-10 space-y-4">
@@ -153,7 +122,7 @@ const NewPricing = () => {
               <div className="p-8 text-center">
                 <a
                   href="#"
-                  className="inline-block text-black bg-[#f15050] font-semibold rounded-full py-3 px-6 "
+                  className="inline-block text-white bg-[#6364f2] hover:scale-105 duration-300 font-semibold rounded-full py-3 px-6"
                 >
                   Order Now
                 </a>
