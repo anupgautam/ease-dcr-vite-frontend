@@ -17,7 +17,6 @@ const TABLE_HEAD = [
     { id: 'chemist_category', label: 'Chemist Category', alignRight: false },
     { id: 'chemist_pan_number', label: 'Chemist PAN Number', alignRight: false },
     { id: 'chemist_contact_person', label: 'Chemist Contact Person', alignRight: false },
-    { id: 'is_investment', label: 'Is Invested', alignRight: false },
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
     { id: 'chemist_territory', label: 'Chemist Territory', alignRight: false },
 ];
@@ -182,7 +181,6 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
         chemist_category: "",
         chemist_pan_number: "",
         chemist_contact_person: "",
-        is_investment: false,
         mpo_name: Cookies.get("user_role") === 'MPO' ? Cookies.get('company_user_id') : "",
         chemist_territory: "",
         company_id: Cookies.get('company_id')
@@ -272,14 +270,14 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 />
             </TableCell>
 
-            <TableCell align="left" style={{ width: "170px" }}>
+            {/* <TableCell align="left" style={{ width: "170px" }}>
                 <Controls.Checkbox
                     name="is_investment"
                     value={Formdata.is_investment}
                     onChange={handleInputChange}
                     label="Is Invested"
                 />
-            </TableCell>
+            </TableCell> */}
             <TableCell align="left" style={{ width: "200px" }}>
                 {
                     Cookies.get('user_role') === 'admin' ?

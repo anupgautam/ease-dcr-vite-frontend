@@ -139,7 +139,7 @@ const AddDoctor = () => {
     const onAddDoctors = useCallback(async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append('is_investment', values.is_invested);
+        formData.append('is_investment', false);
         formData.append('doctor_name', values.doctor_name);
         formData.append('doctor_phone_number', values.doctor_phone_number);
         formData.append('doctor_address', values.doctor_address);
@@ -362,7 +362,7 @@ const AddDoctor = () => {
                                         />
                                     </Box>
                                 </Grid>
-                                <Grid item xs={12}>
+                                {/* <Grid item xs={12}>
                                     <Box marginBottom={2}>
                                         <Controls.Checkbox
                                             name="is_invested"
@@ -371,7 +371,7 @@ const AddDoctor = () => {
                                             onChange={handleInputChange}
                                         />
                                     </Box>
-                                </Grid>
+                                </Grid> */}
                             </Grid>
                             <Stack spacing={1} direction="row">
                                 <Controls.SubmitButton

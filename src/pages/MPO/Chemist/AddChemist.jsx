@@ -124,7 +124,7 @@ const AddChemist = () => {
         formData.append("chemist_pan_number", values.chemist_pan_number);
         formData.append('company_id', Cookies.get('company_id'));
         formData.append('mpo_name', Cookies.get('user_role') === 'admin' ? values.mpo_name : Cookies.get('company_user_id'));
-        formData.append('is_investment', values.is_invested)
+        formData.append('is_investment', false)
         try {
             const response = await createChemists(formData)
             if (response.data) {

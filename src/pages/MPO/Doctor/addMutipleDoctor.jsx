@@ -18,7 +18,6 @@ const TABLE_HEAD = [
     { id: 'doctor_nmc_number', label: 'Doctor NMC Number', alignRight: false },
     { id: 'doctor_qualification', label: 'Doctor Qualification', alignRight: false },
     { id: 'doctor_specialization', label: 'Doctor Specialization', alignRight: false },
-    { id: 'is_investment', label: 'Is Invested', alignRight: false },
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
     { id: 'doctor_territory', label: 'Doctor Territory', alignRight: false },
 ];
@@ -201,7 +200,6 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         doctor_nmc_number: "",
         doctor_qualification: "",
         doctor_specialization: "",
-        is_investment: false,
         mpo_name: Cookies.get("user_role") === 'MPO' ? Cookies.get('company_user_id') : "",
         doctor_territory: "",
         company_id: Cookies.get('company_id')
@@ -321,14 +319,14 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                     options={doctorspecializations}
                 />
             </TableCell>
-            <TableCell align="left" style={{ width: "170px" }}>
+            {/* <TableCell align="left" style={{ width: "170px" }}>
                 <Controls.Checkbox
                     name="is_investment"
                     value={Formdata.is_investment}
                     onChange={handleInputChange}
                     label="Is Invested"
                 />
-            </TableCell>
+            </TableCell> */}
             <TableCell align="left" style={{ width: "200px" }}>
                 {
                     Cookies.get('user_role') === 'admin' ?
