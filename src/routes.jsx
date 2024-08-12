@@ -63,6 +63,7 @@ import DcrListData from './pages/MPO/DCR/dcrListData';
 import HolidayAreaController from './pages/MPO/HolidayArea/HolidayAreaController';
 import ListOfMpoController from './pages/MPO/DoctorEvents/ListOfMpoController';
 import ListOfTourPlanLock from './pages/MPO/TP_Lock/ListOfTourPlanLock';
+import NewLogin from './pages/Common/LoginComponent/NewLogin';
 
 export default function Router() {
   const routes = useRoutes([
@@ -72,7 +73,8 @@ export default function Router() {
     },
     {
       path: '/login',
-      element: <Login />,
+      // element: <Login />,
+      element:<NewLogin/>,
     },
     {
       path: '/forgetpassword',
