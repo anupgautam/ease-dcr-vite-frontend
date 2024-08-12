@@ -52,18 +52,23 @@ export default function LoginPage() {
                         left: { xs: 16, sm: 24, md: 40 },
                     }}
                 /> */}
-
+                <div className=' container flex rounded-xl'>
                 <img src="/assets/images/EASE_SFA/ease.png" className='h-16' alt="Ease SFA Logo" />
-
+                
                 {mdUp && (
+                   
                     <StyledSection>
+                    <div >
+                     
                         <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
                             Hi, Welcome Back
                         </Typography>
-                        <img src="/assets/illustrations/illustration_login.png" alt="login" />
+                        <img src="/assets/loginPage.png" alt="login" />
+                        </div>
                     </StyledSection>
+                    
                 )}
-
+               
                 <Container maxWidth="sm">
                     <StyledContent>
                         <Typography variant="h4" gutterBottom>
@@ -111,6 +116,7 @@ export default function LoginPage() {
                         <LoginForm />
                     </StyledContent>
                 </Container>
+                </div>
             </StyledRoot>
         </>
     );
