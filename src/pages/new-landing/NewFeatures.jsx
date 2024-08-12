@@ -9,6 +9,7 @@ import {
   faCalendarAlt,
   faComments,
   faBell,
+  faCogs,
 } from "@fortawesome/free-solid-svg-icons";
 import "tailwindcss/tailwind.css";
 
@@ -26,6 +27,13 @@ const services = [
     description:
       "Plan your tours efficiently with our comprehensive Tour Plan feature",
     bgColor: "bg-green-500",
+  },
+  {
+    icon: faCogs,
+    title: "POB",
+    description:
+      "Personal Order Booking (POB)  enables sales reps to quickly place customer orders on the spot, ensuring accurate, real-time processing.",
+    bgColor: "bg-orange-900",
   },
   {
     icon: faDollarSign,
