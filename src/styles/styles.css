@@ -648,6 +648,7 @@ input[type="file"] {
   position: absolute;
   top: -8px;
   right: -6px;
+  z-index: 1;
 }
 .customRibbionWrapepr:before {
   content: "";
@@ -655,10 +656,11 @@ input[type="file"] {
   width: 19px;
   display: block;
   position: absolute;
-  background-color: #000;
+  /* background-color: #000; */
   left: 0px;
   top: 0;
   transform: rotate(-90deg);
+  z-index: -2;
 }
 .customRibbionWrapepr:after {
   content: "";
@@ -666,16 +668,27 @@ input[type="file"] {
   width: 10px;
   display: block;
   position: absolute;
-  background-color: #000;
+  /* background-color: #000; */
   right: 1px;
   bottom: -3px;
   transform: rotate(0deg);
-  z-index: -1;
+  z-index: -2;
 }
 .customRibbon {
   clip-path: polygon(0 0, 100% 100%, 99% 0);
   height: 100px;
   width: 120px;
+}
+.customRibbon:before {
+  content: "";
+  height: 10px;
+  width: 10px;
+  background-color: #000;
+}
+
+.CustomWrapper a:hover {
+  background-color: #5b21b6;
+  color: #fff;
 }
 
 .cards .card {
