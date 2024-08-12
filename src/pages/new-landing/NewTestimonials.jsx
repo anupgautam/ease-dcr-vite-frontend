@@ -2,8 +2,6 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import PersonIcon from "@mui/icons-material/Person";
-import PlaceIcon from "@mui/icons-material/Place";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 const TestimonialData = [
   {
@@ -83,17 +81,14 @@ const Testimonial = () => {
         </div>
 
         <Slider {...settings}>
-          {TestimonialData.map(({ id, name, text, place }) => {
+          {TestimonialData.map(({ id, name, text }) => {
             return (
               <div key={id} className="my-6">
                 <div className="flex flex-col justify-center items-center gap-1 text-center shadow-lg p-4 mx-4 rounded-xl relative">
                   <AccountCircleIcon className="rounded-full text-8xl   mx-auto" />
 
                   <h1 className="text-xl font-bold "> {name}</h1>
-                  <div className="flex gap-1 justify-start items-center text-gray-500">
-                    <PlaceIcon fontSize="30px" />
-                    <h3>{place}</h3>
-                  </div>
+
                   <p className="text-gray-500 text-sm mt-4">{text}</p>
                   <p className=" text-black/20 text-9xl font-serif absolute top-0 right-0">
                     ,,
