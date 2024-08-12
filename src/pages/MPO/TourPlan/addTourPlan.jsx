@@ -34,7 +34,7 @@ const AddTourPlan = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const toggleDrawer = useCallback(() => {
-        setIsDrawerOpen(!isDrawerOpen);
+            setIsDrawerOpen(!isDrawerOpen);
     }, [])
 
     const handleCloseDrawer = useCallback(() => {
