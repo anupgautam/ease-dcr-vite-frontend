@@ -153,6 +153,14 @@ export const CompanyUserSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ['CompanyUsers']
         }),
+        postingAllUserAttendance: builder.mutation({
+            query: (id) => ({
+                url: '/expenses/get-user-attendance/',
+                method: "POST",
+                body: id,
+            }),
+            providesTags: ['CompanyUsers']
+        })
     })
 })
 
@@ -167,6 +175,7 @@ export const {
     useGetAllExecutiveLevelsMutation,
     useGetAllCompanyUsersWithoutPaginationQuery,
     useGetAllUserAttendanceQuery,
+    usePostingAllUserAttendanceMutation,
 } = CompanyUserSlice
 
 //! returns the query result object
