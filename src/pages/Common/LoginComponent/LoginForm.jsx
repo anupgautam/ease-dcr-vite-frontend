@@ -68,7 +68,7 @@ const LoginFormInputs = () => {
 
     //! RTKQuery login
     const handleSubmission = useCallback(async (e) => {
-        e.preventDefault(e)
+        e.preventDefault()
         validateEmail(email);
         validatePassword(password);
         if (!emailError && !passwordError) {

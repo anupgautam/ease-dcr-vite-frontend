@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import {
     Box,
     Typography, Button, Grid,
@@ -15,7 +15,7 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 import Cookies from 'js-cookie'
 //! Api Slices 
-import { useGetCompanyHolidaysQuery, useGetHolidaysAreaByIdQuery, useUpdateHolidayAreaMutation } from '@/api/HolidaySlices/holidaySlices';
+import { useGetCompanyHolidaysQuery, useGetHolidayNamesByIdQuery, useUpdateHolidaysMutation } from '@/api/HolidaySlices/holidaySlices';
 import {
     useGetAllCompanyAreasQuery,
 } from '@/api/CompanySlices/companyAreaSlice';
@@ -23,9 +23,7 @@ import {
 const EditHolidayArea = ({ idharu, onClose }) => {
 
     //! Getting  by ID
-    const HolidayArea = useGetHolidaysAreaByIdQuery(idharu);
-    console.log(HolidayArea?.data)
-
+    const HolidayArea = useGetHolidayNamesByIdQuery(idharu);
     //! Company Area
     const Areas = useGetAllCompanyAreasQuery(Cookies.get("company_id"));
 
@@ -35,11 +33,14 @@ const EditHolidayArea = ({ idharu, onClose }) => {
         }
         return [];
     }, [Areas])
+
     const [areaOptions, setAreaOptions] = useState([])
+    const areaOptionsRef = useRef([]);
     //! Options
     const handleHolidayAreas = (event, value) => {
         const selectedIds = value.map(option => option.id);
         setAreaOptions(selectedIds);
+        areaOptionsRef.current = selectedIds;
     };
 
     //! Company holidays
@@ -51,6 +52,21 @@ const EditHolidayArea = ({ idharu, onClose }) => {
         return [];
     }, [Holidays])
 
+    const [initialFValues, setInitialFValues] = useState({
+        holiday_type: "",
+        company_area: "",
+    })
+
+    const { values,
+        errors,
+        setErrors,
+        handleInputChange
+    } = useForm(
+        initialFValues,
+        true,
+        false,
+        true
+    )
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
@@ -68,60 +84,35 @@ const EditHolidayArea = ({ idharu, onClose }) => {
             return Object.values(temp).every(x => x == "")
     }
 
-
-    const [initialFValues, setInitialFValues] = useState({
-        holiday_type: "",
-        company_area: ""
-    })
-
-    useEffect(() => {
-        if (HolidayArea.data) {
-            setInitialFValues({
-                holiday_type: HolidayArea.data.holiday_type.holiday_type,
-                company_area: HolidayArea.data.company_area.company_area,
-            });
-        }
-    }, [HolidayArea.data])
-
-
-    const { values,
-        errors,
-        setErrors,
-        handleInputChange
-    } = useForm(
-        initialFValues,
-        true,
-        false,
-        true
-    )
-
-
     useEffect(() => {
         validate();
     }, [
         values.company_name, values.holiday_type])
 
+    useEffect(() => {
+        if (HolidayArea?.data) {
+            setInitialFValues({
+                holiday_type: HolidayArea?.data?.id,
+                company_area: HolidayArea?.data,
+            });
+        }
+    }, [HolidayArea])
+
     //! Edit Holiday Area
-    const [updateHolidayArea] = useUpdateHolidayAreaMutation();
+    const [updateHolidayArea] = useUpdateHolidaysMutation();
     const history = useNavigate()
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
-
-        // const formData = new FormData();
-        // formData.append("holiday_type", values.holiday_type);
-        // areaOptions.forEach(areaId => {
-        //     formData.append("company_area", areaId);
-        // });
-        // formData.append('id', idharu);
-        // formData.append("company_name", Cookies.get('company_id'));
-        // formData.append('refresh', Cookies.get('refresh'))
-        // formData.append('access', Cookies.get('access'));
         try {
-            const response = await updateHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptions }).unwrap();
-            setSuccessMessage({ show: true, message: 'Successfully Edited CompanyRoles' });
+            console.log('Submitting with:', {
+                holiday_type: values.holiday_type,
+                company_area: areaOptionsRef.current
+            });
+            const response = await updateHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptionsRef.current }).unwrap();
+            setSuccessMessage({ show: true, message: 'Successfully Edited Holiday Area' });
             setTimeout(() => {
                 setSuccessMessage({ show: false, message: '' });
             }, 3000);
@@ -134,7 +125,6 @@ const EditHolidayArea = ({ idharu, onClose }) => {
         }
         onClose();
     }, [updateHolidayArea, values])
-
 
     return (
         <>
@@ -164,51 +154,47 @@ const EditHolidayArea = ({ idharu, onClose }) => {
                         </Typography>
                     </Box>
 
-                    <Form onSubmit={handleSubmit}>
-                        <Box marginBottom={2}>
-                            <Autocomplete
-                                multiple
-                                options={areas}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleHolidayAreas}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Company Areas" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
-                            <Controls.Select
-                                id="focus"
-                                name="holiday_type"
-                                label="Holiday Type*"
-                                value={values.holiday_type}
-                                onChange={handleInputChange}
-                                error={errors.holiday_type}
-                                autoFocus
-                                options={holidays}
-                            />
-                        </Box>
-                        <Stack spacing={1} direction="row">
-                            <Controls.SubmitButton
-                                variant="contained"
-                                className="submit-button"
-                                onClick={(e) => handleSubmit(e)}
-                                text="Submit"
-                            />
-                            <Button
-                                variant="outlined"
-                                className="cancel-button"
-                                onClick={onClose}
-                            >
-                                Cancel
-                            </Button>
-                        </Stack>
-                    </Form>
+                    <Box marginBottom={2}>
+                        <Autocomplete
+                            multiple
+                            options={areas}
+                            getOptionLabel={(option) => option.title}
+                            onChange={handleHolidayAreas}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Company Areas" />
+                            )}
+                            renderOption={(props, option) => (
+                                <li {...props} key={option.id}>
+                                    {option.title}
+                                </li>
+                            )}
+                        />
+                    </Box>
+                    <Box marginBottom={2}>
+                        <Controls.Select
+                            name="holiday_type"
+                            label="Holiday Type*"
+                            value={values.holiday_type}
+                            onChange={handleInputChange}
+                            error={errors.holiday_type}
+                            options={holidays}
+                        />
+                    </Box>
+                    <Stack spacing={1} direction="row">
+                        <Controls.SubmitButton
+                            variant="contained"
+                            className="submit-button"
+                            onClick={(e) => handleSubmit(e)}
+                            text="Submit"
+                        />
+                        <Button
+                            variant="outlined"
+                            className="cancel-button"
+                            onClick={onClose}
+                        >
+                            Cancel
+                        </Button>
+                    </Stack>
 
                 </Box>
             </Drawer>
