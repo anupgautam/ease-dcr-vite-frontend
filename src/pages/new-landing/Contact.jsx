@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { IoLocationSharp, IoMail } from "react-icons/io5";
 import { useCreateLandingsMutation } from "../../api/MPOSlices/LandingSlice";
 import { Grid, Box } from "@mui/material";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import logo from "/assets/logo.png";
+import deskImg from "/assets/desk.jpg";
 
 const Contact = () => {
   const [createLandings] = useCreateLandingsMutation();
@@ -32,7 +36,7 @@ const Contact = () => {
       tempErrors.full_name = "Full Name must be at least 4 characters long.";
     }
 
-    if (form.phone_number.length !== 10) {
+    if (form.phone_number.length !== 13) {
       tempErrors.phone_number = "Phone Number must be exactly 10 digits.";
     }
 
@@ -50,7 +54,6 @@ const Contact = () => {
       console.log("values:", form);
       const response = await createLandings(form).unwrap();
       console.log("rp:", response);
-
       try {
         if (response) {
           setSuccessMessage({
@@ -78,12 +81,13 @@ const Contact = () => {
           setErrorMessage({ show: false, message: "" });
         }, 3000);
       }
+      
     }
   };
 
   return (
     <div
-      className="bg-[#f3f4fe] py-10 lg:py-24 font-public_sans relative"
+      className=" py-10 lg:py-24 font-public_sans relative container"
       id="contact"
     >
       {ErrorMessage.show === true ? (
@@ -105,101 +109,132 @@ const Contact = () => {
         </Grid>
       ) : null}
 
-      <div className=" container space-y-3 lg:space-y-0 lg:flex justify-between items-center">
-        <div className=" xl:w-[45%] px-5 lg:px-12 py-6 lg:py-12 bg-white rounded-xl drop-shadow-md">
-          <h3 className=" font-semibold text-sm">CONTACT US</h3>
-          <h1 className=" text-[22px] lg:text-[30px] font-bold leading-tight my-2">
-            Let's talk about
-            <br /> Love to hear from you!
-          </h1>
-          <div className=" my-5 lg:my-10 space-y-8 text-sm lg:text-[16px] xl:text-[18px]">
-            <section className=" flex gap-x-3 hover:translate-x-4 duration-300">
-              <IoLocationSharp className=" text-[#6364f2] text-3xl" />
-              <section className=" space-y-2">
-                <h2 className=" font-bold text-[24px] mb-3">Our Location</h2>
-                <h3 className=" text-[20px]">Kalanki-14,Kathmandu,Nepal</h3>
-              </section>
-            </section>
-            <section className=" flex gap-x-3 hover:translate-x-4 duration-300">
-              <IoMail className=" text-[#6364f2] text-3xl" />
-              <section className=" space-y-2 text-[20px]">
-                <h2 className=" font-bold text-[24px] mb-3">
-                  How Can We Help?
-                </h2>
-                <h3>info@easesfa.com</h3>
-                <h3>contact@easesfa.com</h3>
-              </section>
-            </section>
-          </div>
-        </div>
-        <div className=" xl:w-[45%]">
-          <section className=" px-5 lg:px-12 py-6 lg:py-12 bg-white rounded-xl drop-shadow-md">
-            <h2 className=" font-bold text-[30px] pb-7">Send us a Message</h2>
+      <div className=" lg:flex justify-between bg-white rounded-[15px] p-3 shadow-lg drop-shadow-md">
+        <div className=" xl:w-[37%]">
+          <section className=" px-5 lg:px-12 py-3 lg:py-12">
+            <h2 className=" font-bold text-[30px] pb-2">Send us a Message</h2>
+            <p className=" pb-7 text-[#7c8285]">
+              Need help with something? Want a demo? Get in touch with our
+              friendly team and we'll get in touch within a day.
+            </p>
             <form className="flex-col flex gap-y-5" onSubmit={handleSubmit}>
               <input
-                placeholder="Full Name*"
+                placeholder="Full Name *"
                 type="text"
                 name="full_name"
                 value={form.full_name}
                 onChange={handleChange}
                 required
-                className={`px-2 py-3 rounded-md border-2 ${
-                  errors.full_name ? "border-red-500" : "border-gray-200"
+                className={`px-2 py-3  border-b-2 ${
+                  errors.full_name ? "border-b-red-600" : "border-b-gray-200"
                 }`}
               />
               {errors.full_name && (
-                <span className="text-red-500 text-sm">{errors.full_name}</span>
+                <span className="text-red-600 text-sm">{errors.full_name}</span>
               )}
 
               <input
-                placeholder="Email*"
+                placeholder="Email *"
                 type="email"
                 name="email"
                 value={form.email}
                 onChange={handleChange}
                 required
-                className="px-2 py-3 rounded-md border-2 border-gray-200"
+                className="px-2 py-3  border-b-2 border-gray-200"
               />
 
-              <input
-                placeholder="Phone Number*"
-                type="number"
-                name="phone_number"
+              <PhoneInput buttonStyle={{border:"none",background:"white",paddingBottom:"12px"}}
+                country={"np"} // Set default country
                 value={form.phone_number}
-                onChange={handleChange}
+                defaultMask=".........."
+                onChange={(phone) =>
+                  handleChange({
+                    target: { name: "phone_number", value: phone },
+                  })
+                }
+                inputStyle={{border: "none"}}
+                inputClass=" font-public_sans"
+                placeholder="Phone Number *"
                 required
-                className={`px-2 py-3 rounded-md border-2 ${
-                  errors.phone_number ? "border-red-500" : "border-gray-200"
-                }`}
+                className={`${errors.phone_number ?"border-red-600":"border-gray-200"} border-b-2 px-2 font-public_sans pb-3`}
+               
               />
               {errors.phone_number && (
-                <span className="text-red-500 text-sm">
+                <span className="border-b-red-600 text-red-600 text-sm">
                   {errors.phone_number}
                 </span>
               )}
 
               <input
-                placeholder="Message*"
+                placeholder="Message *"
                 type="text"
                 name="message"
                 value={form.message}
                 onChange={handleChange}
                 required
-                className={`px-2 py-3 rounded-md border-2 ${
-                  errors.message ? "border-red-500" : "border-gray-200"
+                className={`px-2 py-3  border-b-2 ${
+                  errors.message ? "border-b-red-600" : "border-gray-200"
                 }`}
               />
               {errors.message && (
-                <span className="text-red-500 text-sm">{errors.message}</span>
+                <span className="text-red-600 text-sm">{errors.message}</span>
               )}
 
               <button
-                className="rounded-md bg-[#6364f2] p-3 text-white lg:w-[40%] xl:w-[45%]"
-                type="submit">
+                className=" bg-[#6364f2] p-3 text-white mt-4 rounded-xl"
+                type="submit"
+              >
                 Send Message
               </button>
             </form>
           </section>
+        </div>
+        <div className="relative xl:flex-1 px-5 lg:px-12 py-6 lg:py-12 rounded-[15px] drop-shadow-md">
+          {/* Background Image Layer */}
+          <div
+            className="absolute inset-0 bg-center bg-cover bg-no-repeat rounded-[15px] contrast-75 brightness-50"
+            style={{
+              backgroundImage: `url(${deskImg})`,
+            }}
+          />
+          <section className="flex gap-x-1 items-center absolute right-3 top-2 text-gray-200">
+            <img src={logo} alt="logo" className="h-12" />
+            <h3 className="font-bold">Ease SFA</h3>
+          </section>
+
+          {/* Content Layer */}
+          <div className="relative z-10 h-full">
+            <div className="xl:flex justify-between h-full text-white">
+              <div className="content-end text-white ">
+                <h3 className="font-semibold text-sm">CONTACT US</h3>
+                <h1 className="text-[20px] lg:text-[30px] font-bold leading-tight my-2">
+                  Let's talk about
+                  <br /> Love to hear from you!
+                </h1>
+              </div>
+              <div className="space-y-8 text-sm lg:text-[16px] xl:text-[18px] content-end xl:mt-0 mt-10">
+                <section className="flex gap-x-3 hover:translate-x-4 duration-300">
+                  <IoLocationSharp className="text-[#6364f2] text-2xl" />
+                  <section className="space-y-2">
+                    <h2 className="font-bold text-[20px] mb-3">Our Location</h2>
+                    <h3 className="text-[18px]">
+                      Kalanki-14, Kathmandu, Nepal
+                    </h3>
+                  </section>
+                </section>
+                <section className="flex gap-x-3 hover:translate-x-4 duration-300">
+                  <IoMail className="text-[#6364f2] text-2xl" />
+                  <section className="space-y-2 text-[20px]">
+                    <h2 className="font-bold text-[20px] mb-3">
+                      How Can We Help?
+                    </h2>
+                    <h3>info@easesfa.com</h3>
+                    <h3>contact@easesfa.com</h3>
+                  </section>
+                </section>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
