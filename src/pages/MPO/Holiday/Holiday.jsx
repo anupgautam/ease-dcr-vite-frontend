@@ -4,7 +4,6 @@ import { Button, Grid, Typography, FormControl, Autocomplete, TextField, Box, St
 import moment from 'moment';
 import { useBulkHolidayAddMutation, useFilterGetHolidaysQuery, useGetHolidayByMonthAndYearMutation, useUpdateHolidaysMutation, useGetHolidayNamesQuery } from '@/api/HolidaySlices/holidaySlices';
 import Cookies from 'js-cookie';
-import { RangeCalendar } from '@raralabs/react-patro';
 import "react-patro/src/styles.css";
 import { BSDate } from "nepali-datepicker-react";
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
