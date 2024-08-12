@@ -225,7 +225,6 @@ const EditUser = ({ idharu, onClose }) => {
         }
     }, [updateUsers, values, dateData, idharu]);
 
-
     return (
         <>
             <Drawer

@@ -119,26 +119,29 @@ const DefaultHolidayArea = () => {
     const holidayData = holidayTypes.reduce((acc, item) => {
         const holidayName = item.holiday_type.holiday_name;
         const holidayId = item.holiday_type.id;
+        const companyAreaId = item.company_area.id;
 
         if (!acc[holidayId]) {
             acc[holidayId] = {
                 holidayName,
                 holidayId,
+                holidayNameId: [],
                 companyAreas: []
             };
         }
 
         acc[holidayId].companyAreas.push(item.company_area.company_area);
+        acc[holidayId].holidayNameId.push(companyAreaId);
 
         return acc;
     }, {});
 
-    const holidayArray = Object.values(holidayData).map(({ holidayName, holidayId, companyAreas }) => ({
+    const holidayArray = Object.values(holidayData).map(({ holidayName, holidayId, companyAreas, holidayNameId }) => ({
         holidayName,
         holidayId,
+        holidayNameId,
         companyAreas: companyAreas.join(', ')
     }));
-    console.log(holidayArray)
     return (
         <>
             <Card>

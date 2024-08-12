@@ -70,13 +70,16 @@ export default function NotificationsPopover() {
 
   return (
     <>
-      <Tooltip title="Chat" arrow>
-        <Link to={'/dashboard/admin/chat'}>
-          <IconButton color={open ? 'primary' : 'default'} sx={{ width: 40, height: 40 }}>
-            <Iconify icon="fluent:chat-12-filled" />
-          </IconButton>
-        </Link>
-      </Tooltip>
+      {Cookies.get('user_role') === 'admin' &&
+        <Tooltip title="Chat" arrow>
+          <Link to={'/dashboard/admin/chat'}>
+            <IconButton color={open ? 'primary' : 'default'} sx={{ width: 40, height: 40 }}>
+              <Iconify icon="fluent:chat-12-filled" />
+            </IconButton>
+          </Link>
+        </Tooltip>
+      }
+
       <Tooltip title="Notifications" arrow>
         <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>
           <Iconify icon="eva:bell-fill" />

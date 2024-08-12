@@ -49,13 +49,14 @@ export default function SettingsNav({ openNav, onCloseNav }) {
         <></>
       </Box>
 
-      <Box sx={{ px: 2.5, py: 3, display: 'inline-flex' }}>
+      <Box sx={{ px: 2.5, py: 3, display: 'flex', alignItems: 'center' }}>
+        <Icon icon="solar:settings-bold" style={{ fontSize: '30px', marginRight: "15px" }} />
         <Typography
-          style={{ fontSize: "23px", color: "black", fontWeight: "700", textAlign: 'center' }}>
-          <Icon icon="solar:settings-bold" style={{ fontSize: '30px', marginRight: "15px" }} />
+          sx={{ fontSize: "23px", color: "black", fontWeight: "700" }}>
           Settings
         </Typography>
       </Box>
+
 
       <NavSection data={navConfig} />
 

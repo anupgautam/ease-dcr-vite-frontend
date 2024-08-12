@@ -181,12 +181,22 @@ export const HolidaySlices = apiSlice.injectEndpoints({
             invalidatesTags: ['Holiday']
         }),
 
+        //! Get Holidays data by id
+        getHolidayAreasById: builder.query({
+            query: (id) => ({
+                url: `company/company-holiday-area/`,
+                method: 'POST',
+                body: id
+            }),
+            providesTags: ['Holiday']
+        }),
+
         //! Update Holidays data by id
         updateHolidays: builder.mutation({
             query: (updateHoliday) => {
                 return {
-                    url: `company/company-holiday-area/bulk_update_company_holiday/${updateHoliday.get('id')}/`,
-                    method: 'PATCH',
+                    url: `company/company-holiday-area/bulk_update_company_holiday/`,
+                    method: 'POST',
                     body: updateHoliday,
                 }
             },
@@ -286,6 +296,7 @@ export const {
     useGetHolidayByMonthAndYearMutation,
 
     useGetCompanyHolidaysQuery,
+    useGetHolidayAreasByIdQuery,
     useGetHolidayAreasQuery,
     useGetHolidaysAreaByIdQuery,
     useCreateHolidayAreasMutation,

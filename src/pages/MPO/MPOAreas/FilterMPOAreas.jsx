@@ -43,7 +43,7 @@ import {
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import EditMpoArea from './editMpoArea';
-
+import Iconify from '@/components/iconify/Iconify';
 
 const TABLE_HEAD = [
     { id: 'area_name"', label: 'Tour Plan Date', alignRight: false },
