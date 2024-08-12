@@ -364,6 +364,65 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                 }
             },
         }),
+
+        //! TourPlan locks
+        //! Get TP lock days
+        getTPlockDays: builder.query({
+            query: () => ({
+                url: 'company/company-roles-tp-lock/',
+                method: 'GET'
+            }),
+            providesTags: ['TourPlan']
+        }),
+
+        //! Get By id
+        getTPLockDaysById: builder.query({
+            query: (id) => ({
+                url: `company/company-roles-tp-lock/${id}/`,
+                method: 'GET'
+            }),
+            providesTags: ['TourPlan']
+        }),
+
+        //! POST TP Days
+        createTPDays: builder.mutation({
+            query: (TPDays) => {
+                return {
+                    url: `company/company-roles-tp-lock/`,
+                    method: 'POST',
+                    body: TPDays,
+                    // headers: {
+                    //     'Content-type': 'application/json; charset = UTF-8',
+                    // }
+                }
+            },
+            invalidatesTags: ['TourPlan']
+        }),
+
+        //! Update TP Days
+        //! Update users data by id
+        updateTPDays: builder.mutation({
+            query: (updateTPDays) => {
+                return {
+                    url: `company/company-roles-tp-lock/${updateTPDays.get('id')}/`,
+                    method: 'PATCH',
+                    body: updateTPDays
+                }
+            },
+            invalidatesTags: ['TourPlan'],
+            async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    apiSlice.util.updateQueryData('getTPlockDays', id, (draft) => {
+                        Object.assign(draft, patch)
+                    })
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
+        }),
     })
 })
 
@@ -397,6 +456,12 @@ export const {
     useGetTourplanOfMpoByDateMonthandShiftQuery,
     useBulkUpdateTourplanByHoMutation,
     useGetLockedTourPlanForHigherQuery,
+
+    //! TP Lock Hooks
+    useGetTPlockDaysQuery,
+    useGetTPLockDaysByIdQuery,
+    useCreateTPDaysMutation,
+    useUpdateTPDaysMutation,
 } = TourPlanSlice
 
 //! returns the query result object

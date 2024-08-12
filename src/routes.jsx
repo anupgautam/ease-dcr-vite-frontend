@@ -62,6 +62,7 @@ import AddMultipleMpoArea from './pages/MPO/MPOAreas/addMultipleMpoArea';
 import DcrListData from './pages/MPO/DCR/dcrListData';
 import HolidayAreaController from './pages/MPO/HolidayArea/HolidayAreaController';
 import ListOfMpoController from './pages/MPO/DoctorEvents/ListOfMpoController';
+import ListOfTourPlanLock from './pages/MPO/TP_Lock/ListOfTourPlanLock';
 
 export default function Router() {
   const routes = useRoutes([
@@ -300,7 +301,6 @@ export default function Router() {
         {
           path: 'admin/doctorspecialization',
           element: <Authentication component={ListOfDoctorSpecialization} allowRoles={['admin']} />,
-          // element: <ListOfDoctorSpecialization />,
         },
         {
           path: 'admin/divisions',
@@ -321,6 +321,10 @@ export default function Router() {
         {
           path: 'admin/rewards',
           element: <Authentication component={ListOfRewardsController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/tplocks',
+          element: <Authentication component={ListOfTourPlanLock} allowRoles={['admin']} />,
         },
 
       ]

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import {
     Box,
     Typography, Button, Grid,
-    Autocomplete, TextField
+    Autocomplete, TextField, FormControl, InputLabel, Select, MenuItem, OutlinedInput
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -42,6 +42,18 @@ const EditHolidayArea = ({ idharu, onClose }) => {
         setAreaOptions(selectedIds);
         areaOptionsRef.current = selectedIds;
     };
+
+    //! TR Approach
+    const [MultipleHolidays, setMultipleHolidays] = useState([]);
+
+    const handleMultipleHolidays = useCallback((event) => {
+        const {
+            target: { value },
+        } = event;
+        setMultipleHolidays(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    }, []);
 
     //! Company holidays
     const Holidays = useGetCompanyHolidaysQuery(Cookies.get("company_id"));
@@ -107,10 +119,10 @@ const EditHolidayArea = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         try {
-            console.log('Submitting with:', {
-                holiday_type: values.holiday_type,
-                company_area: areaOptionsRef.current
-            });
+            // console.log('Submitting with:', {
+            //     holiday_type: values.holiday_type,
+            //     company_area: areaOptionsRef.current
+            // });
             const response = await updateHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptionsRef.current }).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited Holiday Area' });
             setTimeout(() => {
@@ -170,6 +182,32 @@ const EditHolidayArea = ({ idharu, onClose }) => {
                             )}
                         />
                     </Box>
+                    {/* <Box marginBottom={2}>
+                        <FormControl sx={{ m: 1, width: 300 }}>
+                            <InputLabel>{"Company Areas*"}</InputLabel>
+                            <Select
+                                labelId="demo-multiple-name-label"
+                                id="demo-multiple-name"
+                                multiple
+                                value={MultipleHolidays}
+                                onChange={handleMultipleHolidays}
+                                input={<OutlinedInput label="Select the Area*" />}
+                                // MenuProps={MenuProps}
+                                sx={{ width: '100%' }}
+                                style={{
+                                    borderBlockColor: "white",
+                                    width: "100%",
+                                    textAlign: 'start'
+                                }}
+                            >
+                                {areas.map((item) => (
+                                    <MenuItem key={item.id} value={item.id}>
+                                        {item.title}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box> */}
                     <Box marginBottom={2}>
                         <Controls.Select
                             name="holiday_type"

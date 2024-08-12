@@ -240,7 +240,8 @@ const ListofAttendance = () => {
 
 
 const AttendanceList = ({ date, userId, month }) => {
-    const { data } = useGetAllUserAttendanceQuery({ company_name: Cookies.get('company_id'), user_id: userId, date: date, month: month });
+    const { data } = useGetAllUserAttendanceQuery({ company_name: Cookies.get('company_id'), user_id: userId, date: date, month: month});
+    console.log(data)
     return (
         <>
             {

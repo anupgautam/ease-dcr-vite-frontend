@@ -1,6 +1,6 @@
 import { Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
 import Cookies from "js-cookie";
-import React, { useEffect, useState, useMemo} from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCreateDoctorsMutation, useGetDoctorsSpecializationQuery, usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
@@ -119,11 +119,11 @@ const AddMutipleDoctor = () => {
                                 Add Multiple Doctor{" "}
                             </Button> */}
                             <Controls.SubmitButton
-                                        variant="contained"
-                                        className="submit-button"
-                                        onClick={(e) => onAddDoctors(e)}
-                                        text="Add Multiple Doctor"
-                                    />
+                                variant="contained"
+                                className="submit-button"
+                                onClick={(e) => onAddDoctors(e)}
+                                text="Add Multiple Doctor"
+                            />
                         </Box>
                     </>
             }
@@ -167,7 +167,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         if (DoctorSpecialization) {
             return DoctorSpecialization.data.map(key => ({ id: key.id, title: key.category_name }))
         }
-        return[];
+        return [];
     }, [DoctorSpecialization])
 
     const [MpoData] = usePostAllMPONamesNoPageMutation()
@@ -229,7 +229,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea) {
-            return MpoArea.map(key => ({ id: key.id, title: key.area_name }))
+            return MpoArea?.data?.map(key => ({ id: key.id, title: key.area_name }))
         }
         return [];
     }, [MpoArea])
