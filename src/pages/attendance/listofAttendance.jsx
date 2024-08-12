@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 import { BSDate } from "nepali-datepicker-react";
 import React, { useEffect, useState } from "react";
-import { useGetAllUserAttendanceQuery } from "../../api/CompanySlices/companyUserSlice";
+import { useGetAllUserAttendanceQuery, usePostingAllUserAttendanceMutation } from "../../api/CompanySlices/companyUserSlice";
 import { useGetUsersByCompanyRoleIdQuery } from "../../api/MPOSlices/UserSlice";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
 import ExportToExcel from "../../reusable/utils/exportSheet";
@@ -45,7 +45,6 @@ function getAllDaysInMonth(year, month) {
     const daysArray = [];
     if (daysInMonth !== null) {
         for (let day = 1; day <= daysInMonth; day++) {
-            // Assuming using nepali-date library for formatting BS dates
             const formattedDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             daysArray.push(formattedDate);
         }
@@ -55,10 +54,13 @@ function getAllDaysInMonth(year, month) {
     return daysArray;
 }
 
+
 const ListofAttendance = () => {
     const now = new BSDate().now();
     const year = now._date.year;
     const month = now._date.month;
+
+
     const months = [
         { value: 1, label: 'Baisakh' },
         { value: 2, label: 'Jestha' },
@@ -117,6 +119,7 @@ const ListofAttendance = () => {
             companyUserList.push({ id: key.id, title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}` });
         })
     }
+    const [AttendanceDateData, setAttendanceDateData] = useState();
     return (
         <Box>
             <Grid container spacing={2}>
@@ -212,18 +215,13 @@ const ListofAttendance = () => {
                                         {companyUserList.map((key, index) => (
                                             <TableRow key={index} style={{ height: '80px' }}>
                                                 <TableCell key={key} style={{ fontWeight: '600' }}>{key.title}</TableCell>
-                                                <TableCell>Casual Leave</TableCell>
-                                                <TableCell>Sick Leave</TableCell>
-                                                <TableCell>Pay Leave</TableCell>
-                                                <TableCell>Leave Without Pay</TableCell>
-                                                <TableCell>holiday</TableCell>
-                                                <TableCell>Saturday</TableCell>
-                                                {allDaysInMonth.map((data, index) => (
-                                                    <>
-                                                        <AttendanceList key={index} date={data} userId={key.id} month='' />
-                                                    </>
-                                                ))
-                                                }
+                                                <TableCell>{AttendanceDateData?.casual_leave}</TableCell>
+                                                <TableCell>{AttendanceDateData?.sick_leave}</TableCell>
+                                                <TableCell>{AttendanceDateData?.paid_leave}</TableCell>
+                                                <TableCell>{AttendanceDateData?.leave_without_pay_leave}</TableCell>
+                                                <TableCell>{AttendanceDateData?.holiday_leave}</TableCell>
+                                                <TableCell>{AttendanceDateData?.saturday}</TableCell>
+                                                <AttendanceList setAttendanceDateData={setAttendanceDateData} data={AttendanceDateData?.attendance_data} allDaysInMonth={allDaysInMonth} userId={key.id} month={selectedMonth} year={selectedYear} />
                                             </TableRow>
                                         ))
                                         }
@@ -239,29 +237,35 @@ const ListofAttendance = () => {
 }
 
 
-const AttendanceList = ({ date, userId, month }) => {
-    const { data } = useGetAllUserAttendanceQuery({ company_name: Cookies.get('company_id'), user_id: userId, date: date, month: month});
+const AttendanceList = ({ data = [], userId, month, year, setAttendanceDateData, allDaysInMonth }) => {
+    const [AttendanceData] = usePostingAllUserAttendanceMutation();
+
+    useEffect(() => {
+        AttendanceData({ year: year, month: month, user_id: userId })
+            .then((res) => {
+                setAttendanceDateData(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [year, month, userId]);
+
     return (
         <>
-            {
-                data !== undefined ?
-                    <>
-                        {
-                            data.count === 0 ?
-                                <>
-                                    <TableCell key={date} style={{ color: 'red' }}>A</TableCell>
-                                </> :
-                                data.results.map((key, index) => (
-                                    <>
-                                        <TableCell key={index} style={{ color: 'green' }}>{key.is_leave === true ? 'L' : 'P'}</TableCell>
-                                    </>
-                                ))
-                        }
-                    </> : null
-            }
+            {allDaysInMonth?.map((key, index) => (
+                <>
+                    {
+                        data.includes(key) ? (
+                            <TableCell key={index} style={{ color: 'green' }}>P</TableCell>
+                        ) : (
+                            <TableCell key={index} style={{ color: 'red' }}>A</TableCell>
+                        )
+                    }
+                </>
+            ))}
         </>
+    );
+};
 
-    )
-}
 
 export default ListofAttendance;
