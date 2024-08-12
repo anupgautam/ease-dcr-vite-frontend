@@ -2,7 +2,7 @@ import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, Table, Tabl
 import Cookies from "js-cookie";
 
 import { BSDate } from "nepali-datepicker-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetAllUserAttendanceQuery } from "../../api/CompanySlices/companyUserSlice";
 import { useGetUsersByCompanyRoleIdQuery } from "../../api/MPOSlices/UserSlice";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
@@ -241,7 +241,6 @@ const ListofAttendance = () => {
 
 const AttendanceList = ({ date, userId, month }) => {
     const { data } = useGetAllUserAttendanceQuery({ company_name: Cookies.get('company_id'), user_id: userId, date: date, month: month});
-    console.log(data)
     return (
         <>
             {
