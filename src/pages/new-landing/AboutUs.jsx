@@ -6,7 +6,7 @@ const AboutUs = () => {
       <div className=" container ">
         <div className=" lg:flex justify-between bg-white rounded-lg">
         <div className=" lg:px-12 lg:py-8 px-4 py-3 lg:w-[45%]">
-          <button className=" px-3 py-2 bg-[#6364f2] text-white rounded-lg">
+          <button className=" px-3 py-2 rounded-lg font-semibold text-xl">
             About Us
           </button>
           <h1 className=" text-[#3e3d48] font-semibold text-[27px] md:text-[38px] mt-4 mb-3 leading-tight">
