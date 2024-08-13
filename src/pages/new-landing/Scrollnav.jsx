@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link as ScrollLink, Events, scrollSpy } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
-import logo from "/assets/logo.png";
+import logo from "/assets/ease.svg";
 import "./Scrollnav.css";
 import { navItems } from "./Elements";
 import Cookies from "js-cookie";
@@ -38,10 +38,9 @@ const Scrollnav = () => {
         isVisible ? "transform translate-y-0" : "transform -translate-y-full"
       }`}
     >
-      <div className=" flex font-semibold gap-x-3 lg:gap-x-4 md:gap-x-8 items-center container justify-between">
+      <div className=" flex font-semibold gap-x-2 lg:gap-x-2 md:gap-x-6 items-center container justify-between">
         <section className=" flex items-center">
-          <img src={logo} alt="LOGO" className=" h-[38px] md:h-[66px]" />
-          <p className="hidden md:block text-[19px]">Ease SFA</p>
+          <img src={logo} alt="LOGO" className=" h-[120px] md:h-[120px]" />
         </section>
         <div className=" flex gap-[1rem] md:gap-[2rem] lg:gap-[3rem] font-bold">
           {navItems.map((item, idx) => {

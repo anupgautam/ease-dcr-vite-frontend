@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback, } from 'react'
 import Controls from '@/reusable/components/forms/controls/Controls';
 import { Button, Grid, Typography, FormControl, Autocomplete, TextField, Box, Stack } from '@mui/material';
 import moment from 'moment';
-import { useBulkHolidayAddMutation, useFilterGetHolidaysQuery, useGetHolidayByMonthAndYearMutation, useUpdateHolidaysMutation, useGetHolidayNamesQuery } from '@/api/HolidaySlices/holidaySlices';
+import { useBulkHolidayAddMutation, useFilterGetHolidaysQuery, useGetHolidayByMonthAndYearMutation, useUpdateHolidaysMutation, useGetHolidayNamesQuery, useFilterHolidayBigCalendarMutation } from '@/api/HolidaySlices/holidaySlices';
 import Cookies from 'js-cookie';
 import "react-patro/src/styles.css";
 import { BSDate } from "nepali-datepicker-react";
@@ -116,7 +116,8 @@ const Holiday = () => {
         }
     }, [SelectedDate, bulkHoliday, holidaySelect]);
 
-    const { data, error, isLoading } = useFilterGetHolidaysQuery(Cookies.get('company_id'));
+    const { data, error, isLoading } = useFilterHolidayBigCalendarMutation({ company_name: Cookies.get('company_id'), holidaySelect });
+    console.log(data)
     const [holidayDates, setHolidayDates] = useState([]);
 
     useEffect(() => {

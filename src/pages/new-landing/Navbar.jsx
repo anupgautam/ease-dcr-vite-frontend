@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "/assets/logo.png";
+import logo from "/assets/ease.svg";
 import { Link as ScrollLink, Events, scrollSpy } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
 import "./Navbar.css";
@@ -35,7 +35,6 @@ const Navbar = () => {
       <div className=" font-public_sans flex items-center justify-between py-2.5 font-semibold lg:font-bold">
         <div className="flex items-center">
           <img src={logo} alt="logo" className="h-10 md:h-14" />
-          <p className="hidden md:block text-[19px]">Ease SFA</p>
         </div>
         <div className="flex gap-x-2.5 md:gap-x-8 text-xl">
           {navItems.map((item, idx) => (

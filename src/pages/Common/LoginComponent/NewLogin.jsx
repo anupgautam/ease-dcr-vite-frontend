@@ -1,6 +1,6 @@
 import React from "react";
 import LoginForm from "./LoginForm";
-import loginImg from "/assets/loginPage.jpg";
+import loginImg from "/assets/images/EASE_SFA/ease.svg";
 //New login page layout made by shirish
 
 const NewLogin = () => {

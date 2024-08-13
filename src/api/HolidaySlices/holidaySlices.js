@@ -277,6 +277,23 @@ export const HolidaySlices = apiSlice.injectEndpoints({
             },
             invalidatesTags: ['Holiday']
         }),
+
+        //! Filter Holidays Big Calendar
+        filterHolidayBigCalendar: builder.mutation({
+            query: (FilteredData) => {
+                return {
+                    url: `company/company-holiday-date/?company_name=${FilteredData.company_name}&company_holiday_type=${FilteredData.holidaySelect}`,
+                    method: 'GET',
+                    headers: {
+                        'Content-type': 'application/json; charset = UTF-8',
+                    }
+                    // body: { ...FilteredData },
+                }
+            },
+            invalidatesTags: ['Holiday']
+        }),
+
+
     })
 })
 
@@ -304,6 +321,7 @@ export const {
     useDeleteHolidayAreasByIdMutation,
     useSearchHolidayAreasMutation,
     useUpdateHolidayNameMutation,
+    useFilterHolidayBigCalendarMutation,
 } = HolidaySlices
 
 //! returns the query result object
