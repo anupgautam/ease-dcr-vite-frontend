@@ -44,7 +44,7 @@ const AddCompanyRoles = () => {
             temp.role_name = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.role_name)
         temp.role_name = returnValidation(['null'], values.roles_name)
         temp.priority_value = returnValidation(['null', 'lessThan50'], values.priority_value)
-        temp.is_highest_value = returnValidation(['null', 'lessThan50'], values.is_highest_value)
+        temp.is_highest_priority = returnValidation(['null', 'lessThan50'], values.is_highest_priority)
 
         setErrors({
             ...temp
@@ -84,7 +84,7 @@ const AddCompanyRoles = () => {
         formData.append("role_name", values.role_name);
         formData.append("priority_value", values.priority_value);
         formData.append('role_name_value', values.roles_name)
-        formData.append('is_highest', values.is_highest)
+        formData.append('is_highest_priority', values.is_highest_priority)
         formData.append("company_name", Cookies.get("company_id"));
         try {
             const response = await createCompanyRoles(formData).unwrap();

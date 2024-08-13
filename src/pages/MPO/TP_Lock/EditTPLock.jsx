@@ -147,14 +147,15 @@ const EditTPLock = ({ idharu, onClose }) => {
 
                     <Form onSubmit={handleSubmit}>
                         <Box marginBottom={2}>
-                            <Controls.Select
-                                name="compnay_roles"
+                            <Controls.Input
+                                name="company_roles"
                                 label="Role Name*"
                                 className={"drawer-role-name-select"}
                                 value={values.company_roles}
                                 onChange={handleInputChange}
                                 options={rolesharu}
-                                error={errors.compnay_roles}
+                                error={errors.company_roles}
+                                disabled={true}
                             />
                         </Box>
                         <Box marginBottom={2}>

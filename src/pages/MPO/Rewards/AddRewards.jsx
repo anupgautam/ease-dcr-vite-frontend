@@ -42,7 +42,6 @@ const AddRewards = () => {
 
     const initialFValues = {
         reward: '',
-        price: ''
     };
 
     const {
@@ -66,7 +65,6 @@ const AddRewards = () => {
         if (validate()) {
             const formData = new FormData();
             formData.append("reward", values.reward);
-            formData.append("price", values.price);
             formData.append("company_name", Cookies.get('company_id'));
             try {
                 const response = await createRewards(formData).unwrap();
@@ -133,7 +131,7 @@ const AddRewards = () => {
                             autoFocus
                         />
                     </Box>
-                    <Box marginBottom={2}>
+                    {/* <Box marginBottom={2}>
                         <Controls.Input
                             name="price"
                             label="Price*"
@@ -141,7 +139,7 @@ const AddRewards = () => {
                             onChange={handleInputChange}
                             error={errors.price}
                         />
-                    </Box>
+                    </Box> */}
                     <Stack spacing={1} direction="row">
                         <Controls.SubmitButton
                             variant="contained"
