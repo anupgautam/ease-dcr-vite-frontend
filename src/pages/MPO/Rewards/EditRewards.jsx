@@ -31,7 +31,6 @@ const EditRewards = ({ idharu, onClose }) => {
         let temp = { ...errors }
         if ('reward' in fieldValues)
             temp.reward = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.reward)
-        temp.price = returnValidation(['null', 'isNumberOnly'], values.price)
         setErrors({
             ...temp
         })
@@ -42,14 +41,12 @@ const EditRewards = ({ idharu, onClose }) => {
 
     const [initialFValues, setInitialFValues] = useState({
         reward: "",
-        price: "",
     })
 
     useEffect(() => {
         if (Rewards.data) {
             setInitialFValues({
                 reward: Rewards.data.reward,
-                price: Rewards.data.price,
             });
         }
     }, [Rewards.data])
@@ -70,8 +67,7 @@ const EditRewards = ({ idharu, onClose }) => {
     useEffect(() => {
         validate();
     }, [
-        values.reward,
-        values.price])
+        values.reward])
 
     //! Edit user
     const [updateRewards] = useUpdateRewardsMutation();
@@ -83,7 +79,6 @@ const EditRewards = ({ idharu, onClose }) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("reward", values.reward);
-        formData.append("price", values.price);
         formData.append('id', idharu);
         formData.append("company_name", Cookies.get('company_id'));
         formData.append('refresh', Cookies.get('refresh'))
@@ -144,7 +139,7 @@ const EditRewards = ({ idharu, onClose }) => {
                                 error={errors.reward}
                             />
                         </Box>
-                        <Box marginBottom={2}>
+                        {/* <Box marginBottom={2}>
                             <Controls.Input
                                 name="price"
                                 label="Price*"
@@ -152,7 +147,7 @@ const EditRewards = ({ idharu, onClose }) => {
                                 onChange={handleInputChange}
                                 error={errors.price}
                             />
-                        </Box>
+                        </Box> */}
                         <Stack spacing={1} direction="row">
                             <Controls.SubmitButton
                                 variant="contained"

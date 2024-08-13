@@ -32,7 +32,6 @@ import EditRewards from './EditRewards';
 
 const TABLE_HEAD = [
     { id: 'reward', label: 'Reward', alignRight: false },
-    { id: 'price', label: 'Price', alignRight: false },
     { id: '', },
 ];
 
@@ -121,7 +120,7 @@ const DefaultList = () => {
                                                                 {rewards.reward}
                                                             </Typography>
                                                         </TableCell>
-                                                        <TableCell align="left">{rewards.price}</TableCell>
+                                                        {/* <TableCell align="left">{rewards.price}</TableCell> */}
                                                         <TableCell align="left">
                                                             <IconButton color={'primary'} onClick={(e) => onEdit(rewards.id)}>
                                                                 <Badge>
