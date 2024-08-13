@@ -33,10 +33,9 @@ const AddMultipleMpoArea = () => {
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const onAddDoctors = useCallback(async (e) => {
+    const onAddDoctors = async (e) => {
         e.preventDefault();
         setIsLoading(true); // Set loading state to true
-
         for (const addData of AllMutipleData) {
             try {
                 const response = await createMpoArea(addData)
@@ -45,23 +44,23 @@ const AddMultipleMpoArea = () => {
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
                         navigate('/dashboard/admin/mpoareas')
-                    }, 3000);
+                    }, 1000);
                 } else {
                     setErrorMessage({ show: true, message: response.error.data[0] });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
-                    }, 3000);
+                    }, 1000);
                 }
             } catch (error) {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                }, 1000);
             }
         }
 
         setIsLoading(false);
-    }, [createMpoArea])
+    }
 
     return (
         <Box>

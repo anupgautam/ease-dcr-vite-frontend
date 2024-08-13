@@ -11,7 +11,7 @@ const initialState = companyUserRoleAdapter.getInitialState();
 
 export const CompanyUserRoleSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        
+
         //! GET all the users
         getAllcompanyUserRoles: builder.query({
             query: (page) => ({
@@ -89,7 +89,7 @@ export const CompanyUserRoleSlice = apiSlice.injectEndpoints({
                         url: `/user/company-user-role/${id}/`,
                         method: 'GET'
                     }),
-                providesTags: ['CompanyUserRoles']
+                providesTags: ['CompanyUserRoles', 'PostTourplan']
             }),
 
         //! DELETE users by id
@@ -101,7 +101,7 @@ export const CompanyUserRoleSlice = apiSlice.injectEndpoints({
                     body: id
                 }
             },
-            invalidatesTags: ['CompanyUserRoles']
+            invalidatesTags: ['CompanyUserRoles', 'TourPlan']
         }),
 
         getUpperCompanyRoles: builder.mutation({

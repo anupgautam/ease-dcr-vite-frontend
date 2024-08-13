@@ -51,18 +51,18 @@ const AddMultipleChemist = () => {
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
                         navigate('/dashboard/admin/listofchemist')
-                    }, 3000);
+                    }, 1000);
                 } else if (response.error) {
                     setErrorMessage({ show: true, message: response?.error?.data[0] });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
-                    }, 3000);
+                    }, 1000);
                 }
             } catch (error) {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                }, 1000);
             }
         }
 
@@ -183,7 +183,8 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
         chemist_contact_person: "",
         mpo_name: Cookies.get("user_role") === 'MPO' ? Cookies.get('company_user_id') : "",
         chemist_territory: "",
-        company_id: Cookies.get('company_id')
+        company_id: Cookies.get('company_id'),
+        is_investment: false,
     })
 
 

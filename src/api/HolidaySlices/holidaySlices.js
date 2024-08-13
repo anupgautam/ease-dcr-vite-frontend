@@ -281,17 +281,17 @@ export const HolidaySlices = apiSlice.injectEndpoints({
         //! Filter Holidays Big Calendar
         filterHolidayBigCalendar: builder.mutation({
             query: (FilteredData) => {
-                console.log(FilteredData);
                 return {
                     url: `company/company-holiday-date/?company_name=${FilteredData.company_name}&company_holiday_type=${FilteredData.holidaySelect}`,
                     method: 'GET',
                     headers: {
-                        'Content-type': 'application/json; charset = UTF-8',
+                        'Content-type': 'application/json; charset=UTF-8',
                     }
-                }
+                };
             },
-            invalidatesTags: ['Holiday']
+            providesTags: ['Holiday']
         }),
+
 
 
     })

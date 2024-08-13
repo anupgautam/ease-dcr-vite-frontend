@@ -46,22 +46,22 @@ const AddMutipleDoctor = () => {
             try {
                 const response = await createDoctors(addData)
                 if (response.data) {
-                    setSuccessMessage({ show: true, message: 'Successfully Added Doctor.' });
+                    setSuccessMessage({ show: true, message: 'Successfully Added Doctors.' });
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
                         navigate('/dashboard/admin/listofdoctor')
-                    }, 3000);
+                    }, 1000);
                 } else {
                     setErrorMessage({ show: true, message: response.error.data[0] });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
-                    }, 3000);
+                    }, 1000);
                 }
             } catch (error) {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                }, 1000);
             }
         }
 

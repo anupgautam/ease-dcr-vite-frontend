@@ -73,16 +73,21 @@ const DefaultList = () => {
     }, [])
 
     //!Pagination logic
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState(1);
 
     const handleChangePage = useCallback((e) => {
-        const data = e.target.ariaLabel
-        let thisArray = data.split(" ")
+        const data = e.target.ariaLabel;
+        let thisArray = data.split(" ");
         setPage(thisArray[3]);
     }, [])
 
-    // !Get Tour Plans
-    const { data } = useGetTourPlansQuery({ page: page, id: Cookies.get("company_id") })
+    const id = Cookies.get("company_id");
+
+    //! Get Tour Plan
+    const { data } = useGetTourPlansQuery({
+        id: Cookies.get("company_id"),
+        page: page
+    });
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteTourPlansByIdMutation()
@@ -186,13 +191,12 @@ const DefaultList = () => {
                 </Scrollbar>
 
                 {/* //!pagination */}
-                <Box justifyContent={'center'} alignItems='center' display={'flex'}
-                    sx={{ margin: "20px 0px" }} >
-                    {data ?
-                        <Pagination
-                            count={parseInt(data.count / 200) + 1}
-                            onChange={handleChangePage}
-                        /> : <></>}
+                <Box justifyContent="center" alignItems="center" display="flex" margin="8px 0px">
+                    {data ? (
+                        <Pagination count={parseInt(data.count / 200) + 1} onChange={handleChangePage} />
+                    ) : (
+                        <Typography variant="body1">In Search</Typography>
+                    )}
                 </Box>
             </Card>
         </>
