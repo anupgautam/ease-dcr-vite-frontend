@@ -32,8 +32,8 @@ const Navbar = () => {
 
   return (
     <div className=" container cursor-pointer">
-      <div className=" font-public_sans flex items-center justify-between font-semibold lg:font-bold">
-          <img src={logo} alt="logo" className="  h-16 lg:h-20" />
+      <div className=" font-public_sans flex items-center justify-between font-semibold lg:font-bold py-3">
+        <img src={logo} alt="logo" className="  h-[40px] md:h-14 lg:h-20" />
         <div className="flex gap-x-2.5 md:gap-x-8 text-xl">
           {navItems.map((item, idx) => (
             <ScrollLink
@@ -45,9 +45,7 @@ const Navbar = () => {
               key={idx}
               activeClass="active-path"
             >
-              <h2 className="py-3 text-[11px] md:text-[16px] ">
-                {item.title}
-              </h2>
+              <h2 className="py-3 text-[13px] md:text-[16px] ">{item.title}</h2>
             </ScrollLink>
           ))}
         </div>

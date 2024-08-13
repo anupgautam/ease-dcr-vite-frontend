@@ -38,10 +38,9 @@ const Scrollnav = () => {
         isVisible ? "transform translate-y-0" : "transform -translate-y-full"
       }`}
     >
-      <div className=" flex font-semibold gap-x-2 lg:gap-x-2 md:gap-x-6 items-center container justify-between">
-       
-          <img src={logo} alt="LOGO" className=" h-16 lg:h-20" />
-  
+      <div className=" flex font-semibold gap-x-2 lg:gap-x-2 md:gap-x-6 items-center container justify-between py-3">
+        <img src={logo} alt="LOGO" className="h-[40px] md:h-14 lg:h-20" />
+
         <div className=" flex gap-[1rem] md:gap-[2rem] lg:gap-[3rem] font-bold">
           {navItems.map((item, idx) => {
             return (
