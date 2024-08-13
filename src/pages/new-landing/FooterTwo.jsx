@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "/assets/logo.png";
+import logo from "/assets/ease.svg";
 import { FaFacebookF } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { RiInstagramFill } from "react-icons/ri";

@@ -53,47 +53,47 @@ export default function LoginPage() {
                     }}
                 /> */}
                 <div className=' container flex rounded-xl'>
-                <img src="/assets/images/EASE_SFA/ease.png" className='h-16' alt="Ease SFA Logo" />
-                
-                {mdUp && (
-                   
-                    <StyledSection>
-                    <div >
-                     
-                        <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-                            Hi, Welcome Back
-                        </Typography>
-                        <img src="/assets/loginPage.png" alt="login" />
-                        </div>
-                    </StyledSection>
-                    
-                )}
-               
-                <Container maxWidth="sm">
-                    <StyledContent>
-                        <Typography variant="h4" gutterBottom>
-                            Sign in to Ease SFA
-                        </Typography>
+                    <img src="/assets/images/EASE_SFA/ease.svg" className='h-16' alt="Ease SFA Logo" />
 
-                        <Typography variant="body2" sx={{ mb: 5 }}>
-                            Don’t have an account? {''}
-                            <Link
-                                component={RouterLink}
-                                to="/"
-                                variant="subtitle3"
-                                sx={{
-                                    textDecoration: 'none',
-                                    color: '#007bff', 
-                                    '&:hover': {
-                                        color: '#0056b3',
-                                    }
-                                }}
-                            >
-                                Get started
-                            </Link>
-                        </Typography>
+                    {mdUp && (
 
-                        {/* <Stack direction="row" spacing={2}>
+                        <StyledSection>
+                            <div >
+
+                                <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+                                    Hi, Welcome Back
+                                </Typography>
+                                <img src="/assets/loginPage.png" alt="login" />
+                            </div>
+                        </StyledSection>
+
+                    )}
+
+                    <Container maxWidth="sm">
+                        <StyledContent>
+                            <Typography variant="h4" gutterBottom>
+                                Sign in to Ease SFA
+                            </Typography>
+
+                            <Typography variant="body2" sx={{ mb: 5 }}>
+                                Don’t have an account? {''}
+                                <Link
+                                    component={RouterLink}
+                                    to="/"
+                                    variant="subtitle3"
+                                    sx={{
+                                        textDecoration: 'none',
+                                        color: '#007bff',
+                                        '&:hover': {
+                                            color: '#0056b3',
+                                        }
+                                    }}
+                                >
+                                    Get started
+                                </Link>
+                            </Typography>
+
+                            {/* <Stack direction="row" spacing={2}>
                             <Button fullWidth size="large" color="inherit" variant="outlined">
                                 <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
                             </Button>
@@ -107,15 +107,15 @@ export default function LoginPage() {
                             </Button>
                         </Stack> */}
 
-                        {/* <Divider sx={{ my: 3 }}>
+                            {/* <Divider sx={{ my: 3 }}>
                             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                                 OR
                             </Typography>
                         </Divider> */}
 
-                        <LoginForm />
-                    </StyledContent>
-                </Container>
+                            <LoginForm />
+                        </StyledContent>
+                    </Container>
                 </div>
             </StyledRoot>
         </>

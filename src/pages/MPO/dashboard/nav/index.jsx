@@ -47,10 +47,9 @@ export default function Nav({ openNav, onCloseNav }) {
       }}
     >
       <Box sx={{ px: 1.5, py: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <img src="/assets/images/EASE_SFA/ease.png" height='80px' width='80px' alt="Ease SFA Logo" />
-        <Typography style={{ fontSize: "20px", color: "black", fontWeight: '700', letterSpacing: '.7px', marginTop: '7px' }}>Ease SFA</Typography>
+        <img src="/assets/ease.png" height='180px' width='180px' alt="Ease SFA Logo" />
+        {/* <Typography style={{ fontSize: "20px", color: "black", fontWeight: '700', letterSpacing: '.7px', marginTop: '7px' }}>Ease SFA</Typography> */}
       </Box>
-
 
       {
         Cookies.get('user_role') === "admin" &&
