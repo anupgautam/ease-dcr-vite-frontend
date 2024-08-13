@@ -20,7 +20,7 @@ const CompanyAreasCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: "18px", fontWeight: '600' }}>
-                        Company Working Areas {data?.length}
+                        Total Company Working Areas: {data?.length}
                     </Typography> : <Typography style={{ fontSize: "18px", fontWeight: '600' }}>Company Working Areas</Typography>}
         </>
     )

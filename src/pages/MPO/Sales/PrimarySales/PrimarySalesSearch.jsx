@@ -127,7 +127,6 @@ const PrimarySalesSearch = () => {
     //! Get Stockist
 
     const companyUserArea = useGetUsersByCompanyUserByIdQuery(Cookies.get('company_user_id'));
-    console.log(companyUserArea)
 
     const Stockist = useGetAllStockistsWithoutPaginationQuery({ company_name: Cookies.get('company_id'), company_area: companyUserArea?.data?.company_area?.company_area });
 

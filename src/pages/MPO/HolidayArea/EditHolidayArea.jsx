@@ -119,10 +119,6 @@ const EditHolidayArea = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         try {
-            // console.log('Submitting with:', {
-            //     holiday_type: values.holiday_type,
-            //     company_area: areaOptionsRef.current
-            // });
             const response = await updateHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptionsRef.current }).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited Holiday Area' });
             setTimeout(() => {

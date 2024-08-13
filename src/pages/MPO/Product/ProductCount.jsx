@@ -20,7 +20,7 @@ const ProductCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: "18px", fontWeight: '600' }} >
-                        Products {data.count}
+                        Total Products: {data.count}
                     </Typography> : <Typography style={{ fontSize: "18px", fontWeight: '600' }}>Products</Typography>}
         </>
     )

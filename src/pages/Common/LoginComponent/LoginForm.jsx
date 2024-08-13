@@ -84,6 +84,7 @@ const LoginFormInputs = () => {
                             Cookies.set('refresh', res.data.token.refresh);
                             Cookies.set('access', res.data.token.access);
                             Cookies.set('email', email);
+                            Cookies.set('is_highest_priority', res.data.is_highest_priority)
                             setSuccessMessage({ show: true, message: 'Successfully Logged In' })
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                 Cookies.set('user_role', 'admin')

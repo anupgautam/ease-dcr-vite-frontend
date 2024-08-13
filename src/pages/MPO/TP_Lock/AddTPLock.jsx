@@ -43,9 +43,9 @@ const AddTPLock = () => {
     const validate = (fieldValues = values) => {
         let temp = { ...errors };
         if ('company_roles' in fieldValues)
-            temp.company_roles = fieldValues.company_roles ? returnValidation(['null'], fieldValues.company_roles) : "";
+            temp.company_roles = returnValidation(['null'], values.company_roles);
         if ('tp_lock_days' in fieldValues)
-            temp.tp_lock_days = fieldValues.tp_lock_days ? returnValidation(['null', 'isNumberOnly'], fieldValues.tp_lock_days) : "";
+            temp.tp_lock_days = returnValidation(['null'], values.tp_lock_days);
 
         setErrors({
             ...temp
@@ -56,8 +56,6 @@ const AddTPLock = () => {
     };
 
     const initialFValues = {
-        company_roles: '',
-        tp_lock_days: ''
     };
 
     const {
@@ -83,8 +81,6 @@ const AddTPLock = () => {
             formData.append("company_roles", values.company_roles);
             formData.append("tp_lock_days", values.tp_lock_days);
             formData.append("company_name", Cookies.get('company_id'));
-            formData.append('refresh', Cookies.get('refresh'))
-            formData.append('access', Cookies.get('access'));
             try {
                 const response = await createTPDays(formData).unwrap();
                 setSuccessMessage({ show: true, message: 'Successfully Added TP Lock Days' });
@@ -141,20 +137,20 @@ const AddTPLock = () => {
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Select
-                            name="compnay_roles"
+                            name="company_roles"
                             label="Role Name*"
                             className={"drawer-role-name-select"}
                             value={values.name}
                             onChange={handleInputChange}
                             options={rolesharu}
-                            error={errors.compnay_roles}
+                            error={errors.company_roles}
                         />
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Input
                             name="tp_lock_days"
-                            label="Price*"
-                            value={values.tp_lock_days}
+                            label="Days*"
+                            value={values.name}
                             onChange={handleInputChange}
                             error={errors.tp_lock_days}
                         />

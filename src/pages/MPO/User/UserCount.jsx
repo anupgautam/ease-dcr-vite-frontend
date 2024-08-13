@@ -18,7 +18,7 @@ const UserCount = () => {
             {
                 data ?
                     <Typography style={{ fontWeight: '600', fontSize: '18px' }}>
-                        Users {data.count}
+                        Total Users: {data.count}
                     </Typography> : <Typography style={{ fontWeight: '600', fontSize: '18px' }}>Users</Typography>}
         </>
     )

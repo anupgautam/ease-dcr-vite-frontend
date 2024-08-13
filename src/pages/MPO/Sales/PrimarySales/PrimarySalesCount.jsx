@@ -17,8 +17,8 @@ const PrimarySalesCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: '18px', fontWeight: '600' }}>
-                        Primary Sales Count {data.count}
-                    </Typography> : <Typography style={{ fontSize: '18px', fontWeight: '600' }}>Primary Sales Count</Typography>}
+                        Total Primary Sales: {data.count}
+                    </Typography> : <Typography style={{ fontSize: '18px', fontWeight: '600' }}>Primary Sales</Typography>}
         </>
     )
 }

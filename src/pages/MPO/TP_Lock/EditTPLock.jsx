@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import {
     Box,
     Typography, Button, Grid
@@ -26,7 +26,6 @@ const EditTPLock = ({ idharu, onClose }) => {
 
     //! Getting TPDays by ID
     const TPDays = useGetTPLockDaysByIdQuery(idharu);
-
 
     //! Get user roles
     const { data, isSuccess, } = useGetUsersRoleQuery(Cookies.get('company_id'));
@@ -64,7 +63,7 @@ const EditTPLock = ({ idharu, onClose }) => {
     useEffect(() => {
         if (TPDays.data) {
             setInitialFValues({
-                company_roles: TPDays.data.company_roles,
+                company_roles: TPDays.data.company_roles.role_name_value,
                 tp_lock_days: TPDays.data.tp_lock_days,
             });
         }
@@ -102,8 +101,6 @@ const EditTPLock = ({ idharu, onClose }) => {
         formData.append("tp_lock_days", values.tp_lock_days);
         formData.append('id', idharu);
         formData.append("company_name", Cookies.get('company_id'));
-        formData.append('refresh', Cookies.get('refresh'))
-        formData.append('access', Cookies.get('access'));
         try {
             const response = await updateTPDays(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited TPDays' });
@@ -154,7 +151,7 @@ const EditTPLock = ({ idharu, onClose }) => {
                                 name="compnay_roles"
                                 label="Role Name*"
                                 className={"drawer-role-name-select"}
-                                value={values.compnay_roles}
+                                value={values.company_roles}
                                 onChange={handleInputChange}
                                 options={rolesharu}
                                 error={errors.compnay_roles}
@@ -163,7 +160,7 @@ const EditTPLock = ({ idharu, onClose }) => {
                         <Box marginBottom={2}>
                             <Controls.Input
                                 name="tp_lock_days"
-                                label="Price*"
+                                label="Days*"
                                 value={values.tp_lock_days}
                                 onChange={handleInputChange}
                                 error={errors.tp_lock_days}

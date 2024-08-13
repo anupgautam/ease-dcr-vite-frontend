@@ -160,7 +160,6 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
     ]
 
     const { data: CompanyArea } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
-    console.log(CompanyArea)
     const companyAreaData = useMemo(() => {
         if (CompanyArea) {
             return CompanyArea?.map(key => ({ id: key.id, title: key.company_area }))

@@ -141,8 +141,6 @@ const SecondarySalesSearch = () => {
         return [];
     }, [Stockist])
 
-    console.log(Stockist)
-
     //! Options
     const [selectedOption, setSelectedOption] = useState('');
 

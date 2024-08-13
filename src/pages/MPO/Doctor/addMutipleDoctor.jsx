@@ -159,12 +159,11 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         { id: "Female", title: "Female" },
     ]
 
-
     const DoctorSpecialization = useGetDoctorsSpecializationQuery(Cookies.get('company_id'))
 
     const doctorspecializations = useMemo(() => {
-        if (DoctorSpecialization) {
-            return DoctorSpecialization.data.map(key => ({ id: key.id, title: key.category_name }))
+        if (DoctorSpecialization?.data) {
+            return DoctorSpecialization?.data.map(key => ({ id: key.id, title: key.category_name }))
         }
         return [];
     }, [DoctorSpecialization])
@@ -200,6 +199,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         doctor_nmc_number: "",
         doctor_qualification: "",
         doctor_specialization: "",
+        is_investment: false,
         mpo_name: Cookies.get("user_role") === 'MPO' ? Cookies.get('company_user_id') : "",
         doctor_territory: "",
         company_id: Cookies.get('company_id')
@@ -231,7 +231,6 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         }
         return [];
     }, [MpoArea])
-
 
 
     return (

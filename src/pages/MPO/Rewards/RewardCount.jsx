@@ -21,7 +21,7 @@ const RewardCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: '18px', fontWeight: '600' }}>
-                        Rewards {data?.length}
+                        Total Rewards: {data?.length}
                     </Typography> : <Typography style={{ fontSize: '18px', fontWeight: '600' }}>Rewards</Typography>}
         </>
     )

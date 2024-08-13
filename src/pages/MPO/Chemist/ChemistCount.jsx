@@ -9,7 +9,7 @@ const ChemistCount = () => {
 
     const handleChangePage = useCallback((e) => {
         const data = e.target.ariaLabel
-        let thisArray = data.split(" ")
+    let thisArray = data.split(" ")
         setPage(thisArray[3]);
     }, [])
 
@@ -20,7 +20,7 @@ const ChemistCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: '18px', fontWeight: '600' }}>
-                        Chemists {data.count}
+                        Total Chemists: {data.count}
                     </Typography> : <Typography style={{ fontSize: '18px', fontWeight: '600' }}>Chemists</Typography>}
         </>
     )

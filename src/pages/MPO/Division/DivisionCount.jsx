@@ -20,7 +20,7 @@ const DivisionCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: "18px", fontWeight: '600' }}>
-                        Divisions {data?.length}
+                        Total Divisions: {data?.length}
                     </Typography> : <Typography style={{ fontSize: "18px", fontWeight: '600' }}>Divisions Count</Typography>}
         </>
     )

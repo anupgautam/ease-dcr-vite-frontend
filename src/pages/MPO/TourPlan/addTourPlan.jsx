@@ -8,7 +8,9 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    OutlinedInput
+    OutlinedInput,
+    Autocomplete,
+    TextField
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -34,7 +36,7 @@ const AddTourPlan = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const toggleDrawer = useCallback(() => {
-            setIsDrawerOpen(!isDrawerOpen);
+        setIsDrawerOpen(!isDrawerOpen);
     }, [])
 
     const handleCloseDrawer = useCallback(() => {
@@ -102,14 +104,19 @@ const AddTourPlan = () => {
 
     const [MpoTpArea, setMpoTpArea] = useState([]);
 
-    const handleMpoTpArea = useCallback((event) => {
-        const {
-            target: { value },
-        } = event;
-        setMpoTpArea(
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    }, []);
+    // const handleMpoTpArea = useCallback((event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setMpoTpArea(
+    //         typeof value === 'string' ? value.split(',') : value,
+    //     );
+    // }, []);
+
+    const handleMpoTpArea = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setMpoTpArea(mpotparea)
+    }
 
     const [MpoAreaData, setMpoAreaData] = useState([]);
 
@@ -261,11 +268,11 @@ const AddTourPlan = () => {
                 onClose={handleCloseDrawer}
                 padding="16px"
                 sx={{
-                    width: 400, // Set the desired width of the Drawer
+                    width: 400,
                     flexShrink: 0,
                     boxSizing: "border-box",
                     '& .MuiDrawer-paper': {
-                        width: 400 // Set the same width for the paper inside the Drawer
+                        width: 400
                     }
                 }}
             >
@@ -345,43 +352,21 @@ const AddTourPlan = () => {
                         Cookies.get('user_role') === "MPO" ?
                             <>
                                 <Box>
-                                    {/* <Box marginBottom={2}>
-                                        <Controls.Select
-                                            name={`select_the_area}`}
-                                            label="Select the Area*"
-                                            value={formValuesArray.select_the_area ? formValuesArray.select_the_area.id : ""}
-                                            onChange={(event) => {
-                                                const selectedOption = mpoAreaData.find(option => option.id === event.target.value);
-                                                handleFormChange('select_the_area', selectedOption, false);
-                                            }}
-                                            options={mpoAreaData}
-                                        />
-                                    </Box> */}
                                     <Box marginBottom={2}>
-                                        <FormControl sx={{ m: 1, width: 300 }}>
-                                            <InputLabel>{"Select the Area*"}</InputLabel>
-                                            <Select
-                                                labelId="demo-multiple-name-label"
-                                                id="demo-multiple-name"
-                                                multiple
-                                                value={MpoTpArea}
-                                                onChange={handleMpoTpArea}
-                                                input={<OutlinedInput label="Select the Area*" />}
-                                                // MenuProps={MenuProps}
-                                                sx={{ width: '100%' }}
-                                                style={{
-                                                    borderBlockColor: "white",
-                                                    width: "100%",
-                                                    textAlign: 'start'
-                                                }}
-                                            >
-                                                {mpoAreaData.map((item) => (
-                                                    <MenuItem key={item.id} value={item.id}>
-                                                        {item.title}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
+                                        <Autocomplete
+                                            multiple
+                                            options={mpoAreaData}
+                                            getOptionLabel={(option) => option.title}
+                                            onChange={handleMpoTpArea}
+                                            renderInput={(params) => (
+                                                <TextField {...params} label="Select the Areas" />
+                                            )}
+                                            renderOption={(props, option) => (
+                                                <li {...props} key={option.id}>
+                                                    {option.title}
+                                                </li>
+                                            )}
+                                        />
                                     </Box>
                                     <Box marginBottom={2}>
                                         <Controls.Input
