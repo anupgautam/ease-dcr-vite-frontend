@@ -55,8 +55,6 @@ const DefaultList = () => {
         mpo_name: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_user_id')
     });
 
-    console.log(data)
-
     const [deleteDoctor] = useDeleteDoctorsByIdMutation();
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7];
@@ -100,8 +98,8 @@ const DefaultList = () => {
                             <TableCell align="left">{doc.doctor_name.doctor_phone_number}</TableCell>
                             <TableCell align="left">{doc.doctor_name.doctor_address}</TableCell>
                             <TableCell align="left">{doc.doctor_name.doctor_qualification}</TableCell>
+                            <TableCell align="left">{doc.doctor_name.doctor_specialization.category_name}</TableCell>
                             <TableCell align="left">{doc.doctor_name.doctor_category}</TableCell>
-                            <TableCell align="left">{doc.is_investment === true ? "Invested" : "Not Invested"}</TableCell>
                             {Cookies.get('user_role') === 'admin' && (
                                 <>
                                     <TableCell align="left">

@@ -19,7 +19,7 @@ const DoctorCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: '18px', fontWeight: '600' }}>
-                        Doctors {data.count}
+                        Total Doctors: {data.count}
                     </Typography> : <Typography style={{ fontSize: '18px', fontWeight: '600' }}>Doctors</Typography>}
         </>
     )

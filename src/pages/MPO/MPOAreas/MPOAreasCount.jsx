@@ -22,7 +22,7 @@ const MPOAreasCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: "18px", fontWeight: '600' }}>
-                        MPO Areas {data?.length}
+                        Total MPO Areas: {data?.length}
                     </Typography> : <Typography style={{ fontSize: "18px", fontWeight: '600' }}>MPO Areas</Typography>}
         </>
     )

@@ -21,7 +21,7 @@ const SpecializationCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: '18px', fontWeight: '600' }}>
-                        Specializations {data?.length}
+                        Total Specializations: {data?.length}
                     </Typography> : <Typography style={{ fontSize: '18px', fontWeight: '600' }}>Specializations</Typography>}
         </>
     )

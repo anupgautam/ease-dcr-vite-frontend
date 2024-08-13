@@ -19,7 +19,7 @@ const CompanyAreaWiseExpenseCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: "18px", fontWeight: '600' }}>
-                        Daily Allowances {data.count}
+                        Total Daily Allowances: {data.count}
                     </Typography> : <Typography style={{ fontSize: "18px", fontWeight: '600' }}>Daily Allowances Count</Typography>}
         </>
     )

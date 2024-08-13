@@ -20,7 +20,7 @@ const UploadCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: '18px', fontWeight: "600" }}>
-                        Uploads {data.count}
+                        Total Uploads: {data.count}
                     </Typography> : <Typography style={{ fontSize: '18px', fontWeight: "600" }}>Upload Count</Typography>}
         </>
     )

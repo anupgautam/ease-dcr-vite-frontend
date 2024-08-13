@@ -30,6 +30,7 @@ const EditCompanyRoles = ({ idharu, onClose }) => {
         let temp = { ...errors }
         if ('role_name' in fieldValues)
             temp.role_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.role_name)
+        temp.is_highest_value = returnValidation(['null', 'lessThan50'], values.is_highest_value)
         setErrors({
             ...temp
         })
@@ -42,12 +43,14 @@ const EditCompanyRoles = ({ idharu, onClose }) => {
 
     const [initialFValues, setInitialFValues] = useState({
         role_name: "",
+        is_highest_priority: '',
     })
 
     useEffect(() => {
         if (CompanyRoles.data) {
             setInitialFValues({
                 role_name: CompanyRoles.data.role_name.role_name,
+                is_highest_priority: CompanyRoles.data.role_name.is_highest_priority,
             });
         }
     }, [CompanyRoles.data])
@@ -80,6 +83,7 @@ const EditCompanyRoles = ({ idharu, onClose }) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("role_name", values.role_name);
+        formData.append("is_highest_priority", values.is_highest_priority);
         formData.append('id', idharu);
         formData.append("company_id", Cookies.get('company_id'));
         formData.append('refresh', Cookies.get('refresh'))
@@ -137,6 +141,14 @@ const EditCompanyRoles = ({ idharu, onClose }) => {
                                 value={values.role_name}
                                 onChange={handleInputChange}
                                 error={errors.role_name}
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <Controls.Checkbox
+                                name="is_highest_priority"
+                                label="Is Highest Priority"
+                                value={values.is_highest_priority}
+                                onChange={handleInputChange}
                             />
                         </Box>
                         <Stack spacing={1} direction="row">
