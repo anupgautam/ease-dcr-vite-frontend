@@ -4,7 +4,7 @@ import { useCreateLandingsMutation } from "../../api/MPOSlices/LandingSlice";
 import { Grid, Box } from "@mui/material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import logo from "/assets/logo.png";
+import logo from "/assets/ease.png";
 import deskImg from "/assets/desk.jpg";
 
 const Contact = () => {
