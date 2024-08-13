@@ -179,7 +179,7 @@ const StockistSearch = () => {
                     {
                         Cookies.get('user_role') === 'admin' &&
                         <Grid container spacing={2}>
-                            <Grid item xs={3}>
+                            <Grid item xs={5} sm={3}>
                                 <TextField
                                     label="Search Stockist"
                                     variant="outlined"
@@ -195,7 +195,7 @@ const StockistSearch = () => {
                                     sx={{ m: 2 }}
                                 />
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid item xs={5} sm={3}>
                                 <Autocomplete
                                     options={companyareas}
                                     getOptionLabel={(option) => option.title}

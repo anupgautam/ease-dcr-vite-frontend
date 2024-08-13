@@ -1,449 +1,568 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
-    Card,
-    Badge,
-    Table,
-    Paper,
-    Button,
-    TableRow,
-    TextField,
-    TableBody,
-    InputAdornment,
-    TableCell,
-    Typography,
-    IconButton,
-    TableContainer,
-    Pagination,
-    Box,
-    Grid,
-    FormControl,
-    Autocomplete,
-} from '@mui/material';
+  Card,
+  Badge,
+  Table,
+  Paper,
+  Button,
+  TableRow,
+  TextField,
+  TableBody,
+  InputAdornment,
+  TableCell,
+  Typography,
+  IconButton,
+  TableContainer,
+  Pagination,
+  Box,
+  Grid,
+  FormControl,
+  Autocomplete,
+} from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Iconify from '@/components/iconify/Iconify';
-import { UserListHead } from '../../../sections/@dashboard/user';
-import Controls from '../../../reusable/components/forms/controls/Controls'
-import { useForm1 } from '../../../reusable/components/forms/useForm';
+import Iconify from "@/components/iconify/Iconify";
+import { UserListHead } from "../../../sections/@dashboard/user";
+import Controls from "../../../reusable/components/forms/controls/Controls";
+import { useForm1 } from "../../../reusable/components/forms/useForm";
 
 import {
-    useDeletecompanyUserRolesByIdMutation,
-    useSearchCompanyUserRolesMutation
-} from '@/api/CompanySlices/companyUserRoleSlice';
-import EditUser from './EditUser';
-import SearchIcon from '@mui/icons-material/Search';
-import Test from './DefaultList';
-import Cookies from 'js-cookie'
-import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRolesSlice';
-import { useGetUsersByCompanyRoleIdQuery } from '@/api/MPOSlices/UserSlice';
-import Scrollbar from '@/components/scrollbar/Scrollbar';
-import { useUpdateUsersMutation } from '@/api/DemoUserSlice';
-import { Link } from 'react-router-dom';
+  useDeletecompanyUserRolesByIdMutation,
+  useSearchCompanyUserRolesMutation,
+} from "@/api/CompanySlices/companyUserRoleSlice";
+import EditUser from "./EditUser";
+import SearchIcon from "@mui/icons-material/Search";
+import Test from "./DefaultList";
+import Cookies from "js-cookie";
+import { useGetCompanyRolesByCompanyQuery } from "@/api/CompanySlices/companyRolesSlice";
+import { useGetUsersByCompanyRoleIdQuery } from "@/api/MPOSlices/UserSlice";
+import Scrollbar from "@/components/scrollbar/Scrollbar";
+import { useUpdateUsersMutation } from "@/api/DemoUserSlice";
+import { Link } from "react-router-dom";
 
 const TABLE_HEAD = [
-    { id: 'user_name', label: 'User Name', alignRight: false },
-    { id: 'email', label: 'Email', alignRight: false },
-    { id: 'phone_number', label: 'Phone Number', alignRight: false },
-    { id: 'role_name', label: 'Role Name', alignRight: false },
-    { id: 'head_quarter', label: 'Head Quarter', alignRight: false },
-    { id: 'executive', label: 'Executive', alignRight: false },
-    { id: 'division', label: 'Division', alignRight: false },
-    { id: 'status', label: 'Status', alignRight: false },
-    { id: 'locked_user', label: 'Locked User', alignRight: false },
-    { id: '' },
+  { id: "user_name", label: "User Name", alignRight: false },
+  { id: "email", label: "Email", alignRight: false },
+  { id: "phone_number", label: "Phone Number", alignRight: false },
+  { id: "role_name", label: "Role Name", alignRight: false },
+  { id: "head_quarter", label: "Head Quarter", alignRight: false },
+  { id: "executive", label: "Executive", alignRight: false },
+  { id: "division", label: "Division", alignRight: false },
+  { id: "status", label: "Status", alignRight: false },
+  { id: "locked_user", label: "Locked User", alignRight: false },
+  { id: "" },
 ];
 
 const UserSearch = () => {
+  //! For drawer
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    //! For drawer 
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const [selectedUpdateId, setSelectedUpdateId] = useState(null);
 
-    const [selectedId, setSelectedId] = useState(null);
-    const [selectedUpdateId, setSelectedUpdateId] = useState(null);
+  const onEdit = useCallback((id) => {
+    setSelectedUpdateId(id);
+    setIsDrawerOpen(true);
+  }, []);
 
-    const onEdit = useCallback((id) => {
-        setSelectedUpdateId(id);
-        setIsDrawerOpen(true);
-    }, []);
+  const onCloseDrawer = useCallback(() => {
+    setIsDrawerOpen(false);
+  }, []);
 
-    const onCloseDrawer = useCallback(() => {
-        setIsDrawerOpen(false);
-    }, [])
+  //!Pagination logic
+  const [page, setPage] = useState(1);
 
-    //!Pagination logic
-    const [page, setPage] = useState(1)
+  const handleChangePage = useCallback((e) => {
+    const data = e.target.ariaLabel;
+    let thisArray = data.split(" ");
+    setPage(thisArray[3]);
+  }, []);
 
-    const handleChangePage = useCallback((e) => {
-        const data = e.target.ariaLabel
-        let thisArray = data.split(" ")
-        setPage(thisArray[3]);
-    }, [])
+  // ! Get all users wala
+  const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get("company_id"));
 
-    // ! Get all users wala
-    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+  const [roleSelect, setRoleSelect] = useState("");
+  const [companyRoleList, setCompanyRoleList] = useState([]);
 
-    const [roleSelect, setRoleSelect] = useState('');
-    const [companyRoleList, setCompanyRoleList] = useState([]);
+  const userList = useGetUsersByCompanyRoleIdQuery({
+    id: Cookies.get("company_id"),
+    page: roleSelect === null ? undefined : roleSelect,
+  });
 
-
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: roleSelect === null ? undefined : roleSelect });
-
-    useEffect(() => {
-        let dataList = [{ id: '', title: 'None' }]
-        if (roleList?.data) {
-            roleList.data.map((key) => {
-                dataList.push({ id: key.id, title: key.role_name_value })
-            })
-        }
-        setCompanyRoleList(dataList);
-    }, [roleList])
-    
-    const [searchResults, setSearchResults] = useState({ search: "" });
-    const [searchUser, results] = useSearchCompanyUserRolesMutation();
-
-    // !on search
-    const onSearch = (e) => {
-        const searchQuery = e.target.value;
-        const company_id = Cookies.get('company_id');
-        setSearchResults({ search: searchQuery, company_id })
-        searchUser(searchResults);
-        // 
+  useEffect(() => {
+    let dataList = [{ id: "", title: "None" }];
+    if (roleList?.data) {
+      roleList.data.map((key) => {
+        dataList.push({ id: key.id, title: key.role_name_value });
+      });
     }
+    setCompanyRoleList(dataList);
+  }, [roleList]);
 
-    const [filterValue, setFilterValue] = useState(true);
+  const [searchResults, setSearchResults] = useState({ search: "" });
+  const [searchUser, results] = useSearchCompanyUserRolesMutation();
 
-    const onFilterChange = useCallback((e) => {
-        setFilterValue(e.target.value);
-    }, []);
+  // !on search
+  const onSearch = (e) => {
+    const searchQuery = e.target.value;
+    const company_id = Cookies.get("company_id");
+    setSearchResults({ search: searchQuery, company_id });
+    searchUser(searchResults);
+    //
+  };
 
-    const initialFValues = {
-        "search": " "
-    }
+  const [filterValue, setFilterValue] = useState(true);
 
-    const handleRoleSelect = useCallback((e, value) => {
-        // setRoleSelect(value.id === null ? "" : value.id);
-        setRoleSelect(value?.id || '');
-    }, [])
-    const handleClear = useCallback(() => {
-        setRoleSelect('');
-    }, []);
+  const onFilterChange = useCallback((e) => {
+    setFilterValue(e.target.value);
+  }, []);
 
-    const {
-        values,
-        handleSearchClick,
-    } = useForm1(initialFValues, true);
+  const initialFValues = {
+    search: " ",
+  };
 
-    useEffect(() => {
-        // 
-        searchUser(values)
-    }, [values])
+  const handleRoleSelect = useCallback((e, value) => {
+    // setRoleSelect(value.id === null ? "" : value.id);
+    setRoleSelect(value?.id || "");
+  }, []);
+  const handleClear = useCallback(() => {
+    setRoleSelect("");
+  }, []);
 
-    // !Delete users
-    const [deleteUser] = useDeletecompanyUserRolesByIdMutation();
-    const [UserStatus] = useUpdateUsersMutation();
+  const { values, handleSearchClick } = useForm1(initialFValues, true);
 
-    const handleChangeStatus = (e, user) => {
+  useEffect(() => {
+    //
+    searchUser(values);
+  }, [values]);
 
-        const formData = new FormData();
-        formData.append("first_name", user.user_name.first_name);
-        formData.append("middle_name", user.user_name.middle_name);
-        formData.append("last_name", user.user_name.last_name);
-        formData.append("is_active", e.target.value);
-        // formData.append("address", values.address);
-        formData.append("phone_number", user.user_name.phone_number);
-        formData.append("email", user.user_name.email);
-        formData.append("role_name", user.role_name.id);
-        formData.append("division_name", user.division_name.id);
-        formData.append("executive_level", user.executive_level.id);
-        formData.append("station_type", user.station_type);
-        formData.append("company_area", user.company_area.id);
-        formData.append('id', user.id);
-        formData.append("company_id", Cookies.get('company_id'));
-        formData.append('refresh', Cookies.get('refresh'))
-        formData.append('access', Cookies.get('access'));
-        formData.append("date_of_joining", user.user_name.date_of_joining);
-        UserStatus(formData)
-            .then((res) => {
-                if (res.data) {
-                    window.location.reload()
-                }
-            })
-    }
+  // !Delete users
+  const [deleteUser] = useDeletecompanyUserRolesByIdMutation();
+  const [UserStatus] = useUpdateUsersMutation();
 
-    //! Dialogue 
-    const [openDialogue, setOpenDialogue] = useState(false);
-    const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const handleChangeStatus = (e, user) => {
+    const formData = new FormData();
+    formData.append("first_name", user.user_name.first_name);
+    formData.append("middle_name", user.user_name.middle_name);
+    formData.append("last_name", user.user_name.last_name);
+    formData.append("is_active", e.target.value);
+    // formData.append("address", values.address);
+    formData.append("phone_number", user.user_name.phone_number);
+    formData.append("email", user.user_name.email);
+    formData.append("role_name", user.role_name.id);
+    formData.append("division_name", user.division_name.id);
+    formData.append("executive_level", user.executive_level.id);
+    formData.append("station_type", user.station_type);
+    formData.append("company_area", user.company_area.id);
+    formData.append("id", user.id);
+    formData.append("company_id", Cookies.get("company_id"));
+    formData.append("refresh", Cookies.get("refresh"));
+    formData.append("access", Cookies.get("access"));
+    formData.append("date_of_joining", user.user_name.date_of_joining);
+    UserStatus(formData).then((res) => {
+      if (res.data) {
+        window.location.reload();
+      }
+    });
+  };
 
-    const handleClickOpen = useCallback(() => {
-        setOpenDialogue(true)
-    }, [])
+  //! Dialogue
+  const [openDialogue, setOpenDialogue] = useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-    const handleClose = useCallback(() => {
-        setOpenDialogue(false)
-    }, [])
+  const handleClickOpen = useCallback(() => {
+    setOpenDialogue(true);
+  }, []);
 
-    return (
-        <>
-            <Card>
-                <Box style={{ padding: "20px" }}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={2.5}>
-                            <TextField
-                                label="Search Users"
-                                variant="outlined"
-                                onChange={(e) => onSearch(e)}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SearchIcon />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                sx={{ m: 2 }}
-                            />
-                        </Grid>
-                        <Grid item xs={2.5}>
-                            <FormControl>
-                                <Autocomplete
-                                    options={companyRoleList}
-                                    getOptionLabel={(option) => option.title}
-                                    onChange={handleRoleSelect}
-                                    renderInput={(params) => (
-                                        <TextField {...params} label="Company Roles" />
-                                    )}
-                                    renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+  const handleClose = useCallback(() => {
+    setOpenDialogue(false);
+  }, []);
+
+  return (
+    <>
+      <Card>
+        <Box style={{ padding: "20px" }}>
+          <Grid container spacing={1.5}>
+            <Grid item xs={4.5} sm={2.5}>
+              <TextField
+                label="Search Users"
+                variant="outlined"
+                onChange={(e) => onSearch(e)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ m: 2 }}
+              />
+            </Grid>
+            <Grid item xs={4} sm={2.5}>
+              <FormControl>
+                <Autocomplete
+                  options={companyRoleList}
+                  getOptionLabel={(option) => option.title}
+                  onChange={handleRoleSelect}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Company Roles" />
+                  )}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.id}>
+                      {option.title}
+                    </li>
+                  )}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={3.5} sm={2.5}>
+              <Box>
+                <Controls.Select
+                  value={filterValue}
+                  name={"Status"}
+                  onChange={(e) => onFilterChange(e)}
+                  options={[
+                    { id: true, title: "Active" },
+                    { id: false, title: "Inactive" },
+                  ]}
+                />
+              </Box>
+            </Grid>
+            <Grid item xs={5}></Grid>
+          </Grid>
+        </Box>
+
+        <Scrollbar>
+          <TableContainer sx={{ minWidth: 1500 }}>
+            <Table>
+              <UserListHead headLabel={TABLE_HEAD} />
+              <TableBody>
+                {searchResults.search.length <= 3 ? (
+                  <>
+                    {roleSelect ? (
+                      <>
+                        {userList !== undefined ? (
+                          <>
+                            {userList?.data?.map((usersearch, index) => (
+                              <TableRow hover tabIndex={-1} key={index}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell
+                                  component="th"
+                                  scope="row"
+                                  align="left"
+                                >
+                                  <Typography variant="subtitle2" noWrap>
+                                    {usersearch.user_name.first_name +
+                                      " " +
+                                      usersearch.user_name.middle_name +
+                                      " " +
+                                      usersearch.user_name.last_name}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell align="left">
+                                  {usersearch.user_name.phone_number}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {usersearch.user_name.email}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {usersearch.role_name.role_name_value}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {usersearch.company_area.company_area}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {usersearch.executive_level.user_name === null
+                                    ? ""
+                                    : usersearch?.executive_level?.user_name
+                                        ?.first_name +
+                                      " " +
+                                      usersearch?.executive_level?.user_name
+                                        ?.middle_name +
+                                      " " +
+                                      usersearch?.executive_level?.user_name
+                                        ?.last_name}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {usersearch.division_name.division_name ===
+                                  null
+                                    ? ""
+                                    : usersearch.division_name.division_name}
+                                </TableCell>
+                                <TableCell align="left">
+                                  {usersearch.role_name.role_name.role_name ===
+                                  "admin" ? (
+                                    "Active"
+                                  ) : (
+                                    <select
+                                      onChange={(e) =>
+                                        handleChangeStatus(e, usersearch)
+                                      }
+                                      defaultValue={
+                                        usersearch.user_name.is_active
+                                      }
+                                      className="select-styles"
+                                    >
+                                      <option value={true}>Active</option>
+                                      <option value={false}>Inactive</option>
+                                    </select>
+                                  )}
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Link
+                                    to={`/dashboard/admin/locked/user?id=${usersearch.id}&role=${usersearch.role_name.role_name.role_name}`}
+                                  >
+                                    <Button>Locked</Button>
+                                  </Link>
+                                </TableCell>
+                                <TableCell align="left">
+                                  <IconButton
+                                    color={"primary"}
+                                    sx={{ width: 40, height: 40, mt: 0.75 }}
+                                    onClick={(e) => onEdit(usersearch.id)}
+                                  >
+                                    <Badge>
+                                      <Iconify icon="eva:edit-fill" />
+                                    </Badge>
+                                  </IconButton>
+                                  <IconButton
+                                    color={"error"}
+                                    sx={{ width: 40, height: 40, mt: 0.75 }}
+                                    onClick={() => {
+                                      setSelectedId(usersearch.id);
+                                      handleClickOpen();
+                                    }}
+                                  >
+                                    <Badge>
+                                      <Iconify icon="eva:trash-2-outline" />
+                                    </Badge>
+                                  </IconButton>
+                                </TableCell>
+                                <Dialog
+                                  fullScreen={fullScreen}
+                                  open={openDialogue}
+                                  onClose={handleClose}
+                                  aria-labelledby="responsive-dialog-title"
+                                >
+                                  <DialogTitle id="responsive-dialog-title">
+                                    {"Are you sure want to delete?"}
+                                  </DialogTitle>
+                                  <DialogActions>
+                                    <Button
+                                      autoFocus
+                                      onClick={() => {
+                                        deleteUser(selectedId);
+                                        handleClose();
+                                      }}
+                                    >
+                                      Yes
+                                    </Button>
+                                    <Button onClick={handleClose} autoFocus>
+                                      No
+                                    </Button>
+                                  </DialogActions>
+                                </Dialog>
+                              </TableRow>
+                            ))}
+                          </>
+                        ) : null}
+                      </>
+                    ) : (
+                      <Test
+                        filterValue={filterValue}
+                        handleChangeStatus={handleChangeStatus}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {results && results?.data?.length == 0 ? (
+                      <>
+                        <TableRow>
+                          <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
+                            <Paper
+                              sx={{
+                                textAlign: "center",
+                              }}
+                            >
+                              <Typography variant="h6" paragraph>
+                                Not found
+                              </Typography>
+                              <Typography variant="body2">
+                                <strong>Requested Data Not found</strong>.
+                                <br /> Try checking for typos or using complete
+                                words.
+                              </Typography>
+                            </Paper>
+                          </TableCell>
+                        </TableRow>
+                      </>
+                    ) : (
+                      <>
+                        {results &&
+                          results?.data?.map((usersearch, index) => (
+                            <TableRow hover tabIndex={-1} key={usersearch.id}>
+                              <TableCell>{index + 1}</TableCell>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                align="left"
+                              >
+                                {/* <Stack direction="row" alignItems="center" spacing={2}> */}
+                                <Typography variant="subtitle2" noWrap>
+                                  {usersearch.user_name.first_name +
+                                    " " +
+                                    usersearch.user_name.middle_name +
+                                    " " +
+                                    usersearch.user_name.last_name}
+                                </Typography>
+                                {/* </Stack> */}
+                              </TableCell>
+                              <TableCell align="left">
+                                {usersearch.user_name.phone_number}
+                              </TableCell>
+                              <TableCell align="left">
+                                {usersearch.user_name.email}
+                              </TableCell>
+                              <TableCell align="left">
+                                {usersearch.role_name.role_name_value}
+                              </TableCell>
+                              <TableCell align="left">
+                                {usersearch.company_area.company_area}
+                              </TableCell>
+                              <TableCell align="left">
+                                {usersearch.executive_level.user_name === null
+                                  ? ""
+                                  : usersearch?.executive_level?.user_name
+                                      ?.first_name +
+                                    " " +
+                                    usersearch?.executive_level?.user_name
+                                      ?.middle_name +
+                                    " " +
+                                    usersearch?.executive_level?.user_name
+                                      ?.last_name}
+                              </TableCell>
+                              <TableCell align="left">
+                                {usersearch.division_name.division_name === null
+                                  ? ""
+                                  : usersearch.division_name.division_name}
+                              </TableCell>
+                              <TableCell align="left">
+                                {usersearch.role_name.role_name.role_name ===
+                                "admin" ? (
+                                  "Active"
+                                ) : (
+                                  <select
+                                    onChange={(e) =>
+                                      handleChangeStatus(e, usersearch)
+                                    }
+                                    defaultValue={
+                                      usersearch.user_name.is_active
+                                    }
+                                    className="select-styles"
+                                  >
+                                    <option value={true}>Active</option>
+                                    <option value={false}>Inactive</option>
+                                  </select>
+                                )}
+                              </TableCell>
+                              <TableCell align="left">
+                                <Link
+                                  to={`/dashboard/admin/locked/user?id=${user.id}&role=${user.role_name.role_name.role_name}`}
+                                >
+                                  <Button>Locked</Button>
+                                </Link>
+                              </TableCell>
+                              {/* //! Edit  */}
+                              <TableCell align="left">
+                                <IconButton
+                                  color={"primary"}
+                                  sx={{ width: 40, height: 40, mt: 0.75 }}
+                                  onClick={(e) => onEdit(usersearch.id)}
+                                >
+                                  <Badge>
+                                    <Iconify icon="eva:edit-fill" />
+                                  </Badge>
+                                </IconButton>
+                                {/* //! Delete  */}
+                                <IconButton
+                                  color={"error"}
+                                  sx={{ width: 40, height: 40, mt: 0.75 }}
+                                  onClick={() => {
+                                    setSelectedId(usersearch.id);
+                                    handleClickOpen();
+                                  }}
+                                >
+                                  <Badge>
+                                    <Iconify icon="eva:trash-2-outline" />
+                                  </Badge>
+                                </IconButton>
+                              </TableCell>
+                              <Dialog
+                                fullScreen={fullScreen}
+                                open={openDialogue}
+                                onClose={handleClose}
+                                aria-labelledby="responsive-dialog-title"
+                              >
+                                <DialogTitle id="responsive-dialog-title">
+                                  {"Are you sure want to delete?"}
+                                </DialogTitle>
+                                <DialogActions>
+                                  <Button
+                                    autoFocus
+                                    onClick={() => {
+                                      deleteUser(selectedId);
+                                      handleClose();
+                                    }}
+                                  >
+                                    Yes
+                                  </Button>
+                                  <Button onClick={handleClose} autoFocus>
+                                    No
+                                  </Button>
+                                </DialogActions>
+                              </Dialog>
+                            </TableRow>
+                          ))}
+                        {/* //!pagination */}
+                        <TableRow>
+                          <TableCell colSpan={6}>
+                            <Box
+                              justifyContent="center"
+                              alignItems="center"
+                              display="flex"
+                              margin="8px 0px"
+                            >
+                              {results ? (
+                                <Pagination
+                                  count={parseInt(results?.count / 200) + 1}
+                                  onChange={handleChangePage}
                                 />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Box>
-                                <Controls.Select
-                                    value={filterValue}
-                                    name={'Status'}
-                                    onChange={(e) => onFilterChange(e)}
-                                    options={[
-                                        { id: true, title: "Active" },
-                                        { id: false, title: "Inactive" },
-                                    ]}
-                                />
+                              ) : (
+                                <Typography variant="body1">
+                                  In Search
+                                </Typography>
+                              )}
                             </Box>
-                        </Grid>
-                        <Grid item xs={5}>
-
-                        </Grid>
-                    </Grid>
-                </Box>
-
-                <Scrollbar>
-                    <TableContainer sx={{ minWidth: 1500 }}>
-                        <Table>
-                            <UserListHead
-                                headLabel={TABLE_HEAD}
-                            />
-                            <TableBody>
-                                {(searchResults.search.length <= 3) ?
-                                    <>
-                                        {
-                                            roleSelect ?
-                                                <>
-                                                    {
-                                                        userList !== undefined ?
-                                                            <>
-                                                                {
-                                                                    userList?.data?.map((usersearch, index) => (
-                                                                        <TableRow hover tabIndex={-1} key={index}>
-                                                                            <TableCell>{index + 1}</TableCell>
-                                                                            <TableCell component="th" scope="row" align="left" >
-                                                                                <Typography variant="subtitle2" noWrap>
-                                                                                    {usersearch.user_name.first_name + " " + usersearch.user_name.middle_name + " " + usersearch.user_name.last_name}
-                                                                                </Typography>
-                                                                            </TableCell>
-                                                                            <TableCell align="left">{usersearch.user_name.phone_number}</TableCell>
-                                                                            <TableCell align="left">{usersearch.user_name.email}</TableCell>
-                                                                            <TableCell align="left">{usersearch.role_name.role_name_value}</TableCell>
-                                                                            <TableCell align="left">{usersearch.company_area.company_area}</TableCell>
-                                                                            <TableCell align="left">{usersearch.executive_level.user_name === null ? "" : usersearch?.executive_level?.user_name?.first_name + " " + usersearch?.executive_level?.user_name?.middle_name + " " + usersearch?.executive_level?.user_name?.last_name}</TableCell>
-                                                                            <TableCell align="left">{usersearch.division_name.division_name === null ? "" : usersearch.division_name.division_name}</TableCell>
-                                                                            <TableCell align="left">
-                                                                                {
-                                                                                    usersearch.role_name.role_name.role_name === "admin" ?
-                                                                                        "Active" :
-                                                                                        <select onChange={(e) => handleChangeStatus(e, usersearch)} defaultValue={usersearch.user_name.is_active} className='select-styles'>
-                                                                                            <option value={true}>Active</option>
-                                                                                            <option value={false}>Inactive</option>
-                                                                                        </select>
-                                                                                }
-                                                                            </TableCell>
-                                                                            <TableCell align="left">
-                                                                                <Link to={`/dashboard/admin/locked/user?id=${usersearch.id}&role=${usersearch.role_name.role_name.role_name}`}>
-                                                                                    <Button>Locked</Button>
-                                                                                </Link>
-                                                                            </TableCell>
-                                                                            <TableCell align="left">
-                                                                                <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(usersearch.id)} >
-                                                                                    <Badge>
-                                                                                        <Iconify icon="eva:edit-fill" />
-                                                                                    </Badge>
-                                                                                </IconButton>
-                                                                                <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(usersearch.id); handleClickOpen() }}>
-                                                                                    <Badge>
-                                                                                        <Iconify icon="eva:trash-2-outline" />
-                                                                                    </Badge>
-                                                                                </IconButton>
-                                                                            </TableCell>
-                                                                            <Dialog
-                                                                                fullScreen={fullScreen}
-                                                                                open={openDialogue}
-                                                                                onClose={handleClose}
-                                                                                aria-labelledby="responsive-dialog-title"
-                                                                            >
-                                                                                <DialogTitle id="responsive-dialog-title">
-                                                                                    {"Are you sure want to delete?"}
-                                                                                </DialogTitle>
-                                                                                <DialogActions>
-                                                                                    <Button autoFocus onClick={() => { deleteUser(selectedId); handleClose() }}>
-                                                                                        Yes
-                                                                                    </Button>
-                                                                                    <Button
-                                                                                        onClick={handleClose}
-                                                                                        autoFocus>
-                                                                                        No
-                                                                                    </Button>
-                                                                                </DialogActions>
-                                                                            </Dialog>
-                                                                        </TableRow>
-                                                                    ))
-                                                                }
-                                                            </> : null
-                                                    }
-                                                </> : <Test filterValue={filterValue} handleChangeStatus={handleChangeStatus} />
-                                        }
-                                    </> :
-                                    <>
-                                        {
-                                            results && results?.data?.length == 0 ?
-                                                <>
-                                                    <TableRow>
-                                                        <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
-                                                            <Paper
-                                                                sx={{
-                                                                    textAlign: 'center',
-                                                                }}
-                                                            >
-                                                                <Typography variant="h6" paragraph>
-                                                                    Not found
-                                                                </Typography>
-                                                                <Typography variant="body2">
-                                                                    <strong>Requested Data Not found</strong>.
-                                                                    <br /> Try checking for typos or using complete words.
-                                                                </Typography>
-                                                            </Paper>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                </> :
-                                                <>
-                                                    {
-                                                        results && results?.data?.map((usersearch, index) => (
-                                                            <TableRow hover tabIndex={-1} key={usersearch.id}>
-                                                                <TableCell>{index + 1}</TableCell>
-                                                                <TableCell component="th" scope="row" align="left" >
-                                                                    {/* <Stack direction="row" alignItems="center" spacing={2}> */}
-                                                                    <Typography variant="subtitle2" noWrap>
-                                                                        {usersearch.user_name.first_name + " " + usersearch.user_name.middle_name + " " + usersearch.user_name.last_name}
-                                                                    </Typography>
-                                                                    {/* </Stack> */}
-                                                                </TableCell>
-                                                                <TableCell align="left">{usersearch.user_name.phone_number}</TableCell>
-                                                                <TableCell align="left">{usersearch.user_name.email}</TableCell>
-                                                                <TableCell align="left">{usersearch.role_name.role_name_value}</TableCell>
-                                                                <TableCell align="left">{usersearch.company_area.company_area}</TableCell>
-                                                                <TableCell align="left">{usersearch.executive_level.user_name === null ? "" : usersearch?.executive_level?.user_name?.first_name + " " + usersearch?.executive_level?.user_name?.middle_name + " " + usersearch?.executive_level?.user_name?.last_name}</TableCell>
-                                                                <TableCell align="left">{usersearch.division_name.division_name === null ? "" : usersearch.division_name.division_name}</TableCell>
-                                                                <TableCell align="left">
-                                                                    {
-                                                                        usersearch.role_name.role_name.role_name === "admin" ?
-                                                                            "Active" :
-                                                                            <select onChange={(e) => handleChangeStatus(e, usersearch)} defaultValue={usersearch.user_name.is_active} className='select-styles'>
-                                                                                <option value={true}>Active</option>
-                                                                                <option value={false}>Inactive</option>
-                                                                            </select>
-                                                                    }
-                                                                </TableCell>
-                                                                <TableCell align="left">
-                                                                    <Link to={`/dashboard/admin/locked/user?id=${user.id}&role=${user.role_name.role_name.role_name}`}>
-                                                                        <Button>Locked</Button>
-                                                                    </Link>
-                                                                </TableCell>
-                                                                {/* //! Edit  */}
-                                                                <TableCell align="left">
-                                                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(usersearch.id)} >
-                                                                        <Badge>
-                                                                            <Iconify icon="eva:edit-fill" />
-                                                                        </Badge>
-                                                                    </IconButton>
-                                                                    {/* //! Delete  */}
-                                                                    <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(usersearch.id); handleClickOpen() }}>
-                                                                        <Badge>
-                                                                            <Iconify icon="eva:trash-2-outline" />
-                                                                        </Badge>
-                                                                    </IconButton>
-                                                                </TableCell>
-                                                                <Dialog
-                                                                    fullScreen={fullScreen}
-                                                                    open={openDialogue}
-                                                                    onClose={handleClose}
-                                                                    aria-labelledby="responsive-dialog-title"
-                                                                >
-                                                                    <DialogTitle id="responsive-dialog-title">
-                                                                        {"Are you sure want to delete?"}
-                                                                    </DialogTitle>
-                                                                    <DialogActions>
-                                                                        <Button autoFocus onClick={() => { deleteUser(selectedId); handleClose() }}>
-                                                                            Yes
-                                                                        </Button>
-                                                                        <Button
-                                                                            onClick={handleClose}
-                                                                            autoFocus>
-                                                                            No
-                                                                        </Button>
-                                                                    </DialogActions>
-                                                                </Dialog>
-                                                            </TableRow>
-                                                        ))}
-                                                    {/* //!pagination */}
-                                                    <TableRow>
-                                                        <TableCell colSpan={6}>
-                                                            <Box justifyContent="center" alignItems="center" display="flex" margin="8px 0px">
-                                                                {results ? (
-                                                                    <Pagination count={parseInt(results?.count / 200) + 1} onChange={handleChangePage} />
-                                                                ) : (
-                                                                    <Typography variant="body1">In Search</Typography>
-                                                                )}
-                                                            </Box>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                </>
-                                        }
-                                    </>
-                                }
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    {isDrawerOpen && <EditUser
-                        idharu={selectedUpdateId} onClose={onCloseDrawer}
-                    />
-                    }
-                </Scrollbar>
-            </Card>
-        </>
-    );
-}
+                          </TableCell>
+                        </TableRow>
+                      </>
+                    )}
+                  </>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {isDrawerOpen && (
+            <EditUser idharu={selectedUpdateId} onClose={onCloseDrawer} />
+          )}
+        </Scrollbar>
+      </Card>
+    </>
+  );
+};
 export default React.memo(UserSearch);

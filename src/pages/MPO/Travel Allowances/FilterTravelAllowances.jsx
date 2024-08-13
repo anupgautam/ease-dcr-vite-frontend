@@ -203,7 +203,7 @@ const FilterTravelAllowances = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={2}>
+                        <Grid item xs={5} sm={3}>
                             <Autocomplete
                                 options={rolesOptions}
                                 getOptionLabel={(option) => option.title}

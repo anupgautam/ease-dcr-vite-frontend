@@ -143,7 +143,7 @@ const CollectionsSearch = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={0}>
-                        <Grid item xs={3}>
+                        <Grid item xs={5} sm={3}>
                             <Grid container>
                                 <Grid item xs={9}>
                                     <TextField
