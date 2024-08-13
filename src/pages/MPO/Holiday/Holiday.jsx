@@ -116,7 +116,8 @@ const Holiday = () => {
         }
     }, [SelectedDate, bulkHoliday, holidaySelect]);
 
-    const { data, error, isLoading } = useFilterHolidayBigCalendarMutation({ company_name: Cookies.get('company_id'), holidaySelect });
+    const { data, error, isLoading } = useFilterGetHolidaysQuery(Cookies.get('company_id'));
+    // const { data, error, isLoading } = useFilterHolidayBigCalendarMutation({ company_name: Cookies.get('company_id') });
     console.log(data)
     const [holidayDates, setHolidayDates] = useState([]);
 
