@@ -156,7 +156,7 @@ const AddUnplannedTp = () => {
 
     return (
         <>
-            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={toggleDrawer} >
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={toggleDrawer} className=" text-[13px]" >
                 Add Unplanned TP
             </Button>
             <Drawer
