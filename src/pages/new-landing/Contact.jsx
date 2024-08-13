@@ -195,9 +195,8 @@ const Contact = () => {
               backgroundImage: `url(${deskImg})`,
             }}
           />
-          <section className="flex gap-x-1 items-center absolute right-3 top-2 text-gray-200">
-            <img src={logo} alt="logo" className="h-12" />
-            <h3 className="font-bold">Ease SFA</h3>
+          <section className="absolute top-0 right-0 text-gray-200">
+            <img src={logo} alt="logo" className=" h-40" />
           </section>
 
           {/* Content Layer */}

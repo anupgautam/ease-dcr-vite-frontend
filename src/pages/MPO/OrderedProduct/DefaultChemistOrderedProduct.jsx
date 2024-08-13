@@ -40,7 +40,7 @@ const DefaultChemistOrderedProduct = ({ data }) => {
         <>
             <Card>
                 <Scrollbar>
-                    <TableContainer sx={{ minWidth: 800 }}>
+                    <TableContainer sx={{ minWidth: 600 }}>
                         <Table>
                             <UserListHead
                                 headLabel={TABLE_HEAD}

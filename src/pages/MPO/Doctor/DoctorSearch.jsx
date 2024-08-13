@@ -198,7 +198,7 @@ const DoctorSearch = () => {
                     {
                         Cookies.get('user_role') === 'admin' &&
                         <Grid container spacing={2}>
-                            <Grid item xs={3}>
+                            <Grid item xs={5.5} sm={3}>
                                 <TextField
                                     label="Search Doctor"
                                     variant="outlined"
@@ -214,7 +214,7 @@ const DoctorSearch = () => {
                                     sx={{ m: 2 }}
                                 />
                             </Grid>
-                            <Grid item xs={2.5}>
+                            <Grid item xs={5} sm={3}>
                                 <Autocomplete
                                     options={mpoNames}
                                     getOptionLabel={(option) => option.title}
@@ -230,7 +230,7 @@ const DoctorSearch = () => {
                                 />
                             </Grid>
                             {mpoName &&
-                                <Grid item xs={3}>
+                                <Grid item xs={3} >
                                     <Autocomplete
                                         options={mpoAreas}
                                         getOptionLabel={(option) => option.title}

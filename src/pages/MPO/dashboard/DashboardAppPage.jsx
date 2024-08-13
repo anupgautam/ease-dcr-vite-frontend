@@ -227,7 +227,7 @@ export default function DashboardAppPage() {
                     Most Visited Doctor
                   </Typography>
                 </Grid>
-                <TableContainer sx={{ minWidth: 900, paddingTop: '20px', paddingBottom: '20px' }}>
+                <TableContainer sx={{ minWidth: 600, paddingTop: '20px', paddingBottom: '20px' }}>
                   <Table>
                     <DashboardListHead
                       headLabel={TABLE_HEAD_DOCTOR}
@@ -280,7 +280,7 @@ export default function DashboardAppPage() {
                     Most Visited Stockist
                   </Typography>
                 </Grid>
-                <TableContainer sx={{ minWidth: 800, paddingTop: '20px', paddingBottom: '20px' }}>
+                <TableContainer sx={{ minWidth: 600, paddingTop: '20px', paddingBottom: '20px' }}>
                   <Table>
                     <DashboardListHead
                       headLabel={TABLE_HEAD_STOCKIST}

@@ -1,6 +1,6 @@
 import React from "react";
 import LoginForm from "./LoginForm";
-import loginImg from "/assets/ease.svg";
+import loginImg from "/assets/loginPage.jpg";
 //New login page layout made by shirish
 
 const NewLogin = () => {
@@ -12,7 +12,7 @@ const NewLogin = () => {
           style={{ backgroundImage: `url(${loginImg})` }}
         >
           <section className=" text-white">
-            <h1 className=" font-bold text-3xl">Ease SFA</h1>
+            <h1 className=" font-bold text-xl lg:text-3xl">Ease SFA</h1>
             <p className="mt-1.5">
               {" "}
               Cupidatat nisi officia nostrud nostrud veniam proident sit anim

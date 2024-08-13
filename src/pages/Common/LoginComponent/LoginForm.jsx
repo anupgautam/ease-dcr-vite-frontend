@@ -156,11 +156,7 @@ const LoginFormInputs = () => {
     return (
         <>
             <h1 className=' text-[40px] font-bold font-public_sans text-[#6364f2]'>Login !</h1>
-            <section className=' flex items-center font-bold mt-5 mb-7 font-public_sans border-2 border-[#4cb4d6] px-3 py-2 w-fit mx-auto rounded-[22px]'>
-                <img src="/assets/images/EASE_SFA/ease.svg" className=' h-12' />
-                <h1 className=' text-center text-xl font-bold font-sofia '>EASE <span className=' text-[#25865b]'>SFA</span></h1>
-
-            </section>
+                <img src="/assets/ease.svg" className=' h-24 mb-3 lg:mb-6 mx-auto mt-2' />
             <form onSubmit={handleSubmission} noValidate>
                 <Box>
                     <Stack spacing={2.5}>
