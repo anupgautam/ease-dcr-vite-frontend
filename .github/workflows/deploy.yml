@@ -22,5 +22,11 @@ jobs:
             git fetch --all
             git checkout main
             git reset --hard origin/main
+
+            if ! command -v npm &> /dev/null; then
+              curl -sL https://deb.nodesource.com/setup_16.x | bash -
+              apt-get install -y nodejs
+            fi
+
             npm install
             npm run build
