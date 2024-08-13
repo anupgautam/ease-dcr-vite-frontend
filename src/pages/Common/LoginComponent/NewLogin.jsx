@@ -1,7 +1,7 @@
 import React from "react";
 import LoginForm from "./LoginForm";
 import loginImg from "/assets/loginPage.jpg";
-//New login page made by shirish
+//New login page layout made by shirish
 
 const NewLogin = () => {
   return (
