@@ -32,10 +32,8 @@ const Navbar = () => {
 
   return (
     <div className=" container cursor-pointer">
-      <div className=" font-public_sans flex items-center justify-between py-2.5 font-semibold lg:font-bold">
-        <div className="flex items-center">
-          <img src={logo} alt="logo" className="h-10 md:h-14" />
-        </div>
+      <div className=" font-public_sans flex items-center justify-between font-semibold lg:font-bold">
+          <img src={logo} alt="logo" className="  h-16 lg:h-20" />
         <div className="flex gap-x-2.5 md:gap-x-8 text-xl">
           {navItems.map((item, idx) => (
             <ScrollLink
