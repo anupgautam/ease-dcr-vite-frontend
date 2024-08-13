@@ -9,7 +9,11 @@ import { useGetStockistAllDCRByIdQuery } from "@/api/DCRs Api Slice/stockistDCR/
 import { useGetAllStockistsWithoutPaginationQuery } from "@/api/MPOSlices/StockistSlice";
 import { useUpdateTourPlansMutation } from "@/api/MPOSlices/TourPlanSlice";
 import { useGetUsersByCompanyUserByIdQuery } from "@/api/MPOSlices/UserSlice";
-import { useAddDcrForStockistWithShiftMpoMutation, useCreateDcrForStockistWithNullValuesMutation, usePostToGetTheTourPlanQuery, useUpdateDcrForStockistMutation } from "@/api/MPOSlices/tourPlan&Dcr";
+import {
+    useAddDcrForStockistWithShiftMpoMutation, useCreateDcrForStockistWithNullValuesMutation,
+    usePostToGetTheTourPlanQuery,
+    useUpdateDcrForStockistMutation
+} from "@/api/MPOSlices/tourPlan&Dcr";
 import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSlices/companyProductSlice";
 import Controls from "@/reusable/forms/controls/Controls";
 import { useForm } from "@/reusable/forms/useForm";
@@ -354,7 +358,7 @@ const AddDCRForStockist = () => {
                                                                                             <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
                                                                                                 {key.tour_plan.tour_plan.select_the_month}
                                                                                             </span>
-                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px",fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.company_mpo_area_id.area_name)
+                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.company_mpo_area_id.area_name)
                                                                                                 .join(', ')}</Typography>
                                                                                         </Box>
                                                                                     </Grid>

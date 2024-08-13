@@ -164,10 +164,10 @@ const DcrListData = () => {
                                             <TextField {...params} label="Users" />
                                         )}
                                         renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                            <li {...props} key={option.id}>
+                                                {option.title}
+                                            </li>
+                                        )}
                                     />
                                 </FormControl>
                             </Grid>

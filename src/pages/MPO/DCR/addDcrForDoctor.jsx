@@ -7,8 +7,15 @@ import { useGetShiftsQuery } from "@/api/DCRs Api Slice/TourPlanApiSlice";
 import { useGetShiftWiseDoctorDCRByIdQuery } from "@/api/DCRs Api Slice/doctorDCR/shiftWiseDoctorDCRSlice";
 import { useGetAllRewardsQuery } from "@/api/DCRs Api Slice/rewardsAPISlice";
 import { useUpdateTourPlansMutation } from "@/api/MPOSlices/TourPlanSlice";
-import { useGetAllVisitedMpoWiseDoctorQuery, useGetDoctorsByIdQuery } from "@/api/MPOSlices/doctorApiSlice";
-import { useCreateDcrWithNullValuesForDoctorMutation, useCreateMpoShiftWiseDcrForDoctorMutation, usePostToGetTheTourPlanQuery, useUpdateDcrForDoctorValuesMutation } from "@/api/MPOSlices/tourPlan&Dcr";
+import {
+    useGetAllVisitedMpoWiseDoctorQuery,
+    useGetDoctorsByIdQuery
+} from "@/api/MPOSlices/doctorApiSlice";
+import {
+    useCreateDcrWithNullValuesForDoctorMutation, useCreateMpoShiftWiseDcrForDoctorMutation,
+    usePostToGetTheTourPlanQuery,
+    useUpdateDcrForDoctorValuesMutation
+} from "@/api/MPOSlices/tourPlan&Dcr";
 import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSlices/companyProductSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
 import Controls from "@/reusable/forms/controls/Controls";

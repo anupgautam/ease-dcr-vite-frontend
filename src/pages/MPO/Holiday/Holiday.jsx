@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo, useCallback, } from 'react'
 import Controls from '@/reusable/components/forms/controls/Controls';
-import { Button, Grid, Typography, FormControl, Autocomplete, TextField, Box, Stack } from '@mui/material';
+import { Grid, Typography, FormControl, Autocomplete, TextField, Box, Stack } from '@mui/material';
 import moment from 'moment';
-import { useBulkHolidayAddMutation, useFilterGetHolidaysQuery, useGetHolidayByMonthAndYearMutation, useUpdateHolidaysMutation, useGetHolidayNamesQuery, useFilterHolidayBigCalendarMutation } from '@/api/HolidaySlices/holidaySlices';
+import { useBulkHolidayAddMutation, useGetHolidayByMonthAndYearMutation, useGetHolidayNamesQuery, useFilterHolidayBigCalendarMutation } from '@/api/HolidaySlices/holidaySlices';
 import Cookies from 'js-cookie';
 import "react-patro/src/styles.css";
 import { BSDate } from "nepali-datepicker-react";
@@ -15,7 +15,7 @@ const localizer = momentLocalizer(moment);
 
 const eventStyleGetter = (event, start, end, isSelected) => {
     const style = {
-        backgroundColor: " #ab0403", // Set the background color to red
+        backgroundColor: " #ab0403",
         borderRadius: "5px",
         opacity: 0.8,
         color: "white",
@@ -116,15 +116,21 @@ const Holiday = () => {
         }
     }, [SelectedDate, bulkHoliday, holidaySelect]);
 
-    const { data, error, isLoading } = useFilterGetHolidaysQuery(Cookies.get('company_id'));
-    // const { data, error, isLoading } = useFilterHolidayBigCalendarMutation({ company_name: Cookies.get('company_id') });
-    console.log(data)
+    // const { data, error, isLoading } = useFilterGetHolidaysQuery(Cookies.get('company_id'));
+
+    const [filterHolidayBigCalendar, { data, error, isLoading }] = useFilterHolidayBigCalendarMutation();
+    useEffect(() => {
+        if (holidaySelect) {
+            filterHolidayBigCalendar({ company_name: parseInt(Cookies.get('company_id')), holidaySelect });
+        }
+    }, [holidaySelect, filterHolidayBigCalendar]);
+
     const [holidayDates, setHolidayDates] = useState([]);
 
     useEffect(() => {
         if (data) {
             if (!isLoading && !error) {
-                const holidays = data.map((item) => new Date(item.date));
+                const holidays = data?.map((item) => new Date(item.holiday_date));
                 setHolidayDates(holidays);
             }
         }

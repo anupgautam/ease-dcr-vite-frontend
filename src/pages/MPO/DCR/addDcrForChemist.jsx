@@ -8,7 +8,12 @@ import { useGetAllRewardsQuery } from "@/api/DCRs Api Slice/rewardsAPISlice";
 import { useUpdateTourPlansMutation } from "@/api/DCRs Api Slice/TourPlanApiSlice";
 import { useGetAllVisitedMpoWiseChemistQuery } from "@/api/MPOSlices/doctorApiSlice";
 import { useGetChemistsByIdQuery } from "@/api/MPOSlices/chemistApiSlice";
-import { useCreateDcrForChemistWithNullValuesMutation, useCreateMpoShiftWiseDcrForChemistMutation, usePostToGetTheTourPlanQuery, useUpdateDcrForChemistValuesMutation } from "@/api/MPOSlices/tourPlan&Dcr";
+import {
+    useCreateDcrForChemistWithNullValuesMutation,
+    useCreateMpoShiftWiseDcrForChemistMutation,
+    usePostToGetTheTourPlanQuery,
+    useUpdateDcrForChemistValuesMutation
+} from "@/api/MPOSlices/tourPlan&Dcr";
 import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSlices/companyProductSlice";
 import Controls from "@/reusable/forms/controls/Controls";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
@@ -401,7 +406,7 @@ const AddDCRforChemist = () => {
         }
 
         // if (AllMutipleData.length !== []) {
-            if (AllMutipleData.length !== 0) {
+        if (AllMutipleData.length !== 0) {
             for (const allData of AllMutipleData) {
                 let sendingData = { ...allData };
                 sendingData['id'] = allData.id;

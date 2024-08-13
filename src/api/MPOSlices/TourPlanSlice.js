@@ -15,10 +15,12 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
 
         //! Get all TourPlans
         getTourPlans: builder.query({
-            query: (page) => ({
-                url: `mpo/company-mpo-tour-plan/?company_name=${page.id}&page=${page.page}`,
-                method: 'GET'
-            }),
+            query: (page) => {
+                return {
+                    url: `mpo/company-mpo-tour-plan/?company_name=${page.id}&page=${page.page}`,
+                    method: 'GET'
+                };
+            },
             providesTags: ['Tourplan']
         }),
 

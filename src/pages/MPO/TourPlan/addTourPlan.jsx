@@ -256,10 +256,9 @@ const AddTourPlan = () => {
         }
     }
 
-
     return (
         <>
-            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={toggleDrawer} >
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={toggleDrawer}>
                 Add
             </Button>
             <Drawer
