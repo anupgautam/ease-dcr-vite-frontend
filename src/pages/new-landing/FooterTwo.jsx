@@ -49,8 +49,7 @@ const FooterTwo = () => {
       <div className=" container grid lg:grid-cols-5 grid-cols-3  justify-between py-8 lg:py-16">
         <div className=" col-span-2 z-50">
           <section className="flex items-center">
-            <img src={logo} alt="logo" className=" h-16" />
-            <h2 className=" font-semibold">Ease SFA</h2>
+            <img src={logo} alt="logo" className=" h-[3rem] lg:h-[4rem]" />
           </section>
           <p className=" text-gray-400 text-[14px] lg:text-[16px] mt-4">
             EaseSFA-Streaming Sales Force Automation

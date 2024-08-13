@@ -34,14 +34,14 @@ const Scrollnav = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 lg:h-20 bg-white transition-transform duration-300 content-center ease-in-out z-50 drop-shadow-md ${
+      className={`fixed top-0 left-0 right-0 h-16 lg:h-24 bg-white transition-transform duration-300 flex items-center ease-in-out z-50 drop-shadow-md ${
         isVisible ? "transform translate-y-0" : "transform -translate-y-full"
       }`}
     >
       <div className=" flex font-semibold gap-x-2 lg:gap-x-2 md:gap-x-6 items-center container justify-between">
-        <section className=" flex items-center">
-          <img src={logo} alt="LOGO" className=" h-[120px] md:h-[120px]" />
-        </section>
+       
+          <img src={logo} alt="LOGO" className=" h-16 lg:h-20" />
+  
         <div className=" flex gap-[1rem] md:gap-[2rem] lg:gap-[3rem] font-bold">
           {navItems.map((item, idx) => {
             return (
