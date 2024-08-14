@@ -60,7 +60,7 @@ export const HODCRSlice = apiSlice.injectEndpoints({
                     // }
                 }
             },
-            invalidatesTags: ['HODCR']
+            invalidatesTags: ['HODCR','PostTourplan']
         }),
 
         //! Search MPO filter wala

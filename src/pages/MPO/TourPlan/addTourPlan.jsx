@@ -20,7 +20,7 @@ import Iconify from '../../../components/iconify';
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import Cookies from 'js-cookie'
-import { useGetShiftsQuery } from '@/api/DCRs Api Slice/TourPlanApiSlice';  
+import { useGetShiftsQuery } from '@/api/DCRs Api Slice/TourPlanApiSlice';
 import {
     NepaliDateConverter,
 } from "react-nepali-date-picker-lite";
@@ -103,6 +103,8 @@ const AddTourPlan = () => {
     }
 
     const [MpoTpArea, setMpoTpArea] = useState([]);
+    const [TPAreaName, setTPAreaName] = useState([])
+
 
     // const handleMpoTpArea = useCallback((event) => {
     //     const {
@@ -112,26 +114,28 @@ const AddTourPlan = () => {
     //         typeof value === 'string' ? value.split(',') : value,
     //     );
     // }, []);
-
     const handleMpoTpArea = (event, value) => {
         const mpotparea = value.map(option => option.id)
+        const mpotpareavalue = value.map(option => option.title)
         setMpoTpArea(mpotparea)
+        setTPAreaName(mpotpareavalue)
     }
 
+    console.log(TPAreaName)
     const [MpoAreaData, setMpoAreaData] = useState([]);
 
     const addTodo = () => {
         const newTodo = {
             selected_date: selectedDates,
             purpose_of_visit: formValuesArray.purpose_of_visit || "",
-            hulting_station: formValuesArray.hulting_station || ""
+            hulting_station: formValuesArray.hulting_station || "",
         };
 
         setTourPlanTodos(prevTodos => [...prevTodos, newTodo]);
         setFormValuesArray({
             select_the_area: "",
             purpose_of_visit: "",
-            hulting_station: ""
+            hulting_station: "",
         });
     }
 
@@ -152,7 +156,7 @@ const AddTourPlan = () => {
         shift: "",
         visit_data: MpoAreaData,
         hulting_station: "",
-        user_id: Cookies.get('company_user_id')
+        user_id: Cookies.get('company_user_id'),
     }
 
     const {
@@ -171,13 +175,22 @@ const AddTourPlan = () => {
     const [AddTourPlan] = useAddTourplanMutation();
     const [AddHigherOrder] = useAddHigherTourPlanMutation();
 
-
     const newData = useMemo(() => {
         if (MpoTpArea.length !== 0) {
             return MpoTpArea.map((key) => ({ company_mpo_area_id: key }))
         }
         return [];
     }, [MpoTpArea])
+
+    // const MPOAreaArray = useMemo(() => {
+    //     if (TPAreaName.length !== 0) {
+    //         return TPAreaName.map((key) => ({ tp_mpo_area: key }))
+    //     }
+    //     return [];
+    // }, [TPAreaName])
+
+
+    // console.log(MPOAreaArray)
 
     const handleSave = () => {
         if (Cookies.get('user_role') === "MPO") {
@@ -319,11 +332,16 @@ const AddTourPlan = () => {
                                                             </Box>
                                                         </Grid>
                                                         <Grid item xs={7.7}>
-                                                            <Box >
+                                                            <Box>
                                                                 <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
                                                                     {getNepaliMonthName(moment(key.selected_date).month() + 1)}
                                                                 </span>
                                                                 {/* <Typography style={{ marginTop: '10px', color: 'black', width: "60px", overflow: 'hidden', fontSize: "12px", color: 'black', fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.select_the_area.title}</Typography> */}
+                                                                {TPAreaName.map((key, index) => (
+                                                                    <Typography key={index} variant="body2">
+                                                                        {key}
+                                                                    </Typography>
+                                                                ))}
                                                             </Box>
                                                         </Grid>
                                                     </Grid>
@@ -399,7 +417,6 @@ const AddTourPlan = () => {
                                             value={CompanyRoles}
                                             onChange={handleRolesChange}
                                             input={<OutlinedInput label="Select the Visited With*" />}
-                                            // MenuProps={MenuProps}
                                             sx={{ width: '100%' }}
                                             style={{
                                                 borderBlockColor: "white",

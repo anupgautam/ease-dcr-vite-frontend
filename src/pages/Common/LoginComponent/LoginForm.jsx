@@ -68,7 +68,7 @@ const LoginFormInputs = () => {
 
     //! RTKQuery login
     const handleSubmission = useCallback(async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         validateEmail(email);
         validatePassword(password);
         if (!emailError && !passwordError) {
@@ -86,7 +86,6 @@ const LoginFormInputs = () => {
                             Cookies.set('access', res.data.token.access);
                             Cookies.set('email', email);
                             Cookies.set('is_highest_priority', res.data.is_highest_priority)
-                            // Cookies.set('username',res.data.username)
                             setSuccessMessage({ show: true, message: 'Successfully Logged In' })
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                 Cookies.set('user_role', 'admin')
@@ -188,12 +187,16 @@ const LoginFormInputs = () => {
                                 InputProps={{
                                     endAdornment: (
                                         <InputAdornment position="end" style={{ marginRight: '0px' }}>
-                                            <Box onClick={toggleVisibility}>
+                                            <Box onClick={toggleVisibility}
+                                                className="cursor-pointer"
+                                            >
                                                 {visible ? <MdOutlineRemoveRedEye /> : <FaRegEyeSlash />}
                                             </Box>
                                         </InputAdornment>
                                     ),
                                 }}
+                            style={{ cursor: 'pointer' }}
+                            // className="cursor-pointer"
                             />
                         </Box>
                     </Stack>
@@ -218,8 +221,8 @@ const LoginFormInputs = () => {
                     <LoadingButton className="loginbutton" fullWidth size="large" type="submit" variant="contained" onClick={handleSubmission} >
                         Login
                     </LoadingButton>
-                    <p className=' text-center my-3 font-public_sans font-semibold text-gray-400'>—————— or ——————</p>
-                    <p className=' text-center my-3 font-public_sans font-semibold'>Are you new? <span className=' underline-offset-2 underline text-[#6364f2]'> Create an Account</span></p>
+                    {/* <p className=' text-center my-3 font-public_sans font-semibold text-gray-400'>—————— or ——————</p>
+                    <p className=' text-center my-3 font-public_sans font-semibold'>Are you new? <span className=' underline-offset-2 underline text-[#6364f2]'> Create an Account</span></p> */}
 
                     {
                         ErrorMessage.show === true ? (
@@ -244,8 +247,8 @@ const LoginFormInputs = () => {
                         )
                             : null
                     }
-                </Box>
-            </form>
+                </Box >
+            </form >
         </>
     )
 }

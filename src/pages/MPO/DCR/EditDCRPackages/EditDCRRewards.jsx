@@ -4,7 +4,12 @@ import { useTransition } from 'react-transition-state';
 import { FaPlus } from "react-icons/fa";
 import RoundButton from "@/reusable/components/button/roundbutton";
 import Controls from "@/reusable/forms/controls/Controls";
-import { useGetAllRewardsByCompanyIdQuery, useGetRewardsByDcrIdQuery, useGetRewardsByIdQuery, usePostRewardForDcrMutation } from "@/api/DCRs Api Slice/rewardsAPISlice";
+import {
+  useGetAllRewardsByCompanyIdQuery,
+  useGetRewardsByDcrIdQuery,
+  useGetRewardsByIdQuery,
+  usePostRewardForDcrMutation
+} from "@/api/DCRs Api Slice/rewardsAPISlice";
 import Cookies from "js-cookie";
 
 const EditDCRRewards = ({ id, context, editApi }) => {

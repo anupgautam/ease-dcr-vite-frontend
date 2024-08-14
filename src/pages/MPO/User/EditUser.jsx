@@ -58,6 +58,7 @@ const EditUser = ({ idharu, onClose }) => {
 
     const [higherUserOptions, setHigherUserOptions] = useState([]);
     const [higherUserList] = useGetAllExecutiveLevelsMutation();
+
     useEffect(() => {
         if (User?.data) {
             higherUserList(User?.data?.company_name?.company_id)
@@ -164,7 +165,6 @@ const EditUser = ({ idharu, onClose }) => {
                 middle_name: User?.data?.user_name?.middle_name,
                 last_name: User?.data?.user_name?.last_name,
                 email: User?.data?.user_name?.email,
-                // address: User.data.user_name.address,
                 phone_number: User?.data?.user_name?.phone_number,
                 role_name: User?.data?.role_name?.id,
                 executive_level: User?.data?.executive_level?.id,
@@ -188,7 +188,6 @@ const EditUser = ({ idharu, onClose }) => {
         formData.append("first_name", values.first_name);
         formData.append("middle_name", values.middle_name);
         formData.append("last_name", values.last_name);
-        // formData.append("address", values.address);
         formData.append("phone_number", values.phone_number);
         formData.append("email", values.email);
         formData.append("role_name", values.role_name);

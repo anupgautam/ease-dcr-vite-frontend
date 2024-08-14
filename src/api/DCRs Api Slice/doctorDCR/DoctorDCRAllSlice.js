@@ -92,12 +92,6 @@ export const DoctorDCRAllSlice = apiSlice.injectEndpoints({
                     await queryFulfilled
                 } catch {
                     patchResult.undo()
-
-                    /**
-                     * Alternatively, on failure you can invalidate the corresponding cache tags
-                     * to trigger a re-fetch:
-                     * dispatch(api.util.invalidateTags(['Post']))
-                     */
                 }
             },
         }),

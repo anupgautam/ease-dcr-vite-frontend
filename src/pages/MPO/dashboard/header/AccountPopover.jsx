@@ -10,6 +10,7 @@ import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Icon } from '@iconify/react';
+import { useGetUsersByIdQuery } from '../../../../api/MPOSlices/UserSlice'
 
 const MENU_OPTIONS = [
   {
@@ -90,8 +91,8 @@ export default function AccountPopover() {
   const handleCloseDialogue = () => {
     setOpenDialogue(false)
   }
+  const userName = useGetUsersByIdQuery(Cookies.get('company_user_role_id'))
 
-  // const username = Cookies.get('username')
   return (
     <>
       <Tooltip title="Profile" arrow>
@@ -137,12 +138,11 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
 
-          {/* <Typography variant="subtitle2">{username}</Typography> */}
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {userName?.data?.user_name?.first_name + " " +userName?.data?.user_name?.last_name }
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {userName?.data?.user_name?.email}
           </Typography>
         </Box>
 

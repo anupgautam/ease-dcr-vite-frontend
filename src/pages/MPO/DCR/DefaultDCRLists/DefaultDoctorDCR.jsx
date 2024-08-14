@@ -114,7 +114,7 @@ const DefaultDoctorDCR = () => {
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
-                                                        {/* <TableCell><Skeleton /></TableCell> */}
+                                                        <TableCell><Skeleton /></TableCell>
                                                         {/* <TableCell><Skeleton /></TableCell> */}
                                                     </TableRow>
                                                 ))}

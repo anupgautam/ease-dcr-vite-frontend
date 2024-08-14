@@ -60,9 +60,8 @@ const TABLE_HEAD = [
     { id: 'mpo_name', label: 'Name', alignRight: false },
     { id: 'area_name', label: 'Area', alignRight: false },
     { id: 'date', label: 'Date', alignRight: false },
-    { id: 'is_approved', label: 'Approved', alignRight: false },
+    { id: 'is_approved', label: 'Approve TP', alignRight: false },
     { id: 'hulting_station', label: 'Hulting Station', alignRight: false },
-    { id: '' },
 ];
 
 const FilteredTourPlan = () => {
@@ -334,9 +333,6 @@ const FilteredTourPlan = () => {
                                                                                         <TableCell padding="checkbox" >
                                                                                             <Skeleton />
                                                                                         </TableCell>
-                                                                                        <TableCell><Skeleton /></TableCell>
-                                                                                        <TableCell><Skeleton /></TableCell>
-                                                                                        <TableCell><Skeleton /></TableCell>
                                                                                         <TableCell><Skeleton /></TableCell>
                                                                                         <TableCell><Skeleton /></TableCell>
                                                                                         <TableCell><Skeleton /></TableCell>
