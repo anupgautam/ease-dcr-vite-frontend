@@ -1,4 +1,4 @@
-import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Typography } from "@mui/material";
+import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Typography, Autocomplete, TextField } from "@mui/material";
 import Cookies from "js-cookie";
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -41,27 +41,39 @@ const AddDCRForStockist = () => {
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
 
-    const handleRolesChange = useCallback((event) => {
-        const {
-            target: { value },
-        } = event;
-        setCompanyRoles(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    }, [])
+    // const handleRolesChange = useCallback((event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setCompanyRoles(
+    //         // On autofill we get a stringified value.
+    //         typeof value === 'string' ? value.split(',') : value,
+    //     );
+    // }, [])
+
+    //! Autocomplete
+
+    const handleRolesChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setCompanyRoles(mpotparea)
+    }
 
     const [RewardOptions, setRewardsOptions] = useState([]);
 
-    const handleRewardsChange = useCallback((event) => {
-        const {
-            target: { value },
-        } = event;
-        setRewardsOptions(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    }, [])
+    // const handleRewardsChange = useCallback((event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setRewardsOptions(
+    //         typeof value === 'string' ? value.split(',') : value,
+    //     );
+    // }, [])
+
+    const handleRewardsChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setRewardsOptions(mpotparea)
+    }
+
 
 
     const { data: ShiftData } = useGetShiftsQuery();
@@ -426,7 +438,7 @@ const AddDCRForStockist = () => {
                                         />
                                     </Box>
                                     <Box marginBottom={2}>
-                                        <FormControl sx={{ m: 1, width: 300 }}>
+                                        {/* <FormControl sx={{ m: 1, width: 300 }}>
                                             <InputLabel>{"Select the Visited With*"}</InputLabel>
                                             <Select
                                                 labelId="demo-multiple-name-label"
@@ -449,7 +461,23 @@ const AddDCRForStockist = () => {
                                                     </MenuItem>
                                                 ))}
                                             </Select>
-                                        </FormControl>
+                                        </FormControl> */}
+
+                                        {/* //! Autocomplete */}
+                                        <Autocomplete
+                                            multiple
+                                            options={executiveOptions}
+                                            getOptionLabel={(option) => option.title}
+                                            onChange={handleRolesChange}
+                                            renderInput={(params) => (
+                                                <TextField {...params} label="Select Visited With" />
+                                            )}
+                                            renderOption={(props, option) => (
+                                                <li {...props} key={option.id}>
+                                                    {option.title}
+                                                </li>
+                                            )}
+                                        />
                                     </Box>
                                     {/* <Box marginBottom={2}>
                                         <FormControl sx={{ m: 1, width: 300 }}>
@@ -478,7 +506,7 @@ const AddDCRForStockist = () => {
                                         </FormControl>
                                     </Box> */}
                                     <Box marginBottom={2}>
-                                        <FormControl sx={{ m: 1, width: 300 }}>
+                                        {/* <FormControl sx={{ m: 1, width: 300 }}>
                                             <InputLabel>{"Select the Rewards*"}</InputLabel>
                                             <Select
                                                 labelId="demo-multiple-name-label"
@@ -501,7 +529,21 @@ const AddDCRForStockist = () => {
                                                     </MenuItem>
                                                 ))}
                                             </Select>
-                                        </FormControl>
+                                        </FormControl> */}
+                                        <Autocomplete
+                                            multiple
+                                            options={rewardsOptions}
+                                            getOptionLabel={(option) => option.title}
+                                            onChange={handleRewardsChange}
+                                            renderInput={(params) => (
+                                                <TextField {...params} label="Select the Rewards" />
+                                            )}
+                                            renderOption={(props, option) => (
+                                                <li {...props} key={option.id}>
+                                                    {option.title}
+                                                </li>
+                                            )}
+                                        />
                                     </Box>
                                 </Box>
                             </Box>

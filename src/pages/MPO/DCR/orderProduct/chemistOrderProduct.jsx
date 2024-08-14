@@ -210,7 +210,6 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange }) => {
                                 value={data}
                                 onChange={handleOrderProductChange}
                                 input={<OutlinedInput label="Select the Visited With*" />}
-                                // MenuProps={MenuProps}
                                 sx={{ width: '100%' }}
                                 style={{
                                     borderBlockColor: "white",
@@ -222,7 +221,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange }) => {
                                     <MenuItem key={item.id} value={item.id}>
                                         {item.title}
                                     </MenuItem>
-                                ))}a
+                                ))}
                             </Select>
                         </FormControl>
                     </Box>

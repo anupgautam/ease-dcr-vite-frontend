@@ -1,4 +1,4 @@
-import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Table, TableBody, TableCell, TableContainer, TableRow, Typography, Autocomplete, TextField } from "@mui/material";
 import Cookies from "js-cookie";
 import React, { useEffect, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -50,22 +50,32 @@ const AddDCRforChemist = () => {
 
     const [PromotedProduct, setPromotedProduct] = useState([]);
 
-    const handleProductChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setPromotedProduct(
-            typeof value === 'string' ? value.split(',') : value,
-        );
+    // const handleProductChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setPromotedProduct(
+    //         typeof value === 'string' ? value.split(',') : value,
+    //     );
+    // }
+
+    const handleProductChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setPromotedProduct(mpotparea)
     }
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
 
-    const handleRolesChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setCompanyRoles(value);
+    // const handleRolesChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setCompanyRoles(value);
+    // }
+
+    const handleRolesChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setCompanyRoles(mpotparea)
     }
 
     const [CompanyChemist, setCompanyChemist] = useState([]);
@@ -96,24 +106,36 @@ const AddDCRforChemist = () => {
         }
     }
 
-    const handleChemistChange = (event) => {
-        const {
-            target: { value },
-        } = event;
+    // const handleChemistChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
 
-        setCompanyChemist(value);
+    //     setCompanyChemist(value);
 
+    //     const removedChemistIds = CompanyChemist.filter(chemistId => !value.includes(chemistId));
+    //     setChemistData(prevData => prevData.filter(item => !removedChemistIds.includes(item.chemist_id)));
+    // }
+
+    const handleChemistChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setCompanyChemist(mpotparea)
         const removedChemistIds = CompanyChemist.filter(chemistId => !value.includes(chemistId));
         setChemistData(prevData => prevData.filter(item => !removedChemistIds.includes(item.chemist_id)));
     }
 
     const [RewardOptions, setRewardsOptions] = useState([]);
 
-    const handleRewardsChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setRewardsOptions(value);
+    // const handleRewardsChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setRewardsOptions(value);
+    // }
+
+    const handleRewardsChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setRewardsOptions(mpotparea)
     }
 
     const { data: ShiftData } = useGetShiftsQuery();
@@ -593,7 +615,7 @@ const AddDCRforChemist = () => {
                                         />
                                     </Box>
                                     <Box marginBottom={2}>
-                                        <FormControl sx={{ m: 1, width: 300 }}>
+                                        {/* <FormControl sx={{ m: 1, width: 300 }}>
                                             <InputLabel>{"Select the Chemist*"}</InputLabel>
                                             <Select
                                                 multiple
@@ -615,7 +637,22 @@ const AddDCRforChemist = () => {
                                                     </MenuItem>
                                                 ))}
                                             </Select>
-                                        </FormControl>
+                                        </FormControl> */}
+                                        <Autocomplete
+                                            multiple
+                                            options={chemistOptions}
+                                            getOptionLabel={(option) => option.title}
+                                            onChange={handleChemistChange}
+                                            renderInput={(params) => (
+                                                <TextField {...params} label="Select Chemists" />
+                                            )}
+                                            renderOption={(props, option) => (
+                                                <li {...props} key={option.id}>
+                                                    {option.title}
+                                                </li>
+                                            )}
+                                        />
+
                                     </Box>
                                 </Box>
                             </Box>
@@ -708,13 +745,17 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
 
-    const handleRolesChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setCompanyRoles(value);
-    }
+    // const handleRolesChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setCompanyRoles(value);
+    // }
 
+    const handleRolesChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setCompanyRoles(mpotparea)
+    }
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
         Cookies.get('company_id')
@@ -736,13 +777,18 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
 
     const [PromotedProduct, setPromotedProduct] = useState([]);
 
-    const handleProductChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setPromotedProduct(
-            typeof value === 'string' ? value.split(',') : value,
-        );
+    // const handleProductChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setPromotedProduct(
+    //         typeof value === 'string' ? value.split(',') : value,
+    //     );
+    // }
+
+    const handleProductChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setPromotedProduct(mpotparea)
     }
 
     const rewards = useGetAllRewardsQuery(Cookies.get('company_id'));
@@ -758,11 +804,16 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
 
     const [RewardOptions, setRewardsOptions] = useState([]);
 
-    const handleRewardsChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setRewardsOptions(value);
+    // const handleRewardsChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setRewardsOptions(value);
+    // }
+
+    const handleRewardsChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setRewardsOptions(mpotparea)
     }
 
     const [Formdata, setFormData] = useState({
@@ -823,7 +874,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
             {/* <TableCell><NepaliDateCalendar/></TableCell> */}
             <TableCell style={{ width: "200px" }}>{Chemist?.data?.chemist_name.chemist_name}</TableCell>
             <TableCell align="left" style={{ width: "300px" }}>
-                <FormControl sx={{ m: 1, width: 300 }}>
+                {/* <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel>{"Select the Ordered Product *"}</InputLabel>
                     <Select
                         multiple
@@ -845,10 +896,25 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
+                </FormControl> */}
+                <Autocomplete
+                    multiple
+                    options={executiveOptions}
+                    getOptionLabel={(option) => option.title}
+                    onChange={handleRolesChange}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Select Visited With" />
+                    )}
+                    renderOption={(props, option) => (
+                        <li {...props} key={option.id}>
+                            {option.title}
+                        </li>
+                    )}
+                />
+
             </TableCell>
             <TableCell align="left" style={{ width: "300px" }}>
-                <FormControl sx={{ m: 1, width: 300 }}>
+                {/* <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel>{"Select the Promoted Product*"}</InputLabel>
                     <Select
                         labelId="demo-multiple-chip-label"
@@ -871,10 +937,25 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
+                </FormControl> */}
+
+                <Autocomplete
+                    multiple
+                    options={productOptions}
+                    getOptionLabel={(option) => option.title}
+                    onChange={handleProductChange}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Select Promoted Products" />
+                    )}
+                    renderOption={(props, option) => (
+                        <li {...props} key={option.id}>
+                            {option.title}
+                        </li>
+                    )}
+                />
             </TableCell>
             <TableCell align="left" style={{ width: "300px" }}>
-                <FormControl sx={{ m: 1, width: 300 }}>
+                {/* <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel>{"Select the Rewards*"}</InputLabel>
                     <Select
                         labelId="demo-multiple-name-label"
@@ -897,7 +978,21 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
+                </FormControl> */}
+                <Autocomplete
+                    multiple
+                    options={rewardsOptions}
+                    getOptionLabel={(option) => option.title}
+                    onChange={handleRewardsChange}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Select the Rewards" />
+                    )}
+                    renderOption={(props, option) => (
+                        <li {...props} key={option.id}>
+                            {option.title}
+                        </li>
+                    )}
+                />
             </TableCell>
             <TableCell align="left">
                 {/* //! Chemist Ordered Product */}

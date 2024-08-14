@@ -139,7 +139,7 @@ export default function AccountPopover() {
         <Box sx={{ my: 1.5, px: 2.5 }}>
 
           <Typography variant="subtitle2" noWrap>
-            {userName?.data?.user_name?.first_name + " " +userName?.data?.user_name?.last_name }
+            {userName?.data?.user_name?.first_name + " " + userName?.data?.user_name?.last_name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {userName?.data?.user_name?.email}
@@ -149,12 +149,12 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={reDirectProfile} sx={{ m: 1 }}>
+        {/* <MenuItem onClick={reDirectProfile} sx={{ m: 1 }}>
           <ListItemIcon>
             <Icon icon="iconamoon:profile-circle-fill" />
           </ListItemIcon>
           Profile
-        </MenuItem>
+        </MenuItem> */}
 
         <MenuItem onClick={reDirectChangePwd} sx={{ m: 1 }}>
           <ListItemIcon>
