@@ -75,7 +75,6 @@ const LoginFormInputs = () => {
             try {
                 await login({ 'email': email, 'password': password })
                     .then((res) => {
-                        console.log(res.data)
                         if (res.data) {
                             Cookies.set('User_id', res.data.user_id);
                             Cookies.set('company_id', res.data.company_id);

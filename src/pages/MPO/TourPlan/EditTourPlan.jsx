@@ -175,6 +175,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         const data = { mpo_area: newData, shift: 1, purpose_of_visit: values.purpose_of_visit, is_dcr_added: false, is_approved: values.is_approved, hulting_station: values.hulting_station, select_the_month: getNepaliMonthName(moment(dateData).month() + 1), select_the_date: typeof dateData === "string" ? dateData : DateToString(dateData), id: idharu, company_name: Cookies.get('company_id') }
+        console.log(data)
         try {
             const response = await updateTourPlans({
                 id: idharu,
@@ -202,7 +203,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
             }, 3000);
         }
     }, [updateTourPlans, values])
-
 
 
     return (
@@ -253,23 +253,11 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                         label="MPO name*"
                                         value={values.mpo_name}
                                         onChange={handleInputChange}
-                                        // options={userList}
                                         error={errors.mpo_name}
-                                    // className={"drawer-first-name-input"}
                                     />
                                 </Box>
                             </Grid>
                             <Grid item xs={12}>
-                                {/* <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="area_name"
-                                        label="Area Name*"
-                                        value={values.area_name}
-                                        onChange={handleInputChange}
-                                        error={errors.area_name}
-                                        options={areas}
-                                    />
-                                </Box> */}
                                 <Box marginBottom={2}>
                                     <FormControl sx={{ m: 1, width: 300 }}>
                                         <InputLabel>{"Select the Area*"}</InputLabel>
@@ -280,7 +268,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                             value={MpoTpArea}
                                             onChange={handleMpoTpArea}
                                             input={<OutlinedInput label="Select the Area*" />}
-                                            // MenuProps={MenuProps}
                                             sx={{ width: '100%' }}
                                             style={{
                                                 borderBlockColor: "white",
@@ -299,21 +286,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
                             </Grid>
                         </Grid>
                         <Box marginBottom={2}>
-                            {/* <InputLabel style={{ fontSize: '15px', color: 'black', marginBottom: "12px" }}>{"Select The Date*"}</InputLabel> */}
-                            {/* <Controls.DatePicker
-                                name="select_the_date_id"
-                                showIcon
-                                selectedDate={values.select_the_date_id}
-                                onChange={handleInputChange}
-                                dateFormat="yyyy-MM-dd"
-                                placeholderText="Select the Date"
-                            /> */}
-                            {/* <NepaliDatePicker
-                                inputClassName="form-control"
-                                value={dateData}
-                                onChange={(value) => setDateData(value)}
-                                options={{ calenderLocale: "en", valueLocale: "en" }}
-                            /> */}
                             <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Select the Date*</label><br />
                             <NepaliDatePicker value={dateData} format="YYYY-MM-DD" onChange={(value) => setDateData(value)} />
                         </Box>
@@ -327,18 +299,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
                             />
                         </Box>
                         <Grid container spacing={2}>
-                            {/* <Grid item xs={12}>
-                                <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="shift"
-                                        label="Shifts*"
-                                        value={values.shift}
-                                        onChange={handleInputChange}
-                                        error={errors.shift}
-                                        options={shifts}
-                                    />
-                                </Box>
-                            </Grid> */}
                             <Grid item xs={12}>
                                 <Box marginBottom={2}>
                                     <Controls.Input
