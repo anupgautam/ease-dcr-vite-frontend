@@ -1,4 +1,4 @@
-import React,{ useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
     Badge,
     Button,
@@ -8,6 +8,7 @@ import {
     IconButton,
     Pagination,
     Box,
+    Grid,
 } from '@mui/material';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -24,6 +25,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
+import { useUnlockUsersMutation } from '../../../api/MPOSlices/UserSlice'
 
 const TABLE_HEAD = [
     { id: 'name', label: 'Name', alignRight: false },
@@ -41,6 +43,7 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
 
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
+    const [openDialogues, setOpenDialogues] = useState({});
 
     const onEdit = useCallback((id) => {
         setSelectedUpdateId(id);
@@ -57,12 +60,12 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-    const handleClickOpen = useCallback(() => {
-        setOpenDialogue(true);
+    const handleClickOpen = useCallback((userId) => {
+        setOpenDialogues((prev) => ({ ...prev, [userId]: true }));
     }, []);
 
-    const handleClose = useCallback(() => {
-        setOpenDialogue(false);
+    const handleClose = useCallback((userId) => {
+        setOpenDialogues((prev) => ({ ...prev, [userId]: false }));
     }, []);
 
     //!Pagination logic
@@ -75,20 +78,43 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
         setPage(thisArray[3]);
     }, [])
 
+    const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+
     // ! Get all users wala
     const { data, refetch } = useGetAllcompanyUserRolesQuery({ company_name: Cookies.get('company_id'), page: page, is_active: filterValue });
 
-    // !Delete chemists
-    const [deleteUser] = useDeletecompanyUserRolesByIdMutation();
-    const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+    const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
+    const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
+    const [unlockUser] = useUnlockUsersMutation()
+    const [locks, setLocks] = useState();
 
-    const handleDelete = useCallback(
-        (id) => {
-            deleteUser(id);
-            handleClose();
-        },
-        [deleteUser, handleClose]
-    );
+    const UserLocks = useCallback(async ({ userId, isTpLocked }) => {
+        const newLockStatus = !isTpLocked;
+        setLocks(newLockStatus);
+
+        // console.log(userId, newLockStatus);
+        try {
+            const response = await unlockUser({ id: userId, is_tp_locked: newLockStatus }).unwrap();
+
+            if (response.data) {
+                setSuccessMessage({ show: true, message: 'User Unlocked' });
+                setTimeout(() => {
+                    setSuccessMessage({ show: false, message: '' });
+                }, 3000);
+            } else {
+                setErrorMessage({ show: true, message: 'Data failed to add.' });
+                setTimeout(() => {
+                    setErrorMessage({ show: false, message: '' });
+                }, 3000);
+            }
+        } catch (error) {
+            setErrorMessage({ show: true, message: 'Some Error Occurred . Try again later' });
+            setTimeout(() => {
+                setErrorMessage({ show: false, message: '' });
+            }, 3000);
+        }
+        handleClose()
+    }, [unlockUser, handleClose]);
 
     const totalPages = useMemo(() => Math.ceil((data?.count || 0) / 30), [data]);
 
@@ -137,9 +163,80 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
                                 }
                             </TableCell>
                             <TableCell align="left">
-                                <Link to={`/dashboard/admin/locked/user?id=${user.id}&role=${user.role_name.role_name.role_name}`}>
-                                    <Button>Locked</Button>
-                                </Link>
+                                {user.is_tp_locked === false ? (
+                                    <>
+                                        <IconButton
+                                            color={'primary'}
+                                            sx={{ width: 40, height: 40, mt: 0.75 }}
+                                            onClick={() => { setSelectedId(user.id); handleClickOpen(user.id); }}
+                                        >
+                                            <Badge>
+                                                <Iconify icon="dashicons:unlock" />
+                                            </Badge>
+                                        </IconButton>
+                                        <Dialog
+                                            fullScreen={fullScreen}
+                                            open={openDialogues[user.id] || false}
+                                            onClose={() => handleClose(user.id)}
+                                            aria-labelledby="responsive-dialog-title"
+                                        >
+                                            <DialogTitle id="responsive-dialog-title">
+                                                {"Do you want to lock this user?"}
+                                            </DialogTitle>
+                                            <DialogActions>
+                                                <Button
+                                                    autoFocus
+                                                    onClick={() => UserLocks({ userId: user.id, isTpLocked: user.is_tp_locked })}
+                                                >
+                                                    Yes
+                                                </Button>
+                                                <Button
+                                                    onClick={() => handleClose(user.id)}
+                                                    autoFocus
+                                                >
+                                                    No
+                                                </Button>
+                                            </DialogActions>
+                                        </Dialog>
+                                    </>
+                                ) : (
+                                    <>
+                                        <IconButton
+                                            color={'error'}
+                                            sx={{ width: 40, height: 40, mt: 0.75 }}
+                                            onClick={() => { setSelectedId(user.id); handleClickOpen(user.id); }}
+                                        >
+                                            <Badge>
+                                                <Iconify icon="material-symbols:lock" />
+                                            </Badge>
+                                        </IconButton>
+                                        <Dialog
+                                            fullScreen={fullScreen}
+                                            open={openDialogues[user.id] || false}
+                                            onClose={() => handleClose(user.id)}
+                                            aria-labelledby="responsive-dialog-title"
+                                        >
+                                            <DialogTitle id="responsive-dialog-title">
+                                                {"Do you want to unlock this user?"}
+                                            </DialogTitle>
+                                            <DialogActions>
+                                                <Button
+                                                    autoFocus
+                                                    onClick={() => UserLocks({ userId: user.id, isTpLocked: user.is_tp_locked })}
+                                                >
+                                                    Yes
+                                                </Button>
+                                                <Button
+                                                    onClick={() => handleClose(user.id)}
+                                                    autoFocus
+                                                >
+                                                    No
+                                                </Button>
+                                            </DialogActions>
+                                        </Dialog>
+                                    </>
+                                )}
+
                             </TableCell>
                             <TableCell align="right">
                                 {/* //!Edit */}
@@ -148,7 +245,7 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
                                         <Iconify icon="eva:edit-fill" />
                                     </Badge>
                                 </IconButton>
-                                <Dialog
+                                {/* <Dialog
                                     fullScreen={fullScreen}
                                     open={openDialogue}
                                     onClose={handleClose}
@@ -167,7 +264,7 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
                                             No
                                         </Button>
                                     </DialogActions>
-                                </Dialog>
+                                </Dialog> */}
                                 {isDrawerOpen && <EditUser
                                     idharu={selectedUpdateId} onClose={onCloseDrawer}
                                 />
@@ -193,8 +290,25 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
                                 </Box>
                             </TableCell>
                         </TableRow>
-
                     </>}
+            {
+                ErrorMessage.show === true ? (
+                    <Grid>
+                        <Box className="messageContainer errorMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                ) : null
+            }
+            {
+                SuccessMessage.show === true ? (
+                    <Grid>
+                        <Box className="messageContainer successMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                ) : null
+            }
         </>
     );
 }

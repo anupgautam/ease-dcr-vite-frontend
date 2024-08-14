@@ -75,6 +75,7 @@ const LoginFormInputs = () => {
             try {
                 await login({ 'email': email, 'password': password })
                     .then((res) => {
+                        console.log(res.data)
                         if (res.data) {
                             Cookies.set('User_id', res.data.user_id);
                             Cookies.set('company_id', res.data.company_id);
@@ -85,6 +86,7 @@ const LoginFormInputs = () => {
                             Cookies.set('access', res.data.token.access);
                             Cookies.set('email', email);
                             Cookies.set('is_highest_priority', res.data.is_highest_priority)
+                            // Cookies.set('username',res.data.username)
                             setSuccessMessage({ show: true, message: 'Successfully Logged In' })
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                 Cookies.set('user_role', 'admin')
@@ -156,7 +158,7 @@ const LoginFormInputs = () => {
     return (
         <>
             <h1 className=' text-[40px] font-bold font-public_sans text-[#6364f2]'>Login !</h1>
-                <img src="/assets/ease.svg" className=' h-24 mb-3 lg:mb-6 mx-auto mt-2' />
+            <img src="/assets/ease.svg" className=' h-24 mb-3 lg:mb-6 mx-auto mt-2' />
             <form onSubmit={handleSubmission} noValidate>
                 <Box>
                     <Stack spacing={2.5}>

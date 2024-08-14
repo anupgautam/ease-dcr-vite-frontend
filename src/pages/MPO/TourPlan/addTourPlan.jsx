@@ -20,7 +20,7 @@ import Iconify from '../../../components/iconify';
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import Cookies from 'js-cookie'
-import { useGetShiftsQuery } from '@/api/DCRs Api Slice/TourPlanApiSlice';
+import { useGetShiftsQuery } from '@/api/DCRs Api Slice/TourPlanApiSlice';  
 import {
     NepaliDateConverter,
 } from "react-nepali-date-picker-lite";

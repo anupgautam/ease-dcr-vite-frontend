@@ -325,7 +325,7 @@ export default function Router() {
           element: <Authentication component={ListOfRewardsController} allowRoles={['admin']} />,
         },
         {
-          path: 'admin/tplocks',
+          path: 'admin/dcrlockdays',
           element: <Authentication component={ListOfTourPlanLock} allowRoles={['admin']} />,
         },
 

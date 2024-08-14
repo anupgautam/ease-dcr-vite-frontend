@@ -7,14 +7,14 @@ import {
     useTheme
 } from '@mui/material';
 import DefaultList from './DefaultList'
-import AddTPLock from './AddTPLock';
-import TPLockCount from './TPLockCount';
+import AddDCRLockDays from './AddDCRLockDays';
+import DCRLockCount from './DCRLockCount';
 import {
     useGetTPlockDaysQuery
 } from '../../../api/MPOSlices/TourPlanSlice'
 import Cookies from 'js-cookie'
 
-const ListOfTPLocks = () => {
+const ListOfDCRLockDays = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -27,7 +27,7 @@ const ListOfTPLocks = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={9}>
                             <Box style={{ marginTop: '10px' }}>
-                                <TPLockCount />
+                                <DCRLockCount />
                             </Box>
                         </Grid>
 
@@ -38,7 +38,7 @@ const ListOfTPLocks = () => {
                                 alignItems="center"
                                 justifyContent="flex-end"
                             >
-                                <AddTPLock />
+                                <AddDCRLockDays />
                             </Stack>
                         </Grid>
                     </Grid>
@@ -49,4 +49,4 @@ const ListOfTPLocks = () => {
     )
 }
 
-export default React.memo(ListOfTPLocks)
+export default React.memo(ListOfDCRLockDays)

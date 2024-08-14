@@ -6,7 +6,7 @@ import {
 import Cookies from 'js-cookie'
 
 
-const TPLockCount = () => {
+const DCRLockCount = () => {
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
@@ -21,10 +21,10 @@ const TPLockCount = () => {
             {
                 data ?
                     <Typography style={{ fontSize: '18px', fontWeight: '600' }}>
-                        TourPlan Lock {data?.length}
-                    </Typography> : <Typography style={{ fontSize: '18px', fontWeight: '600' }}>TourPlan Lock</Typography>}
+                        DCR Lock Days {data?.length}
+                    </Typography> : <Typography style={{ fontSize: '18px', fontWeight: '600' }}>DCR Lock Days</Typography>}
         </>
     )
 }
 
-export default React.memo(TPLockCount)
+export default React.memo(DCRLockCount)

@@ -46,8 +46,8 @@ const navsettingsConfig = [
   },
 
   {
-    title: 'TourPlan Locks',
-    path: 'admin/tplocks',
+    title: 'DCR Lock Days',
+    path: 'admin/dcrlockdays',
     icon: <Icon icon="material-symbols:lock" style={{ fontSize: '20px' }} />,
   },
 
