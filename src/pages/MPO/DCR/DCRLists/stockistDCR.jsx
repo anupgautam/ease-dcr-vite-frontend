@@ -45,7 +45,6 @@ const TABLE_HEAD = [
     { id: 'date', label: 'Date', alignRight: false },
     { id: 'month', label: 'Month', alignRight: false },
     { id: 'stockist_name', label: 'Stockist Name', alignRight: false },
-    { id: '' },
 ];
 
 const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
@@ -138,7 +137,7 @@ const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
                                                             <TableCell><Skeleton /></TableCell>
                                                             <TableCell><Skeleton /></TableCell>
                                                             <TableCell><Skeleton /></TableCell>
-                                                            {/* <TableCell><Skeleton /></TableCell> */}
+                                                            <TableCell><Skeleton /></TableCell>
                                                             {/* <TableCell><Skeleton /></TableCell> */}
                                                         </TableRow>
                                                     ))}

@@ -41,7 +41,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: value,
                 };
             },
-            invalidatesTags: ['PostTourplan'],
+            invalidatesTags: ['PostTourplan','HODCR'],
         }),
         postToGetTheTourPlan: builder.query({
             query: value => {
@@ -59,7 +59,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: value,
             }),
-            invalidatesTags: ['PostTourplan'],
+            invalidatesTags: ['PostTourplan','DoctorDCR'],
         }),
         createDcrForChemistWithNullValues: builder.mutation({
             query: (value) => ({
@@ -67,7 +67,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: value
             }),
-            invalidatesTags: ['PostTourplan']
+            invalidatesTags: ['PostTourplan', 'ChemistDCR']
         }),
         createDcrForStockistWithNullValues: builder.mutation({
             query: (value) => {
@@ -77,7 +77,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: value,
                 }
             },
-            invalidatesTags: ['PostTourplan']
+            invalidatesTags: ['PostTourplan','StockistDCR']
         }),
         updateDcrForDoctorValues: builder.mutation({
             query: (value) => {
@@ -87,7 +87,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: value.value,
                 }
             },
-            invalidatesTags: ['PostTourplan']
+            invalidatesTags: ['PostTourplan','DoctorDCR']
         }),
         updateDcrForChemistValues: builder.mutation({
             query: (value) => {
@@ -97,7 +97,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: value.value,
                 }
             },
-            invalidatesTags: ['PostTourplan']
+            invalidatesTags: ['PostTourplan','ChemistDCR']
         }),
         createMpoShiftWiseDcrForDoctor: builder.mutation({
             query: value => ({
@@ -105,7 +105,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: value,
             }),
-            invalidatesTags: ['PostTourplan'],
+            invalidatesTags: ['PostTourplan','DoctorDCR'],
         }),
 
         createMpoShiftWiseDcrForChemist: builder.mutation({
@@ -114,7 +114,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: value,
             }),
-            invalidatesTags: ['PostTourplan'],
+            invalidatesTags: ['PostTourplan','ChemistDCR'],
         }),
 
 
@@ -125,7 +125,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: value
             }),
-            invalidatesTags: ['PostTourplan']
+            invalidatesTags: ['PostTourplan','ChemistDCR']
         }),
         createDcrForChemistwithShiftMpo: builder.mutation({
             query: (value) => ({
@@ -133,7 +133,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: value
             }),
-            invalidatesTags: ['PostTourplan']
+            invalidatesTags: ['PostTourplan','ChemistDCR']
         }),
         updateDcrForStockist: builder.mutation({
             query: (IdValue) => {
@@ -143,7 +143,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: IdValue.value,
                 }
             },
-            invalidatesTags: ['PostTourplan']
+            invalidatesTags: ['PostTourplan','StockistDCR']
         }),
         addDcrForStockistWithShiftMpo: builder.mutation({
             query: (value) => {
@@ -153,7 +153,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: value,
                 }
             },
-            invalidatesTags: ['PostTourplan']
+            invalidatesTags: ['PostTourplan','StockistDCR']
         }),
         getStatDataofDcrByUser: builder.mutation({
             query: (value) => {

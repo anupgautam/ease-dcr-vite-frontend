@@ -44,7 +44,6 @@ const TABLE_HEAD = [
     { id: 'date', label: 'Date', alignRight: false },
     { id: 'visited_area', label: 'Visited Area', alignRight: false },
     { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
-    { id: '' },
 ];
 
 const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
@@ -146,8 +145,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
                                                             <TableCell><Skeleton /></TableCell>
                                                             <TableCell><Skeleton /></TableCell>
                                                             <TableCell><Skeleton /></TableCell>
-                                                            {/* <TableCell><Skeleton /></TableCell> */}
-                                                            {/* <TableCell><Skeleton /></TableCell> */}
+                                                            <TableCell><Skeleton /></TableCell>
                                                         </TableRow>
                                                     ))}
                                             </> :

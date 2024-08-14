@@ -203,4 +203,4 @@ const DefaultList = () => {
     )
 }
 
-export default React.memo(DefaultList)
+export default DefaultList;

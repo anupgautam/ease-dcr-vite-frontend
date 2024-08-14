@@ -45,7 +45,7 @@ const TABLE_HEAD = [
     { id: 'visited_area', label: 'Area', alignRight: false },
     { id: 'date', label: 'Date', alignRight: false },
     { id: 'visited_with', label: 'Visited With', alignRight: false },
-    { id: 'approved', label: 'Approved', alignRight: false },
+    { id: 'approved', label: 'Approve TP', alignRight: false },
     { id: 'hulting_station', label: 'Hulting Station', alignRight: false },
     { id: '' },
 ];

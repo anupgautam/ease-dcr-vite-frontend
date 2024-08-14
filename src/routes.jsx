@@ -272,7 +272,6 @@ export default function Router() {
         },
         {
           path: 'admin/profile',
-          // element: <Authentication component={Profile} allowRoles={['mpo']} />,
           element: <Profile />,
         },
       ],
