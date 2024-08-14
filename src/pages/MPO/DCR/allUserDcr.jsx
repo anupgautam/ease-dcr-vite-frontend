@@ -188,7 +188,7 @@ const AllUserDcr = () => {
                 </Box>
 
                 <Scrollbar>
-                    <TableContainer sx={{ minWidth: 1200 }}>
+                    <TableContainer sx={{ minWidth: 1500  }}>
                         <Table>
                             <UserListHead
                                 headLabel={TABLE_HEAD}

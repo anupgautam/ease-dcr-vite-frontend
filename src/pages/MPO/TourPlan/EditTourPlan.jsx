@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import {
-    Box, Grid,
-    Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel
+    Box, Grid, Typography, Button, Autocomplete, TextField
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -10,11 +9,10 @@ import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import 'react-datepicker/dist/react-datepicker.css';
 
-//! Reusable Component
 import { useForm, Form } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
-//! Api Slices 
+
 import {
     useGetTourPlansByIdQuery,
     useUpdateTourPlansMutation,
@@ -27,65 +25,28 @@ import { useSelector } from 'react-redux';
 import DateToString from '@/reusable/forms/utils/dateToString';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 
-
 import Cookies from 'js-cookie'
 import moment from 'moment';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 
 const EditTourPlan = ({ idharu, onClose }) => {
-
-    const now = new BSDate().now();
+    const now = new Date();
     const [dateData, setDateData] = useState();
     const userList = useSelector(state => state?.tourPlan?.dataList);
 
     const TourPlan = useGetTourPlansByIdQuery(idharu);
-
     const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: TourPlan?.data?.mpo_name?.id });
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
-            return MpoArea?.data.map((key) => ({ id: key.id, title: key.area_name }))
+            return MpoArea?.data.map((key) => ({ id: key.id, title: key.area_name }));
         }
         return [];
-    }, [MpoArea])
-
-    // //! Get selected area
-    const shiftData = useGetShiftsQuery(Cookies.get('company_id'));
-
-    const shifts = useMemo(() => {
-        if (shiftData) {
-            return shiftData?.data?.map((key) => ({
-                id: key.id,
-                title: key.shift,
-            }));
-        }
-        return [];
-    }, [shiftData])
-    //! Nepali Date format wale
-
-    //! Validation wala  
-    const validate = (fieldValues = values) => {
-        // 
-        let temp = { ...errors }
-        if ('first_name' in fieldValues)
-            temp.mpo_name = returnValidation(['null'], values.mpo_name)
-        temp.area_name = returnValidation(['null'], values.area_name)
-        temp.shift = returnValidation(['null'], values.shift)
-        temp.select_the_date_id = returnValidation(['null'], values.select_the_date_id)
-
-        setErrors({
-            ...temp
-        })
-        // 
-
-        if (fieldValues === values)
-            return Object.values(temp).every(x => x == "")
-    }
-
+    }, [MpoArea]);
 
     const [initialFValues, setInitialFValues] = useState({
         mpo_name: "",
-        area_name: "",
+        area_name: [],
         shift: "",
         select_the_date_id: "",
         purpose_of_visit: "",
@@ -93,24 +54,24 @@ const EditTourPlan = ({ idharu, onClose }) => {
         select_the_month: "",
         is_approved: "",
         hulting_station: ""
-    })
+    });
 
     const [MpoTpArea, setMpoTpArea] = useState([]);
 
-    const handleMpoTpArea = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setMpoTpArea(
-            typeof value === 'string' ? value.split(',') : value,
-        );
+    const handleMpoTpArea = (event, value) => {
+        setMpoTpArea(value);
     };
-
 
     useEffect(() => {
         if (TourPlan?.data) {
-            setInitialFValues({
-                mpo_name: TourPlan?.data?.mpo_name?.user_name?.first_name + ' ' + TourPlan?.data?.mpo_name?.user_name?.last_name,
+            const selectedAreas = TourPlan?.data?.mpo_area_read?.map(area => ({
+                id: area.company_mpo_area_id.id,
+                title: area.company_mpo_area_id.area_name,
+            }));
+
+            setInitialFValues(prevValues => ({
+                ...prevValues,
+                mpo_name: `${TourPlan?.data?.mpo_name?.user_name?.first_name} ${TourPlan?.data?.mpo_name?.user_name?.last_name}`,
                 shift: TourPlan?.data?.tour_plan?.shift?.id,
                 select_the_date_id: TourPlan?.data?.tour_plan?.tour_plan?.select_the_date_id,
                 purpose_of_visit: TourPlan?.data?.tour_plan?.tour_plan?.purpose_of_visit,
@@ -118,73 +79,63 @@ const EditTourPlan = ({ idharu, onClose }) => {
                 is_dcr_added: TourPlan?.data?.tour_plan?.tour_plan?.is_dcr_added,
                 is_approved: TourPlan?.data?.is_approved,
                 hulting_station: TourPlan?.data?.tour_plan?.tour_plan?.hulting_station,
-            });
+                area_name: selectedAreas,
+            }));
             setDateData(TourPlan?.data?.tour_plan?.tour_plan?.select_the_date_id ? TourPlan?.data?.tour_plan?.tour_plan?.select_the_date_id : now)
-            // setMpoTpArea(TourPlan?.mpo_area_read)
-            if (TourPlan?.data?.mpo_area_read?.length !== 0) {
-                let newData = [];
-                TourPlan?.data?.mpo_area_read.forEach((key) => {
-                    newData.push(key.company_mpo_area_id.id)
-                })
-                setMpoTpArea(newData);
-            }
 
+            setMpoTpArea(selectedAreas || []);
         }
-    }, [TourPlan?.data])
+    }, [TourPlan?.data]);
 
-
-
-    const { values,
-        errors,
-        setErrors,
-        handleInputChange,
-    } = useForm(
+    const { values, errors, setErrors, handleInputChange } = useForm(
         initialFValues,
         true,
         false,
         true
-    )
+    );
 
-    useEffect(() => {
-        validate();
-    }, [values.mpo_name,
-    values.area_name,
-    values.shift,
-    values.select_the_date_id,
-    values.purpose_of_visit,
-    values.is_dcr_added,
-    values.is_approved])
+    const validate = (fieldValues = values) => {
+        let temp = { ...errors };
+        if ('mpo_name' in fieldValues) temp.mpo_name = returnValidation(['null'], values.mpo_name);
+        if ('area_name' in fieldValues) temp.area_name = values.area_name.length === 0 ? "This field is required." : "";
+        temp.shift = returnValidation(['null'], values.shift);
+        temp.select_the_date_id = returnValidation(['null'], values.select_the_date_id);
 
+        setErrors({ ...temp });
+
+        if (fieldValues === values) return Object.values(temp).every(x => x === "");
+    };
 
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
-    //! Edit tourplan
     const [updateTourPlans] = useUpdateTourPlansMutation();
     const history = useNavigate();
 
     const monthData = getNepaliMonthName(moment(dateData).month() + 1);
 
-    const newData = [];
-    if (MpoTpArea.length !== 0) {
-        MpoTpArea.forEach((key) => {
-            newData.push({ company_mpo_area_id: key })
-        })
-    }
-
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
-        const data = { mpo_area: newData, shift: 1, purpose_of_visit: values.purpose_of_visit, is_dcr_added: false, is_approved: values.is_approved, hulting_station: values.hulting_station, select_the_month: getNepaliMonthName(moment(dateData).month() + 1), select_the_date: typeof dateData === "string" ? dateData : DateToString(dateData), id: idharu, company_name: Cookies.get('company_id') }
+        const data = {
+            mpo_area: MpoTpArea.map(area => ({ company_mpo_area_id: area.id })),
+            shift: values.shift,
+            purpose_of_visit: values.purpose_of_visit,
+            is_dcr_added: values.is_dcr_added,
+            is_approved: values.is_approved,
+            hulting_station: values.hulting_station,
+            select_the_month: getNepaliMonthName(moment(values.select_the_date_id).month() + 1),
+            select_the_date: typeof values.select_the_date_id === "string" ? values.select_the_date_id : DateToString(values.select_the_date_id),
+            id: idharu,
+            company_name: Cookies.get('company_id')
+        };
+        console.log(data)
         try {
-            const response = await updateTourPlans({
-                id: idharu,
-                value: data
-            }).unwrap();
+            const response = await updateTourPlans({ id: idharu, value: data }).unwrap();
 
             if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited TourPlan' });
                 setTimeout(() => {
-                    history("/dashboard/admin/tourplan")
+                    history("/dashboard/admin/tourplan");
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
             } else {
@@ -193,17 +144,13 @@ const EditTourPlan = ({ idharu, onClose }) => {
                     setErrorMessage({ show: false, message: '' });
                 }, 3000);
             }
-        }
-        catch (error) {
-
+        } catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
             }, 3000);
         }
-    }, [updateTourPlans, values])
-
-
+    }, [updateTourPlans, values, MpoTpArea, idharu]);
 
     return (
         <>
@@ -211,36 +158,20 @@ const EditTourPlan = ({ idharu, onClose }) => {
                 anchor="right"
                 open={true}
                 onClose={onClose}
-                padding="16px"
                 sx={{
-                    width: 400, // Set the desired width of the Drawer
+                    width: 400,
                     flexShrink: 0,
                     boxSizing: "border-box",
-                    '& .MuiDrawer-paper': {
-                        width: 400 // Set the same width for the paper inside the Drawer
-                    }
+                    '& .MuiDrawer-paper': { width: 400 }
                 }}
             >
                 <Box style={{ padding: "20px" }}>
-                    <Box
-                        p={1}
-                        width="340px"
-                        textAlign="center"
-                        role="presentation"
-                        className="drawer-box"
-                        style={{ marginBottom: "40px" }}
-                    >
+                    <Box p={1} width="340px" textAlign="center" role="presentation" className="drawer-box" style={{ marginBottom: "40px" }}>
                         <Typography variant="h6" className="drawer-box-text">
-
-                            <IconButton
-                                className="close-button"
-                                onClick={onClose}
-                            >
+                            <IconButton className="close-button" onClick={onClose}>
                                 <Close />
                             </IconButton>
-                            <Typography variant="h6">
-                                Edit TourPlan
-                            </Typography>
+                            <Typography variant="h6">Edit TourPlan</Typography>
                         </Typography>
                     </Box>
                     <Form onSubmit={handleSubmit}>
@@ -253,69 +184,31 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                         label="MPO name*"
                                         value={values.mpo_name}
                                         onChange={handleInputChange}
-                                        // options={userList}
                                         error={errors.mpo_name}
-                                    // className={"drawer-first-name-input"}
                                     />
                                 </Box>
                             </Grid>
                             <Grid item xs={12}>
-                                {/* <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="area_name"
-                                        label="Area Name*"
-                                        value={values.area_name}
-                                        onChange={handleInputChange}
-                                        error={errors.area_name}
-                                        options={areas}
-                                    />
-                                </Box> */}
                                 <Box marginBottom={2}>
-                                    <FormControl sx={{ m: 1, width: 300 }}>
-                                        <InputLabel>{"Select the Area*"}</InputLabel>
-                                        <Select
-                                            labelId="demo-multiple-name-label"
-                                            id="demo-multiple-name"
-                                            multiple
-                                            value={MpoTpArea}
-                                            onChange={handleMpoTpArea}
-                                            input={<OutlinedInput label="Select the Area*" />}
-                                            // MenuProps={MenuProps}
-                                            sx={{ width: '100%' }}
-                                            style={{
-                                                borderBlockColor: "white",
-                                                width: "100%",
-                                                textAlign: 'start'
-                                            }}
-                                        >
-                                            {areas.map((item) => (
-                                                <MenuItem key={item.id} value={item.id}>
-                                                    {item.title}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
+                                    <Autocomplete
+                                        multiple
+                                        options={areas}
+                                        getOptionLabel={(option) => option.title}
+                                        value={MpoTpArea}
+                                        onChange={handleMpoTpArea}
+                                        renderInput={(params) => (
+                                            <TextField {...params} label="Select the Areas" error={Boolean(errors.area_name)} helperText={errors.area_name} />
+                                        )}
+                                    />
                                 </Box>
                             </Grid>
                         </Grid>
                         <Box marginBottom={2}>
-                            {/* <InputLabel style={{ fontSize: '15px', color: 'black', marginBottom: "12px" }}>{"Select The Date*"}</InputLabel> */}
-                            {/* <Controls.DatePicker
-                                name="select_the_date_id"
-                                showIcon
-                                selectedDate={values.select_the_date_id}
-                                onChange={handleInputChange}
-                                dateFormat="yyyy-MM-dd"
-                                placeholderText="Select the Date"
-                            /> */}
-                            {/* <NepaliDatePicker
-                                inputClassName="form-control"
-                                value={dateData}
-                                onChange={(value) => setDateData(value)}
-                                options={{ calenderLocale: "en", valueLocale: "en" }}
-                            /> */}
                             <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Select the Date*</label><br />
-                            <NepaliDatePicker value={dateData} format="YYYY-MM-DD" onChange={(value) => setDateData(value)} />
+                            <NepaliDatePicker
+                                value={dateData}
+                                format="YYYY-MM-DD"
+                                onChange={(value) => setDateData(value)} />
                         </Box>
                         <Box marginBottom={2}>
                             <Controls.Input
@@ -327,18 +220,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
                             />
                         </Box>
                         <Grid container spacing={2}>
-                            {/* <Grid item xs={12}>
-                                <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="shift"
-                                        label="Shifts*"
-                                        value={values.shift}
-                                        onChange={handleInputChange}
-                                        error={errors.shift}
-                                        options={shifts}
-                                    />
-                                </Box>
-                            </Grid> */}
                             <Grid item xs={12}>
                                 <Box marginBottom={2}>
                                     <Controls.Input
@@ -361,7 +242,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                     label="Is Approved"
                                 />
                             }
-
                         </Box>
                         <Stack spacing={1} direction="row">
                             <Button
@@ -402,6 +282,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
             }
         </>
     );
-};
+}
 
-export default React.memo(EditTourPlan);
+export default EditTourPlan;

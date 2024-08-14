@@ -1,4 +1,4 @@
-import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Table, TableBody, TableCell, TableContainer, TableRow, Typography, Autocomplete, TextField } from "@mui/material";
 import Cookies from "js-cookie";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -46,22 +46,34 @@ const AddDcrForDoctor = () => {
 
     const [PromotedProduct, setPromotedProduct] = useState([]);
 
-    const handleProductChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setPromotedProduct(
-            typeof value === 'string' ? value.split(',') : value,
-        );
+    // const handleProductChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setPromotedProduct(
+    //         typeof value === 'string' ? value.split(',') : value,
+    //     );
+    // }
+
+    const handleProductChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setPromotedProduct(mpotparea)
     }
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
 
-    const handleRolesChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setCompanyRoles(value);
+    // const handleRolesChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setCompanyRoles(value);
+    // }
+
+    //! Autocomplete
+
+    const handleRolesChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setCompanyRoles(mpotparea)
     }
 
     const [CompanyDoctor, setCompanyDoctor] = useState([]);
@@ -93,12 +105,22 @@ const AddDcrForDoctor = () => {
         }
     }
 
-    const handleDoctorChange = (event) => {
-        const {
-            target: { value },
-        } = event;
+    // const handleDoctorChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
 
-        setCompanyDoctor(value);
+    //     setCompanyDoctor(value);
+
+    //     const removedDoctorIds = CompanyDoctor.filter(doctorId => !value.includes(doctorId));
+    //     setDoctorData(prevData => prevData.filter(item => !removedDoctorIds.includes(item.doctor_id)));
+    // }
+
+    //! AutoComplete
+
+    const handleDoctorChange = (event, value) => {
+        const doctorname = value.map(option => option.id)
+        setCompanyDoctor(doctorname)
 
         const removedDoctorIds = CompanyDoctor.filter(doctorId => !value.includes(doctorId));
         setDoctorData(prevData => prevData.filter(item => !removedDoctorIds.includes(item.doctor_id)));
@@ -106,11 +128,16 @@ const AddDcrForDoctor = () => {
 
     const [RewardOptions, setRewardsOptions] = useState([]);
 
-    const handleRewardsChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setRewardsOptions(value);
+    // const handleRewardsChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setRewardsOptions(value);
+    // }
+
+    const handleRewardsChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setRewardsOptions(mpotparea)
     }
 
     const { data: ShiftData } = useGetShiftsQuery()
@@ -441,7 +468,7 @@ const AddDcrForDoctor = () => {
                                         />
                                     </Box>
                                     <Box marginBottom={2}>
-                                        <FormControl sx={{ m: 1, width: 300 }}>
+                                        {/* <FormControl sx={{ m: 1, width: 300 }}>
                                             <InputLabel>{"Select the Doctor*"}</InputLabel>
                                             <Select
                                                 multiple
@@ -463,7 +490,22 @@ const AddDcrForDoctor = () => {
                                                     </MenuItem>
                                                 ))}
                                             </Select>
-                                        </FormControl>
+                                        </FormControl> */}
+                                        {/* //! Autocomplete */}
+                                        <Autocomplete
+                                            multiple
+                                            options={doctorOptions}
+                                            getOptionLabel={(option) => option.title}
+                                            onChange={handleDoctorChange}
+                                            renderInput={(params) => (
+                                                <TextField {...params} label="Select Doctors" />
+                                            )}
+                                            renderOption={(props, option) => (
+                                                <li {...props} key={option.id}>
+                                                    {option.title}
+                                                </li>
+                                            )}
+                                        />
                                     </Box>
                                 </Box>
                             </Box>
@@ -556,11 +598,16 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
 
-    const handleRolesChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setCompanyRoles(value);
+    // const handleRolesChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setCompanyRoles(value);
+    // }
+
+    const handleRolesChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setCompanyRoles(mpotparea)
     }
 
 
@@ -584,14 +631,19 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
 
     const [PromotedProduct, setPromotedProduct] = useState([]);
 
-    const handleProductChange = useCallback((event) => {
-        const {
-            target: { value },
-        } = event;
-        setPromotedProduct(
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    }, [])
+    // const handleProductChange = useCallback((event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setPromotedProduct(
+    //         typeof value === 'string' ? value.split(',') : value,
+    //     );
+    // }, [])
+
+    const handleProductChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setPromotedProduct(mpotparea)
+    }
 
     const rewards = useGetAllRewardsQuery(Cookies.get('company_id'));
 
@@ -606,12 +658,18 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
 
     const [RewardOptions, setRewardsOptions] = useState([]);
 
-    const handleRewardsChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setRewardsOptions(value);
+    // const handleRewardsChange = (event) => {
+    //     const {
+    //         target: { value },
+    //     } = event;
+    //     setRewardsOptions(value);
+    // }
+
+    const handleRewardsChange = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        setRewardsOptions(mpotparea)
     }
+
 
     const [Formdata, setFormData] = useState({
         expenses_name: "",
@@ -655,7 +713,7 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
             <TableCell style={{ width: "50px" }}>{sn + 1}</TableCell>
             <TableCell style={{ width: "200px" }}>{Doctor?.data?.doctor_name.doctor_name}</TableCell>
             <TableCell align="left" style={{ width: "300px" }}>
-                <FormControl sx={{ m: 1, width: 300 }}>
+                {/* <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel>{"Select the Visited With*"}</InputLabel>
                     <Select
                         multiple
@@ -663,7 +721,6 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                         value={CompanyRoles}
                         onChange={handleRolesChange}
                         label="Select the Visited With*"
-                        // MenuProps={MenuProps}
                         sx={{ width: '100%' }}
                         style={{
                             borderBlockColor: "white",
@@ -677,10 +734,26 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
+                </FormControl> */}
+
+                {/* //! Autocomplete */}
+                <Autocomplete
+                    multiple
+                    options={executiveOptions}
+                    getOptionLabel={(option) => option.title}
+                    onChange={handleRolesChange}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Select Visited With" />
+                    )}
+                    renderOption={(props, option) => (
+                        <li {...props} key={option.id}>
+                            {option.title}
+                        </li>
+                    )}
+                />
             </TableCell>
             <TableCell align="left" style={{ width: "300px" }}>
-                <FormControl sx={{ m: 1, width: 300 }}>
+                {/* <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel>{"Select the Promoted Product*"}</InputLabel>
                     <Select
                         labelId="demo-multiple-chip-label"
@@ -703,10 +776,26 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
+                </FormControl> */}
+
+                {/* //! Autocomplete */}
+                <Autocomplete
+                    multiple
+                    options={productOptions}
+                    getOptionLabel={(option) => option.title}
+                    onChange={handleProductChange}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Select Promoted Products" />
+                    )}
+                    renderOption={(props, option) => (
+                        <li {...props} key={option.id}>
+                            {option.title}
+                        </li>
+                    )}
+                />
             </TableCell>
             <TableCell align="left" style={{ width: "300px" }}>
-                <FormControl sx={{ m: 1, width: 300 }}>
+                {/* <FormControl sx={{ m: 1, width: 300 }}>
                     <InputLabel>{"Select the Rewards*"}</InputLabel>
                     <Select
                         labelId="demo-multiple-name-label"
@@ -729,7 +818,21 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
+                </FormControl> */}
+                <Autocomplete
+                    multiple
+                    options={rewardsOptions}
+                    getOptionLabel={(option) => option.title}
+                    onChange={handleRewardsChange}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Select the Rewards" />
+                    )}
+                    renderOption={(props, option) => (
+                        <li {...props} key={option.id}>
+                            {option.title}
+                        </li>
+                    )}
+                />
             </TableCell>
             <TableCell align="left">
                 <Controls.Input

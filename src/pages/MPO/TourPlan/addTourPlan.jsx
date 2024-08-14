@@ -121,7 +121,6 @@ const AddTourPlan = () => {
         setTPAreaName(mpotpareavalue)
     }
 
-    console.log(TPAreaName)
     const [MpoAreaData, setMpoAreaData] = useState([]);
 
     const addTodo = () => {

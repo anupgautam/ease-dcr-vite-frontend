@@ -62,6 +62,7 @@ const TABLE_HEAD = [
     { id: 'date', label: 'Date', alignRight: false },
     { id: 'is_approved', label: 'Approve TP', alignRight: false },
     { id: 'hulting_station', label: 'Hulting Station', alignRight: false },
+    { id: "" }
 ];
 
 const FilteredTourPlan = () => {
