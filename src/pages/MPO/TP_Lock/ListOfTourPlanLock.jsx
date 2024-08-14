@@ -1,10 +1,10 @@
 import React from 'react'
-import ListOfTPLocks from './ListOfTPLocks';
+import ListOfDCRLockDays from './ListOfDCRLockDays';
 
 const ListOfTourPlanLock = () => {
     return (
         <>
-            <ListOfTPLocks />
+            <ListOfDCRLockDays />
         </>
     )
 }

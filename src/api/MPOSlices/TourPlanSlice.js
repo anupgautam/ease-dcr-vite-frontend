@@ -21,7 +21,10 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                     method: 'GET'
                 };
             },
-            providesTags: ['Tourplan']
+            providesTags: (result, error, arg) =>
+                [
+                    'Tourplan'
+                ]
         }),
 
         getMpoArea: builder.query({

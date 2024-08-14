@@ -132,7 +132,7 @@ const AddTPLock = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Add TP Lock Days
+                            Add DCR Lock Days
                         </Typography>
                     </Box>
                     <Box marginBottom={2}>

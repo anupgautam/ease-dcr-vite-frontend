@@ -11,7 +11,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: value,
                 };
             },
-            invalidatesTags: ['Tourplan'],
+            invalidatesTags: ['Tourplan', 'User'],
         }),
         addHigherTourPlan: builder.mutation({
             query: value => {
@@ -21,7 +21,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: value,
                 }
             },
-            invalidatesTags: ['Tourplan'],
+            invalidatesTags: ['Tourplan', 'User'],
         }),
         getHigherOrderTourPlanUsingId: builder.mutation({
             query: value => {
@@ -120,11 +120,11 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
 
         addOrderedProductInformationChemist: builder.mutation({
             query: (value) =>
-                    ({
-                        url: '/dcr/dcr-for-chemist-ordered-product-information/',
-                        method: 'POST',
-                        body: value
-                    }),
+            ({
+                url: '/dcr/dcr-for-chemist-ordered-product-information/',
+                method: 'POST',
+                body: value
+            }),
             invalidatesTags: ['PostTourplan']
         }),
         createDcrForChemistwithShiftMpo: builder.mutation({

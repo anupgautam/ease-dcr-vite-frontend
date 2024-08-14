@@ -91,6 +91,7 @@ export default function AccountPopover() {
     setOpenDialogue(false)
   }
 
+  // const username = Cookies.get('username')
   return (
     <>
       <Tooltip title="Profile" arrow>
@@ -135,6 +136,8 @@ export default function AccountPopover() {
         }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
+
+          {/* <Typography variant="subtitle2">{username}</Typography> */}
           <Typography variant="subtitle2" noWrap>
             {account.displayName}
           </Typography>

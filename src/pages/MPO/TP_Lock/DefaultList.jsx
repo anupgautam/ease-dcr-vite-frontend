@@ -23,7 +23,7 @@ import Cookies from 'js-cookie'
 import {
     useGetTPlockDaysQuery,
 } from '../../../api/MPOSlices/TourPlanSlice'
-import EditTPLock from './EditTPLock';
+import EditDCRLockDays from './EditDCRLockDays';
 
 const TABLE_HEAD = [
     { id: 'company_roles', label: 'Company Roles', alignRight: false },
@@ -73,11 +73,11 @@ const DefaultList = () => {
     }, [])
 
     //! Get Categories
-    const { data, refetch } = useGetTPlockDaysQuery(Cookies.get('company_id'));
+    const { data } = useGetTPlockDaysQuery(Cookies.get('company_id'));
+    console.log(data)
 
     const handleDelete = async (id) => {
         await deleteRewards(id);
-        refetch();
         handleClose();
     };
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -115,7 +115,7 @@ const DefaultList = () => {
                                                         </TableCell>
                                                         <TableCell align="left">{tpdays.tp_lock_days}</TableCell>
                                                         <TableCell align="left">
-                                                            <IconButton color={'primary'} onClick={(e) => onEdit(tpdays.id)}>
+                                                            <IconButton color={'primary'} onClick={(e) => onEdit(tpdays.company_roles.id)}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:edit-fill" />
                                                                 </Badge>
@@ -133,7 +133,7 @@ const DefaultList = () => {
 
                 </Scrollbar>
             </Card>
-            {isDrawerOpen && <EditTPLock
+            {isDrawerOpen && <EditDCRLockDays
                 idharu={selectedUpdateId} onClose={onCloseDrawer}
             />
             }

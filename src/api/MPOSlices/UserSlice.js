@@ -145,6 +145,19 @@ export const userApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ['CompanyUserRoles']
         }),
 
+        //! POST users 
+        unlockUsers: builder.mutation({
+            query: (unlockUsers) => {
+                console.log(unlockUsers)
+                return {
+                    url: `user/company-user-role/${unlockUsers.id}/`,
+                    method: 'PATCH',
+                    body: unlockUsers,
+                }
+            },
+            invalidatesTags: ['CompanyUserRoles']
+        }),
+
         //! Login User
         loginUser: builder.mutation({
             query: (loginInfo) => {
@@ -210,6 +223,7 @@ export const {
     useCreateUsersMutation,
     useLoginUserMutation,
     useUpdateUsersMutation,
+    useUnlockUsersMutation,
     useSearchUsersMutation,
     useGetUsersByCompanyRoleIdQuery,
     useGetAllUsersWithoutPaginationQuery,

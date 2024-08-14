@@ -26,6 +26,13 @@ const EditTPLock = ({ idharu, onClose }) => {
 
     //! Getting TPDays by ID
     const TPDays = useGetTPLockDaysByIdQuery(idharu);
+    const [companyRoles, setCompanyRoles] = useState()
+
+    useEffect(() => {
+        if (TPDays) {
+            setCompanyRoles(TPDays?.data?.company_roles?.id)
+        }
+    }, [TPDays])
 
     //! Get user roles
     const { data, isSuccess, } = useGetUsersRoleQuery(Cookies.get('company_id'));
@@ -97,10 +104,10 @@ const EditTPLock = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append("company_roles", values.company_roles);
+        formData.append("company_roles", companyRoles);
         formData.append("tp_lock_days", values.tp_lock_days);
-        formData.append('id', idharu);
         formData.append("company_name", Cookies.get('company_id'));
+        formData.append("id", idharu);
         try {
             const response = await updateTPDays(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited TPDays' });
@@ -141,7 +148,7 @@ const EditTPLock = ({ idharu, onClose }) => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Edit TPDays
+                            Edit DCR Lock Days
                         </Typography>
                     </Box>
 
