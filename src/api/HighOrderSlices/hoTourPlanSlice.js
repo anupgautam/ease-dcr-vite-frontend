@@ -19,7 +19,7 @@ export const HOTourPlanSlice = apiSlice.injectEndpoints({
                 url: `other-roles/higher-order-tourplan-with-pagination/?page=${page.page}&visited_with__company_name=${page.company_name}`,
                 method: 'GET'
             }),
-            providesTags: ['HOTourPlan','PostTourplan']
+            providesTags: ['HOTourPlan', 'PostTourplan','TourPlan']
         }),
 
         //! Get all HOTourPlans By id
@@ -83,7 +83,7 @@ export const HOTourPlanSlice = apiSlice.injectEndpoints({
                 url: `other-roles/higher-order-tourplan-with-pagination/?user_id=${id.user_id}&month=${id.month}&year=${id.date}&page=${id.page}&company_id=${id.company_name}`,
                 method: 'GET'
             }),
-            providesTags: ['HOTourPlan']
+            providesTags: ['HOTourPlan', 'TourPlan']
         }),
 
         //! Search Tour Plan CSV filter wala

@@ -21,10 +21,8 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                     method: 'GET'
                 };
             },
-            providesTags: (result, error, arg) =>
-                [
-                    'Tourplan'
-                ]
+            providesTags: ['Tourplan'],
+            invalidatesTags: ['Tourplan']
         }),
 
         getMpoArea: builder.query({
@@ -110,7 +108,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                 url: `/mpo/company-mpo-tour-plan/?company_name=${mpoName.company_name}&mpo_name_id=${mpoName.mpo_name}&tour_plan__tour_plan__select_the_month=${mpoName.month}&page=${mpoName.page}&tour_plan__tour_plan__year=${mpoName.date}&mpo_name__role_name__role_name=${mpoName.role_data}`,
                 method: 'GET',
             }),
-            providesTags: ['Tourplan'],
+            providesTags: ['Tourplan', 'TourPlan'],
         }),
         getTourplanOfMpoByDateMonthandShift: builder.query({
             query: mpoName => ({

@@ -131,15 +131,7 @@ const EditChemist = ({ idharu, onClose }) => {
         validate();
 
     }, [
-        values.chemist_name,
-        values.chemist_address,
-        values.chemist_phone_number,
-        values.chemist_territory,
-        values.chemist_pan_number,
-        values.chemist_contact_person,
-        values.mpo_name,
-        values.chemist_category,
-        values.is_invested,
+        values
     ])
 
 
@@ -165,7 +157,7 @@ const EditChemist = ({ idharu, onClose }) => {
         formData.append('id', Chemist?.data?.id);
         formData.append('refresh', Cookies.get('refresh'));
         formData.append('access', Cookies.get('access'));
-        formData.append('is_investment', values.is_invested)
+        formData.append('is_investment', false)
         try {
 
             const response = await updateChemists(formData).unwrap();
@@ -294,14 +286,14 @@ const EditChemist = ({ idharu, onClose }) => {
                                 options={chemistcategories}
                             />
                         </Box>
-                        <Box marginBottom={2}>
+                        {/* <Box marginBottom={2}>
                             <Controls.Checkbox
                                 name="is_invested"
                                 value={values.is_invested}
                                 onChange={handleInputChange}
                                 label="Is Invested"
                             />
-                        </Box>
+                        </Box> */}
                         <Stack spacing={1} direction="row">
                             <Controls.SubmitButton
                                 variant="contained"

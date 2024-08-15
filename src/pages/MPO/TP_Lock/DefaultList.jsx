@@ -22,7 +22,7 @@ import Cookies from 'js-cookie'
 
 import {
     useGetTPlockDaysQuery,
-} from '../../../api/MPOSlices/TourPlanSlice'
+} from '@/api/MPOSlices/TourPlanSlice'
 import EditDCRLockDays from './EditDCRLockDays';
 
 const TABLE_HEAD = [
@@ -74,7 +74,6 @@ const DefaultList = () => {
 
     //! Get Categories
     const { data } = useGetTPlockDaysQuery(Cookies.get('company_id'));
-    console.log(data)
 
     const handleDelete = async (id) => {
         await deleteRewards(id);
