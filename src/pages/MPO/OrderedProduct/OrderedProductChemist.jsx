@@ -26,7 +26,7 @@ const OrderedProductChemist = ({ index, value, other }) => {
   }, [chemists])
 
   const handleRoleSelect = useCallback((e, value) => {
-    setSelectedChemist(value?.id)
+    setSelectedChemist(value?.id || "")
   }, [])
 
   const [responseData, setResponseData] = useState();

@@ -110,8 +110,12 @@ const AllUserDcr = () => {
         "search": " "
     }
 
+    // const handleRoleSelect = useCallback((e, value) => {
+    //     setRoleSelect(value.id === null ? "" : value.id);
+    // }, [])
+
     const handleRoleSelect = useCallback((e, value) => {
-        setRoleSelect(value.id === null ? "" : value.id);
+        setRoleSelect(value?.id || "");
     }, [])
 
     const handleClear = useCallback(() => {

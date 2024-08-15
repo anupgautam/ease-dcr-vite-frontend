@@ -46,6 +46,42 @@ const TABLE_HEAD = [
 
 const AllUserTp = () => {
 
+    // ! Get all users wala
+    // const { data } = useGetAllcompanyUserRolesQuery({ id: Cookies.get('company_id'), page: page });
+    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+
+    const [roleSelect, setRoleSelect] = useState('');
+    const [companyRoleList, setCompanyRoleList] = useState([]);
+
+    const handleRoleSelect = useCallback((e, value) => {
+        setRoleSelect(value?.id || "");
+    }, [])
+
+    const handleClear = () => {
+        setRoleSelect('');
+    };
+
+    // const handleRoleSelect = useCallback((e, value) => {
+    //     setRoleSelect(value.id === null ? "" : value.id);
+    // }, [])
+
+    // const handleClear = () => {
+    //     setRoleSelect('');
+    // };
+
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: roleSelect === null ? undefined : roleSelect });
+
+    useEffect(() => {
+        let dataList = []
+        if (roleList?.data) {
+            roleList.data.map((key) => {
+                // dataList.push({ id: key.id, title: key.role_name_value })
+                dataList.push({ id: key.id, title: key.role_name.role_name })
+            })
+        }
+        setCompanyRoleList(dataList);
+    }, [roleList])
+
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -69,27 +105,7 @@ const AllUserTp = () => {
         setPage(thisArray[3]);
     }, [])
 
-    // ! Get all users wala
-    // const { data } = useGetAllcompanyUserRolesQuery({ id: Cookies.get('company_id'), page: page });
-    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
-
-    const [roleSelect, setRoleSelect] = useState('');
-    const [companyRoleList, setCompanyRoleList] = useState([]);
-
-
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: roleSelect === null ? undefined : roleSelect });
-
-    useEffect(() => {
-        let dataList = []
-        if (roleList?.data) {
-            roleList.data.map((key) => {
-                // dataList.push({ id: key.id, title: key.role_name_value })
-                dataList.push({ id: key.id, title: key.role_name.role_name })
-            })
-        }
-        setCompanyRoleList(dataList);
-    }, [roleList])
-
+    //! Search Logic
     const [searchResults, setSearchResults] = useState({ search: "" });
     const [searchUser, results] = useSearchCompanyUserRolesMutation();
 
@@ -104,13 +120,6 @@ const AllUserTp = () => {
     const initialFValues = {
         "search": " "
     }
-
-    const handleRoleSelect = (e, value) => {
-        setRoleSelect(value.id === null ? "" : value.id);
-    }
-    const handleClear = () => {
-        setRoleSelect('');
-    };
 
     const {
         values,
@@ -190,7 +199,6 @@ const AllUserTp = () => {
                             <TableBody>
                                 {(searchResults.search.length <= 3) ?
                                     <>
-
                                         <>
                                             {
                                                 userList !== undefined ?

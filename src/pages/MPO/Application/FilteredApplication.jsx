@@ -92,7 +92,7 @@ const FilteredApplication = () => {
 
     const handleOptionChange = useCallback((value) => {
         setCompanyId(Cookies.get('company_id'));
-        setSelectedOption(value?.id);
+        setSelectedOption(value?.id || "");
     }, [])
 
 

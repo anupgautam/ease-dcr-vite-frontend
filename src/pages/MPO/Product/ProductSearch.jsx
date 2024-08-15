@@ -116,7 +116,7 @@ const ProductSearch = () => {
         const searchQuery = e.target.value;
         if (searchQuery === '') {
             setSearchDataCondition(false);
-            setSearchData([]); // Clear the search data immediately
+            setSearchData([]);
         } else {
             SearchChemist({ search: searchQuery, company_id: Cookies.get('company_id') })
                 .then((res) => {

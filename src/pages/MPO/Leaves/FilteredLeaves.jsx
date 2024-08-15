@@ -76,7 +76,7 @@ const FilteredLeaves = () => {
     const [mpoName, setMPOName] = useState('');
 
     const handleOptionChange = useCallback((event, value) => {
-        setSelectedOption(value?.id);
+        setSelectedOption(value?.id || "");
     }, [])
 
 
@@ -143,10 +143,10 @@ const FilteredLeaves = () => {
                                     <TextField {...params} label="Roles" />
                                 )}
                                 renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
                             />
                         </Grid>
                         <Grid item xs={2.85}>

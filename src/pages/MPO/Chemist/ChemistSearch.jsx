@@ -1,3 +1,4 @@
+import { debounce } from 'lodash';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     Card,
@@ -29,6 +30,7 @@ import EditChemist from './EditChemist'
 
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
+import { useForm1 } from '../../../reusable/components/forms/useForm';
 import SearchIcon from '@mui/icons-material/Search';
 
 import {
@@ -39,7 +41,6 @@ import {
 import {
     useGetAllMPOAreasNoPageQuery, usePostAllMPONamesNoPageMutation
 } from '../../../api/MPOSlices/DoctorSlice'
-import { debounce } from 'lodash';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 
 const TABLE_HEAD = [
@@ -52,33 +53,8 @@ const TABLE_HEAD = [
 ];
 
 const ChemistSearch = () => {
-
-    //! For drawer 
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-    const [selectedId, setSelectedId] = useState(null);
-    const [selectedUpdateId, setSelectedUpdateId] = useState(null);
-    const [page, setPage] = useState(1)
-
-    const handleChangePage = useCallback((e) => {
-        const data = e.target.ariaLabel
-        let thisArray = data.split(" ")
-        setPage(thisArray[3]);
-    }, [])
-
-    const onEdit = useCallback((id) => {
-        setSelectedUpdateId(id);
-        setIsDrawerOpen(true);
-    }, [])
-
-    const onCloseDrawer = useCallback(() => {
-        setIsDrawerOpen(false);
-    }, [])
-
-
+    //! MPO Data
     const [MpoData] = usePostAllMPONamesNoPageMutation()
-
-
     const [mpoName, setMPOName] = useState('');
     const [MpoList, setMpoList] = useState([]);
 
@@ -100,6 +76,7 @@ const ChemistSearch = () => {
         }
     }, [Cookies.get('company_id')])
 
+    //! MPO Area
     const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: Cookies.get('company_id'), mpo_name: mpoName })
 
     const [mpoArea, setMPOArea] = useState('')
@@ -111,19 +88,49 @@ const ChemistSearch = () => {
         return [];
     }, [MPO_Area]);
 
+
+    //! For drawer 
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+    const [selectedId, setSelectedId] = useState(null);
+    const [selectedUpdateId, setSelectedUpdateId] = useState(null);
+
+    const onEdit = useCallback((id) => {
+        setSelectedUpdateId(id);
+        setIsDrawerOpen(true);
+    }, [])
+
+    const onCloseDrawer = useCallback(() => {
+        setIsDrawerOpen(false);
+    }, [])
+
     //! Options
     const [companyId, setCompanyId] = useState();
 
     const handleOptionChange = useCallback((event, value) => {
         setCompanyId(Cookies.get('company_id'));
-        setMPOArea(value?.id)
+        setMPOArea(value?.id || "")
     }, [])
 
     const handleMPONameChange = useCallback((event, value) => {
-        setMPOName(value?.id)
+        setMPOName(value?.id || "")
         setCompanyId(Cookies.get('company_id'));
     }, [])
 
+    //! Pagination Logic
+    const [page, setPage] = useState(1)
+
+    const handleChangePage = useCallback((e) => {
+        const data = e.target.ariaLabel
+        let thisArray = data.split(" ")
+        setPage(thisArray[3]);
+    }, [])
+
+    //! Search Logic
+    const { data: chemistData } = useGetChemistsByMpoAreaAndIdQuery({ company_name: Cookies.get('company_id'), mpo_area: mpoArea, mpo_name: mpoName, page: page })
+
+    const [searchResults, setSearchResults] = useState({ search: "" });
+    const [searchChemist, results] = useSearchChemistsMutation()
 
     const [SearchData, setSearchData] = useState([]);
     const [SearchDataCondition, setSearchDataCondition] = useState(false);
@@ -134,7 +141,7 @@ const ChemistSearch = () => {
         const searchQuery = e.target.value;
         if (searchQuery === '') {
             setSearchDataCondition(false);
-            setSearchData([]); // Clear the search data immediately
+            setSearchData([]);
         } else {
             SearchChemist({ search: searchQuery, company_id: Cookies.get('company_id') })
                 .then((res) => {
@@ -148,18 +155,22 @@ const ChemistSearch = () => {
         }
     };
 
-    const debouncedSearch = debounce(onSearch, 300);
+    const initialFValues = {
+        "search": " "
+    }
 
+    const {
+        values,
+        handleSearchClick,
+    } = useForm1(initialFValues, true);
 
-    const [filterArray, setFilterArray] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const elementsPerPage = 8;
-    const [searchResults, setSearchResults] = useState({ search: "" });
-    const [searchChemist, results] = useSearchChemistsMutation()
+    useEffect(() => {
+        searchChemist(values)
+    }, [values])
 
-    const { data: chemistData } = useGetChemistsByMpoAreaAndIdQuery({ company_name: Cookies.get('company_id'), mpo_area: mpoArea, mpo_name: mpoName, page: page })
-
-
+    // const [filterArray, setFilterArray] = useState([]);
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const elementsPerPage = 8;
     //! Copy array element 
     useEffect(() => {
         if (results && results.data && results.data.results && Array.isArray(results.data.results)) {
@@ -167,10 +178,6 @@ const ChemistSearch = () => {
             setFilterArray(arrayWala);
         }
     }, [results]);
-
-
-    const startIndex = (currentPage - 1) * elementsPerPage;
-    const endIndex = startIndex + elementsPerPage;
 
     //! onSearch
     const FilteredData = { mpo_area: mpoArea, mpo_name: mpoName, companyId: companyId }
@@ -198,6 +205,8 @@ const ChemistSearch = () => {
         setOpenDialogue(false)
     }, [])
 
+    const debouncedSearch = debounce(onSearch, 300);
+
     return (
         <>
             <Card>
@@ -221,7 +230,7 @@ const ChemistSearch = () => {
                                     sx={{ m: 2 }}
                                 />
                             </Grid>
-                            <Grid item xs={2.5}>
+                            <Grid item xs={3}>
                                 <Autocomplete
                                     options={mpoNames}
                                     getOptionLabel={(option) => option.title}
@@ -237,7 +246,7 @@ const ChemistSearch = () => {
                                 />
                             </Grid>
                             {mpoName &&
-                                <Grid item xs={2}>
+                                <Grid item xs={3}>
                                     <Autocomplete
                                         options={mpoAreas}
                                         getOptionLabel={(option) => option.title}
@@ -246,10 +255,10 @@ const ChemistSearch = () => {
                                             <TextField {...params} label="MPO Area" />
                                         )}
                                         renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                            <li {...props} key={option.id}>
+                                                {option.title}
+                                            </li>
+                                        )}
                                     />
                                 </Grid>
                             }
@@ -344,7 +353,7 @@ const ChemistSearch = () => {
                                             }
                                         </> :
                                         <>
-                                            {mpoName === "" && mpoArea === "" ?
+                                            {mpoName === "" || !mpoName ?
                                                 <Test /> :
                                                 <>
                                                     {

@@ -34,7 +34,7 @@ const UploadSearch = () => {
     }, [])
 
     //! Get User roles wala
-    const { data,isSuccess} = useGetUsersByCompanyRoleWithOutPageQuery(Cookies.get('company_id'))
+    const { data, isSuccess } = useGetUsersByCompanyRoleWithOutPageQuery(Cookies.get('company_id'))
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
@@ -50,7 +50,7 @@ const UploadSearch = () => {
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleOptionChange = useCallback((event, value) => {
-        setSelectedOption(value?.id);
+        setSelectedOption(value?.id || "");
     }, [])
 
 

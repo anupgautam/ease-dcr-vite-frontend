@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 //! @mui
 import {
     Card,
@@ -104,7 +104,7 @@ const FilteredMissedCalls = () => {
 
 
     const handleRoleSelect = useCallback((e, value) => {
-        setRoleSelect(value?.id)
+        setRoleSelect(value?.id || "")
     }, [])
 
     const { data: missedCalledData } = useGetMissedDataByMpoQuery({ company_name: Cookies.get('company_id'), month: selectedMonth, mpo_name: roleSelect, year: selectedYear })
@@ -157,10 +157,10 @@ const FilteredMissedCalls = () => {
                                     <TextField {...params} label="User List" />
                                 )}
                                 renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
                             />
                         </Grid>
                     </Grid>
