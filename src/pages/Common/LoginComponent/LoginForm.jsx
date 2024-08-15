@@ -108,7 +108,7 @@ const LoginFormInputs = () => {
                                 }, [2000])
                             }
                         } if (res.error) {
-                            setErrorMessage({ show: true, message: res.error.error });
+                            setErrorMessage({ show: true, message: res.error.data });
                             setTimeout(() => {
                                 setErrorMessage({ show: false, message: "" });
                             }, [2000])
@@ -134,6 +134,7 @@ const LoginFormInputs = () => {
             }, [2000])
         }
     }, [email, password])
+
 
     useEffect(() => {
         const handleKeyDown = e => {
@@ -194,7 +195,7 @@ const LoginFormInputs = () => {
                                         </InputAdornment>
                                     ),
                                 }}
-                            style={{ cursor: 'pointer' }}
+                                style={{ cursor: 'pointer' }}
                             // className="cursor-pointer"
                             />
                         </Box>
