@@ -98,8 +98,6 @@ const EditDCR = ({ idharu, onClose }) => {
         true
     )
 
-
-
     const { data: doctorsdata } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: Cookies.get('company_id'), mpo_name: values.mpo_name, mpo_area: values.visited_area })
 
     const doctors = useMemo(() => {

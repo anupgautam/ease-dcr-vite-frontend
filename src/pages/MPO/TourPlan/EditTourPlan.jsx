@@ -128,7 +128,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
             id: idharu,
             company_name: Cookies.get('company_id')
         };
-        console.log(data)
         try {
             const response = await updateTourPlans({ id: idharu, value: data }).unwrap();
 

@@ -77,7 +77,6 @@ const DefaultList = () => {
                             <TableCell><Skeleton /></TableCell>
                             <TableCell><Skeleton /></TableCell>
                             <TableCell><Skeleton /></TableCell>
-                            <TableCell><Skeleton /></TableCell>
                         </TableRow>
                     ))}
                 </>
@@ -94,7 +93,7 @@ const DefaultList = () => {
                             <TableCell align="left">{chem.chemist_name.chemist_phone_number}</TableCell>
                             <TableCell align="left">{chem.chemist_name.chemist_address}</TableCell>
                             <TableCell align="left">{chem.chemist_name.chemist_category}</TableCell>
-                            <TableCell align="left">{chem.is_investment ? "Invested" : "Not Invested"}</TableCell>
+                            {/* <TableCell align="left">{chem.is_investment ? "Invested" : "Not Invested"}</TableCell> */}
                             {Cookies.get('user_role') === 'admin' && (
                                 <>
                                     <TableCell align="left">

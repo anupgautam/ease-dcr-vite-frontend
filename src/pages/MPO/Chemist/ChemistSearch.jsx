@@ -47,7 +47,7 @@ const TABLE_HEAD = [
     { id: 'chemist_phone_number', label: 'Number', alignRight: false },
     { id: 'chemist_address', label: 'Address', alignRight: false },
     { id: 'chemist_category', label: 'Category', alignRight: false },
-    { id: 'is_invested', label: 'Is Invested', alignRight: false },
+    // { id: 'is_invested', label: 'Is Invested', alignRight: false },
     { id: '' },
 ];
 
@@ -299,7 +299,7 @@ const ChemistSearch = () => {
                                                                     <TableCell align="left">{chemistsearch.chemist_name.chemist_phone_number}</TableCell>
                                                                     <TableCell align="left">{chemistsearch.chemist_name.chemist_address}</TableCell>
                                                                     <TableCell align="left">{chemistsearch.chemist_name.chemist_category}</TableCell>
-                                                                    <TableCell align="left">{chemistsearch.is_investment === true ? "Invested" : "Not Invested"}</TableCell>
+                                                                    {/* <TableCell align="left">{chemistsearch.is_investment === true ? "Invested" : "Not Invested"}</TableCell> */}
                                                                     <TableCell align="left">
                                                                         {/* //! Edit  */}
                                                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => {
@@ -383,7 +383,7 @@ const ChemistSearch = () => {
                                                                                         <TableCell align="left">{chemistsearch.chemist_name.chemist_phone_number}</TableCell>
                                                                                         <TableCell align="left">{chemistsearch.chemist_name.chemist_address}</TableCell>
                                                                                         <TableCell align="left">{chemistsearch.chemist_name.chemist_category}</TableCell>
-                                                                                        <TableCell align="left">{chemistsearch.is_investment === true ? "Invested" : "Not Invested"}</TableCell>
+                                                                                        {/* <TableCell align="left">{chemistsearch.is_investment === true ? "Invested" : "Not Invested"}</TableCell> */}
                                                                                         {/* //! Edit  */}
                                                                                         <TableCell align="left">
                                                                                             <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => {

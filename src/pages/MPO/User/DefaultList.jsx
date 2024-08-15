@@ -117,7 +117,6 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
 
     const totalPages = useMemo(() => Math.ceil((data?.count || 0) / 30), [data]);
 
-    console.log(data)
     return (
         <>
             {
