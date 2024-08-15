@@ -92,7 +92,6 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
         const newLockStatus = !isTpLocked;
         setLocks(newLockStatus);
 
-        // console.log(userId, newLockStatus);
         try {
             const response = await unlockUser({ id: userId, is_tp_locked: newLockStatus }).unwrap();
 
@@ -174,30 +173,6 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
                                                 <Iconify icon="dashicons:unlock" />
                                             </Badge>
                                         </IconButton>
-                                        <Dialog
-                                            fullScreen={fullScreen}
-                                            open={openDialogues[user.id] || false}
-                                            onClose={() => handleClose(user.id)}
-                                            aria-labelledby="responsive-dialog-title"
-                                        >
-                                            <DialogTitle id="responsive-dialog-title">
-                                                {"Do you want to lock this user?"}
-                                            </DialogTitle>
-                                            <DialogActions>
-                                                <Button
-                                                    autoFocus
-                                                    onClick={() => UserLocks({ userId: user.id, isTpLocked: user.is_tp_locked })}
-                                                >
-                                                    Yes
-                                                </Button>
-                                                <Button
-                                                    onClick={() => handleClose(user.id)}
-                                                    autoFocus
-                                                >
-                                                    No
-                                                </Button>
-                                            </DialogActions>
-                                        </Dialog>
                                     </>
                                 ) : (
                                     <>

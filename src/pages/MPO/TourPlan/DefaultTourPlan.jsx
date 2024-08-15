@@ -42,6 +42,14 @@ const TABLE_HEAD = [
 
 const DefaultList = () => {
 
+
+    //! Get Tour Plan
+    const { data, refetch } = useGetTourPlansQuery({
+        id: Cookies.get("company_id"),
+        page: page
+    });
+
+
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -83,11 +91,6 @@ const DefaultList = () => {
 
     const id = Cookies.get("company_id");
 
-    //! Get Tour Plan
-    const { data } = useGetTourPlansQuery({
-        id: Cookies.get("company_id"),
-        page: page
-    });
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteTourPlansByIdMutation()

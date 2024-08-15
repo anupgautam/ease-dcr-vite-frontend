@@ -53,6 +53,8 @@ const DefaultList = () => {
         company_area: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_user_id')
     });
 
+    console.log(data)
+
     const [deleteStockist] = useDeleteStockistsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7];
 
@@ -64,6 +66,7 @@ const DefaultList = () => {
     const onCloseDrawer = useCallback(() => {
         setIsDrawerOpen(false);
     }, []);
+
 
     return (
         <>
@@ -81,7 +84,7 @@ const DefaultList = () => {
                 </>
             ) : (
                 <>
-                    {data && data.results.map((stockist, index) => (
+                    {data && data?.results?.map((stockist, index) => (
                         <TableRow hover tabIndex={-1} role="checkbox" key={stockist.id}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell component="th" scope="row" align="left">

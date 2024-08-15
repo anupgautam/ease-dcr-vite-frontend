@@ -182,6 +182,7 @@ const UserSearch = () => {
     setOpenDialogue(false);
   }, []);
 
+
   return (
     <>
       <Card>
@@ -279,23 +280,23 @@ const UserSearch = () => {
                                   {usersearch.executive_level.user_name === null
                                     ? ""
                                     : usersearch?.executive_level?.user_name
-                                        ?.first_name +
-                                      " " +
-                                      usersearch?.executive_level?.user_name
-                                        ?.middle_name +
-                                      " " +
-                                      usersearch?.executive_level?.user_name
-                                        ?.last_name}
+                                      ?.first_name +
+                                    " " +
+                                    usersearch?.executive_level?.user_name
+                                      ?.middle_name +
+                                    " " +
+                                    usersearch?.executive_level?.user_name
+                                      ?.last_name}
                                 </TableCell>
                                 <TableCell align="left">
                                   {usersearch.division_name.division_name ===
-                                  null
+                                    null
                                     ? ""
                                     : usersearch.division_name.division_name}
                                 </TableCell>
                                 <TableCell align="left">
                                   {usersearch.role_name.role_name.role_name ===
-                                  "admin" ? (
+                                    "admin" ? (
                                     "Active"
                                   ) : (
                                     <select
@@ -313,11 +314,55 @@ const UserSearch = () => {
                                   )}
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Link
-                                    to={`/dashboard/admin/locked/user?id=${usersearch.id}&role=${usersearch.role_name.role_name.role_name}`}
-                                  >
-                                    <Button>Locked</Button>
-                                  </Link>
+                                  {/* {user.is_tp_locked === false ? (
+                                    <>
+                                      <IconButton
+                                        color={'primary'}
+                                        sx={{ width: 40, height: 40, mt: 0.75 }}
+                                        onClick={() => { setSelectedId(user.id); handleClickOpen(user.id); }}
+                                      >
+                                        <Badge>
+                                          <Iconify icon="dashicons:unlock" />
+                                        </Badge>
+                                      </IconButton>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <IconButton
+                                        color={'error'}
+                                        sx={{ width: 40, height: 40, mt: 0.75 }}
+                                        onClick={() => { setSelectedId(user.id); handleClickOpen(user.id); }}
+                                      >
+                                        <Badge>
+                                          <Iconify icon="material-symbols:lock" />
+                                        </Badge>
+                                      </IconButton>
+                                      <Dialog
+                                        fullScreen={fullScreen}
+                                        open={openDialogues[user.id] || false}
+                                        onClose={() => handleClose(user.id)}
+                                        aria-labelledby="responsive-dialog-title"
+                                      >
+                                        <DialogTitle id="responsive-dialog-title">
+                                          {"Do you want to unlock this user?"}
+                                        </DialogTitle>
+                                        <DialogActions>
+                                          <Button
+                                            autoFocus
+                                            onClick={() => UserLocks({ userId: user.id, isTpLocked: user.is_tp_locked })}
+                                          >
+                                            Yes
+                                          </Button>
+                                          <Button
+                                            onClick={() => handleClose(user.id)}
+                                            autoFocus
+                                          >
+                                            No
+                                          </Button>
+                                        </DialogActions>
+                                      </Dialog>
+                                    </>
+                                  )} */}
                                 </TableCell>
                                 <TableCell align="left">
                                   <IconButton
@@ -438,13 +483,13 @@ const UserSearch = () => {
                                 {usersearch.executive_level.user_name === null
                                   ? ""
                                   : usersearch?.executive_level?.user_name
-                                      ?.first_name +
-                                    " " +
-                                    usersearch?.executive_level?.user_name
-                                      ?.middle_name +
-                                    " " +
-                                    usersearch?.executive_level?.user_name
-                                      ?.last_name}
+                                    ?.first_name +
+                                  " " +
+                                  usersearch?.executive_level?.user_name
+                                    ?.middle_name +
+                                  " " +
+                                  usersearch?.executive_level?.user_name
+                                    ?.last_name}
                               </TableCell>
                               <TableCell align="left">
                                 {usersearch.division_name.division_name === null
@@ -453,7 +498,7 @@ const UserSearch = () => {
                               </TableCell>
                               <TableCell align="left">
                                 {usersearch.role_name.role_name.role_name ===
-                                "admin" ? (
+                                  "admin" ? (
                                   "Active"
                                 ) : (
                                   <select

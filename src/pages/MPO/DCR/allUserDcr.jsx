@@ -23,7 +23,7 @@ import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Scrollbar from '@/components/iconify/Iconify';
-import { UserListHead} from '../../../sections/@dashboard/user';
+import { UserListHead } from '../../../sections/@dashboard/user';
 
 import { useForm1 } from '../../../reusable/components/forms/useForm';
 
@@ -187,8 +187,8 @@ const AllUserDcr = () => {
                     </Grid>
                 </Box>
 
-                <Scrollbar>
-                    <TableContainer sx={{ minWidth: 1500  }}>
+                <Box sx={{ overflowX: 'auto', overflowY: 'hidden' }}>
+                    <TableContainer sx={{ minWidth: 1200, overflowX: 'auto' }}>
                         <Table>
                             <UserListHead
                                 headLabel={TABLE_HEAD}
@@ -343,7 +343,7 @@ const AllUserDcr = () => {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                </Scrollbar>
+                </Box>
             </Card>
         </>
     );
