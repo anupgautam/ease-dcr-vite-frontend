@@ -37,12 +37,12 @@ const FilteredDCR = () => {
     const id = searchParams.get('id');
     const role = searchParams.get('role');
     const date = searchParams.get('date');
+    const dateOnly = date.split('T')[0];
     const dispatch = useDispatch();
 
     const [selectedId, setSelectedId] = useState(null);
     const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
 
-    const [companyRoleList, setCompanyRoleList] = useState([]);
     const [companyUserList, setCompanyUserList] = useState([]);
     const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: '' })
     const [selectedDCRType, setSelectedDCRType] = useState("Doctor");
@@ -55,11 +55,9 @@ const FilteredDCR = () => {
         let dataList = []
         if (roleList?.data) {
             roleList.data.map((key) => {
-                // dataList.push({ id: key.id, title: key.role_name_value })
                 dataList.push({ id: key.id, title: key.role_name.role_name })
             })
         }
-        setCompanyRoleList(dataList);
     }, [roleList])
 
 
@@ -85,19 +83,8 @@ const FilteredDCR = () => {
     const yearData = now._date.year;
 
 
-    //! Month Format 
-    const [startMonth, setStartMonth] = useState(null);
-    // const [selectedMonth, setMonthData] = useState('');
 
-    // const handleMonthChange = (date) => {
-    //     setStartMonth(date)
-    //     if (date) {
-    //         const MonthData = date.toLocaleString('default', { month: 'long' })
-    //         setMonthData(MonthData)
-    //     }
-    // }
 
-    //! Months
     const [selectedYear, setSelectedYear] = useState(yearData);
     const yearList = ['2075', '2076', '2077', '2078', '2079', '2080', '2081', '2082', '2083', '2084', '2085', '2086', '2087', '2088', '2089', '2090']
 
@@ -161,42 +148,48 @@ const FilteredDCR = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
-                        <Grid item md={2}>
-                            <FormControl>
-                                <InputLabel id="mpo-select-label">Year</InputLabel>
-                                <Select
-                                    labelId="mpo-select-label"
-                                    id="mpo-select"
-                                    value={selectedYear}
-                                    onChange={(e) => setSelectedYear(e.target.value)}
-                                    label="Year"
-                                >
-                                    <MenuItem value="">None</MenuItem>
-                                    {yearList.map((year) => (
-                                        <MenuItem key={year} value={year}>
-                                            {year}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item md={2}>
-                            <FormControl fullWidth>
-                                <InputLabel>Month</InputLabel>
-                                <Select
-                                    value={selectedMonth}
-                                    onChange={handleNepaliMonthChange}
-                                    label="Month"
-                                >
-                                    {months.map((month) => (
-                                        <MenuItem key={month.value} value={month.value}>
-                                            {month.label}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
                         {
+                            Cookies.get('user_role') !== "admin" &&
+                            <Grid item md={2}>
+                                <FormControl>
+                                    <InputLabel id="mpo-select-label">Year</InputLabel>
+                                    <Select
+                                        labelId="mpo-select-label"
+                                        id="mpo-select"
+                                        value={selectedYear}
+                                        onChange={(e) => setSelectedYear(e.target.value)}
+                                        label="Year"
+                                    >
+                                        <MenuItem value="">None</MenuItem>
+                                        {yearList.map((year) => (
+                                            <MenuItem key={year} value={year}>
+                                                {year}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        }
+                        {
+                            Cookies.get('user_role') !== "admin" &&
+                            <Grid item md={2}>
+                                <FormControl fullWidth>
+                                    <InputLabel>Month</InputLabel>
+                                    <Select
+                                        value={selectedMonth}
+                                        onChange={handleNepaliMonthChange}
+                                        label="Month"
+                                    >
+                                        {months.map((month) => (
+                                            <MenuItem key={month.value} value={month.value}>
+                                                {month.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        }
+                        {/* {
                             Cookies.get('user_role') === 'admin' &&
                             <Grid item xs={2.5}>
                                 <FormControl>
@@ -215,7 +208,7 @@ const FilteredDCR = () => {
                                     />
                                 </FormControl>
                             </Grid>
-                        }
+                        } */}
                         {role === "MPO" || Cookies.get('user_role') === "MPO" ?
                             <Grid item md={2}>
                                 {
@@ -301,7 +294,9 @@ const FilteredDCR = () => {
                                             <DoctorDCR
                                                 selectedUser={selectedId ? selectedId?.id : id}
                                                 selectedMonth={selectedMonth}
-                                                selectedDate={dateData} /> :
+                                                selectedDate={dateData}
+                                                dateOnly={dateOnly}
+                                            /> :
                                             <DefaultDoctorDCR />
                                         }
                                     </> :
@@ -318,7 +313,9 @@ const FilteredDCR = () => {
                                             <DoctorDCR
                                                 selectedUser={selectedId ? selectedId : id}
                                                 selectedMonth={selectedMonth}
-                                                selectedDate={selectedYear} /> :
+                                                selectedDate={selectedYear}
+                                                dateOnly={dateOnly}
+                                            /> :
                                             <DefaultDoctorDCR />
                                         }
                                     </> :
@@ -336,7 +333,9 @@ const FilteredDCR = () => {
                                             <ChemistDCR
                                                 selectedUser={selectedId ? selectedId?.id : id}
                                                 selectedMonth={selectedMonth}
-                                                selectedDate={selectedYear} />
+                                                selectedDate={selectedYear}
+                                                dateOnly={dateOnly}
+                                            />
                                             : <DefaultChemistDCR />
                                         }
                                     </> :
@@ -353,7 +352,9 @@ const FilteredDCR = () => {
                                             <ChemistDCR
                                                 selectedUser={selectedId ? selectedId : id}
                                                 selectedMonth={selectedMonth}
-                                                selectedDate={selectedYear} />
+                                                selectedDate={selectedYear}
+                                                dateOnly={dateOnly}
+                                            />
                                             : <DefaultChemistDCR />
                                         }
                                     </> :
@@ -370,7 +371,9 @@ const FilteredDCR = () => {
                                             <StockistDCR
                                                 selectedUser={selectedId ? selectedId : id}
                                                 selectedMonth={selectedMonth}
-                                                selectedDate={selectedYear} />
+                                                selectedDate={selectedYear}
+                                                dateOnly={dateOnly}
+                                            />
                                             : <DefaultStockistDCR />
                                         }
                                     </> :

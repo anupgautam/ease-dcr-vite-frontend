@@ -197,6 +197,8 @@ const FilteredTourPlan = () => {
         setPage(thisArray[3]);
     }, [])
 
+    // const dateOnly = dateString.split('T')[0];
+
     const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: Cookies.get('company_id'), date: selectedYear, month: selectedMonth, mpo_name: Cookies.get('user_role') === 'admin' ? id : Cookies.get('company_user_id'), page: page, role_data: Cookies.get('user_role') === 'admin' ? "" : '' })
 
     console.log("TourPlanSearch", TourPlanSearch);

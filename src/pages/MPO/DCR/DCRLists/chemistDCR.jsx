@@ -48,7 +48,7 @@ const TABLE_HEAD = [
     { id: 'chemist_name', label: 'Chemist Name', alignRight: false },
 ];
 
-const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
+const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
 
     const dispatch = useDispatch();
 
@@ -82,7 +82,7 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
 
 
     //! onSearch
-    const FilteredData = { company_name: Cookies.get('company_id'), user_id: selectedUser, month: selectedMonth, date: selectedDate }
+    const FilteredData = { company_name: Cookies.get('company_id'), user_id: Cookies.get('user_role') === "admin" ? selectedUser : Cookies.get('company_user_id'), month: Cookies.get('user_role') === "admin" ? "" : selectedMonth, date: Cookies.get('user_role') === "admin" ? "" : selectedDate, fullDate: Cookies.get('user_role') === "admin" ? dateOnly : "" }
 
     //! Search Results 
     const results = useSearchChemistsDCRQuery(FilteredData);

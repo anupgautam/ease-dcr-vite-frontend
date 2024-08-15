@@ -44,11 +44,10 @@ const TABLE_HEAD = [
     { id: 'date', label: 'Date', alignRight: false },
     { id: 'visited_area', label: 'Visited Area', alignRight: false },
     { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
+    { id: '', label: '', alignRight: false },
 ];
 
-const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
-
-
+const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
     const dispatch = useDispatch();
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -75,7 +74,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
     // 
 
     //! onSearch
-    const FilteredData = { company_name: Cookies.get('company_id'), user_id: Cookies.get('user_role') === "admin" ? selectedUser : Cookies.get('company_user_id'), month: selectedMonth, date: selectedDate }
+    const FilteredData = { company_name: Cookies.get('company_id'), user_id: Cookies.get('user_role') === "admin" ? selectedUser : Cookies.get('company_user_id'), month: Cookies.get('user_role') === "admin" ? "" : selectedMonth, date: Cookies.get('user_role') === "admin" ? "" : selectedDate, fullDate: Cookies.get('user_role') === "admin" ? dateOnly : "" }
 
     //! Search Results 
     const results = useSearchDoctorsDCRQuery(FilteredData);
