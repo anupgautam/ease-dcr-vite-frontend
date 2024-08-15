@@ -22,8 +22,16 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import EditTarget from './EditTarget';
+import { BSDate } from 'nepali-datepicker-react';
+import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 
 const FilteredTarget = ({ selectedYear, selectedRole }) => {
+
+    const now = new BSDate().now();
+
+    const monthData = getNepaliMonthName(now._date.month);
+    const yearData = now._date.year;
+    
     const { data } = useGetTargetsByFilterQuery({ selectedYear, selectedRole });
     const [deleteTarget] = useDeleteTargetsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]

@@ -81,7 +81,7 @@ const DefaultTarget = () => {
                             </TableRow>
                         ))}
                 </> :
-                    <>{data && data?.results?.map((target, index) => (
+                    <>{data && data?.map((target, index) => (
                         <TableRow hover tabIndex={-1} role="checkbox" key={target.id}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell component="th" scope="row" align="left">
@@ -101,11 +101,11 @@ const DefaultTarget = () => {
                                     </Badge>
                                 </IconButton>
                                 {/*//! Delete  */}
-                                <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(target.id); handleClickOpen() }}>
+                                {/* <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(target.id); handleClickOpen() }}>
                                     <Badge>
                                         <Iconify icon="eva:trash-2-outline" />
                                     </Badge>
-                                </IconButton>
+                                </IconButton> */}
                             </TableCell>
                             <Dialog
                                 fullScreen={fullScreen}

@@ -106,8 +106,8 @@ const EditTarget = ({ idharu, onClose }) => {
     //! Edit user
     const [updateTarget] = useUpdateTargetsMutation();
     const history = useNavigate()
-    const [SuccessMessage, setSuccessMessage] = useState(null);
-    const [ErrorMessage, setErrorMessage] = useState(null);
+    const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
+    const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -122,13 +122,13 @@ const EditTarget = ({ idharu, onClose }) => {
             .then((res) => {
                 setSuccessMessage("Successfully edited Stockists")
                 setTimeout(() => {
-                    history("/dashboard/admin/target")
+                    setSuccessMessage({ show: false, message: '' });
                 }, [3000])
             })
             .catch((err) => {
                 setErrorMessage("Some Error Occur. Please Try Again Later.");
                 setTimeout(() => {
-                    setErrorMessage(null);
+                    setErrorMessage({ show: false, message: '' });
                 }, [3000]);
             })
     }
@@ -140,79 +140,108 @@ const EditTarget = ({ idharu, onClose }) => {
                 open={true}
                 onClose={onClose}
                 padding="16px"
+                sx={{
+                    width: 400,
+                    flexShrink: 0,
+                    boxSizing: 'border-box',
+                    '& .MuiDrawer-paper': {
+                        width: 400,
+                    },
+                }}
             >
-                <Box
-                    p={1}
-                    width="400px"
-                    textAlign="center"
-                    role="presentation"
-                    className="drawer-box"
-                >
-                    <Typography variant="h6" className="drawer-box-text">
-                        Edit Target
-                        <IconButton
-                            className="close-button"
-                            onClick={onClose}
-                        >
-                            <Close />
-                        </IconButton>
-                    </Typography>
+                <Box style={{ padding: "20px" }}>
+
+                    <Box
+                        p={1}
+                        textAlign="center"
+                        role="presentation"
+                        className="drawer-box"
+                        style={{ marginBottom: "40px" }}
+                    >
+                        <Typography variant="h6" className="drawer-box-text">
+                            Edit Target
+                            <IconButton
+                                className="close-button"
+                                onClick={onClose}
+                            >
+                                <Close />
+                            </IconButton>
+                        </Typography>
+                    </Box>
+                    <Form onSubmit={handleSubmit}>
+                        <Box marginBottom={2}>
+                            <Controls.Select
+                                name="target_from"
+                                label="Target From*"
+                                value={values.target_from.id}
+                                onChange={handleInputChange}
+                                error={errors.target_from}
+                                options={upperUser}
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <Controls.Input
+                                name="year"
+                                label="Year*"
+                                value={values.year}
+                                onChange={handleInputChange}
+                                error={errors.year}
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <Controls.Input
+                                name="sales"
+                                label="Sales*"
+                                value={values.sales}
+                                onChange={handleInputChange}
+                                error={errors.sales}
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <Controls.Input
+                                name="target_amount"
+                                label="Target Amount*"
+                                value={values.target_amount}
+                                onChange={handleInputChange}
+                                error={errors.target_amount}
+                            />
+                        </Box>
+                        <Stack spacing={1} direction="row">
+                            <Controls.SubmitButton
+                                variant="contained"
+                                className="submit-button"
+                                onClick={(e) => { handleSubmit(e); onClose() }}
+                                text="Submit"
+                            />
+                            <Button
+                                variant="outlined"
+                                className="cancel-button"
+                                onClick={onClose}
+                            >
+                                Cancel
+                            </Button>
+                        </Stack>
+                    </Form>
                 </Box>
-                <Form onSubmit={handleSubmit}>
-                    <Box marginBottom={3}>
-                        <Controls.Select
-                            name="target_from"
-                            label="Target From*"
-                            value={values.target_from.id}
-                            onChange={handleInputChange}
-                            error={errors.target_from}
-                            options={upperUser}
-                        />
-                    </Box>
-                    <Box marginBottom={4}>
-                        <Controls.Input
-                            name="year"
-                            label="Year*"
-                            value={values.year}
-                            onChange={handleInputChange}
-                            error={errors.year}
-                        />
-                    </Box>
-                    <Box marginBottom={4}>
-                        <Controls.Input
-                            name="sales"
-                            label="Sales*"
-                            value={values.sales}
-                            onChange={handleInputChange}
-                            error={errors.sales}
-                        />
-                    </Box>
-                    <Box marginBottom={4}>
-                        <Controls.Input
-                            name="target_amount"
-                            label="Target Amount*"
-                            value={values.target_amount}
-                            onChange={handleInputChange}
-                            error={errors.target_amount}
-                        />
-                    </Box>
-                    <Stack spacing={6} direction="row">
-                        <Controls.SubmitButton
-                            variant="contained"
-                            className="submit-button"
-                            onClick={(e) => { handleSubmit(e); onClose() }}
-                            text="Submit"
-                        />
-                        <Button
-                            variant="outlined"
-                            className="cancel-button"
-                            onClick={onClose}
-                        >
-                            Cancel
-                        </Button>
-                    </Stack>
-                </Form>
             </Drawer>
+            {
+                ErrorMessage.show === true ? (
+                    <Grid>
+                        <Box className="messageContainer errorMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                ) : null
+            }
+            {
+                SuccessMessage.show === true ? (
+                    <Grid>
+                        <Box className="messageContainer successMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                ) : null
+            }
         </>
     );
 };

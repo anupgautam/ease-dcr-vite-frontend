@@ -201,8 +201,6 @@ const FilteredTourPlan = () => {
 
     const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: Cookies.get('company_id'), date: selectedYear, month: selectedMonth, mpo_name: Cookies.get('user_role') === 'admin' ? id : Cookies.get('company_user_id'), page: page, role_data: Cookies.get('user_role') === 'admin' ? "" : '' })
 
-    console.log("TourPlanSearch", TourPlanSearch);
-
     //! Search results
 
     const [mpoName, setMPOName] = useState('');

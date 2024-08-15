@@ -43,6 +43,8 @@ import Cookies from 'js-cookie'
 import FilteredTarget from './FilteredTarget';
 import SelectDataDCR from '../DCR/SelectDataDCR';
 import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRolesSlice';
+import { BSDate } from 'nepali-datepicker-react';
+import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 
 const TABLE_HEAD = [
     { id: 'user_name', label: 'User Name', alignRight: false },
@@ -54,11 +56,36 @@ const TABLE_HEAD = [
 ];
 
 const TargetSearch = (props) => {
+
+    const now = new BSDate().now();
+
+    const monthData = getNepaliMonthName(now._date.month);
+    const yearData = now._date.year;
+
+
     const { children, value, index, ...other } = props;
 
     const yearList = ['2075', '2076', '2077', '2078', '2079', '2080', '2081', '2082', '2083', '2084', '2085', '2086', '2087', '2088', '2089', '2090']
+
+    const year = [
+        { value: '2080', label: '2080' },
+        { value: '2081', label: '2081' },
+        { value: '2082', label: '2082' },
+        { value: '2083', label: '2083' },
+        { value: '2084', label: '2084' },
+        { value: '2085', label: '2085' },
+        { value: '2086', label: '2086' },
+        { value: '2087', label: '2087' },
+        { value: '2089', label: '2089' },
+        { value: '2090', label: '2090' },
+    ]
+
     const [selectedRole, setSelectedRole] = useState(null);
-    const [selectedYear, setSelectedYear] = useState(null);
+    const [selectedYear, setSelectedYear] = useState(yearData);
+
+    const handleNepaliYearChange = useCallback((event) => {
+        setSelectedYear(event.target.value);
+    }, [])
 
     const { data: rolesData } = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
 
@@ -98,9 +125,9 @@ const TargetSearch = (props) => {
         setPage(thisArray[3]);
     }, [])
 
-    // ! Get all users wala
-    const { data } = useGetTargetsQuery(page);
-    // 
+    // // ! Get all users wala
+    // const { data } = useGetTargetsQuery(page);
+    // // 
 
 
     const [searchResults, setSearchResults] = useState({ search: "" });
@@ -166,19 +193,16 @@ const TargetSearch = (props) => {
                                 <Grid container spacing={0}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={2}>
-                                            <FormControl>
-                                                <InputLabel id="mpo-select-label">Year</InputLabel>
+                                            <FormControl fullWidth>
+                                                <InputLabel>Year</InputLabel>
                                                 <Select
-                                                    labelId="mpo-select-label"
-                                                    id="mpo-select"
                                                     value={selectedYear}
-                                                    onChange={(e) => setSelectedYear(e.target.value)}
+                                                    onChange={handleNepaliYearChange}
                                                     label="Year"
                                                 >
-                                                    <MenuItem value="">None</MenuItem>
-                                                    {yearList.map((year) => (
-                                                        <MenuItem key={year} value={year}>
-                                                            {year}
+                                                    {year.map((year) => (
+                                                        <MenuItem key={year.value} value={year.value}>
+                                                            {year.label}
                                                         </MenuItem>
                                                     ))}
                                                 </Select>
