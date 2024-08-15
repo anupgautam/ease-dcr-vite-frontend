@@ -121,9 +121,9 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                 'doctor_category': Doctor?.data?.doctor_name?.doctor_category,
                 'doctor_nmc_number': Doctor?.data?.doctor_name?.doctor_nmc_number,
                 'doctor_qualification': Doctor?.data?.doctor_name?.doctor_qualification,
-                'doctor_specialization': Doctor?.data?.doctor_name?.doctor_specialization,
+                'doctor_specialization': Doctor?.data?.doctor_name?.doctor_specialization?.id,
                 'mpo_name': Doctor?.data?.mpo_name,
-                'is_invested': Doctor?.data?.is_investment,
+                'is_invested': false,
             });
         }
     }, [Doctor.data])
@@ -132,17 +132,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
         validate();
 
     }, [
-        values.doctor_name,
-        values.doctor_address,
-        values.doctor_gender,
-        values.doctor_phone_number,
-        values.doctor_territory,
-        values.doctor_specialization,
-        values.doctor_category,
-        values.doctor_nmc_number,
-        values.doctor_qualification,
-        values.mpo_name,
-        values.is_invested
+        values
     ])
 
     //! Edit user
@@ -168,7 +158,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
         formData.append('id', Doctor.data.doctor_name.id);
         formData.append('refresh', Cookies.get('refresh'))
         formData.append('access', Cookies.get('access'));
-        formData.append('is_investment', values.is_invested)
+        formData.append('is_investment', false)
         try {
             const response = await updateDoctors(formData)
             if (response.data) {
@@ -336,14 +326,14 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                                 />
                             </Box>
                         </Grid>
-                        <Box marginBottom={2}>
+                        {/* <Box marginBottom={2}>
                             <Controls.Checkbox
                                 name="is_invested"
                                 value={values.is_invested}
                                 onChange={handleInputChange}
                                 label="Is Invested"
                             />
-                        </Box>
+                        </Box> */}
 
                         <Stack spacing={1} direction="row">
                             <Controls.SubmitButton
