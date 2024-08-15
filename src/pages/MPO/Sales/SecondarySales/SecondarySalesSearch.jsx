@@ -127,7 +127,7 @@ const SecondarySalesSearch = () => {
 
     //! Get Stockist
     const mpo_id = useSelector(state => state.dcrData.selected_user);
-    
+
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id);
     const { Stockist } = useGetAllStockistsWithoutPaginationQuery({ company_name: Cookies.get('company_id'), company_area: mpoArea?.company_area?.id })
 
@@ -145,9 +145,14 @@ const SecondarySalesSearch = () => {
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleOptionChange = useCallback((event, value) => {
-        setSelectedOption(value?.id);
+        setSelectedOption(value?.id || "");
         setCompanyId(Cookies.get("company_id"))
     }, []);
+
+    // const handleOptionChange = useCallback((event, value) => {
+    //     setSelectedOption(value?.id);
+    //     setCompanyId(Cookies.get("company_id"))
+    // }, []);
 
 
     //! Search results
@@ -288,7 +293,7 @@ const SecondarySalesSearch = () => {
                 <Card>
                     <Box style={{ padding: "20px" }}>
                         <Grid container spacing={2}>
-                            <Grid item xs={2}>
+                            <Grid item xs={3}>
                                 <Autocomplete
                                     options={rolesOptions}
                                     getOptionLabel={(option) => option.title}

@@ -131,7 +131,7 @@ const PrimarySalesSearch = () => {
     const Stockist = useGetAllStockistsWithoutPaginationQuery({ company_name: Cookies.get('company_id'), company_area: companyUserArea?.data?.company_area?.company_area });
 
     const rolesOptions = useMemo(() => {
-        if (Stockist) {
+        if (Stockist?.data) {
             return Stockist?.data?.map((key) => ({
                 id: key.id,
                 title: key.stockist_name.stockist_name
@@ -144,9 +144,14 @@ const PrimarySalesSearch = () => {
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleOptionChange = useCallback((event, value) => {
-        setSelectedOption(value.id === null ? "" : value.id);
+        setSelectedOption(value?.id || "");
         setCompanyId(Cookies.get("company_id"))
     }, []);
+
+    // const handleOptionChange = useCallback((event, value) => {
+    //     setSelectedOption(value.id === null ? "" : value.id);
+    //     setCompanyId(Cookies.get("company_id"))
+    // }, []);
 
 
     //! Search results
@@ -283,7 +288,7 @@ const PrimarySalesSearch = () => {
                 <Card>
                     <Box style={{ padding: "20px" }}>
                         <Grid container spacing={2}>
-                            <Grid item xs={2}>
+                            <Grid item xs={3}>
                                 <FormControl>
                                     <Autocomplete
                                         options={rolesOptions}
