@@ -189,7 +189,6 @@ const AddTourPlan = () => {
     // }, [TPAreaName])
 
 
-    // console.log(MPOAreaArray)
 
     const handleSave = () => {
         if (Cookies.get('user_role') === "MPO") {

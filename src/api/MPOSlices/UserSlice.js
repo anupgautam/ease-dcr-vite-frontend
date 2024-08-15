@@ -148,7 +148,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         //! POST users 
         unlockUsers: builder.mutation({
             query: (unlockUsers) => {
-                console.log(unlockUsers)
                 return {
                     url: `user/company-user-role/${unlockUsers.id}/`,
                     method: 'PATCH',

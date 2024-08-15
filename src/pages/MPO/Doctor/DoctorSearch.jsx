@@ -27,7 +27,6 @@ import { useTheme } from "@mui/material/styles";
 
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
-
 import { useForm1 } from '../../../reusable/components/forms/useForm';
 
 import {
@@ -55,56 +54,6 @@ const TABLE_HEAD = [
 ];
 
 const DoctorSearch = () => {
-
-    //! For drawer 
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-    const [selectedId, setSelectedId] = useState(null);
-    const [selectedUpdateId, setSelectedUpdateId] = useState(null);
-    const [selectedDivisionId, setSelectedDivisionId] = useState(null);
-    const [page, setPage] = useState(1);
-
-    const handleChangePage = useCallback((e) => {
-        const data = e.target.ariaLabel
-        let thisArray = data.split(" ")
-        setPage(thisArray[3]);
-    }, [])
-
-    const onEdit = useCallback((id, divisionId) => {
-        setSelectedUpdateId(id);
-        setSelectedDivisionId(divisionId);
-        setIsDrawerOpen(true);
-    }, [])
-
-    const onCloseDrawer = useCallback(() => {
-        setIsDrawerOpen(false);
-    }, [])
-
-    // ! Get all users wala
-    const [SearchData, setSearchData] = useState([]);
-
-    const [SearchDataCondition, setSearchDataCondition] = useState(false);
-
-    const [SearchDoctor] = useSearchDoctorsMutation();
-
-    const onSearch = (e) => {
-        const searchQuery = e.target.value;
-        if (searchQuery === '') {
-            setSearchDataCondition(false);
-            setSearchData([]);
-        } else {
-            SearchDoctor({ search: searchQuery, company_id: Cookies.get('company_id') })
-                .then((res) => {
-                    setSearchDataCondition(true);
-                    if (res.data) {
-                        setSearchData(res.data);
-                    }
-                })
-                .catch((err) => {
-                })
-        }
-    }
-
     //! Get MPO Names
     const [MpoData] = usePostAllMPONamesNoPageMutation()
 
@@ -129,6 +78,7 @@ const DoctorSearch = () => {
         }
     }, [Cookies.get('company_id')])
 
+    //! MPO Area
     const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: Cookies.get('company_id'), mpo_name: Cookies.get('user_role') === 'admin' ? mpoName : Cookies.get('company_user_id') })
 
     const [mpoArea, setMPOArea] = useState('')
@@ -140,25 +90,70 @@ const DoctorSearch = () => {
         return [];
     }, [MPO_Area]);
 
+    //! For drawer 
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+    const [selectedId, setSelectedId] = useState(null);
+    const [selectedUpdateId, setSelectedUpdateId] = useState(null);
+    const [selectedDivisionId, setSelectedDivisionId] = useState(null);
+
+    const onEdit = useCallback((id, divisionId) => {
+        setSelectedUpdateId(id);
+        setSelectedDivisionId(divisionId);
+        setIsDrawerOpen(true);
+    }, [])
+
+    const onCloseDrawer = useCallback(() => {
+        setIsDrawerOpen(false);
+    }, [])
 
     //! Options
     const [companyId, setCompanyId] = useState();
 
     const handleOptionChange = useCallback((event, value) => {
         setCompanyId(Cookies.get('company_id'));
-        setMPOArea(value?.id)
+        setMPOArea(value?.id || "")
     }, [])
 
     const handleMPONameChange = useCallback((event, value) => {
-        setMPOName(value?.id)
+        setMPOName(value?.id || "")
         setCompanyId(Cookies.get('company_id'));
     }, [])
 
+    //! Pagination Logic
+    const [page, setPage] = useState(1);
 
+    const handleChangePage = useCallback((e) => {
+        const data = e.target.ariaLabel
+        let thisArray = data.split(" ")
+        setPage(thisArray[3]);
+    }, [])
+
+    // ! Search Logic
     const { data: DoctorData } = useGetAllDoctorByMpoAndMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_area: mpoArea, mpo_name: Cookies.get('user_role') === 'admin' ? mpoName : Cookies.get('company_user_id'), page: page })
 
-    // !on search
+    const [SearchData, setSearchData] = useState([]);
+    const [SearchDataCondition, setSearchDataCondition] = useState(false);
 
+    const [SearchDoctor] = useSearchDoctorsMutation();
+
+    const onSearch = (e) => {
+        const searchQuery = e.target.value;
+        if (searchQuery === '') {
+            setSearchDataCondition(false);
+            setSearchData([]);
+        } else {
+            SearchDoctor({ search: searchQuery, company_id: Cookies.get('company_id') })
+                .then((res) => {
+                    setSearchDataCondition(true);
+                    if (res.data) {
+                        setSearchData(res.data);
+                    }
+                })
+                .catch((err) => {
+                })
+        }
+    }
 
     const initialFValues = {
         "search": " "
@@ -249,12 +244,11 @@ const DoctorSearch = () => {
                         </Grid>
                     }
                 </Box>
+
                 <Scrollbar>
                     <TableContainer sx={{ minWidth: 900 }}>
                         <Table>
-                            <UserListHead
-                                headLabel={TABLE_HEAD}
-                            />
+                            <UserListHead headLabel={TABLE_HEAD} />
                             <TableBody>
                                 {
                                     SearchDataCondition === true ?
@@ -291,9 +285,8 @@ const DoctorSearch = () => {
                                                                     <TableCell align="left">{doctorsearch.doctor_name.doctor_phone_number}</TableCell>
                                                                     <TableCell align="left">{doctorsearch.doctor_name.doctor_address}</TableCell>
                                                                     <TableCell align="left">{doctorsearch.doctor_name.doctor_qualification}</TableCell>
-                                                                    <TableCell align="left">{doctorsearch.doctor_name.doctor_specialization}</TableCell>
+                                                                    <TableCell align="left">{doctorsearch.doctor_name.doctor_specialization.category_name}</TableCell>
                                                                     <TableCell align="left">{doctorsearch.doctor_name.doctor_category}</TableCell>
-                                                                    <TableCell align="left">{doctorsearch.is_investment === true ? "Invested" : "Not Invested"}</TableCell>
                                                                     <TableCell align="left">
                                                                         <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorsearch.id); handleClickOpen() }}>
                                                                             <Badge>
@@ -328,7 +321,7 @@ const DoctorSearch = () => {
                                             }
                                         </> :
                                         <>
-                                            {mpoName === "" && mpoArea === "" ?
+                                            {mpoName === "" || !mpoName ?
                                                 <Test /> :
                                                 <>
                                                     {
@@ -365,9 +358,8 @@ const DoctorSearch = () => {
                                                                                         <TableCell align="left">{doctorsearch.doctor_name.doctor_phone_number}</TableCell>
                                                                                         <TableCell align="left">{doctorsearch.doctor_name.doctor_address}</TableCell>
                                                                                         <TableCell align="left">{doctorsearch.doctor_name.doctor_qualification}</TableCell>
+                                                                                        <TableCell align="left">{doctorsearch.doctor_name.doctor_specialization.category_name}</TableCell>
                                                                                         <TableCell align="left">{doctorsearch.doctor_name.doctor_category}</TableCell>
-                                                                                        <TableCell align="left">{doctorsearch.is_investment === true ? "Invested" : "Not Invested"}</TableCell>
-
                                                                                         <TableCell align="left">
                                                                                             <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorsearch.id); handleClickOpen() }}>
                                                                                                 <Badge>

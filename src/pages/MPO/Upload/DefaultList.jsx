@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Container} from '@mui/material';
+import { Container } from '@mui/material';
 import { DefaultUploadList } from '../../../sections/@dashboard/uploads';
 import { useGetUploadQuery } from '../../../api/Uploads/uploadApiSlice'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -21,7 +21,7 @@ const DefaultList = () => {
 
     return (
         <>
-            <Container>
+            <Container sx={{ pt: 4 }}>
                 <DefaultUploadList uploads={data} />
             </Container>
         </>

@@ -33,7 +33,7 @@ const OrderedProductStockist = ({ index, value, other }) => {
   }, [selectedStockist])
 
   const handleRoleSelect = useCallback((e, value) => {
-    setSelectedStockist(value.id)
+    setSelectedStockist(value.id || "")
   }, [])
 
   // 

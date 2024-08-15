@@ -38,6 +38,7 @@ const AddDoctor = () => {
     const doctorGender = [
         { id: 'Male', title: 'Male' },
         { id: 'Female', title: 'Female' },
+        { id: 'Others', title: 'Others' },
     ];
 
     //! Get Doctor Specialization

@@ -204,7 +204,6 @@ const UserSearch = () => {
               />
             </Grid>
             <Grid item xs={4} sm={2.5}>
-              <FormControl>
                 <Autocomplete
                   options={companyRoleList}
                   getOptionLabel={(option) => option.title}
@@ -218,7 +217,6 @@ const UserSearch = () => {
                     </li>
                   )}
                 />
-              </FormControl>
             </Grid>
             <Grid item xs={3.5} sm={2.5}>
               <Box>
@@ -517,7 +515,7 @@ const UserSearch = () => {
                               </TableCell>
                               <TableCell align="left">
                                 <Link
-                                  to={`/dashboard/admin/locked/user?id=${user.id}&role=${user.role_name.role_name.role_name}`}
+                                  to={`/dashboard/admin/locked/user?id=${usersearch.id}&role=${usersearch.role_name.role_name.role_name}`}
                                 >
                                   <Button>Locked</Button>
                                 </Link>

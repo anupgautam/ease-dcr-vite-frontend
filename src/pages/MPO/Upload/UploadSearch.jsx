@@ -34,7 +34,7 @@ const UploadSearch = () => {
     }, [])
 
     //! Get User roles wala
-    const { data,isSuccess} = useGetUsersByCompanyRoleWithOutPageQuery(Cookies.get('company_id'))
+    const { data, isSuccess } = useGetUsersByCompanyRoleWithOutPageQuery(Cookies.get('company_id'))
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
@@ -50,7 +50,7 @@ const UploadSearch = () => {
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleOptionChange = useCallback((event, value) => {
-        setSelectedOption(value?.id);
+        setSelectedOption(value?.id || "");
     }, [])
 
 
@@ -84,7 +84,7 @@ const UploadSearch = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2} alignItems="center">
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             {Cookies.get('user_role') === 'admin' &&
                                 <Autocomplete
                                     options={rolesOptions}
@@ -101,7 +101,7 @@ const UploadSearch = () => {
                                 />
                             }
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             {selectedOption &&
                                 <TextField
                                     label="Search Uploads"

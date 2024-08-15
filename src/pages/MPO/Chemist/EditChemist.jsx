@@ -183,11 +183,18 @@ const EditChemist = ({ idharu, onClose }) => {
                 open={true}
                 onClose={onClose}
                 padding="16px"
+                sx={{
+                    width: 400,
+                    flexShrink: 0,
+                    boxSizing: "border-box",
+                    '& .MuiDrawer-paper': {
+                        width: 400
+                    }
+                }}
             >
                 <Box style={{ padding: "20px" }}>
                     <Box
                         p={1}
-                        width="400px"
                         textAlign="center"
                         role="presentation"
                         className="drawer-box"
@@ -242,48 +249,48 @@ const EditChemist = ({ idharu, onClose }) => {
                                 error={errors.chemist_phone_number}
                             />
                         </Box>
+                        <Box marginBottom={2}>
+                            <Controls.Input
+                                name="chemist_contact_person"
+                                label="Chemist Contact Person*"
+                                value={values.chemist_contact_person}
+                                onChange={handleInputChange}
+                                error={errors.chemist_contact_person}
+                            />
+                        </Box>
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="chemist_territory"
-                                        label="Chemist Territory*"
-                                        value={values.chemist_territory}
+                                    <Controls.Input
+                                        name="chemist_pan_number"
+                                        label="Chemist Pan Number*"
+                                        value={values.chemist_pan_number}
                                         onChange={handleInputChange}
-                                        error={errors.chemist_territory}
-                                        options={mpoAreaData}
+                                        error={errors.chemist_pan_number}
                                     />
                                 </Box>
                             </Grid>
                             <Grid item xs={6}>
                                 <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="chemist_contact_person"
-                                        label="Chemist Contact Person*"
-                                        value={values.chemist_contact_person}
+                                    <Controls.Select
+                                        name="chemist_category"
+                                        label="Chemist Category*"
+                                        value={values.chemist_category}
                                         onChange={handleInputChange}
-                                        error={errors.chemist_contact_person}
+                                        error={errors.chemist_category}
+                                        options={chemistcategories}
                                     />
                                 </Box>
                             </Grid>
                         </Grid>
                         <Box marginBottom={2}>
-                            <Controls.Input
-                                name="chemist_pan_number"
-                                label="Chemist Pan Number*"
-                                value={values.chemist_pan_number}
-                                onChange={handleInputChange}
-                                error={errors.chemist_pan_number}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
                             <Controls.Select
-                                name="chemist_category"
-                                label="Chemist Category*"
-                                value={values.chemist_category}
+                                name="chemist_territory"
+                                label="Chemist Territory*"
+                                value={values.chemist_territory}
                                 onChange={handleInputChange}
-                                error={errors.chemist_category}
-                                options={chemistcategories}
+                                error={errors.chemist_territory}
+                                options={mpoAreaData}
                             />
                         </Box>
                         {/* <Box marginBottom={2}>

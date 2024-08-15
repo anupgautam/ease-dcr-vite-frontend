@@ -133,14 +133,14 @@ const FilteredDoctorEvent = () => {
     const [selectedDoctor, setSelectedDoctor] = useState('');
 
     const handleMPONameChange = useCallback((event, value) => {
-        setMPOName(value?.id)
+        setMPOName(value?.id || "")
         setCompanyId(Cookies.get('company_id'));
         // setSelectedOption(value?.id);
     }, []);
 
     const handleDoctorOptionChange = useCallback((event, value) => {
         // setCompanyId(Cookies.get('company_id'));
-        setSelectedDoctor(value?.id);
+        setSelectedDoctor(value?.id || "");
     }, []);
 
     //! Search results
@@ -235,7 +235,7 @@ const FilteredDoctorEvent = () => {
                                     )} 
                             />
                         </Grid> */}
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             {
                                 Cookies.get('user_role') === 'admin' &&
                                 <Autocomplete

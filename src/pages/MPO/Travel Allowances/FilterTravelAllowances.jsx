@@ -98,11 +98,11 @@ const FilterTravelAllowances = () => {
     const [mpoName, setMPOName] = useState('');
 
     const handleOptionChange = useCallback((event, value) => {
-        setSelectedOption(value?.id);
+        setSelectedOption(value?.id || "");
     }, []);
 
     const handleUsersOptionsChange = useCallback((event, value) => {
-        setSelecterUser(value);
+        setSelecterUser(value?.id || "");
     }, []);
 
 
@@ -203,7 +203,7 @@ const FilterTravelAllowances = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={5} sm={3}>
+                        <Grid item xs={2}>
                             <Autocomplete
                                 options={rolesOptions}
                                 getOptionLabel={(option) => option.title}
@@ -218,7 +218,7 @@ const FilterTravelAllowances = () => {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={2.5}>
+                        <Grid item xs={3}>
                             <Autocomplete
                                 options={usersoptions}
                                 getOptionLabel={(option) => option.title}
@@ -233,13 +233,13 @@ const FilterTravelAllowances = () => {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={1.5}>
+                        <Grid item xs={1.75}>
                             <FormControl fullWidth>
                                 <InputLabel>Year</InputLabel>
                                 <Select
                                     value={selectedYear}
                                     onChange={handleYearChange}
-                                    label="Month"
+                                    label="Year"
                                 >
                                     {years.map((month) => (
                                         <MenuItem key={month.value} value={month.value}>
@@ -267,7 +267,7 @@ const FilterTravelAllowances = () => {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={4} container justifyContent="flex-end">
+                        <Grid item xs={3} container justifyContent="flex-end">
                             <ExcelCSVTravelAllowances data={results} userName={selectedUser.title} />
                         </Grid>
                     </Grid>

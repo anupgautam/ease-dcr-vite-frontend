@@ -142,7 +142,7 @@ const DefaultDoctorEvents = () => {
                                                     </TableCell>
                                                     <TableCell align="left">{doctorevent.event_date}</TableCell>
                                                     <TableCell align="left">{doctorevent.doctor_id.doctor_name.doctor_name}</TableCell>
-                                                    <TableCell align="left">{doctorevent.mpo_id.user_name.first_name + " " + doctorevent.mpo_id.user_name.first_name}</TableCell>
+                                                    <TableCell align="left">{doctorevent.mpo_id.user_name.first_name + " " + doctorevent.mpo_id.user_name.last_name}</TableCell>
                                                     {/*//! Delete  */}
                                                     <TableCell align="right">
                                                         <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorevent.id); handleClickOpen() }}>
