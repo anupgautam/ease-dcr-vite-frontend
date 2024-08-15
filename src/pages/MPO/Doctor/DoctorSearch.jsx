@@ -249,12 +249,11 @@ const DoctorSearch = () => {
                         </Grid>
                     }
                 </Box>
+
                 <Scrollbar>
                     <TableContainer sx={{ minWidth: 900 }}>
                         <Table>
-                            <UserListHead
-                                headLabel={TABLE_HEAD}
-                            />
+                            <UserListHead headLabel={TABLE_HEAD} />
                             <TableBody>
                                 {
                                     SearchDataCondition === true ?
@@ -291,9 +290,8 @@ const DoctorSearch = () => {
                                                                     <TableCell align="left">{doctorsearch.doctor_name.doctor_phone_number}</TableCell>
                                                                     <TableCell align="left">{doctorsearch.doctor_name.doctor_address}</TableCell>
                                                                     <TableCell align="left">{doctorsearch.doctor_name.doctor_qualification}</TableCell>
-                                                                    <TableCell align="left">{doctorsearch.doctor_name.doctor_specialization}</TableCell>
+                                                                    <TableCell align="left">{doctorsearch.doctor_name.doctor_specialization.category_name}</TableCell>
                                                                     <TableCell align="left">{doctorsearch.doctor_name.doctor_category}</TableCell>
-                                                                    <TableCell align="left">{doctorsearch.is_investment === true ? "Invested" : "Not Invested"}</TableCell>
                                                                     <TableCell align="left">
                                                                         <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorsearch.id); handleClickOpen() }}>
                                                                             <Badge>
@@ -365,9 +363,8 @@ const DoctorSearch = () => {
                                                                                         <TableCell align="left">{doctorsearch.doctor_name.doctor_phone_number}</TableCell>
                                                                                         <TableCell align="left">{doctorsearch.doctor_name.doctor_address}</TableCell>
                                                                                         <TableCell align="left">{doctorsearch.doctor_name.doctor_qualification}</TableCell>
+                                                                                        <TableCell align="left">{doctorsearch.doctor_name.doctor_specialization.category_name}</TableCell>
                                                                                         <TableCell align="left">{doctorsearch.doctor_name.doctor_category}</TableCell>
-                                                                                        <TableCell align="left">{doctorsearch.is_investment === true ? "Invested" : "Not Invested"}</TableCell>
-
                                                                                         <TableCell align="left">
                                                                                             <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorsearch.id); handleClickOpen() }}>
                                                                                                 <Badge>

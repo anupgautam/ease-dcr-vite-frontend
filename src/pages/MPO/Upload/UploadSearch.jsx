@@ -84,7 +84,7 @@ const UploadSearch = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2} alignItems="center">
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             {Cookies.get('user_role') === 'admin' &&
                                 <Autocomplete
                                     options={rolesOptions}
@@ -101,7 +101,7 @@ const UploadSearch = () => {
                                 />
                             }
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             {selectedOption &&
                                 <TextField
                                     label="Search Uploads"

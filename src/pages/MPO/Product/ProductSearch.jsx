@@ -53,6 +53,23 @@ const TABLE_HEAD = [
 
 const ProductSearch = () => {
 
+    //! Company Division
+    const Division = useGetFilteredDivisionsQuery(Cookies.get('company_id'));
+
+
+    const [companyDivision, setCompanyDivision] = useState('')
+    const [companyId, setCompanyId] = useState();
+
+
+    const companydivisions = useMemo(() => {
+        if (Division?.data) {
+            return Division?.data.map(key => ({ id: key.id, title: key.division_name }))
+        }
+        return [];
+    }, [Division])
+
+    const { data: productDivision } = useGetProductsByDivisionIdQuery({ company_name: Cookies.get('company_id'), division_name: companyDivision })
+
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -66,6 +83,12 @@ const ProductSearch = () => {
 
     const onCloseDrawer = useCallback(() => {
         setIsDrawerOpen(false);
+    }, [])
+
+    //! Options
+    const handleDivisionChange = useCallback((event, value) => {
+        setCompanyDivision(value?.id || '')
+        setCompanyId(Cookies.get('company_id'));
     }, [])
 
     //!Pagination logic
@@ -82,6 +105,7 @@ const ProductSearch = () => {
 
     const [searchResults, setSearchResults] = useState({ search: "" });
     const [searchProduct, results] = useSearchProductsMutation()
+    const searchData = results.data;
 
     const [SearchData, setSearchData] = useState([]);
     const [SearchDataCondition, setSearchDataCondition] = useState(false);
@@ -105,17 +129,6 @@ const ProductSearch = () => {
                 });
         }
     };
-    // const results = results.data;
-    // 
-
-    // !on search
-    // const onSearch = (e) => {
-    //     const searchQuery = e.target.value;
-    //     const company_id = Cookies.get('company_id');
-    //     setSearchResults({ search: searchQuery, company_id })
-    //     searchProduct(searchResults);
-    //     // 
-    // }
 
     const initialFValues = {
         "search": " "
@@ -127,9 +140,18 @@ const ProductSearch = () => {
     } = useForm1(initialFValues, true);
 
     useEffect(() => {
-        // 
         searchProduct(values)
     }, [values])
+
+    //! onSearch
+    const FilteredData = { company_division: companyDivision, companyId: companyId, }
+
+    useEffect(() => {
+        if (companyId || companyDivision) {
+
+            searchProduct(FilteredData)
+        }
+    }, [companyId, companyDivision])
 
     // !Delete products
     const [deleteProduct] = useDeleteProductsByIdMutation()
@@ -147,38 +169,7 @@ const ProductSearch = () => {
         setOpenDialogue(false)
     }, [])
 
-    //! Company Division
-    const Division = useGetFilteredDivisionsQuery(Cookies.get('company_id'));
 
-
-    const [companyDivision, setCompanyDivision] = useState('')
-    const [companyId, setCompanyId] = useState();
-
-
-    const companydivisions = useMemo(() => {
-        if (Division?.data) {
-            return Division?.data.map(key => ({ id: key.id, title: key.division_name }))
-        }
-        return [];
-    }, [Division])
-
-    const { data: productDivision } = useGetProductsByDivisionIdQuery({ company_name: Cookies.get('company_id'), division_name: companyDivision })
-
-    //! Options
-    const handleDivisionChange = useCallback((event, value) => {
-        setCompanyDivision(value?.id)
-        setCompanyId(Cookies.get('company_id'));
-    }, [])
-
-    //! onSearch
-    const FilteredData = { company_division: companyDivision, companyId: companyId, }
-
-    useEffect(() => {
-        if (companyId || companyDivision) {
-
-            searchProduct(FilteredData)
-        }
-    }, [companyId, companyDivision])
 
     const debouncedSearch = debounce(onSearch, 300);
 
@@ -315,7 +306,7 @@ const ProductSearch = () => {
                                             }
                                         </> :
                                         <>
-                                            {companyDivision === "" ?
+                                            {companyDivision === "" || !companyDivision ?
                                                 <Test /> :
                                                 <>
                                                     {
@@ -348,11 +339,9 @@ const ProductSearch = () => {
                                                                                     <TableRow hover tabIndex={-1} key={productsearch.id}>
                                                                                         <TableCell>{index + 1}</TableCell>
                                                                                         <TableCell component="th" scope="row" align="left" >
-                                                                                            {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                                                             <Typography variant="subtitle2" noWrap>
                                                                                                 {productsearch.product_name.product_name}
                                                                                             </Typography>
-                                                                                            {/* </Stack> */}
                                                                                         </TableCell>
                                                                                         <TableCell align="left">{productsearch.product_name.product_molecular_name}</TableCell>
                                                                                         <TableCell align="left">Rs. {productsearch.product_name.product_price_per_strip_in_mrp}</TableCell>

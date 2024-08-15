@@ -63,6 +63,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
     const doctorGender = [
         { id: "Male", title: "Male" },
         { id: "Female", title: "Female" },
+        { id: "Others", title: "Others" },
     ]
 
     const [initialFValues, setInitialFValues] = useState({
@@ -181,6 +182,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
         }
     }, [updateDoctors, id, values])
 
+
     return (
         <>
             <Drawer
@@ -188,11 +190,18 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                 open={true}
                 onClose={onClose}
                 padding="16px"
+                sx={{
+                    width: 400,
+                    flexShrink: 0,
+                    boxSizing: 'border-box',
+                    '& .MuiDrawer-paper': {
+                        width: 400,
+                    },
+                }}
             >
                 <Box style={{ padding: "20px" }}>
                     <Box
                         p={1}
-                        width="400px"
                         textAlign="center"
                         role="presentation"
                         className="drawer-box"
@@ -210,8 +219,8 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                         </Typography>
                     </Box>
                     <Form onSubmit={handleSubmit}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
+                        <Grid container spacing={0}>
+                            <Grid item xs={12}>
                                 <Box marginBottom={2}>
                                     <Controls.Input
                                         id="autoFocus"
@@ -224,8 +233,8 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                                     />
                                 </Box>
                             </Grid>
-                            <Grid item xs={6}>
-                                <Box marginBottom={4}>
+                            <Grid item xs={12}>
+                                <Box marginBottom={2}>
                                     <Controls.Input
                                         name="doctor_address"
                                         label="Doctor Address*"
@@ -235,9 +244,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                                     />
                                 </Box>
                             </Grid>
-                        </Grid>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
+                            <Grid item xs={12}>
                                 <Box marginBottom={2}>
                                     <Controls.Input
                                         name="doctor_phone_number"
@@ -248,7 +255,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                                     />
                                 </Box>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={12}>
                                 <Box marginBottom={2}>
                                     <Controls.Select
                                         name="doctor_gender"
@@ -261,10 +268,8 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                                     />
                                 </Box>
                             </Grid>
-                        </Grid>
 
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
+                            <Grid item xs={12}>
                                 <Box marginBottom={2}>
                                     <Controls.Select
                                         name="doctor_territory"
@@ -276,7 +281,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                                     />
                                 </Box>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={12}>
                                 <Box marginBottom={2}>
                                     <Controls.Select
                                         name="doctor_specialization"
@@ -290,31 +295,29 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                             </Grid>
                         </Grid>
 
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="doctor_nmc_number"
-                                        label="Doctor NMC Number*"
-                                        value={values.doctor_nmc_number}
-                                        onChange={handleInputChange}
-                                        error={errors.doctor_nmc_number}
-                                    />
-                                </Box>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="doctor_qualification"
-                                        label="Doctor Qualification*"
-                                        value={values.doctor_qualification}
-                                        onChange={handleInputChange}
-                                        error={errors.doctor_qualification}
-                                    />
-                                </Box>
-                            </Grid>
+                        <Grid item xs={12}>
+                            <Box marginBottom={2}>
+                                <Controls.Input
+                                    name="doctor_nmc_number"
+                                    label="Doctor NMC Number*"
+                                    value={values.doctor_nmc_number}
+                                    onChange={handleInputChange}
+                                    error={errors.doctor_nmc_number}
+                                />
+                            </Box>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12}>
+                            <Box marginBottom={2}>
+                                <Controls.Input
+                                    name="doctor_qualification"
+                                    label="Doctor Qualification*"
+                                    value={values.doctor_qualification}
+                                    onChange={handleInputChange}
+                                    error={errors.doctor_qualification}
+                                />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12}>
                             <Box marginBottom={2}>
                                 <Controls.Select
                                     name="doctor_category"
@@ -345,6 +348,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                             <Button
                                 variant="outlined"
                                 className="cancel-button"
+                                style={{ padding: '10px' }}
                                 onClick={onClose}
                             >
                                 Cancel

@@ -167,11 +167,11 @@ const AddChemist = () => {
                 onClose={() => setIsDrawerOpen(false)}
                 padding="16px"
                 sx={{
-                    width: 400, // Set the desired width of the Drawer
+                    width: 400,
                     flexShrink: 0,
                     boxSizing: "border-box",
                     '& .MuiDrawer-paper': {
-                        width: 400 // Set the same width for the paper inside the Drawer
+                        width: 400
                     }
                 }}
             >
@@ -329,14 +329,14 @@ const AddChemist = () => {
                                         options={mpoAreaData}
                                     />
                                 </Box>
-                                <Box marginBottom={2}>
+                                {/* <Box marginBottom={2}>
                                     <Controls.Checkbox
                                         name="is_invested"
                                         value={values.is_invested}
                                         onChange={handleInputChange}
                                         label="Is Invested"
                                     />
-                                </Box>
+                                </Box> */}
                                 <Stack spacing={1} direction="row">
                                     <Controls.SubmitButton
                                         variant="contained"

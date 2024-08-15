@@ -58,17 +58,17 @@ const StockistSearch = () => {
     //! Get Company Area
     const Company_Areas = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
 
-    const [companyArea, setCompanyArea] = useState('')
-    const [companyId, setCompanyId] = useState();
+    const [companyArea, setCompanyArea] = useState('');
+    const [companyId, setCompanyId] = useState(Cookies.get('company_id'));
 
     const companyareas = useMemo(() => {
         if (Company_Areas?.data) {
-            return Company_Areas.data.map(key => ({ id: key.id, title: key.company_area }))
+            return Company_Areas.data.map(key => ({ id: key.id, title: key.company_area }));
         }
         return [];
-    }, [Company_Areas])
+    }, [Company_Areas]);
 
-    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: Cookies.get('company_id'), company_area: companyArea })
+    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: companyId, company_area: companyArea });
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -79,32 +79,31 @@ const StockistSearch = () => {
     const onEdit = useCallback((id) => {
         setSelectedUpdateId(id);
         setIsDrawerOpen(true);
-    }, [])
+    }, []);
 
     const onCloseDrawer = useCallback(() => {
         setIsDrawerOpen(false);
-    }, [])
+    }, []);
 
     //! Options
     const handleCompanyNameChange = (event, value) => {
-        setCompanyArea(value?.id)
+        setCompanyArea(value?.id || '');
         setCompanyId(Cookies.get('company_id'));
-        // setSelectedOption(value?.id);
     };
 
     //!Pagination logic
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState(1);
     const handleChangePage = (e) => {
-        const data = e.target.ariaLabel
-        let thisArray = data.split(" ")
+        const data = e.target.ariaLabel;
+        let thisArray = data.split(" ");
         setPage(thisArray[3]);
     }
 
     // ! Get all users wala
-    const { data } = useGetAllStockistsQuery(page);
+    const { data: AllStockistsData } = useGetAllStockistsQuery(page);
 
     const [searchResults, setSearchResults] = useState({ search: "" });
-    const [searchStockist, results] = useSearchStockistsMutation()
+    const [searchStockist, results] = useSearchStockistsMutation();
     const searchData = results.data;
 
     const [SearchData, setSearchData] = useState([]);
@@ -126,6 +125,7 @@ const StockistSearch = () => {
                     }
                 })
                 .catch((err) => {
+                    // Handle error
                 });
         }
     };
@@ -140,22 +140,20 @@ const StockistSearch = () => {
     } = useForm1(initialFValues, true);
 
     useEffect(() => {
-        // 
-        searchStockist(values)
-    }, [values])
+        searchStockist(values);
+    }, [values]);
 
     //! onSearch
-    const FilteredData = { company_area: companyArea, company_name: companyId, }
+    const FilteredData = { company_area: companyArea, company_name: companyId };
 
     useEffect(() => {
         if (companyId || companyArea) {
-
-            searchStockist(FilteredData)
+            searchStockist(FilteredData);
         }
-    }, [companyId, companyArea])
+    }, [companyId, companyArea]);
 
-    // !Delete doctors
-    const [deleteStockist] = useDeleteStockistsByIdMutation()
+    // !Delete stockists
+    const [deleteStockist] = useDeleteStockistsByIdMutation();
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
@@ -163,12 +161,12 @@ const StockistSearch = () => {
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     const handleClickOpen = useCallback(() => {
-        setOpenDialogue(true)
-    }, [])
+        setOpenDialogue(true);
+    }, []);
 
     const handleClose = useCallback(() => {
-        setOpenDialogue(false)
-    }, [])
+        setOpenDialogue(false);
+    }, []);
 
     const debouncedSearch = debounce(onSearch, 300);
 
@@ -247,7 +245,7 @@ const StockistSearch = () => {
                                                             SearchData.map((stockistsearch, index) => (
                                                                 <TableRow hover tabIndex={-1} key={stockistsearch.id}>
                                                                     <TableCell>{index + 1}</TableCell>
-                                                                    <TableCell component="th" scope="row" align="left" >
+                                                                    <TableCell component="th" scope="row" align="left">
                                                                         <Typography variant="subtitle2" noWrap>
                                                                             {stockistsearch.stockist_name.stockist_name}
                                                                         </Typography>
@@ -294,40 +292,39 @@ const StockistSearch = () => {
                                                         }
                                                     </>
                                             }
-                                        </> : <>
-                                            {companyArea === "" ?
+                                        </> :
+                                        <>
+                                            {companyArea === "" || !companyArea ?
                                                 <Test /> :
                                                 <>
                                                     {
                                                         StockistData !== undefined ?
                                                             <>
                                                                 {
-                                                                    StockistData.count == 0 ?
-                                                                        <>
-                                                                            <TableRow>
-                                                                                <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
-                                                                                    <Paper
-                                                                                        sx={{
-                                                                                            textAlign: 'center',
-                                                                                        }}
-                                                                                    >
-                                                                                        <Typography variant="h6" paragraph>
-                                                                                            Not found
-                                                                                        </Typography>
-                                                                                        <Typography variant="body2">
-                                                                                            <strong>Requested Data Not found</strong>.
-                                                                                            <br /> Try checking for typos or using complete words.
-                                                                                        </Typography>
-                                                                                    </Paper>
-                                                                                </TableCell>
-                                                                            </TableRow>
-                                                                        </> :
+                                                                    StockistData.count === 0 ?
+                                                                        <TableRow>
+                                                                            <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
+                                                                                <Paper
+                                                                                    sx={{
+                                                                                        textAlign: 'center',
+                                                                                    }}
+                                                                                >
+                                                                                    <Typography variant="h6" paragraph>
+                                                                                        Not found
+                                                                                    </Typography>
+                                                                                    <Typography variant="body2">
+                                                                                        <strong>Requested Data Not found</strong>.
+                                                                                        <br /> Try checking for typos or using complete words.
+                                                                                    </Typography>
+                                                                                </Paper>
+                                                                            </TableCell>
+                                                                        </TableRow> :
                                                                         <>
                                                                             {
                                                                                 StockistData.results.map((stockistsearch, index) => (
                                                                                     <TableRow hover tabIndex={-1} key={stockistsearch.id}>
                                                                                         <TableCell>{index + 1}</TableCell>
-                                                                                        <TableCell component="th" scope="row" align="left" >
+                                                                                        <TableCell component="th" scope="row" align="left">
                                                                                             <Typography variant="subtitle2" noWrap>
                                                                                                 {stockistsearch.stockist_name.stockist_name}
                                                                                             </Typography>
@@ -392,14 +389,12 @@ const StockistSearch = () => {
                                             }
                                         </>
                                 }
-
                             </TableBody>
                         </Table>
                     </TableContainer>
                     {isDrawerOpen && <EditStockist
                         idharu={selectedUpdateId} onClose={onCloseDrawer}
-                    />
-                    }
+                    />}
                 </Scrollbar>
             </Card>
         </>
