@@ -25,12 +25,16 @@ import {
     useGetAllCompanyAreasQuery
 } from '@/api/CompanySlices/companyAreaSlice'
 import Cookies from 'js-cookie';
+import {
+    NepaliDateConverter
+} from "react-nepali-date-picker-lite";
+
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 
 const AddUser = () => {
 
     //! Get user roles
-    const { data, isSuccess,} = useGetUsersRoleQuery(Cookies.get('company_id'));
+    const { data, isSuccess, } = useGetUsersRoleQuery(Cookies.get('company_id'));
 
     const rolesharu = useMemo(() => {
         if (isSuccess) {
@@ -81,6 +85,7 @@ const AddUser = () => {
     const [dateData, setDateData] = useState(now);
     const [dateFormat, setDateFormat] = useState(dateData?._date)
     const [nepaliDate, setNepaliDate] = useState(dateFormat)
+
 
     const formatDate = (date) => {
         const year = date.year;
@@ -189,17 +194,17 @@ const AddUser = () => {
         formData.append("company_area", values.company_area);
         formData.append("station_type", values.station_type);
         formData.append("is_active", true);
-        formData.append("date_of_joining", formattedDate);
+        formData.append("date_of_joining", dateData);
 
         try {
             const response = await createUsers(formData)
-            if (response.data) {
+            if (response?.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Added User' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
             } else {
-                setErrorMessage({ show: true, message: response.error.data[0] });
+                setErrorMessage({ show: true, message: response?.error?.data[0] });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
                 }, 3000);
@@ -212,6 +217,7 @@ const AddUser = () => {
         }
         setIsDrawerOpen(false);
     }, [createUsers, values]);
+
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -326,10 +332,10 @@ const AddUser = () => {
                     <Box marginBottom={2}>
                         <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Date of Joining*</label><br />
 
-                        <NepaliDatePicker 
-                        value={dateData} 
-                        format="YYYY-MM-DD" 
-                        onChange={(value) => setDateData(value)} />
+                        <NepaliDatePicker
+                            value={dateData}
+                            format="YYYY-MM-DD"
+                            onChange={(value) => setDateData(value)} />
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Select

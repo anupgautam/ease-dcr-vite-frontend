@@ -108,7 +108,6 @@ const LoginFormInputs = () => {
                                 }, [2000])
                             }
                         } if (res.error) {
-                            console.log(res.error)
                             if (res.error?.originalStatus === 500) {
                                 setErrorMessage({ show: true, message: 'Backend Error' });
                             } else {

@@ -24,9 +24,10 @@ import { useCreateApplicationsMutation } from '../../../api/ApplicationSlices/Ap
 
 const AddApplication = () => {
 
-    const today = NepaliDateConverter.getNepaliDate();
-    const [selectedDates, setSelectedDates] = useState(today);
-    const [selectedDatesTo, setSelectedDatesTo] = useState(today);
+    //! Format Date
+    const now = new BSDate().now();
+    const [selectedDates, setSelectedDates] = useState(now);
+    const [selectedDatesTo, setSelectedDatesTo] = useState(now);
 
     const leaves = [
         { id: "CP", title: "Casual Leave" },
