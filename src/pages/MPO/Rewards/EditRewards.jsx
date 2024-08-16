@@ -88,6 +88,7 @@ const EditRewards = ({ idharu, onClose }) => {
             setSuccessMessage({ show: true, message: 'Successfully Edited Rewards' });
             setTimeout(() => {
                 setSuccessMessage({ show: false, message: '' });
+                onClose();
             }, 3000);
         }
         catch (error) {
@@ -96,7 +97,6 @@ const EditRewards = ({ idharu, onClose }) => {
                 setErrorMessage({ show: false, message: '' });
             }, 3000);
         }
-        onClose();
     }, [updateRewards, values])
 
     return (
