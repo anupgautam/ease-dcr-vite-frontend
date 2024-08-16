@@ -264,7 +264,7 @@ const AddDoctor = () => {
                                     <Box marginBottom={2}>
                                         <Controls.Input
                                             name="doctor_address"
-                                            label="Doctor Address*"
+                                            label="Doctor Address"
                                             value={values.name}
                                             onChange={handleInputChange}
                                             error={errors.doctor_address}
@@ -275,7 +275,7 @@ const AddDoctor = () => {
                                     <Box marginBottom={2}>
                                         <Controls.Input
                                             name="doctor_phone_number"
-                                            label="Doctor Phone Number*"
+                                            label="Doctor Phone Number"
                                             value={values.name}
                                             onChange={handleInputChange}
                                             error={errors.doctor_phone_number}
@@ -308,7 +308,7 @@ const AddDoctor = () => {
                                     <Box marginBottom={2}>
                                         <Controls.RadioGroup
                                             name="doctor_gender"
-                                            label="Doctor Gender*"
+                                            label="Doctor Gender"
                                             value={values.name}
                                             onChange={handleInputChange}
                                             items={doctorGender}

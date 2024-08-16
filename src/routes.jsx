@@ -74,7 +74,7 @@ export default function Router() {
     {
       path: '/login',
       // element: <Login />,
-      element:<NewLogin/>,
+      element: <NewLogin />,
     },
     {
       path: '/forgetpassword',
@@ -179,7 +179,7 @@ export default function Router() {
         },
         {
           path: 'admin/target',
-          element: <Authentication component={TargetController} allowRoles={['admin']} />,
+          element: <Authentication component={TargetController} allowRoles={['admin', 'other-roles']} />,
         },
         {
           path: 'admin/application',

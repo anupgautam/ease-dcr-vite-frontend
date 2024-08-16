@@ -176,7 +176,7 @@ const AddStockist = () => {
                                     <Controls.Input
                                         id="autoFocus"
                                         name="no_of_stockist"
-                                        label="Number of Stockist*"
+                                        label="Number of Stockist"
                                         value={values.no_of_stockist}
                                         onChange={handleInputChange}
                                         autoFocus
@@ -248,7 +248,7 @@ const AddStockist = () => {
                                 <Box marginBottom={2}>
                                     <Controls.Input
                                         name="pan_vat_number"
-                                        label="Pan Vat Number*"
+                                        label="Pan Vat Number"
                                         value={values.name}
                                         onChange={handleInputChange}
                                         error={errors.pan_vat_number}
@@ -257,7 +257,7 @@ const AddStockist = () => {
                                 <Box marginBottom={2}>
                                     <Controls.Select
                                         name="stockist_category"
-                                        label="Stockist Category*"
+                                        label="Stockist Category"
                                         value={values.name}
                                         onChange={handleInputChange}
                                         error={errors.stockist_category}
