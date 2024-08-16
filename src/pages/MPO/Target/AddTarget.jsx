@@ -229,7 +229,7 @@ const AddTarget = () => {
                             value={values.name}
                             onChange={handleInputChange}
                             error={errors.target_to}
-                        options={users}
+                            options={users}
                         />
                     </Box>
                     <Stack spacing={1} direction="row">

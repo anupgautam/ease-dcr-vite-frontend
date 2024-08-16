@@ -5,7 +5,6 @@ import React, { useState, useMemo, useCallback } from "react";
 import { useGetAllCompanyAreasWithoutPaginationQuery } from "@/api/CompanySlices/companyAreaSlice";
 import { useGetAllStockistsWithoutPaginationQuery } from "@/api/MPOSlices/StockistSlice";
 import ExportToExcel from "@/reusable/utils/exportSheet";
-import Iconify from "../../../components/iconify/Iconify";
 
 const ExportStockist = () => {
     const [mpoName, setMPOName] = useState('');
@@ -26,34 +25,32 @@ const ExportStockist = () => {
         { label: 'S.No.', key: 'sno' },
         { label: 'Stockist Name', key: 'stockist_name' },
         { label: 'Stockist Address', key: "stockist_address" },
-        { label: 'Stockist Contact Number', key: 'stockist_contact_number' },
+        { label: 'Contact Number', key: 'stockist_contact_number' },
         { label: 'Stockist Category', key: 'stockist_category' },
-        { label: 'Stockist PAN or VAT Number', key: 'pan_vat_number' },
-        { label: 'Head Quarter', key: "area" }
+        { label: 'PAN/VAT Number', key: 'pan_vat_number' },
+        { label: 'Headquarter', key: "area" }
     ];
 
-    const templateData = useMemo(() => {
-        return data?.map((values, index) => ({
-            sno: index + 1,
-            stockist_name: values?.stockist_name?.stockist_name,
-            stockist_address: values?.stockist_name?.stockist_address,
-            stockist_contact_number: values?.stockist_name?.stockist_contact_number,
-            stockist_category: values?.stockist_name?.stockist_category,
-            pan_vat_number: values?.stockist_name?.pan_vat_number,
-            area: mpoName?.title || "Unknown",
-        }));
-    }, [data, mpoName]);
+    const templateData = data?.map((values, index) => ({
+        sno: index + 1,
+        stockist_name: values?.stockist_name?.stockist_name,
+        stockist_address: values?.stockist_name?.stockist_address,
+        stockist_contact_number: values?.stockist_name?.stockist_contact_number,
+        stockist_category: values?.stockist_name?.stockist_category,
+        pan_vat_number: values?.stockist_name?.pan_vat_number,
+        area: mpoName.title,
+    }))
 
-    const handleMPONameChange = (event, value) => {
+    const handleMPONameChange = useCallback((event, value) => {
         setMPOName(value)
-    };
+    }, []);
 
     return (
         <Box>
             <Box style={{ float: "right" }}>
                 {data ?
                     <>
-                        <Button color="success" variant="contained" startIcon={<Iconify icon="mdi:microsoft-excel" />} onClick={() => setIsDrawerOpen(true)}>Export</Button>
+                        <ExportToExcel headers={headers} fileName={`Stockists`} data={templateData} />
                     </> : <></>}
             </Box>
             <Drawer
@@ -86,7 +83,7 @@ const ExportStockist = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Export Stockist
+                            Export Chemist
                         </Typography>
                         <Box marginTop={3} marginBottom={3}>
                             <Autocomplete
@@ -94,7 +91,7 @@ const ExportStockist = () => {
                                 getOptionLabel={(option) => option.title}
                                 onChange={handleMPONameChange}
                                 renderInput={(params) => (
-                                    <TextField {...params} label="Company Areas" />
+                                    <TextField {...params} />
                                 )}
                                 renderOption={(props, option) => (
                                     <li {...props} key={option.id}>
