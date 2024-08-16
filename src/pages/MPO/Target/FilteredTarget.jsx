@@ -31,7 +31,7 @@ const FilteredTarget = ({ selectedYear, selectedRole }) => {
 
     const monthData = getNepaliMonthName(now._date.month);
     const yearData = now._date.year;
-    
+
     const { data } = useGetTargetsByFilterQuery({ selectedYear, selectedRole });
     const [deleteTarget] = useDeleteTargetsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -143,13 +143,25 @@ const FilteredTarget = ({ selectedYear, selectedRole }) => {
                     }
                         {/* //!pagination */}
                         <TableRow>
-                            <Box justifyContent="center" alignItems="center" display="flex" margin="8px 0px">
-                                {data ? (
-                                    <Pagination count={parseInt(data.count / 30) + 1} onChange={handleChangePage} />
-                                ) : (
-                                    <Typography variant="body1">In Search</Typography>
-                                )}
-                            </Box>
+                            <TableCell colSpan={6}>
+                                <Box
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    display="flex"
+                                    margin="8px 0px"
+                                >
+                                    {data ? (
+                                        <Pagination
+                                            count={parseInt(data?.count / 200) + 1}
+                                            onChange={handleChangePage}
+                                        />
+                                    ) : (
+                                        <Typography variant="body1">
+                                            In Search
+                                        </Typography>
+                                    )}
+                                </Box>
+                            </TableCell>
                         </TableRow>
                     </>}
         </>

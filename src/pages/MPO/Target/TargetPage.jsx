@@ -1,9 +1,10 @@
-import React, { useCallback} from 'react'
+import React, { useCallback } from 'react'
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import TargetSearch from './TargetSearch';
 import TargetChart from './TargetChart';
+import AddTarget from './AddTarget';
 
 const TargetPage = () => {
 
@@ -22,14 +23,14 @@ const TargetPage = () => {
 
     return (
         <>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab label="List View" {...a11yProps(0)} />
                     <Tab label="Chart View" {...a11yProps(1)} />
                 </Tabs>
+                <AddTarget />
             </Box>
-            <TargetSearch index={0} value={value}
-            />
+            <TargetSearch index={0} value={value} />
             <TargetChart index={1} value={value} />
         </>
     )

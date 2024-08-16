@@ -32,17 +32,17 @@ export const TargetSlices = apiSlice.injectEndpoints({
 
         //GET Targets by filtered value
         getTargetsByFilter: builder.query({
-            query: (filters) =>{
-                const {selectedYear, selectedRole} = filters;
-            return{
-                url: `expenses/target/?year=${selectedYear?selectedYear:""}&target_to__role_name=${selectedRole?selectedRole:""}`,
-                method: 'GET'
-            }
-        },
-        invalidatesTags: ['Target']
+            query: (filters) => {
+                const { selectedYear, selectedRole } = filters;
+                return {
+                    url: `expenses/target/?year=${selectedYear ? selectedYear : ""}&target_to__role_name=${selectedRole ? selectedRole : ""}`,
+                    method: 'GET'
+                }
+            },
+            invalidatesTags: ['Target']
         }),
 
-        //GET Target by user
+        //!GET Target by user
         getTargetsByUser: builder.mutation({
             query: (id) => {
 
@@ -64,6 +64,18 @@ export const TargetSlices = apiSlice.injectEndpoints({
                     url: `expenses/target/${id}/`,
                     method: 'DELETE',
                     body: id
+                }
+            },
+            invalidatesTags: ['Target']
+        }),
+
+        //! Add Target
+        createTarget: builder.mutation({
+            query: (newTarget) => {
+                return {
+                    url: `expenses/target/`,
+                    method: 'POST',
+                    body: newTarget,
                 }
             },
             invalidatesTags: ['Target']
@@ -118,6 +130,7 @@ export const {
     useGetTargetsQuery,
     useGetTargetsByIdQuery,
     useGetTargetsByFilterQuery,
+    useCreateTargetMutation,
     useUpdateTargetsMutation,
     useDeleteTargetsByIdMutation,
     useSearchTargetMutation,

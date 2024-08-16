@@ -53,7 +53,6 @@ const DefaultList = () => {
         company_area: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_user_id')
     });
 
-
     const [deleteStockist] = useDeleteStockistsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7];
 

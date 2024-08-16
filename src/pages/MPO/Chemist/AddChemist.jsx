@@ -255,7 +255,7 @@ const AddChemist = () => {
                                         <Box marginBottom={2}>
                                             <Controls.Input
                                                 name="chemist_address"
-                                                label="Chemist Address*"
+                                                label="Chemist Address"
                                                 value={values.name}
                                                 onChange={handleInputChange}
                                                 error={errors.chemist_address}
@@ -266,7 +266,7 @@ const AddChemist = () => {
                                 <Box marginBottom={2}>
                                     <Controls.Input
                                         name="chemist_phone_number"
-                                        label="Phone Number*"
+                                        label="Phone Number"
                                         value={values.name}
                                         onChange={handleInputChange}
                                         error={errors.chemist_phone_number}
@@ -275,7 +275,7 @@ const AddChemist = () => {
                                 <Box marginBottom={2}>
                                     <Controls.Input
                                         name="chemist_contact_person"
-                                        label="Chemist Contact Person*"
+                                        label="Chemist Contact Person"
                                         value={values.name}
                                         onChange={handleInputChange}
                                         error={errors.chemist_contact_person}
@@ -286,7 +286,7 @@ const AddChemist = () => {
                                         <Box marginBottom={2}>
                                             <Controls.Input
                                                 name="chemist_pan_number"
-                                                label="Chemist PAN Number*"
+                                                label="Chemist PAN Number"
                                                 value={values.name}
                                                 onChange={handleInputChange}
                                                 error={errors.chemist_pan_number}
