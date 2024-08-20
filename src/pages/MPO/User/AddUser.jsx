@@ -194,7 +194,7 @@ const AddUser = () => {
         formData.append("company_area", values.company_area);
         formData.append("station_type", values.station_type);
         formData.append("is_active", true);
-        formData.append("date_of_joining", dateData);
+        formData.append("date_of_joining", formattedDate);
 
         try {
             const response = await createUsers(formData)

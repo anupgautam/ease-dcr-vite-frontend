@@ -37,7 +37,7 @@ const FilteredDCR = () => {
     const id = searchParams.get('id');
     const role = searchParams.get('role');
     const date = searchParams.get('date');
-    const dateOnly = date.split('T')[0];
+    const dateOnly = date?.split('T')[0];
     const dispatch = useDispatch();
 
     const [selectedId, setSelectedId] = useState(null);
