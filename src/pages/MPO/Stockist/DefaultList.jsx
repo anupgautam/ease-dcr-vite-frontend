@@ -46,7 +46,7 @@ const DefaultList = () => {
     const handleChangePage = useCallback((event, newPage) => {
         setPage(newPage);
     }, [])
-
+    
     const { data } = useGetAllStockistsQuery({
         id: Cookies.get('company_id'),
         page: page,

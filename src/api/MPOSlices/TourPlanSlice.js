@@ -33,6 +33,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                 };
             },
             providesTags: ['Tourplan'],
+            invalidatesTags: ['Tourplan']
         }),
 
 

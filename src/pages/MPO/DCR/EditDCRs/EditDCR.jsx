@@ -16,6 +16,7 @@ import {
     useGetDoctorDcrByIdQuery,
     useUpdateDoctorsAllDCRMutation
 } from '../../../../api/DCRs Api Slice/doctorDCR/DoctorDCRAllSlice';
+import { BSDate } from "nepali-datepicker-react";
 import editWithoutImage from '@/reusable/components/forms/utils/editUtils/editWithoutImage';
 import useDebounce from '@/reusable/components/forms/utils/debounce';
 import EditDoctorDCRProducts from '../EditDCRPackages/EditDoctorDCRProducts';
@@ -25,6 +26,7 @@ import { useSelector } from 'react-redux';
 import { useGetShiftWiseDoctorDCRByIdQuery, useUpdateShiftWiseDoctorDCRMutation } from '@/api/DCRs Api Slice/doctorDCR/shiftWiseDoctorDCRSlice';
 import Cookies from 'js-cookie';
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
+import { useGetAllCompanyAreasQuery } from '../../../../api/CompanySlices/companyAreaSlice'
 
 const EditDCR = ({ idharu, onClose }) => {
     const now = new BSDate().now();
@@ -102,14 +104,16 @@ const EditDCR = ({ idharu, onClose }) => {
 
     const doctors = useMemo(() => {
         if (doctorsdata !== undefined) {
-            return doctorsdata.data.map((key) => ({ id: key.id, title: key.doctor_name.doctor_name }))
+            return doctorsdata?.map((key) => ({ id: key.id, title: key.doctor_name.doctor_name }))
         }
         return [];
     }, [doctorsdata])
 
+    const MpoArea = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+
     const areas = useMemo(() => {
         if (MpoArea?.data) {
-            return MpoArea?.data.map((key) => ({ id: key.id, title: key.area_name }))
+            return MpoArea?.data.map((key) => ({ id: key.id, title: key.company_area }))
         }
         return [];
     }, [MpoArea])

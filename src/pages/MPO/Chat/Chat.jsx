@@ -3,12 +3,14 @@ import { WEBSOCKET_BASE_URL } from '../../../baseURL'
 import connectWebSocket from "../../../reusable/utils/multipleWSConnection";
 import { useDispatch } from "react-redux";
 import { addData } from "../../../reducer/chatReducer";
-
+import {useGetChatsByUserMutation} from '../../../api/newChatSlices/chatSlice'
 import EventUserList from "../../../userList/eventAdminList";
 import { generate8CharacterUUID } from "../../../reusable/utils/generate8bitUUID";
 import { Box } from "@mui/system";
 import { Card, Grid, Typography } from "@mui/material";
 import { BsFillChatDotsFill } from "react-icons/bs";
+import Cookies from 'js-cookie'
+import ChatContainer from "./chatMessageList";
 
 const ChatApp = () => {
     return (
@@ -113,8 +115,6 @@ const Chat = () => {
             });
         };
     }, [urls, Cookies.get('company_id'), onMessageReceived]);
-
-
 
 
     const submitMessage = () => {
