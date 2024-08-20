@@ -41,9 +41,9 @@ const Holiday = () => {
 
     const [holidaySelect, setHolidaySelect] = useState(DefaultData);
 
-    const handleHolidaySelect = useCallback((e, value) => {
+    const handleHolidaySelect = (e, value) => {
         setHolidaySelect(value?.id || '');
-    }, [])
+    }
 
     useEffect(() => {
         if (holidays) {
