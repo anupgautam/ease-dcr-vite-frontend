@@ -86,6 +86,7 @@ const LoginFormInputs = () => {
                             Cookies.set('email', email);
                             Cookies.set('is_highest_priority', res.data.is_highest_priority)
                             setSuccessMessage({ show: true, message: 'Successfully Logged In' })
+                            setTimeout(() => setSuccessMessage({ show: false, message: "" }), 2000);
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                 Cookies.set('user_role', 'admin')
                                 navigate('/dashboard/admin');
