@@ -13,6 +13,7 @@ import { useTheme } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
+import { Link } from "react-router-dom";
 
 const localizer = momentLocalizer(moment);
 
@@ -80,8 +81,6 @@ const Attendance = () => {
     const year = now._date.year;
     const month = now._date.month;
 
-
-
     const months = [
         { value: 1, label: 'Baisakh' },
         { value: 2, label: 'Jestha' },
@@ -142,17 +141,6 @@ const Attendance = () => {
     }
     const [AttendanceDateData, setAttendanceDateData] = useState();
 
-    //! Dialogue
-    const [openDialogues, setOpenDialogues] = useState(false);
-
-
-    const handleOpen = () => {
-        setOpenDialogues(true);
-    };
-
-    const handleClose = () => {
-        setOpenDialogues(false);
-    };
     return (
         <Box>
             <Grid container spacing={2}>
@@ -235,12 +223,6 @@ const Attendance = () => {
                                             <TableCell>
                                                 Details
                                             </TableCell>
-                                            {/* {allDaysInMonth.map((date, index) => {
-                                                const day = date.split('-').pop();
-                                                return (
-                                                    <TableCell key={index}>{day}</TableCell>
-                                                );
-                                            })} */}
                                         </TableRow>
                                     </TableHead>
 
@@ -254,9 +236,13 @@ const Attendance = () => {
                                                 <TableCell>{AttendanceDateData?.leave_without_pay_leave}</TableCell>
                                                 <TableCell>{AttendanceDateData?.holiday_leave}</TableCell>
                                                 <TableCell>{AttendanceDateData?.saturday}</TableCell>
-                                                <CalendarData setAttendanceDateData={setAttendanceDateData} data={AttendanceDateData?.attendance_data} allDaysInMonth={allDaysInMonth} userId={key.id} month={selectedMonth} year={selectedYear} />
-                                                <TableCell align="left">
-                                                    <Button onClick={handleOpen}>View Details</Button>
+                                                <TableCell>
+                                                    <TableCell>
+                                                        <Link to="/dashboard/admin/userattendance">
+                                                            <Button>View Details</Button>
+                                                        </Link>
+                                                    </TableCell>
+                                                    <CalendarData setAttendanceDateData={setAttendanceDateData} userId={key.id} month={selectedMonth} year={selectedYear} />
                                                 </TableCell>
                                             </TableRow>
                                         ))
@@ -272,7 +258,8 @@ const Attendance = () => {
     )
 }
 
-const CalendarData = ({ data = [], userId, month, year, setAttendanceDateData }) => {
+const CalendarData = ({ userId, month, year, setAttendanceDateData }) => {
+
     const [AttendanceData] = usePostingAllUserAttendanceMutation();
 
     useEffect(() => {
@@ -285,6 +272,16 @@ const CalendarData = ({ data = [], userId, month, year, setAttendanceDateData })
             });
     }, [year, month, userId]);
 
+    //! Dialogue
+    const [openDialogues, setOpenDialogues] = useState(false);
+    const handleOpen = () => {
+        setOpenDialogues(true);
+    };
+
+    const handleClose = () => {
+        setOpenDialogues(false);
+    };
+
     const theme = useTheme();
 
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -292,12 +289,10 @@ const CalendarData = ({ data = [], userId, month, year, setAttendanceDateData })
         <Dialog
             fullScreen={fullScreen}
             open={openDialogues}
-            onClose={() => handleClose()}
+            onClose={handleClose}
             aria-labelledby="responsive-dialog-title"
         >
-            <DialogTitle id="responsive-dialog-title">
-                {"Do you want to unlock this user?"}
-            </DialogTitle>
+
             <div style={{ height: "640px" }}>
                 <Calendar
                     localizer={localizer}
@@ -310,6 +305,14 @@ const CalendarData = ({ data = [], userId, month, year, setAttendanceDateData })
                     eventPropGetter={eventStyleGetter}
                 />
             </div>
+            <DialogTitle id="responsive-dialog-title">
+                {"Do you want to unlock this user?"}
+            </DialogTitle>
+            <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                    Close
+                </Button>
+            </DialogActions>
         </Dialog>
 
     </>

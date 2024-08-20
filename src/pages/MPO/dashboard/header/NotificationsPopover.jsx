@@ -65,7 +65,7 @@ export default function NotificationsPopover() {
     );
   }
 
-  const countFalseValues = data.reduce((count, obj) => count + (obj.is_read === false ? 1 : 0), 0);
+  const countFalseValues = data?.reduce((count, obj) => count + (obj.is_read === false ? 1 : 0), 0);
 
 
   return (

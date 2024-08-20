@@ -34,6 +34,7 @@
     "lodash": "^4.17.21",
     "mdi-material-ui": "^7.9.1",
     "moment": "^2.30.1",
+    "nepali-date": "^0.1.3",
     "nepali-date-converter": "^3.3.2",
     "nepali-datepicker-react": "^0.0.2",
     "nepali-datepicker-reactjs": "^1.1.7",

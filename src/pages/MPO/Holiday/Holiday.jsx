@@ -154,7 +154,6 @@ const Holiday = () => {
 
     const holidayEvents = getHolidayEvents();
 
-    console.log(holidayEvents)
     const handleChange = (date) => {
 
     }

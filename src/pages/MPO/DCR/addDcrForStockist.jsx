@@ -131,6 +131,7 @@ const AddDCRForStockist = () => {
 
     useEffect(() => {
         if (dcrForDoctor?.data || NewTourPlanData || companyUserArea?.data || CompanyRoles || RewardOptions) {
+        // if (dcrForDoctor?.data || NewTourPlanData) {
             setInitialFvalues({
                 edit: true,
                 tour_id: NewTourPlanData?.id,
@@ -147,6 +148,7 @@ const AddDCRForStockist = () => {
             });
         }
     }, [dcrForDoctor?.data, NewTourPlanData, companyUserArea?.data]);
+    // }, [dcrForDoctor?.data, NewTourPlanData]);
 
     const { values,
         errors,
@@ -220,7 +222,7 @@ const AddDCRForStockist = () => {
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
     const navigate = useNavigate();
 
-    const handlePostDcr = useCallback(() => {
+    const handlePostDcr = () => {
         let sendingData = { ...values };
         if (id) {
             sendingData['id'] = id;
@@ -332,7 +334,7 @@ const AddDCRForStockist = () => {
                     }, 2000);
                 })
         }
-    }, [])
+    }
 
     return (
         <Box style={{ padding: "10px" }}>
