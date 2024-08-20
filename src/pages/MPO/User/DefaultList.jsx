@@ -153,7 +153,7 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
                             <TableCell align="left">{user.division_name.division_name === null ? "" : user.division_name.division_name}</TableCell>
                             <TableCell align="left">
                                 {
-                                    user.role_name.role_name.role_name === "admin" ?
+                                    user?.role_name?.role_name?.role_name === "admin" ?
                                         "Active" :
                                         <select onChange={(e) => handleChangeStatus(e, user)} defaultValue={user.user_name.is_active} className='select-styles'>
                                             <option value={true}>Active</option>
@@ -162,12 +162,12 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
                                 }
                             </TableCell>
                             <TableCell align="left">
-                                {user.is_tp_locked === false ? (
+                                {user?.is_tp_locked === false ? (
                                     <>
                                         <IconButton
                                             color={'primary'}
                                             sx={{ width: 40, height: 40, mt: 0.75 }}
-                                            onClick={() => { setSelectedId(user.id); handleClickOpen(user.id); }}
+                                            onClick={() => { setSelectedId(user?.id); handleClickOpen(user?.id); }}
                                         >
                                             <Badge>
                                                 <Iconify icon="dashicons:unlock" />
@@ -197,7 +197,7 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
                                             <DialogActions>
                                                 <Button
                                                     autoFocus
-                                                    onClick={() => UserLocks({ userId: user.id, isTpLocked: user.is_tp_locked })}
+                                                    onClick={() => UserLocks({ userId: user?.id, isTpLocked: user?.is_tp_locked })}
                                                 >
                                                     Yes
                                                 </Button>

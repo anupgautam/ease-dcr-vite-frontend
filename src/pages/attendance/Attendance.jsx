@@ -1,12 +1,32 @@
-import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button } from "@mui/material";
 import Cookies from "js-cookie";
-
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { BSDate } from "nepali-datepicker-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useGetAllUserAttendanceQuery, usePostingAllUserAttendanceMutation } from "../../api/CompanySlices/companyUserSlice";
 import { useGetUsersByCompanyRoleIdQuery } from "../../api/MPOSlices/UserSlice";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
 import ExportToExcel from "../../reusable/utils/exportSheet";
+import moment from 'moment';
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+
+const localizer = momentLocalizer(moment);
+
+const eventStyleGetter = (event, start, end, isSelected) => {
+    const style = {
+        backgroundColor: " #ab0403",
+        borderRadius: "5px",
+        opacity: 0.8,
+        color: "white",
+        border: "1px solid  #ab0403",
+        display: "block",
+    };
+    return { style };
+};
 
 const bsMonthDays = {
     2080: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30],
@@ -55,10 +75,11 @@ function getAllDaysInMonth(year, month) {
 }
 
 
-const ListofAttendance = () => {
+const Attendance = () => {
     const now = new BSDate().now();
     const year = now._date.year;
     const month = now._date.month;
+
 
 
     const months = [
@@ -120,6 +141,18 @@ const ListofAttendance = () => {
         })
     }
     const [AttendanceDateData, setAttendanceDateData] = useState();
+
+    //! Dialogue
+    const [openDialogues, setOpenDialogues] = useState(false);
+
+
+    const handleOpen = () => {
+        setOpenDialogues(true);
+    };
+
+    const handleClose = () => {
+        setOpenDialogues(false);
+    };
     return (
         <Box>
             <Grid container spacing={2}>
@@ -174,12 +207,12 @@ const ListofAttendance = () => {
                     </Box>
                     <Box style={{ paddingTop: "5px", paddingBottom: "15px" }}>
                         <Scrollbar>
-                            <TableContainer sx={{ minWidth: 2500 }}>
+                            <TableContainer sx={{ minWidth: 800 }}>
                                 <Table>
                                     <TableHead>
                                         <TableRow style={{ height: '60px' }}>
                                             <TableCell>
-                                                <Typography style={{ width: "13rem", color: "grey", fontSize: '15px', fontWeight: '600' }}>User</Typography>
+                                                <Typography style={{ width: "5rem", color: "grey", fontSize: '15px', fontWeight: '600' }}>User Name</Typography>
                                             </TableCell>
                                             <TableCell>
                                                 CL
@@ -199,18 +232,18 @@ const ListofAttendance = () => {
                                             <TableCell>
                                                 S
                                             </TableCell>
-                                            {allDaysInMonth.map((date, index) => {
+                                            <TableCell>
+                                                Details
+                                            </TableCell>
+                                            {/* {allDaysInMonth.map((date, index) => {
                                                 const day = date.split('-').pop();
                                                 return (
                                                     <TableCell key={index}>{day}</TableCell>
                                                 );
-                                            })}
+                                            })} */}
                                         </TableRow>
                                     </TableHead>
-                                    {/* <UserListHead
-                                        headLabel={TABLE_HEAD}
-                                        sn={false}
-                                    /> */}
+
                                     <TableBody>
                                         {companyUserList.map((key, index) => (
                                             <TableRow key={index} style={{ height: '80px' }}>
@@ -221,7 +254,10 @@ const ListofAttendance = () => {
                                                 <TableCell>{AttendanceDateData?.leave_without_pay_leave}</TableCell>
                                                 <TableCell>{AttendanceDateData?.holiday_leave}</TableCell>
                                                 <TableCell>{AttendanceDateData?.saturday}</TableCell>
-                                                <AttendanceList setAttendanceDateData={setAttendanceDateData} data={AttendanceDateData?.attendance_data} allDaysInMonth={allDaysInMonth} userId={key.id} month={selectedMonth} year={selectedYear} />
+                                                <CalendarData setAttendanceDateData={setAttendanceDateData} data={AttendanceDateData?.attendance_data} allDaysInMonth={allDaysInMonth} userId={key.id} month={selectedMonth} year={selectedYear} />
+                                                <TableCell align="left">
+                                                    <Button onClick={handleOpen}>View Details</Button>
+                                                </TableCell>
                                             </TableRow>
                                         ))
                                         }
@@ -236,8 +272,7 @@ const ListofAttendance = () => {
     )
 }
 
-
-const AttendanceList = ({ data = [], userId, month, year, setAttendanceDateData, allDaysInMonth }) => {
+const CalendarData = ({ data = [], userId, month, year, setAttendanceDateData }) => {
     const [AttendanceData] = usePostingAllUserAttendanceMutation();
 
     useEffect(() => {
@@ -250,22 +285,35 @@ const AttendanceList = ({ data = [], userId, month, year, setAttendanceDateData,
             });
     }, [year, month, userId]);
 
-    return (
-        <>
-            {allDaysInMonth?.map((key, index) => (
-                <>
-                    {
-                        data.includes(key) ? (
-                            <TableCell key={index} style={{ color: 'green' }}>P</TableCell>
-                        ) : (
-                            <TableCell key={index} style={{ color: 'red' }}>A</TableCell>
-                        )
-                    }
-                </>
-            ))}
-        </>
-    );
-};
+    const theme = useTheme();
 
+    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+    <>
+        <Dialog
+            fullScreen={fullScreen}
+            open={openDialogues}
+            onClose={() => handleClose()}
+            aria-labelledby="responsive-dialog-title"
+        >
+            <DialogTitle id="responsive-dialog-title">
+                {"Do you want to unlock this user?"}
+            </DialogTitle>
+            <div style={{ height: "640px" }}>
+                <Calendar
+                    localizer={localizer}
+                    // events={holidayEvents}
+                    views={['month']}
+                    startAccessor="start"
+                    endAccessor="end"
+                    selectable={null}
+                    onSelectSlot={null}
+                    eventPropGetter={eventStyleGetter}
+                />
+            </div>
+        </Dialog>
 
-export default ListofAttendance;
+    </>
+
+}
+
+export default Attendance;

@@ -64,6 +64,7 @@ import HolidayAreaController from './pages/MPO/HolidayArea/HolidayAreaController
 import ListOfMpoController from './pages/MPO/DoctorEvents/ListOfMpoController';
 import ListOfTourPlanLock from './pages/MPO/TP_Lock/ListOfTourPlanLock';
 import NewLogin from './pages/Common/LoginComponent/NewLogin';
+import Attendance from './pages/attendance/Attendance';
 
 export default function Router() {
   const routes = useRoutes([
@@ -244,7 +245,8 @@ export default function Router() {
         },
         {
           path: 'admin/user/attendance',
-          element: <Authentication component={ListofAttendance} allowRoles={['admin']} />,
+          // element: <Authentication component={ListofAttendance} allowRoles={['admin']} />,
+          element: <Authentication component={Attendance} allowRoles={['admin']} />,
         },
         {
           path: 'admin/doctorevent',
