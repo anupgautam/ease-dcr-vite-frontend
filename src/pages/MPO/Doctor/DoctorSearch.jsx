@@ -274,21 +274,21 @@ const DoctorSearch = () => {
                                                     </TableRow> :
                                                     <>
                                                         {
-                                                            SearchData.map((doctorsearch, index) => (
-                                                                <TableRow hover tabIndex={-1} key={doctorsearch.id}>
+                                                            SearchData?.map((doctorsearch, index) => (
+                                                                <TableRow hover tabIndex={-1} key={doctorsearch?.id}>
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell component="th" scope="row" align="left">
                                                                         <Typography variant="subtitle2" noWrap>
-                                                                            {doctorsearch.doctor_name.doctor_name}
+                                                                            {doctorsearch?.doctor_name.doctor_name}
                                                                         </Typography>
                                                                     </TableCell>
-                                                                    <TableCell align="left">{doctorsearch.doctor_name.doctor_phone_number}</TableCell>
-                                                                    <TableCell align="left">{doctorsearch.doctor_name.doctor_address}</TableCell>
-                                                                    <TableCell align="left">{doctorsearch.doctor_name.doctor_qualification}</TableCell>
-                                                                    <TableCell align="left">{doctorsearch.doctor_name.doctor_specialization.category_name}</TableCell>
-                                                                    <TableCell align="left">{doctorsearch.doctor_name.doctor_category}</TableCell>
+                                                                    <TableCell align="left">{doctorsearch?.doctor_name?.doctor_address}</TableCell>
+                                                                    <TableCell align="left">{doctorsearch?.doctor_name?.doctor_phone_number}</TableCell>
+                                                                    <TableCell align="left">{doctorsearch?.doctor_name?.doctor_qualification}</TableCell>
+                                                                    <TableCell align="left">{doctorsearch?.doctor_name?.doctor_specialization?.category_name}</TableCell>
+                                                                    <TableCell align="left">{doctorsearch?.doctor_name?.doctor_category}</TableCell>
                                                                     <TableCell align="left">
-                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorsearch.id); handleClickOpen() }}>
+                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorsearch?.id); handleClickOpen() }}>
                                                                             <Badge>
                                                                                 <Iconify icon="eva:trash-2-outline" />
                                                                             </Badge>
@@ -328,7 +328,7 @@ const DoctorSearch = () => {
                                                         DoctorData !== undefined ?
                                                             <>
                                                                 {
-                                                                    DoctorData.count === 0 ?
+                                                                    DoctorData?.count === 0 ?
                                                                         <TableRow>
                                                                             <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
                                                                                 <Paper
@@ -347,21 +347,21 @@ const DoctorSearch = () => {
                                                                             </TableCell>
                                                                         </TableRow> : <>
                                                                             {
-                                                                                DoctorData.results.map((doctorsearch, index) => (
-                                                                                    <TableRow hover tabIndex={-1} key={doctorsearch.id}>
+                                                                                DoctorData?.results.map((doctorsearch, index) => (
+                                                                                    <TableRow hover tabIndex={-1} key={doctorsearch?.id}>
                                                                                         <TableCell>{index + 1}</TableCell>
                                                                                         <TableCell component="th" scope="row" align="left">
                                                                                             <Typography variant="subtitle2" noWrap>
-                                                                                                {doctorsearch.doctor_name.doctor_name}
+                                                                                                {doctorsearch?.doctor_name?.doctor_name}
                                                                                             </Typography>
                                                                                         </TableCell>
-                                                                                        <TableCell align="left">{doctorsearch.doctor_name.doctor_phone_number}</TableCell>
-                                                                                        <TableCell align="left">{doctorsearch.doctor_name.doctor_address}</TableCell>
-                                                                                        <TableCell align="left">{doctorsearch.doctor_name.doctor_qualification}</TableCell>
-                                                                                        <TableCell align="left">{doctorsearch.doctor_name.doctor_specialization.category_name}</TableCell>
-                                                                                        <TableCell align="left">{doctorsearch.doctor_name.doctor_category}</TableCell>
+                                                                                        <TableCell align="left">{doctorsearch?.doctor_name?.doctor_phone_number}</TableCell>
+                                                                                        <TableCell align="left">{doctorsearch?.doctor_name?.doctor_address}</TableCell>
+                                                                                        <TableCell align="left">{doctorsearch?.doctor_name?.doctor_qualification}</TableCell>
+                                                                                        <TableCell align="left">{doctorsearch?.doctor_name?.doctor_specialization?.category_name}</TableCell>
+                                                                                        <TableCell align="left">{doctorsearch?.doctor_name?.doctor_category}</TableCell>
                                                                                         <TableCell align="left">
-                                                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorsearch.id); handleClickOpen() }}>
+                                                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorsearch?.id); handleClickOpen() }}>
                                                                                                 <Badge>
                                                                                                     <Iconify icon="eva:trash-2-outline" />
                                                                                                 </Badge>

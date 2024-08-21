@@ -38,7 +38,7 @@ const AddUser = () => {
 
     const rolesharu = useMemo(() => {
         if (isSuccess) {
-            return data.map(key => ({ id: key.id, title: key.role_name_value }));
+            return data?.map(key => ({ id: key.id, title: key.role_name_value }));
         }
         return [];
     }, [isSuccess, data]);
@@ -48,7 +48,7 @@ const AddUser = () => {
 
     const companyAreas = useMemo(() => {
         if (CompanyAreas?.data) {
-            return CompanyAreas.data.map(key => ({ id: key.id, title: key.company_area }));
+            return CompanyAreas?.data?.map(key => ({ id: key?.id, title: key?.company_area }));
         }
         return [];
     }, [CompanyAreas]);
@@ -58,7 +58,7 @@ const AddUser = () => {
 
     const divisionList = useMemo(() => {
         if (Divisions?.data) {
-            return Divisions.data.map(key => ({ id: key.id, title: key.division_name }));
+            return Divisions.data.map(key => ({ id: key?.id, title: key?.division_name }));
         }
         return [];
     }, [Divisions]);
@@ -72,8 +72,8 @@ const AddUser = () => {
         const exce = [];
         getExecLevel(companyId).then((res) => {
             // 
-            res.data.map((key) => {
-                exce.push({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name })
+            res?.data?.map((key) => {
+                exce.push({ id: key?.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name })
             })
         })
         setExecutiveLevels(exce);

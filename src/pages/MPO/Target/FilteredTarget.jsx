@@ -150,7 +150,7 @@ const FilteredTarget = ({ selectedYear, selectedRole }) => {
                                     display="flex"
                                     margin="8px 0px"
                                 >
-                                    {data ? (
+                                    {data && typeof data?.count === 'number'  ? (
                                         <Pagination
                                             count={parseInt(data?.count / 200) + 1}
                                             onChange={handleChangePage}

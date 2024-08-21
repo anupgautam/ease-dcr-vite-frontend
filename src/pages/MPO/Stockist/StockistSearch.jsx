@@ -140,8 +140,10 @@ const StockistSearch = () => {
     } = useForm1(initialFValues, true);
 
     useEffect(() => {
-        searchStockist(values);
-    }, [values]);
+        if (values.search.trim()) {
+            searchStockist(values);
+        }
+    }, [values, searchStockist]);
 
     //! onSearch
     const FilteredData = { company_area: companyArea, company_name: companyId };

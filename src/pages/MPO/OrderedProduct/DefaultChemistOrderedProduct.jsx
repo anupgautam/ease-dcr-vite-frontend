@@ -57,7 +57,7 @@ const DefaultChemistOrderedProduct = ({ data }) => {
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
                                                         <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
+                                                        {/* <TableCell><Skeleton /></TableCell> */}
                                                         {/* <TableCell><Skeleton /></TableCell> */}
                                                     </TableRow>
                                                 ))}
@@ -88,9 +88,9 @@ const DefaultChemistOrderedProduct = ({ data }) => {
                 {/* //!pagination */}
                 <Box justifyContent={'center'} alignItems='center' display={'flex'}
                     sx={{ margin: "20px 0px" }} >
-                    {data ?
+                    {data && typeof data?.count === 'number' ?
                         <Pagination
-                            count={parseInt(data.count / 8) + 1}
+                            count={parseInt(data?.count / 8) + 1}
                             onChange={handleChangePage}
                         /> : <></>}
                 </Box>

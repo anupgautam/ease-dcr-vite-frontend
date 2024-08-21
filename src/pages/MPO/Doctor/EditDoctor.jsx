@@ -35,7 +35,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
 
     const doctorspecializations = useMemo(() => {
         if (DoctorSpecialization?.data) {
-            return DoctorSpecialization?.data.map(key => ({ id: key.id, title: key.category_name }))
+            return DoctorSpecialization?.data?.map(key => ({ id: key.id, title: key.category_name }))
         }
         return [];
     }, [DoctorSpecialization])
@@ -45,7 +45,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
-            return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))
+            return MpoArea?.data?.map(key => ({ id: key.id, title: key.area_name }))
         }
         return [];
     }, [MpoArea])

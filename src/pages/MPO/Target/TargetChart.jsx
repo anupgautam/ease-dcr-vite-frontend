@@ -18,7 +18,7 @@ export default function TargetChart(props) {
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedCompanyUser, setSelectedCompanyUser] = useState(null);
   const [companyUserList, setCompanyUserList] = useState([]);
-  const roles = useSelector(state => state.dcrData.company_roles);
+  const roles = useSelector(state => state?.dcrData?.company_roles);
   const yearList = ['2080', '2081', '2082', '2083', '2084', '2085', '2086', '2087', '2088', '2089', '2090'];
   const [chartData, setChartData] = useState(null);
 
@@ -28,13 +28,15 @@ export default function TargetChart(props) {
   useEffect(() => {
     if (companyUser?.data) {
       const userList = []
-      companyUser.data.forEach((key) => {
-        userList.push({ id: key.id, title: key.user_name.first_name + " " + key.user_name.last_name })
+      companyUser?.data?.forEach((key) => {
+        userList.push({ id: key.id, title: key?.user_name?.first_name + " " + key?.user_name?.last_name })
       })
       setCompanyUserList(userList);
     }
   }, [companyUser])
 
+  console.log(roles)
+  
   const [targetUser] = useGetTargetsByUserMutation();
 
   useEffect(() => {
@@ -132,7 +134,7 @@ export default function TargetChart(props) {
                         label="Role Name"
                       >
                         <MenuItem value={null}>None</MenuItem>
-                        {companyUserList.map((role) => (
+                        {companyUserList?.map((role) => (
                           <MenuItem key={role.id} value={role.id}>
                             {role.title && role.title}
                           </MenuItem>

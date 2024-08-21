@@ -88,18 +88,18 @@ const DefaultList = () => {
             ) : (
                 <>
                     {data && data.results.map((doc, index) => (
-                        <TableRow hover tabIndex={-1} role="checkbox" key={doc.id}>
+                        <TableRow hover tabIndex={-1} role="checkbox" key={doc?.id}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell component="th" scope="row" align="left">
                                 <Typography variant="subtitle2" noWrap>
-                                    {doc.doctor_name.doctor_name}
+                                    {doc?.doctor_name?.doctor_name}
                                 </Typography>
                             </TableCell>
-                            <TableCell align="left">{doc.doctor_name.doctor_phone_number}</TableCell>
-                            <TableCell align="left">{doc.doctor_name.doctor_address}</TableCell>
-                            <TableCell align="left">{doc.doctor_name.doctor_qualification}</TableCell>
-                            <TableCell align="left">{doc.doctor_name.doctor_specialization.category_name}</TableCell>
-                            <TableCell align="left">{doc.doctor_name.doctor_category}</TableCell>
+                            <TableCell align="left">{doc?.doctor_name?.doctor_phone_number}</TableCell>
+                            <TableCell align="left">{doc?.doctor_name?.doctor_address}</TableCell>
+                            <TableCell align="left">{doc?.doctor_name?.doctor_qualification}</TableCell>
+                            <TableCell align="left">{doc?.doctor_name?.doctor_specialization?.category_name}</TableCell>
+                            <TableCell align="left">{doc?.doctor_name?.doctor_category}</TableCell>
                             {Cookies.get('user_role') === 'admin' && (
                                 <>
                                     <TableCell align="left">
