@@ -60,7 +60,7 @@ const ChemistSearch = () => {
 
     const mpoNames = useMemo(() => {
         if (MpoList) {
-            return MpoList.map(key => ({ id: key.id, title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name }))
+            return MpoList?.map(key => ({ id: key?.id, title: key?.user_name?.first_name + ' ' + key?.user_name?.middle_name + ' ' + key?.user_name?.last_name }))
         }
         return [];
     }, [MpoList])
@@ -165,16 +165,18 @@ const ChemistSearch = () => {
     } = useForm1(initialFValues, true);
 
     useEffect(() => {
-        searchChemist(values)
-    }, [values])
+        if (values.search.trim()) {
+            searchChemist(values)
+        }
+    }, [values, searchChemist])
 
     // const [filterArray, setFilterArray] = useState([]);
     // const [currentPage, setCurrentPage] = useState(1);
     // const elementsPerPage = 8;
     //! Copy array element 
     useEffect(() => {
-        if (results && results.data && results.data.results && Array.isArray(results.data.results)) {
-            const arrayWala = [...results.data.results];
+        if (results && results?.data && results?.data?.results && Array.isArray(results?.data?.results)) {
+            const arrayWala = [...results?.data?.results];
             setFilterArray(arrayWala);
         }
     }, [results]);
@@ -297,7 +299,7 @@ const ChemistSearch = () => {
                                                     </TableRow> :
                                                     <>
                                                         {
-                                                            SearchData.map((chemistsearch, index) => (
+                                                            SearchData?.map((chemistsearch, index) => (
                                                                 <TableRow hover tabIndex={-1} key={chemistsearch.id}>
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell component="th" scope="row" align="left">
@@ -360,7 +362,7 @@ const ChemistSearch = () => {
                                                         chemistData !== undefined ?
                                                             <>
                                                                 {
-                                                                    chemistData.count === 0 ?
+                                                                    chemistData?.count === 0 ?
                                                                         <TableRow>
                                                                             <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
                                                                                 <Paper
@@ -379,7 +381,7 @@ const ChemistSearch = () => {
                                                                             </TableCell>
                                                                         </TableRow> : <>
                                                                             {
-                                                                                chemistData.results.map((chemistsearch, index) => (
+                                                                                chemistData?.results?.map((chemistsearch, index) => (
                                                                                     <TableRow hover tabIndex={-1} key={chemistsearch.id}>
                                                                                         <TableCell>{index + 1}</TableCell>
                                                                                         <TableCell component="th" scope="row" align="left">

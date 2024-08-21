@@ -46,7 +46,7 @@ const DefaultStockistOrderedProduct = ({ data }) => {
                             <TableBody>
                                 <>
                                     {
-                                        data.length === 0 ? <>
+                                        data?.length === 0 ? <>
                                             {
                                                 eightArrays.map((key) => (
                                                     <TableRow key={key} >
@@ -85,9 +85,9 @@ const DefaultStockistOrderedProduct = ({ data }) => {
                 {/* //!pagination */}
                 <Box justifyContent={'center'} alignItems='center' display={'flex'}
                     sx={{ margin: "20px 0px" }} >
-                    {data ?
+                    {data && typeof data?.count === 'number' ?
                         <Pagination
-                            count={parseInt(data.count / 8) + 1}
+                            count={parseInt(data?.count / 8) + 1}
                             onChange={handleChangePage}
                         /> : <></>}
                 </Box>

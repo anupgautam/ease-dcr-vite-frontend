@@ -47,7 +47,7 @@ export const StockistSlice = apiSlice.injectEndpoints({
             getAllStockistsWithoutPagination: builder.query({
                 query: (page) =>
                 ({
-                    url: `stockist/company-stockist-with-out-pagination/?company_name=${page.company_name}&stockist_name__stockist_territory=${page.company_area}`,
+                    url: `stockist/company-stockist-with-out-pagination/?company_name=${page?.company_name}&stockist_name__stockist_territory=${page?.company_area}`,
                     method: 'GET'
                 }),
                 providesTags: ['Stockist']

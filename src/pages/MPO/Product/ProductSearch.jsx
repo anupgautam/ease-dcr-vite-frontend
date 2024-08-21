@@ -140,8 +140,10 @@ const ProductSearch = () => {
     } = useForm1(initialFValues, true);
 
     useEffect(() => {
-        searchProduct(values)
-    }, [values])
+        if (values.search.trim()) {
+            searchProduct(values)
+        }
+    }, [values, searchProduct])
 
     //! onSearch
     const FilteredData = { company_division: companyDivision, companyId: companyId, }

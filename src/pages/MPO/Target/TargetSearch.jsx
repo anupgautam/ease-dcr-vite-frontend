@@ -154,9 +154,10 @@ const TargetSearch = (props) => {
     } = useForm1(initialFValues, true);
 
     useEffect(() => {
-        // 
-        searchTarget(values)
-    }, [values])
+        if (values.search.trim()) {
+            searchTarget(values)
+        }
+    }, [values, searchTarget])
 
     // !Delete doctors
     const [deleteTarget] = useDeleteTargetsByIdMutation();
@@ -260,7 +261,7 @@ const TargetSearch = (props) => {
                                             headLabel={TABLE_HEAD}
                                         />
                                         <TableBody>
-                                            {(searchResults.search.length <= 3) ?
+                                            {(searchResults?.search?.length <= 3) ?
                                                 <>
                                                     {selectedRole || selectedYear ?
                                                         <FilteredTarget
@@ -268,7 +269,7 @@ const TargetSearch = (props) => {
                                                             selectedYear={selectedYear} /> :
                                                         <DefaultTarget />}
                                                 </> : <>{
-                                                    searchData && searchData.map((targetsearch, index) => (
+                                                    searchData && searchData?.map((targetsearch, index) => (
                                                         <TableRow hover tabIndex={-1} key={targetsearch.id}>
                                                             <TableCell>{index + 1}</TableCell>
                                                             <TableCell component="th" scope="row" align="left">

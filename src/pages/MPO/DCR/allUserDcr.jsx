@@ -128,9 +128,10 @@ const AllUserDcr = () => {
     } = useForm1(initialFValues, true);
 
     useEffect(() => {
-        // 
-        searchUser(values)
-    }, [values])
+        if (values.search.trim()) {
+            searchUser(values)
+        }
+    }, [values, searchUser])
 
     // !Delete users
     const [deleteUser] = useDeletecompanyUserRolesByIdMutation();
@@ -330,7 +331,7 @@ const AllUserDcr = () => {
                                                     <TableRow>
                                                         <TableCell colSpan={6}>
                                                             <Box justifyContent="center" alignItems="center" display="flex" margin="8px 0px">
-                                                                {results ? (
+                                                                {results && typeof results?.count === 'number' ? (
                                                                     <Pagination count={parseInt(results.count / 200) + 1} onChange={handleChangePage} />
                                                                 ) : (
                                                                     <Typography variant="body1">In Search</Typography>

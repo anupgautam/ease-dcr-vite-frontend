@@ -27,7 +27,7 @@ const OrderedProductStockist = ({ index, value, other }) => {
 
   useEffect(() => {
     stockistOrderedProductData(selectedStockist).then((res) => {
-      setOrderedData(res.data.results)
+      setOrderedData(res?.data?.results)
     })
 
   }, [selectedStockist])
@@ -59,7 +59,7 @@ const OrderedProductStockist = ({ index, value, other }) => {
                       <TextField {...params} label="Stockist" />
                     )}
                     renderOption={(props, option) => (
-                      <li {...props} key={option.id}>
+                      <li {...props} key={`${option.id}-${option.title}`}>
                         {option.title}
                       </li>
                     )}
