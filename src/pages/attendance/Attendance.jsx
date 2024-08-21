@@ -144,6 +144,14 @@ const ListofAttendance = () => {
     const [userName, setUserName] = useState();
     const [userNameValue, setUserNameValue] = useState();
 
+    useEffect(() => {
+        if (companyUserList?.length > 0) {
+            setUserName(companyUserList[0]?.id);
+            setUserNameValue(companyUserList[0]?.title);
+        }
+    }, [companyUserList]);
+
+
     const handleUserNameChange = (event, value) => {
         setUserName(value?.id || '')
         setUserNameValue(value?.title || '')
@@ -200,6 +208,7 @@ const ListofAttendance = () => {
                                 <Autocomplete
                                     options={companyUserList}
                                     getOptionLabel={(option) => option.title}
+                                    value={companyUserList?.find(user => user?.id === userName) || null}
                                     onChange={handleUserNameChange}
                                     renderInput={(params) => (
                                         <TextField {...params} label="Users" />
@@ -214,35 +223,62 @@ const ListofAttendance = () => {
                         </Grid>
                     </Box>
 
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'left', gap: 2, marginLeft: '20px' }}>
+                        {/* Previous Button */}
+                        <IconButton
+                            onClick={handlePrevMonth}
+                            sx={{
+                                fontSize: 16,
+                                textTransform: 'uppercase',
+                                padding: '8px 16px',
+                                borderRadius: '4px',
+                                border: '1px solid #ddd',
+                                backgroundColor: '#f5f5f5',
+                                color: '#333',
+                                '&:hover': {
+                                    backgroundColor: '#e0e0e0',
+                                },
+
+                            }}
+                        >
+                            <Typography variant="button" sx={{ fontWeight: 'bold' }}>Previous</Typography>
+                        </IconButton>
+
+                        <IconButton
+                            onClick={handleNextMonth}
+                            sx={{
+                                fontSize: 16,
+                                textTransform: 'uppercase',
+                                padding: '8px 16px',
+                                borderRadius: '4px',
+                                border: '1px solid #ddd',
+                                backgroundColor: '#f5f5f5',
+                                color: '#333',
+                                '&:hover': {
+                                    backgroundColor: '#e0e0e0',
+                                }
+                            }}
+                        >
+                            <Typography variant="button" sx={{ fontWeight: 'bold' }}>Next</Typography>
+                        </IconButton>
+                    </Box>
+
 
                     <Box style={{ paddingTop: "5px", paddingBottom: "15px" }}>
                         <Scrollbar>
                             <Paper elevation={3} sx={{ padding: "16px" }}>
                                 <Grid container spacing={1} align="center">
-
-                                    <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" sx={{ height: '100%' }}>
-                                        <IconButton onClick={handlePrevMonth} sx={{
-                                            fontSize: 20
-                                        }}>
-                                            <ArrowBackIos />
-                                        </IconButton>
-
-                                        {userName && (
-                                            <AttendanceList
-                                                setAttendanceDateData={setAttendanceDateData}
-                                                data={AttendanceDateData?.attendance_data}
-                                                allDaysInMonth={allDaysInMonth}
-                                                userList={userName}
-                                                selectedMonth={selectedMonth}
-                                                selectedYear={selectedYear}
-                                                userNameValue={userNameValue}
-                                            />
-                                        )}
-
-                                        <IconButton onClick={handleNextMonth} sx={{ fontSize: 20 }}>
-                                            <ArrowForwardIos />
-                                        </IconButton>
-                                    </Stack>
+                                    {userName && (
+                                        <AttendanceList
+                                            setAttendanceDateData={setAttendanceDateData}
+                                            data={AttendanceDateData?.attendance_data}
+                                            allDaysInMonth={allDaysInMonth}
+                                            userList={userName}
+                                            selectedMonth={selectedMonth}
+                                            selectedYear={selectedYear}
+                                            userNameValue={userNameValue}
+                                        />
+                                    )}
                                 </Grid>
                             </Paper>
                         </Scrollbar>

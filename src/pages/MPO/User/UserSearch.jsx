@@ -135,9 +135,10 @@ const UserSearch = () => {
   const { values, handleSearchClick } = useForm1(initialFValues, true);
 
   useEffect(() => {
-    //
-    searchUser(values);
-  }, [values]);
+    if (values.search.trim()) {
+      searchUser(values);
+    }
+  }, [values, searchUser]);
 
   // !Delete users
   const [deleteUser] = useDeletecompanyUserRolesByIdMutation();
@@ -204,19 +205,19 @@ const UserSearch = () => {
               />
             </Grid>
             <Grid item xs={4} sm={2.5}>
-                <Autocomplete
-                  options={companyRoleList}
-                  getOptionLabel={(option) => option.title}
-                  onChange={handleRoleSelect}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Company Roles" />
-                  )}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option.id}>
-                      {option.title}
-                    </li>
-                  )}
-                />
+              <Autocomplete
+                options={companyRoleList}
+                getOptionLabel={(option) => option.title}
+                onChange={handleRoleSelect}
+                renderInput={(params) => (
+                  <TextField {...params} label="Company Roles" />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.id}>
+                    {option.title}
+                  </li>
+                )}
+              />
             </Grid>
             <Grid item xs={3.5} sm={2.5}>
               <Box>
