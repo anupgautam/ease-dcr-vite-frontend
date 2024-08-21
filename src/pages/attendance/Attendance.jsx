@@ -1,33 +1,31 @@
-import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button } from "@mui/material";
+import React, { useEffect, useState, useMemo } from "react";
+import {
+    Box,
+    Card,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Select,
+    Typography,
+    Paper,
+    Autocomplete,
+    TextField,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    IconButton,
+    Stack
+} from "@mui/material";
 import Cookies from "js-cookie";
-import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { BSDate } from "nepali-datepicker-react";
-import React, { useEffect, useState, useCallback } from "react";
-import { useGetAllUserAttendanceQuery, usePostingAllUserAttendanceMutation } from "../../api/CompanySlices/companyUserSlice";
-import { useGetUsersByCompanyRoleIdQuery } from "../../api/MPOSlices/UserSlice";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
-import ExportToExcel from "../../reusable/utils/exportSheet";
-import moment from 'moment';
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from "@mui/material/DialogActions";
-import { Link } from "react-router-dom";
-
-const localizer = momentLocalizer(moment);
-
-const eventStyleGetter = (event, start, end, isSelected) => {
-    const style = {
-        backgroundColor: " #ab0403",
-        borderRadius: "5px",
-        opacity: 0.8,
-        color: "white",
-        border: "1px solid  #ab0403",
-        display: "block",
-    };
-    return { style };
-};
+import { useGetUsersByCompanyRoleIdQuery } from "../../api/MPOSlices/UserSlice";
+import { usePostingAllUserAttendanceMutation } from "../../api/CompanySlices/companyUserSlice";
+import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 
 const bsMonthDays = {
     2080: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30],
@@ -62,11 +60,10 @@ function getBsMonthDays(year, month) {
 
 function getAllDaysInMonth(year, month) {
     const daysInMonth = getBsMonthDays(year, month);
-
     const daysArray = [];
     if (daysInMonth !== null) {
         for (let day = 1; day <= daysInMonth; day++) {
-            const formattedDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const formattedDate = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
             daysArray.push(formattedDate);
         }
     } else {
@@ -75,85 +72,93 @@ function getAllDaysInMonth(year, month) {
     return daysArray;
 }
 
-
-const Attendance = () => {
+const ListofAttendance = () => {
     const now = new BSDate().now();
     const year = now._date.year;
     const month = now._date.month;
 
     const months = [
-        { value: 1, label: 'Baisakh' },
-        { value: 2, label: 'Jestha' },
-        { value: 3, label: 'Asadh' },
-        { value: 4, label: 'Shrawan' },
-        { value: 5, label: 'Bhadra' },
-        { value: 6, label: 'Ashwin' },
-        { value: 7, label: 'Kartik' },
-        { value: 8, label: 'Mangsir' },
-        { value: 9, label: 'Poush' },
-        { value: 10, label: 'Magh' },
-        { value: 11, label: 'Falgun' },
-        { value: 12, label: 'Chaitra' },
-    ]
+        { value: 1, label: "Baisakh" },
+        { value: 2, label: "Jestha" },
+        { value: 3, label: "Asadh" },
+        { value: 4, label: "Shrawan" },
+        { value: 5, label: "Bhadra" },
+        { value: 6, label: "Ashwin" },
+        { value: 7, label: "Kartik" },
+        { value: 8, label: "Mangsir" },
+        { value: 9, label: "Poush" },
+        { value: 10, label: "Magh" },
+        { value: 11, label: "Falgun" },
+        { value: 12, label: "Chaitra" }
+    ];
 
-    const [selectedMonth, setSelectedMonth] = useState(month)
-
+    const [selectedMonth, setSelectedMonth] = useState(month);
     const handleNepaliMonthChange = (event) => {
         setSelectedMonth(event.target.value);
     };
-    const years = [
-        { value: 2080, label: "2080" },
-        { value: 2081, label: "2081" },
-        { value: 2082, label: "2082" },
-        { value: 2083, label: "2083" },
-        { value: 2084, label: "2084" },
-        { value: 2085, label: "2085" },
-        { value: 2086, label: "2086" },
-        { value: 2087, label: "2087" },
-        { value: 2088, label: "2088" },
-        { value: 2089, label: "2089" },
-        { value: 2090, label: "2090" },
-        { value: 2091, label: "2091" },
-        { value: 2092, label: "2092" },
-        { value: 2093, label: "2093" },
-        { value: 2094, label: "2094" },
-        { value: 2095, label: "2095" },
-        { value: 2096, label: "2096" },
-        { value: 2097, label: "2097" },
-        { value: 2098, label: "2098" },
-        { value: 2099, label: "2099" },
-    ]
-    const [selectedYear, setSelectedYear] = useState(year);
 
+    const years = Array.from({ length: 20 }, (_, index) => ({
+        value: 2080 + index,
+        label: (2080 + index).toString()
+    }));
+
+    const [selectedYear, setSelectedYear] = useState(year);
     const handleYearChange = (event) => {
         setSelectedYear(event.target.value);
     };
 
+    //! Handle Next and Previous functionality
+    const handlePrevMonth = () => {
+        if (selectedMonth === 1) {
+            setSelectedMonth(12);
+            setSelectedYear(prevYear => prevYear - 1);
+        } else {
+            setSelectedMonth(prevMonth => prevMonth - 1);
+        }
+    };
+
+    const handleNextMonth = () => {
+        if (selectedMonth === 12) {
+            setSelectedMonth(1);
+            setSelectedYear(prevYear => prevYear + 1);
+        } else {
+            setSelectedMonth(prevMonth => prevMonth + 1);
+        }
+    };
+
+
     const allDaysInMonth = getAllDaysInMonth(selectedYear, selectedMonth);
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: '' });
+    const userList = useGetUsersByCompanyRoleIdQuery({
+        id: Cookies.get("company_id"),
+        page: ""
+    });
 
-    const companyUserList = [];
+    const companyUserList = useMemo(() => {
+        if (userList) {
+            return userList?.data?.map(key => ({ id: key.id, title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}` }))
+        }
+        return []
+    }, [userList])
 
-    if (userList !== undefined) {
-        userList?.data?.map((key) => {
-            companyUserList.push({ id: key.id, title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}` });
-        })
+    //! User Options
+    const [userName, setUserName] = useState();
+    const [userNameValue, setUserNameValue] = useState();
+
+    const handleUserNameChange = (event, value) => {
+        setUserName(value?.id || '')
+        setUserNameValue(value?.title || '')
     }
+
     const [AttendanceDateData, setAttendanceDateData] = useState();
 
     return (
         <Box>
             <Grid container spacing={2}>
                 <Grid item xs={10}>
-                    <Typography style={{ fontWeight: '600', fontSize: '18px' }}>
+                    <Typography style={{ fontWeight: "600", fontSize: "18px" }}>
                         User Attendance
                     </Typography>
                 </Grid>
-                {/* <Grid item xs={2}>
-                    <Box style={{ float: "right" }}>
-                        <ExportToExcel headers={'headers'} fileName={'userList'} data={'templateData'} />
-                    </Box>
-                </Grid> */}
             </Grid>
             <Box style={{ marginTop: "20px" }}>
                 <Card>
@@ -191,132 +196,175 @@ const Attendance = () => {
                                     </Select>
                                 </FormControl>
                             </Grid>
+                            <Grid item xs={3}>
+                                <Autocomplete
+                                    options={companyUserList}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleUserNameChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Users" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                />
+                            </Grid>
                         </Grid>
                     </Box>
+
+
                     <Box style={{ paddingTop: "5px", paddingBottom: "15px" }}>
                         <Scrollbar>
-                            <TableContainer sx={{ minWidth: 800 }}>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow style={{ height: '60px' }}>
-                                            <TableCell>
-                                                <Typography style={{ width: "5rem", color: "grey", fontSize: '15px', fontWeight: '600' }}>User Name</Typography>
-                                            </TableCell>
-                                            <TableCell>
-                                                CL
-                                            </TableCell>
-                                            <TableCell>
-                                                SL
-                                            </TableCell>
-                                            <TableCell>
-                                                PL
-                                            </TableCell>
-                                            <TableCell>
-                                                LWP
-                                            </TableCell>
-                                            <TableCell>
-                                                H
-                                            </TableCell>
-                                            <TableCell>
-                                                S
-                                            </TableCell>
-                                            <TableCell>
-                                                Details
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableHead>
+                            <Paper elevation={3} sx={{ padding: "16px" }}>
+                                <Grid container spacing={1} align="center">
 
-                                    <TableBody>
-                                        {companyUserList.map((key, index) => (
-                                            <TableRow key={index} style={{ height: '80px' }}>
-                                                <TableCell key={key} style={{ fontWeight: '600' }}>{key.title}</TableCell>
-                                                <TableCell>{AttendanceDateData?.casual_leave}</TableCell>
-                                                <TableCell>{AttendanceDateData?.sick_leave}</TableCell>
-                                                <TableCell>{AttendanceDateData?.paid_leave}</TableCell>
-                                                <TableCell>{AttendanceDateData?.leave_without_pay_leave}</TableCell>
-                                                <TableCell>{AttendanceDateData?.holiday_leave}</TableCell>
-                                                <TableCell>{AttendanceDateData?.saturday}</TableCell>
-                                                <TableCell>
-                                                    <TableCell>
-                                                        <Link to="/dashboard/admin/userattendance">
-                                                            <Button>View Details</Button>
-                                                        </Link>
-                                                    </TableCell>
-                                                    <CalendarData setAttendanceDateData={setAttendanceDateData} userId={key.id} month={selectedMonth} year={selectedYear} />
-                                                </TableCell>
-                                            </TableRow>
-                                        ))
-                                        }
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                                    <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" sx={{ height: '100%' }}>
+                                        <IconButton onClick={handlePrevMonth} sx={{
+                                            fontSize: 20
+                                        }}>
+                                            <ArrowBackIos />
+                                        </IconButton>
+
+                                        {userName && (
+                                            <AttendanceList
+                                                setAttendanceDateData={setAttendanceDateData}
+                                                data={AttendanceDateData?.attendance_data}
+                                                allDaysInMonth={allDaysInMonth}
+                                                userList={userName}
+                                                selectedMonth={selectedMonth}
+                                                selectedYear={selectedYear}
+                                                userNameValue={userNameValue}
+                                            />
+                                        )}
+
+                                        <IconButton onClick={handleNextMonth} sx={{ fontSize: 20 }}>
+                                            <ArrowForwardIos />
+                                        </IconButton>
+                                    </Stack>
+                                </Grid>
+                            </Paper>
                         </Scrollbar>
                     </Box>
                 </Card>
             </Box>
         </Box>
-    )
-}
+    );
+};
 
-const CalendarData = ({ userId, month, year, setAttendanceDateData }) => {
-
+//! Original
+const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, selectedYear, setAttendanceDateData, userNameValue }) => {
     const [AttendanceData] = usePostingAllUserAttendanceMutation();
+    const [AttendData, setAttendData] = useState();
 
     useEffect(() => {
-        AttendanceData({ year: year, month: month, user_id: userId })
-            .then((res) => {
-                setAttendanceDateData(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, [year, month, userId]);
+        if (userList) {
+            AttendanceData({ year: selectedYear, month: selectedMonth, user_id: userList })
+                .then((res) => {
+                    setAttendanceDateData(res?.data);
+                    setAttendData(res?.data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }, [selectedYear, selectedMonth, userList]);
 
-    //! Dialogue
-    const [openDialogues, setOpenDialogues] = useState(false);
-    const handleOpen = () => {
-        setOpenDialogues(true);
-    };
+    const daysInWeek = 7;
+    const firstDay = new Date(`${selectedYear}-${String(selectedMonth).padStart(2, "0")}-01`).getDay();
+    const paddedDays = Array.from({ length: firstDay }, () => null);
 
-    const handleClose = () => {
-        setOpenDialogues(false);
-    };
+    // Calculate total days and number of rows needed
+    const totalDays = paddedDays.length + allDaysInMonth.length;
+    const rows = Math.ceil(totalDays / daysInWeek);
 
-    const theme = useTheme();
+    return (
+        <Grid container spacing={1} sx={{ padding: '8px' }}>
+            {AttendData !== undefined ? (
+                <>
+                    {/* Display User Name */}
 
-    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-    <>
-        <Dialog
-            fullScreen={fullScreen}
-            open={openDialogues}
-            onClose={handleClose}
-            aria-labelledby="responsive-dialog-title"
-        >
 
-            <div style={{ height: "640px" }}>
-                <Calendar
-                    localizer={localizer}
-                    // events={holidayEvents}
-                    views={['month']}
-                    startAccessor="start"
-                    endAccessor="end"
-                    selectable={null}
-                    onSelectSlot={null}
-                    eventPropGetter={eventStyleGetter}
-                />
-            </div>
-            <DialogTitle id="responsive-dialog-title">
-                {"Do you want to unlock this user?"}
-            </DialogTitle>
-            <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                    Close
-                </Button>
-            </DialogActions>
-        </Dialog>
+                    {/* Calendar Table */}
+                    <Grid item xs={12}>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                                            <TableCell key={day} sx={{ textAlign: "center", fontSize: "20px", fontWeight: "bold", color: "#0d0d0d", border: '1px solid #ddd' }}>
+                                                {day}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {Array.from({ length: rows }).map((_, rowIndex) => (
+                                        <TableRow key={rowIndex}>
+                                            {Array.from({ length: daysInWeek }).map((_, colIndex) => {
+                                                const index = rowIndex * daysInWeek + colIndex;
+                                                const date = paddedDays[index] || allDaysInMonth[index - paddedDays.length];
+                                                const day = date ? parseInt(date.split("-").pop()) : null;
+                                                const isPresent = AttendData[userList[0]?.id]?.includes(date);
 
-    </>
+                                                return (
+                                                    <TableCell
+                                                        key={index}
+                                                        sx={{
+                                                            textAlign: "center",
+                                                            height: "60px",
+                                                            width: "60px",
+                                                            lineHeight: "60px",
+                                                            fontSize: "22px", // Increased font size
+                                                            color: isPresent ? "#2e7d32" : "#c62828",
+                                                            // color: isPresent ? "#2e7d32" : "#c62828", 
 
-}
+                                                            fontWeight: "bold",
+                                                            border: '1px solid #ddd', // Soft border
+                                                        }}
+                                                    >
+                                                        {day}
+                                                    </TableCell>
+                                                );
+                                            })}
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Grid>
 
-export default Attendance;
+                    {/* Leave Summary */}
+                    <Grid item xs={12} sx={{ marginTop: "20px" }}>
+                        <Grid container spacing={2} justifyContent="center">
+                            <Grid item>
+                                <Typography color="#637381" variant="h6">SL: {AttendData.sick_leave}</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography color="#637381" variant="h6">CL: {AttendData.casual_leave}</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography color="#637381" variant="h6">PL: {AttendData.paid_leave}</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography color="#637381" variant="h6">LWP: {AttendData.leave_without_pay_leave}</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography color="#637381" variant="h6">H: {AttendData.holiday_leave}</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography color="#637381" variant="h6">S: {AttendData.saturday}</Typography>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </>
+            ) : null}
+        </Grid>
+    );
+};
+
+
+
+
+export default ListofAttendance;
