@@ -140,13 +140,13 @@ const AddDcrForHo = () => {
     }, [])
 
     const handleDCRForChemist = useCallback(() => {
-        DcrForChemist()
-            .then((res) => {
-                if (res.data) {
-                    navigation(`/dashboard/admin/dcr/for/chemist?id=${res.data.id}`)
-                }
-            }).catch((err) => {
-            })
+        // DcrForChemist()
+        //     .then((res) => {
+        //         if (res.data) {
+        navigation(`/dashboard/admin/dcr/for/chemist`)
+        //     }
+        // }).catch((err) => {
+        // })
     }, [])
 
     const handleDCRForStockist = useCallback(() => {

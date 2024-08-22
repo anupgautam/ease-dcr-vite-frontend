@@ -68,7 +68,7 @@ const StockistSearch = () => {
         return [];
     }, [Company_Areas]);
 
-    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: companyId, company_area: companyArea });
+    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: Cookies.get('company_id'), company_area: Cookies.get("user_role") === "admin" ? companyArea : Cookies.get("company_area_id") });
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

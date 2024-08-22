@@ -112,6 +112,15 @@ export const ChemistOrderedProductSlice = apiSlice.injectEndpoints({
             },
             invalidatesTags: ['ChemistOrderedProduct']
         }),
+        getChemistOrderProductData: builder.query({
+            query: (id) => {
+                return {
+                    url: `/dcr/dcr-for-chemist-product/?dcr_id=${id.dcr_id}&ordered_product=${id.id}`,
+                    method: 'GET',
+                }
+            },
+            providesTags: ['ChemistOrderedProduct', 'PostTourplan']
+        })
     })
 })
 
@@ -123,6 +132,7 @@ export const {
     useAddChemistOrderedProductMutation,
     useGetChemistOrderedProductByDCRIdQuery,
     useAddChemistOrderedProductByIdMutation,
+    useGetChemistOrderProductDataQuery,
 } = ChemistOrderedProductSlice
 
 //! returns the query result object
