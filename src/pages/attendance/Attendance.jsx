@@ -26,6 +26,7 @@ import Scrollbar from "../../components/scrollbar/Scrollbar";
 import { useGetUsersByCompanyRoleIdQuery } from "../../api/MPOSlices/UserSlice";
 import { usePostingAllUserAttendanceMutation } from "../../api/CompanySlices/companyUserSlice";
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import ExportToExcel from '@/reusable/utils/exportSheet';
 
 const bsMonthDays = {
     2080: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30],
@@ -73,6 +74,41 @@ function getAllDaysInMonth(year, month) {
 }
 
 const ListofAttendance = () => {
+
+    //! Export To excel wala
+    const headers = [
+        { label: 'S.No.', key: 'sno' },
+        { label: 'First Name', key: 'first_name' },
+        { label: 'Middle Name', key: 'middle_name' },
+        { label: 'Last Name', key: 'last_name' },
+        { label: 'Company Name', key: 'company_name' },
+        { label: 'Email', key: 'email' },
+        { label: 'Head Quarter', key: 'head_quarter' },
+        { label: 'Phone Number', key: 'phone_number' },
+        { label: 'Role', key: 'role_name' },
+    ];
+
+    // const templateData = data?.map((values, index) => ({
+    //     sno: index + 1,
+    //     first_name: values?.user_name?.first_name,
+    //     middle_name: values?.user_name?.middle_name,
+    //     last_name: values?.user_name?.last_name,
+    //     company_name: values?.company_name?.company_name,
+    //     email: values?.user_name?.email,
+    //     head_quarter: values?.company_area?.company_area,
+    //     phone_number: values?.user_name?.phone_number,
+    //     role_name: values?.role_name?.role_name_value
+    // }));
+
+    const templateData = {
+        sno: "1",
+        first_name: "lemon",
+        middle_name: "wala",
+        last_name: "Gautam",
+
+    }
+
+
     const now = new BSDate().now();
     const year = now._date.year;
     const month = now._date.month;
@@ -168,6 +204,12 @@ const ListofAttendance = () => {
                     </Typography>
                 </Grid>
             </Grid>
+            {/* //! Export to Excel */}
+            {userName && (
+                <Box sx={{ display: 'flex', justifyContent: 'right' }}>
+                    <ExportToExcel headers={headers} fileName={'Attendance'} data={templateData} />
+                </Box>
+            )}
             <Box style={{ marginTop: "20px" }}>
                 <Card>
                     <Box style={{ padding: "15px" }}>
@@ -220,6 +262,7 @@ const ListofAttendance = () => {
                                     )}
                                 />
                             </Grid>
+
                         </Grid>
                     </Box>
 

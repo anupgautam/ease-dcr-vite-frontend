@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Card, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableRow, TextField } from "@mui/material";
+import { Autocomplete, Box, Button, Card, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableRow, TextField, IconButton, Badge } from "@mui/material";
 import Cookies from "js-cookie";
 import moment from "moment";
 import { BSDate } from "nepali-datepicker-react";
@@ -10,6 +10,7 @@ import { useGetStatDataofDcrByHigherUserMutation, useGetStatDataofDcrByUserMutat
 import Scrollbar from "@/components/scrollbar/Scrollbar";
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import { UserListHead } from "@/sections/@dashboard/user";
+import Iconify from '@/components/iconify/Iconify';
 
 const TABLE_HEAD = [
     { id: 'user_name', label: 'User Name', alignRight: false },
@@ -31,7 +32,6 @@ const TABLE_HEAD1 = [
     { id: 'head_quarter', label: 'Head Quarter', alignRight: false },
     { id: 'all_call', label: 'All Call', alignRight: false },
     { id: 'remarks', label: 'Remarks', alignRight: false },
-    { id: '' },
 ];
 
 
@@ -187,27 +187,34 @@ const DcrListData = () => {
                                     />
                                     <TableBody>
                                         {
-                                            StatData && StatData.map((key, index) => (
-                                                <TableRow key={key}>
-                                                    <TableCell>{index + 1}</TableCell>
-                                                    <TableCell align="left">{singleUser?.data?.user_name?.first_name + " " + singleUser?.data?.user_name?.middle_name + " " + singleUser?.data?.user_name?.last_name}</TableCell>
-                                                    <TableCell align="left">{getNepaliMonthName(moment(key.date).month() + 1)} {moment(key.date).format('DD')}</TableCell>
-                                                    <TableCell align="left">{singleUser?.data?.company_area?.company_area}</TableCell>
-                                                    <TableCell align="center" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600' }}>{key.doctor_call}</TableCell>
-                                                    <TableCell align="center" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600' }}>{key.chemist_call}</TableCell>
-                                                    <TableCell align="center" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600' }}>{key.stockist_call}</TableCell>
-                                                    <TableCell align="center" style={{ color: '#5e67e0', fontSize: '16px', fontWeight: '600' }}>{key.total_joined_call}</TableCell>
-                                                    <TableCell align="center" style={{ color: '#5e67e0', fontSize: '16px', fontWeight: '600' }}>{key.doctor_call + key.chemist_call + key.stockist_call - key.total_joined_call}</TableCell>
-                                                    <TableCell align="left"></TableCell>
-                                                    <TableCell align="left"></TableCell>
-                                                    <TableCell align="left">
-                                                        <Link to={`/dashboard/admin/dcr?id=${id}&role=${role}&date=${key.date}`}>
-                                                            <Button>VIEW DETAILS</Button>
-                                                        </Link>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))
-                                        }
+                                            StatData && StatData.map((key, index) => {
+                                                return (
+                                                    <TableRow hover tabIndex={-1} key={`${key.id}-${index}`}>
+                                                        <TableCell>{index + 1}</TableCell>
+                                                        <TableCell align="left">{singleUser?.data?.user_name?.first_name + " " + singleUser?.data?.user_name?.middle_name + " " + singleUser?.data?.user_name?.last_name}</TableCell>
+                                                        <TableCell align="left">{getNepaliMonthName(moment(key.date).month() + 1)} {moment(key.date).format('DD')}</TableCell>
+                                                        <TableCell align="left">{singleUser?.data?.company_area?.company_area}</TableCell>
+                                                        <TableCell align="center" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600' }}>{key.doctor_call}</TableCell>
+                                                        <TableCell align="center" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600' }}>{key.chemist_call}</TableCell>
+                                                        <TableCell align="center" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600' }}>{key.stockist_call}</TableCell>
+                                                        <TableCell align="center" style={{ color: '#5e67e0', fontSize: '16px', fontWeight: '600' }}>{key.total_joined_call}</TableCell>
+                                                        <TableCell align="center" style={{ color: '#5e67e0', fontSize: '16px', fontWeight: '600' }}>{key.doctor_call + key.chemist_call + key.stockist_call - key.total_joined_call}</TableCell>
+                                                        <TableCell align="left"></TableCell>
+                                                        <TableCell align="left"></TableCell>
+                                                        <TableCell align="left">
+                                                            <Link to={`/dashboard/admin/dcr?id=${id}&role=${role}&date=${key.date}`}>
+                                                                {/* <Button>VIEW DETAILS</Button> */}
+                                                                <IconButton>
+                                                                    <Badge>
+                                                                        <Iconify icon="fluent:info-28-filled" sx={{ color: 'primary.main' }} />
+                                                                    </Badge>
+                                                                </IconButton>
+                                                            </Link>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )
+                                            })}
+
                                     </TableBody>
                                 </Table>
                             </TableContainer> :
@@ -219,7 +226,7 @@ const DcrListData = () => {
                                     <TableBody>
                                         {
                                             StatData && StatData.map((key, index) => (
-                                                <TableRow key={key}>
+                                                <TableRow hover tabIndex={-1} key={`${key.id}-${index}`}>
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell align="left">{singleUser?.data?.user_name?.first_name + " " + singleUser?.data?.user_name?.middle_name + " " + singleUser?.data?.user_name?.last_name}</TableCell>
                                                     <TableCell align="left">{getNepaliMonthName(moment(key.date).month() + 1)} {moment(key.date).format('DD')}</TableCell>
@@ -227,7 +234,12 @@ const DcrListData = () => {
                                                     <TableCell align="left" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600', marginLeft: "10px" }}>{key.call_data}</TableCell>
                                                     <TableCell align="left">
                                                         <Link to={`/dashboard/admin/dcr?id=${id}&role=${role}&date=${key.date}`}>
-                                                            <Button>VIEW DETAILS</Button>
+                                                            {/* <Button>VIEW DETAILS</Button> */}
+                                                            <IconButton>
+                                                                <Badge>
+                                                                    <Iconify icon="fluent:info-28-filled" sx={{ color: 'primary.main' }} />
+                                                                </Badge>
+                                                            </IconButton>
                                                         </Link>
                                                     </TableCell>
                                                 </TableRow>
