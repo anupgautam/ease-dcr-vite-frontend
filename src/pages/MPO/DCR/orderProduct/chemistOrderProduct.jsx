@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import {
     Box,
     Typography,
@@ -17,23 +17,30 @@ import Close from "@mui/icons-material/Close";
 
 import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
-import { returnValidation } from '../../../../validation';
-
-import {
-    useCreateDoctorsEventsMutation
-} from '../../../../api/MPOSlices/DoctorSlice'
 import Cookies from 'js-cookie'
-import { useGetAllProductsOptionsWithDivisionQuery } from '@/api/MPOSlices/productApiSlice';
-import { useGetUsersByIdQuery } from '@/api/DemoUserSlice';
-import { useGetAllChemistsWithoutPaginationQuery } from '@/api/MPOSlices/ChemistSlice';
-import { useAddChemistOrderedProductByIdMutation, useAddChemistOrderedProductMutation } from '@/api/DCRs Api Slice/chemistDCR/chemistOrderedProductInformation';
+import { useGetChemistOrderProductDataQuery } from '@/api/DCRs Api Slice/chemistDCR/chemistOrderedProductInformation';
 import { useGetAllCompanyProductsWithoutPaginationQuery } from '@/api/productSlices/companyProductSlice';
 import { useAddOrderedProductInformationChemistMutation } from '@/api/MPOSlices/tourPlan&Dcr';
+import {
+    useUpdateDcrForChemistValuesMutation
+} from "@/api/MPOSlices/tourPlan&Dcr";
+import { useGetStockistsByCompanyAreaQuery } from '@/api/MPOSlices/StockistSlice';
 
-const ChemistOrderProduct = ({ id, data, handleOrderProductChange }) => {
 
-    const { data: mpoArea } = useGetUsersByIdQuery(Cookies.get('company_user_id'));
+const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) => {
+    const [updateDcr] = useUpdateDcrForChemistValuesMutation();
+
     const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(Cookies.get('company_id'))
+
+    useEffect(() => {
+        if (allData?.Formdata?.ordered_products?.length !== 0) {
+            let sendingData = { id: allData?.id, visited_chemist: "", visited_area: "", date: "", shift: "", company_roles: [], ordered_products: allData?.Formdata?.ordered_products, company_product: [], rewards: [] };
+            updateDcr({ id: allData?.id, value: sendingData })
+                .then((res) => {
+                })
+        }
+    }, [allData?.Formdata?.ordered_products, id])
+
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {
@@ -45,23 +52,20 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange }) => {
         return [];
     }, [productData])
 
-    const company_id = Cookies.get('company_id');
-    const company_area_id = mpoArea?.company_area?.id;
 
-    const { data: ChemistData } = useGetAllChemistsWithoutPaginationQuery({
-        company_name: company_id,
-        company_area: company_area_id,
-    })
+    const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: Cookies.get('company_id'), company_area: Cookies.get('company_area_id') })
+
 
     const chemistList = useMemo(() => {
-        if (ChemistData !== undefined) {
-            return ChemistData?.map((key, index) => ({
+        if (StockistsData !== undefined) {
+            return StockistsData.results?.map((key, index) => ({
                 id: key.id,
-                title: key.chemist_name.chemist_name
+                title: key.stockist_name.stockist_name
             }))
         }
         return [];
-    }, [ChemistData])
+    }, [StockistsData])
+
 
     const [OrderProduct] = useAddOrderedProductInformationChemistMutation();
     const [AddProduct, setAddProduct] = useState([]);
@@ -71,7 +75,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange }) => {
         let temp = { ...errors }
         if ('product_name' in fieldValues)
             //     temp.product_name = returnValidation(['null'], values.product_name)
-            // temp.chemist_name = returnValidation(['null'], values.chemist_name)
+            // temp.stockist_name = returnValidation(['null'], values.stockist_name)
             // temp.selectedDates = returnValidation(['null'], selectedDates)
 
             setErrors({
@@ -85,7 +89,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange }) => {
 
     const [initialFValues, setInitialFValues] = useState({
         product_name: "",
-        chemist_name: "",
+        stockist_name: "",
         quantity: ""
     })
 
@@ -100,7 +104,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange }) => {
 
     useEffect(() => {
         validate();
-    }, [values.product_name, values.chemist_name])
+    }, [values.product_name, values.stockist_name])
 
 
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -118,7 +122,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange }) => {
                         setSuccessMessage({ show: false, message: '' });
                         setInitialFValues({
                             product_name: "",
-                            chemist_name: "",
+                            stockist_name: "",
                             quantity: ""
                         });
                     }, 3000);
@@ -202,14 +206,14 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange }) => {
                     </Box> */}
                     <Box marginBottom={2}>
                         <FormControl sx={{ m: 1, width: 300 }}>
-                            <InputLabel>{"Select the Visited With*"}</InputLabel>
+                            <InputLabel>{"Select the Product*"}</InputLabel>
                             <Select
                                 labelId="demo-multiple-name-label"
                                 id="demo-multiple-name"
                                 multiple
                                 value={data}
                                 onChange={handleOrderProductChange}
-                                input={<OutlinedInput label="Select the Visited With*" />}
+                                input={<OutlinedInput label="Select the Product*" />}
                                 sx={{ width: '100%' }}
                                 style={{
                                     borderBlockColor: "white",
@@ -227,7 +231,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange }) => {
                     </Box>
                     {
                         data.map((key, index) => (
-                            <MyChemist id={key} key={index} AddProduct={AddProduct} setAddProduct={setAddProduct} chemistList={chemistList} />
+                            <MyChemist id={key} dcr_id={allData?.id} key={index} AddProduct={AddProduct} setAddProduct={setAddProduct} chemistList={chemistList} />
                         ))
                     }
                     <Stack spacing={1} direction="row">
@@ -272,72 +276,140 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange }) => {
 
 
 
-const MyChemist = ({ id, AddProduct, chemistList, setAddProduct }) => {
-    const [orderedQuantity, setOrderQuantity] = useState({
-        quantity: "",
-        chemist_name: "",
+const MyChemist = ({ id, AddProduct, chemistList, setAddProduct, dcr_id }) => {
+    const [orderedInformation, setOrderInformation] = useState({
+        id: "",
+        product_information: [],
     });
 
-    useEffect(() => {
-        if (id && orderedQuantity.quantity && orderedQuantity.chemist_name) {
-            // Check if the product already exists in AddProduct
-            const existingProductIndex = AddProduct.findIndex(item => item.id === id);
-            if (existingProductIndex !== -1) {
-                // Update existing product
-                setAddProduct(prevAddProduct => {
-                    const updatedAddProduct = [...prevAddProduct];
-                    updatedAddProduct[existingProductIndex].product_information = [{
-                        ordered_quantity: orderedQuantity.quantity,
-                        select_the_chemist: orderedQuantity.chemist_name
-                    }];
-                    return updatedAddProduct;
-                });
-            } else {
-                // Add new product
-                setAddProduct(prevAddProduct => [
-                    ...prevAddProduct,
-                    {
-                        id: id,
-                        product_information: [{
-                            ordered_quantity: orderedQuantity.quantity,
-                            select_the_chemist: orderedQuantity.stockist_name
-                        }]
-                    }
-                ]);
-            }
-        }
-    }, [id, orderedQuantity]);
 
-    const handleInputChange = (event) => {
+    const { data: dcrData } = useGetChemistOrderProductDataQuery({ dcr_id: dcr_id, id: id });
+
+    const transformDataWithKeys = (dataArray) => {
+        if (dataArray && dataArray.length > 0) {
+            const obj = dataArray[0];
+            let transformed = {};
+
+            Object.entries(obj).forEach(([key, value]) => {
+                transformed[key] = value;
+            });
+
+            return transformed;
+        }
+        return null;
+    };
+
+    const transformedData = transformDataWithKeys(dcrData);
+    const prevStockistDataIdRef = useRef(transformedData?.id);
+
+    useEffect(() => {
+        if (transformedData?.id) {
+            prevStockistDataIdRef.current = transformedData.id;
+        }
+    }, [transformedData?.id]);
+
+    useEffect(() => {
+        if (prevStockistDataIdRef.current) {
+            setOrderInformation((prev) => ({
+                ...prev,
+                id: prevStockistDataIdRef.current,
+            }));
+        }
+    }, [prevStockistDataIdRef.current]);
+
+    const [OrderData, setOrderedData] = useState([]);
+    const [orderedQuantity, setOrderedQuantity] = useState({});
+
+    const handleStockistChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+
+        setOrderedData(
+            typeof value === 'string' ? value.split(',') : value
+        );
+    };
+
+    const handleInputChange = (event, stockistId) => {
         const { name, value } = event.target;
-        setOrderQuantity(prevState => ({
+
+        setOrderedQuantity((prevState) => ({
             ...prevState,
-            [name]: value
+            [stockistId]: {
+                ...prevState[stockistId],
+                [name]: value,
+            },
         }));
     };
+
+    useEffect(() => {
+        if (orderedInformation.id && OrderData.length > 0) {
+            setAddProduct((prevAddProduct) => {
+                const existingProductIndex = prevAddProduct.findIndex(item => item.id === id);
+
+                const productInformation = OrderData.map(stockistId => ({
+                    ordered_quantity: orderedQuantity[stockistId]?.quantity || "",
+                    select_the_stockist: stockistId,
+                }));
+
+                if (existingProductIndex !== -1) {
+                    const updatedAddProduct = [...prevAddProduct];
+                    updatedAddProduct[existingProductIndex].product_information = productInformation;
+                    return updatedAddProduct;
+                } else {
+                    return [
+                        ...prevAddProduct,
+                        {
+                            id: orderedInformation.id,
+                            product_information: productInformation,
+                        },
+                    ];
+                }
+            });
+        }
+    }, [orderedInformation.id , OrderData, orderedQuantity]);
 
     return (
         <>
             <Box marginBottom={2}>
-                <Controls.Select
-                    name="chemist_name"
-                    label="Select the Chemist*"
-                    value={orderedQuantity.chemist_name}
-                    onChange={handleInputChange}
-                    options={chemistList}
-                />
+                <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel>{"Select the Stockist With*"}</InputLabel>
+                    <Select
+                        labelId="demo-multiple-name-label"
+                        id="demo-multiple-name"
+                        multiple
+                        value={OrderData}
+                        onChange={handleStockistChange}
+                        input={<OutlinedInput label="Select the Stockist With*" />}
+                        sx={{ width: '100%' }}
+                        style={{
+                            borderBlockColor: "white",
+                            width: "100%",
+                            textAlign: 'start'
+                        }}
+                    >
+                        {chemistList.map((item) => (
+                            <MenuItem key={item.id} value={item.id}>
+                                {item.title}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
             </Box>
-            <Box marginBottom={2}>
-                <Controls.Input
-                    name="quantity"
-                    label="Order Quantity*"
-                    value={orderedQuantity.quantity}
-                    onChange={handleInputChange}
-                />
-            </Box>
+            {OrderData.map((stockistId) => (
+                <Box marginBottom={2} key={stockistId}>
+                    <Controls.Input
+                        name="quantity"
+                        label="Order Quantity*"
+                        value={orderedQuantity[stockistId]?.quantity || ""}
+                        onChange={(event) => handleInputChange(event, stockistId)}
+                    />
+                </Box>
+            ))}
         </>
-    )
+    );
 };
+
 
 
 export default React.memo(ChemistOrderProduct); 

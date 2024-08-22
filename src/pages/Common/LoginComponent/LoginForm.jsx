@@ -85,6 +85,7 @@ const LoginFormInputs = () => {
                             Cookies.set('access', res.data.token.access);
                             Cookies.set('email', email);
                             Cookies.set('is_highest_priority', res.data.is_highest_priority)
+                            Cookies.set('company_area_id', res.data.company_area_id);
                             setSuccessMessage({ show: true, message: 'Successfully Logged In' })
                             setTimeout(() => setSuccessMessage({ show: false, message: "" }), 2000);
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {

@@ -50,7 +50,7 @@ const DefaultList = () => {
     const { data } = useGetAllStockistsQuery({
         id: Cookies.get('company_id'),
         page: page,
-        company_area: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_user_id')
+        company_area: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_area_id')
     });
 
     const [deleteStockist] = useDeleteStockistsByIdMutation();

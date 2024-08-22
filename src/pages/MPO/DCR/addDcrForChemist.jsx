@@ -170,7 +170,6 @@ const AddDCRforChemist = () => {
             ordered_products: 'normal',
             rewards: 'select',
         },
-
     })
 
     // 
@@ -289,144 +288,9 @@ const AddDCRforChemist = () => {
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
     const navigate = useNavigate();
 
+    console.log("AllMutipleData", AllMutipleData);
+
     const handlePostDcr = () => {
-
-        let sendingData = { ...values };
-
-
-        if (id) {
-            sendingData['id'] = id;
-            if (sendingData['company_product']) {
-                let companyProduct = PromotedProduct;
-                sendingData['company_product'] = [];
-                companyProduct.map(key => {
-                    sendingData['company_product'].push({ id: key });
-                });
-            } else {
-                sendingData['company_product'] = [];
-            }
-            if (sendingData['rewards']) {
-                let rewards = RewardOptions;
-
-                sendingData['rewards'] = [];
-                rewards.map(key => {
-                    sendingData['rewards'].push({ id: key });
-                });
-            } else {
-                sendingData['rewards'] = [];
-            }
-            if (sendingData['ordered_products']) {
-                let rewards = OrderProduct;
-
-                sendingData['ordered_products'] = [];
-                rewards.map(key => {
-                    sendingData['ordered_products'].push({ id: key });
-                });
-            } else {
-                sendingData['rewards'] = [];
-            }
-            if (sendingData['company_roles']) {
-                let companyRoles = CompanyRoles;
-                sendingData['company_roles'] = [];
-                companyRoles.map(key => {
-                    sendingData['company_roles'].push({ id: key });
-                });
-            } else {
-                sendingData['company_roles'] = [];
-            }
-            if (
-                sendingData['visited_area'] ||
-                sendingData['shift'] ||
-                sendingData['visited_chemist']
-            ) {
-                sendingData['visited_area'] = sendingData['visited_area'];
-                sendingData['shift'] = values.shift;
-                sendingData['visited_chemist'] = sendingData['visited_chemist'];
-            } else {
-                sendingData['visited_area'] = null;
-                sendingData['visited_chemist'] = null;
-                sendingData['shift'] = null;
-            }
-            updateDcr({ id: id, value: sendingData })
-                .then((res) => {
-
-                    if (res.data) {
-                        createMpoDcr({
-                            mpo_name: Cookies.get('company_user_id'),
-                            dcr_id: id,
-                            shift: values.shift,
-                        })
-                            .then((res) => {
-                                if (res.data) {
-                                    if (LastData === true) {
-                                        updateTourplan({
-                                            id: values.tour_id,
-                                            value: { is_dcr_added: true },
-                                        })
-                                            .then(res => {
-                                                if (res.data) {
-                                                    setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
-                                                    setTimeout(() => {
-                                                        setSuccessMessage({ show: false, message: '' });
-                                                        navigate('/dashboard/admin/dcr');
-                                                    }, 2000);
-                                                }
-                                            })
-                                            .catch(err => {
-
-                                            });
-                                    } else {
-                                        DcrForChemist()
-                                            .then((res) => {
-                                                if (res.data) {
-                                                    setSuccessMessage({ show: true, message: 'Dcr Added Successfully. Add Another Dcr.' });
-                                                    setTimeout(() => {
-                                                        setSuccessMessage({ show: false, message: '' });
-                                                        navigate(`/dashboard/admin/dcr/for/chemist?id=${res.data.id}`)
-                                                        setInitialFvalues(
-                                                            {
-                                                                visited_chemist: '',
-                                                                expenses: '',
-                                                                expenses_name: '',
-                                                                expenses_reasoning: '',
-                                                            }
-                                                        )
-                                                        setPromotedProduct([]);
-                                                        setRewardsOptions([]);
-                                                        setCompanyRoles([]);
-                                                    }, 2000);
-                                                }
-                                            })
-                                    }
-                                } else {
-                                    setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
-                                    setTimeout(() => {
-                                        setErrorMessage({ show: false, message: '' });
-                                    }, 2000);
-                                }
-                            })
-                            .catch(err => {
-                                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                                setTimeout(() => {
-                                    setErrorMessage({ show: false, message: '' });
-                                }, 2000);
-                            });
-                    } else {
-                        setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 2000);
-                    }
-                })
-                .catch((err) => {
-
-                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 2000);
-                })
-        }
-
         // if (AllMutipleData.length !== []) {
         if (AllMutipleData.length !== 0) {
             for (const allData of AllMutipleData) {
@@ -440,6 +304,12 @@ const AddDCRforChemist = () => {
                     });
                 } else {
                     sendingData['company_product'] = [];
+                }
+                let ordered_products = sendingData?.Formdata?.ordered_products;
+                if (ordered_products.length !== 0) {
+                    sendingData['ordered_products'] = ordered_products;
+                } else {
+                    sendingData['ordered_products'] = [];
                 }
                 if (sendingData['rewards']) {
                     let rewards = allData.rewards;
@@ -463,11 +333,16 @@ const AddDCRforChemist = () => {
                 if (
                     sendingData['visited_area'] ||
                     sendingData['shift'] ||
-                    sendingData['visited_chemist']
+                    sendingData['visited_chemist'] ||
+                    sendingData['date']
                 ) {
                     sendingData['visited_area'] = sendingData['visited_area'];
                     sendingData['shift'] = allData.shift;
                     sendingData['visited_chemist'] = sendingData['visited_chemist'];
+                    sendingData['expenses'] = sendingData?.Formdata?.expenses;
+                    sendingData['expenses_name'] = sendingData?.Formdata?.expenses_name;
+                    sendingData['expenses_reasoning'] = sendingData?.Formdata?.expenses_reasoning;
+                    sendingData['date'] = allData.date;
                 } else {
                     sendingData['visited_area'] = null;
                     sendingData['visited_chemist'] = null;
@@ -820,7 +695,9 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
         expenses_name: "",
         expenses: "",
         expenses_reasoning: "",
+        ordered_products: [],
     })
+
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -838,7 +715,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
                 shift: values.shift,
                 date: values.date,
                 visited_area: values.visited_area,
-                visited_doctor: data.chemist_id,
+                visited_chemist: data.chemist_id,
                 Formdata,
                 rewards: RewardOptions,
                 visited_with: CompanyRoles,
@@ -847,6 +724,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
                     request: 'PATCH',
                     company_product: 'select',
                     company_roles: 'select',
+                    ordered_products: 'normal',
                     rewards: 'select',
                 },
             };
@@ -857,15 +735,17 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
     //! Ordered Product
     const [OrderProduct, setOrderedProduct] = useState([]);
 
-    const handleOrderProductChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setOrderedProduct(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    }
+    const handleOrderedProducts = (e) => {
+        setOrderedProduct(e.target.value);
+        if (!Formdata.ordered_products.includes(e.target.value)) {
+            setFormData(prevFormdata => ({
+                ...prevFormdata,
+                ordered_products: e.target.value.map((key) => ({
+                    id: key
+                })),
+            }));
+        }
+    };
 
 
     return (
@@ -996,7 +876,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
             </TableCell>
             <TableCell align="left">
                 {/* //! Chemist Ordered Product */}
-                <ChemistOrderProduct id={id} data={OrderProduct} handleOrderProductChange={handleOrderProductChange} />
+                <ChemistOrderProduct id={id} data={OrderProduct} allData={AllMutipleData[sn]} handleOrderProductChange={handleOrderedProducts} />
             </TableCell>
             <TableCell align="left">
                 <Controls.Input
