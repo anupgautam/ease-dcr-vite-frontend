@@ -108,13 +108,13 @@ const ChemistSearch = () => {
     const [companyId, setCompanyId] = useState();
 
     const handleOptionChange = useCallback((event, value) => {
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(parseInt(Cookies.get('company_id')));
         setMPOArea(value?.id || "")
     }, [])
 
     const handleMPONameChange = useCallback((event, value) => {
         setMPOName(value?.id || "")
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(parseInt(Cookies.get('company_id')));
     }, [])
 
     //! Pagination Logic
@@ -143,7 +143,7 @@ const ChemistSearch = () => {
             setSearchDataCondition(false);
             setSearchData([]);
         } else {
-            SearchChemist({ search: searchQuery, company_id: Cookies.get('company_id') })
+            SearchChemist({ search: searchQuery, company_id: parseInt(Cookies.get('company_id')) })
                 .then((res) => {
                     if (res.data) {
                         setSearchDataCondition(true);

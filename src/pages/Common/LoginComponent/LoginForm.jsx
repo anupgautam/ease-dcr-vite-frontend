@@ -142,6 +142,7 @@ const LoginFormInputs = () => {
     useEffect(() => {
         const handleKeyDown = e => {
             if (e.key === 'Enter' && email && password) {
+                e.preventDefault();
                 handleSubmission();
             }
         };
@@ -221,7 +222,7 @@ const LoginFormInputs = () => {
                             Forgot Password?
                         </Link>
                     </Stack>
-                    <LoadingButton className="loginbutton" fullWidth size="large" type="submit" variant="contained" onClick={handleSubmission} >
+                    <LoadingButton className="loginbutton" fullWidth size="large" type="submit" variant="contained">
                         Login
                     </LoadingButton>
                     {/* <p className=' text-center my-3 font-public_sans font-semibold text-gray-400'>—————— or ——————</p>

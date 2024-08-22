@@ -45,7 +45,6 @@ const TABLE_HEAD = [
     { id: 'dcr_feeded', label: 'DCR Feeded', alignRight: false },
     { id: 'dcr_pending', label: 'DCR Pending', alignRight: false },
     { id: 'summary', label: 'Remark', alignRight: false },
-    { id: '' },
 ];
 
 const AllUserDcr = () => {
@@ -208,7 +207,7 @@ const AllUserDcr = () => {
                                                     <>
                                                         {
                                                             userList?.data?.map((usersearch, index) => (
-                                                                <TableRow hover tabIndex={-1} key={index}>
+                                                                <TableRow hover tabIndex={-1} key={`${usersearch.id}-${index}`}>
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell component="th" scope="row" align="left" >
                                                                         {/* <Stack direction="row" alignItems="center" spacing={2}> */}

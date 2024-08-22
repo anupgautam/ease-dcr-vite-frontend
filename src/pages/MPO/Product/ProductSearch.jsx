@@ -88,7 +88,7 @@ const ProductSearch = () => {
     //! Options
     const handleDivisionChange = useCallback((event, value) => {
         setCompanyDivision(value?.id || '')
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(parseInt(Cookies.get('company_id')));
     }, [])
 
     //!Pagination logic
@@ -118,7 +118,7 @@ const ProductSearch = () => {
             setSearchDataCondition(false);
             setSearchData([]);
         } else {
-            SearchChemist({ search: searchQuery, company_id: Cookies.get('company_id') })
+            SearchChemist({ search: searchQuery, company_id: parseInt(Cookies.get('company_id')) })
                 .then((res) => {
                     if (res.data) {
                         setSearchDataCondition(true);

@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import { debounce, parseInt } from 'lodash';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     Card,
@@ -139,11 +139,18 @@ const DoctorSearch = () => {
 
     const onSearch = (e) => {
         const searchQuery = e.target.value;
+
+        // if (!mpoName) {
+        //     setSearchDataCondition(false);
+        //     setSearchData([]);
+        //     return;
+        // }
+
         if (searchQuery === '') {
             setSearchDataCondition(false);
             setSearchData([]);
         } else {
-            SearchDoctor({ search: searchQuery, company_id: Cookies.get('company_id') })
+            SearchDoctor({ search: searchQuery, company_id: parseInt(Cookies.get('company_id')) })
                 .then((res) => {
                     setSearchDataCondition(true);
                     if (res.data) {
@@ -151,6 +158,7 @@ const DoctorSearch = () => {
                     }
                 })
                 .catch((err) => {
+                    console.log(err)
                 })
         }
     }

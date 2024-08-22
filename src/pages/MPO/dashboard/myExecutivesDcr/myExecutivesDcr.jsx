@@ -65,13 +65,14 @@ const MyExecutivesDcr = () => {
 
     const lowerList = useMemo(() => {
         if (myHigherData !== undefined) {
-            return myHigherData.map((key, index) => ({
+            return myHigherData?.map((key, index) => ({
                 id: key.id,
                 title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name
             }));
         }
         return [];
     }, [myHigherData])
+    console.log(myHigherData)
 
     const [selectedOption, setSelectedOption] = useState(() => {
         // Check if myHigherData is not empty and contains at least one element
