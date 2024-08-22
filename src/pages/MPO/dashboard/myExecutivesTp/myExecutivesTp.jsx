@@ -97,7 +97,7 @@ const MyExecutiveTp = () => {
 
     const lowerList = useMemo(() => {
         if (myHigherData !== undefined) {
-            return myHigherData.map((key, index) => ({
+            return myHigherData?.map((key, index) => ({
                 id: key.id,
                 title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name,
                 role: key.role_name.role_name.role_name
@@ -126,19 +126,18 @@ const MyExecutiveTp = () => {
     useEffect(() => {
         let dataList = []
         if (roleList?.data) {
-            roleList.data.map((key) => {
-                dataList.push({ id: key.id, title: key.role_name_value })
+            roleList?.data?.map((key) => {
+                dataList?.push({ id: key.id, title: key?.role_name_value })
             })
         }
         setCompanyRoleList(dataList);
     }, [roleList])
 
-
     useEffect(() => {
         let dataList1 = []
         if (userList?.data) {
-            userList.data.map((key) => {
-                dataList1.push({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name })
+            userList?.data?.map((key) => {
+                dataList1.push({ id: key.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name })
             })
         }
         setCompanyUserList(dataList1);

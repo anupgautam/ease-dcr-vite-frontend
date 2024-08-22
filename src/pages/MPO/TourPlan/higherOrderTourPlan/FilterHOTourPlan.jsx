@@ -267,7 +267,7 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                             </Scrollbar>
                             <Box justifyContent={'center'} alignItems='center' display={'flex'}
                                 sx={{ margin: "20px 0px" }} >
-                                {hoTourPlan ?
+                                {hoTourPlan && typeof hoTourPlan?.count === 'number' ?
                                     <Pagination
                                         count={parseInt(hoTourPlan?.data?.count / 200) + 1}
                                         onChange={handleChangePage}

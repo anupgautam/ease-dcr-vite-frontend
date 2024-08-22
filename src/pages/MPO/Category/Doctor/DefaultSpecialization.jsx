@@ -109,7 +109,7 @@ const DefaultSpecialization = () => {
                                                 ))}
                                         </> :
                                             <>{data && data?.map((categories, index) => (
-                                                <TableRow hover tabIndex={-1} role="checkbox" key={categories.id || index}>
+                                                <TableRow hover tabIndex={-1} key={categories.id || `fallback-key-${index}`}>
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         <Typography variant="subtitle2" noWrap>

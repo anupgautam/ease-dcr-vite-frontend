@@ -206,7 +206,7 @@ const DcrListData = () => {
                                                                 {/* <Button>VIEW DETAILS</Button> */}
                                                                 <IconButton>
                                                                     <Badge>
-                                                                        <Iconify icon="fluent:info-28-filled" sx={{ color: 'primary.main' }} />
+                                                                        <Iconify icon="mdi:eye" sx={{ color: 'primary.main' }} />
                                                                     </Badge>
                                                                 </IconButton>
                                                             </Link>
@@ -237,7 +237,8 @@ const DcrListData = () => {
                                                             {/* <Button>VIEW DETAILS</Button> */}
                                                             <IconButton>
                                                                 <Badge>
-                                                                    <Iconify icon="fluent:info-28-filled" sx={{ color: 'primary.main' }} />
+                                                                    {/* <Iconify icon="mdi:eye" sx={{ color: 'primary.main' }} /> */}
+                                                                    <Iconify icon="mdi:eye" sx={{ color: 'primary.main' }} />
                                                                 </Badge>
                                                             </IconButton>
                                                         </Link>

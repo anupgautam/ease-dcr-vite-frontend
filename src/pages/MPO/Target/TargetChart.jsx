@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import {
   MenuItem,
   Box,
@@ -10,7 +10,9 @@ import {
 import { useSelector } from 'react-redux';
 import ApexChart from '@/reusable/components/charts/apexChart';
 import { useGetTargetsByUserMutation } from '@/api/ExpensesSlices/targetSlices';
+import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRolesSlice';
 import { useGetAllCompanyUserRoleByRoleQuery } from '@/api/CompanySlices/companyUserRoleSlice';
+import Cookies from 'js-cookie'
 
 export default function TargetChart(props) {
   const { children, value, index, ...other } = props;
@@ -18,12 +20,23 @@ export default function TargetChart(props) {
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedCompanyUser, setSelectedCompanyUser] = useState(null);
   const [companyUserList, setCompanyUserList] = useState([]);
-  const roles = useSelector(state => state?.dcrData?.company_roles);
+  // const roles = useSelector(state => state?.dcrData?.company_roles);
   const yearList = ['2080', '2081', '2082', '2083', '2084', '2085', '2086', '2087', '2088', '2089', '2090'];
   const [chartData, setChartData] = useState(null);
 
   const companyUser = useGetAllCompanyUserRoleByRoleQuery(selectedRole);
 
+  const { data: rolesData } = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+
+  const roles = useMemo(() => {
+    if (rolesData !== undefined) {
+      return rolesData?.map((key) => ({
+        id: key.id,
+        title: key.role_name.role_name
+      }))
+    }
+    return [];
+  }, [rolesData])
 
   useEffect(() => {
     if (companyUser?.data) {
@@ -35,8 +48,7 @@ export default function TargetChart(props) {
     }
   }, [companyUser])
 
-  console.log(roles)
-  
+
   const [targetUser] = useGetTargetsByUserMutation();
 
   useEffect(() => {
