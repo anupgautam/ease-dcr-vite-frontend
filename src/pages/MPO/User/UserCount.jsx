@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import { Typography } from '@mui/material';
 import { useGetAllcompanyUserRolesQuery } from '@/api/CompanySlices/companyUserRoleSlice';
-import Cookies from 'js-cookie'
-
+import { CookieContext } from '@/App'
 
 const UserCount = () => {
+
+    const { company_id } = useContext(CookieContext)
     const [page, setPage] = useState(1)
     const handleChangePage = useCallback((e) => {
         const data = e.target.ariaLabel
@@ -12,7 +13,7 @@ const UserCount = () => {
         setPage(thisArray[3]);
     }, [])
 
-    const { data } = useGetAllcompanyUserRolesQuery({ company_name: Cookies.get('company_id'), page: page });
+    const { data } = useGetAllcompanyUserRolesQuery({ company_name: company_id, page: page });
     return (
         <>
             {

@@ -112,7 +112,7 @@ export default function NotificationsPopover() {
           <List
             disablePadding
           >
-            {data.slice(0, 2).map((notification) => (
+            {data?.slice(0, 2).map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>

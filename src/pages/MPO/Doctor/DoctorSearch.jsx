@@ -1,5 +1,5 @@
 import { debounce, parseInt } from 'lodash';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -39,8 +39,8 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import Test from './DefaultList';
 import EditDoctor from './EditDoctor';
-import Cookies from 'js-cookie'
 import Scrollbar from '@/components/scrollbar/Scrollbar';
+import { CookieContext } from '@/App'
 
 
 const TABLE_HEAD = [
@@ -53,6 +53,7 @@ const TABLE_HEAD = [
 ];
 
 const DoctorSearch = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
     //! Get MPO Names
     const [MpoData] = usePostAllMPONamesNoPageMutation()
 
@@ -67,18 +68,18 @@ const DoctorSearch = () => {
     }, [MpoList])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     //! MPO Area
-    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: Cookies.get('company_id'), mpo_name: Cookies.get('user_role') === 'admin' ? mpoName : Cookies.get('company_user_id') })
+    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: company_id, mpo_name: user_role === 'admin' ? mpoName : company_user_id })
 
     const [mpoArea, setMPOArea] = useState('')
 
@@ -110,13 +111,13 @@ const DoctorSearch = () => {
     const [companyId, setCompanyId] = useState();
 
     const handleOptionChange = useCallback((event, value) => {
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
         setMPOArea(value?.id || "")
     }, [])
 
     const handleMPONameChange = useCallback((event, value) => {
         setMPOName(value?.id || "")
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
     }, [])
 
     //! Pagination Logic
@@ -129,7 +130,7 @@ const DoctorSearch = () => {
     }, [])
 
     // ! Search Logic
-    const { data: DoctorData } = useGetAllDoctorByMpoAndMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_area: mpoArea, mpo_name: Cookies.get('user_role') === 'admin' ? mpoName : Cookies.get('company_user_id'), page: page })
+    const { data: DoctorData } = useGetAllDoctorByMpoAndMpoAreaQuery({ company_name: company_id, mpo_area: mpoArea, mpo_name: user_role === 'admin' ? mpoName : company_user_id, page: page })
 
     const [SearchData, setSearchData] = useState([]);
     const [SearchDataCondition, setSearchDataCondition] = useState(false);
@@ -149,7 +150,7 @@ const DoctorSearch = () => {
             setSearchDataCondition(false);
             setSearchData([]);
         } else {
-            SearchDoctor({ search: searchQuery, company_id: parseInt(Cookies.get('company_id')) })
+            SearchDoctor({ search: searchQuery, company_id: parseInt(company_id) })
                 .then((res) => {
                     setSearchDataCondition(true);
                     if (res.data) {
@@ -198,7 +199,7 @@ const DoctorSearch = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     {
-                        Cookies.get('user_role') === 'admin' &&
+                        user_role === 'admin' &&
                         <Grid container spacing={2}>
                             <Grid item xs={5.5} sm={3}>
                                 <TextField

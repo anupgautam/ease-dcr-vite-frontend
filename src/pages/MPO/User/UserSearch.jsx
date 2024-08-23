@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import {
   Card,
   Badge,
@@ -36,12 +36,12 @@ import {
 import EditUser from "./EditUser";
 import SearchIcon from "@mui/icons-material/Search";
 import Test from "./DefaultList";
-import Cookies from "js-cookie";
 import { useGetCompanyRolesByCompanyQuery } from "@/api/CompanySlices/companyRolesSlice";
 import { useGetUsersByCompanyRoleIdQuery } from "@/api/MPOSlices/UserSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
 import { useUpdateUsersMutation } from "@/api/DemoUserSlice";
 import { Link } from "react-router-dom";
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
   { id: "user_name", label: "User Name", alignRight: false },
@@ -57,6 +57,8 @@ const TABLE_HEAD = [
 ];
 
 const UserSearch = () => {
+  const { company_id, access, refresh } = useContext(CookieContext)
+
   //! For drawer
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -82,13 +84,13 @@ const UserSearch = () => {
   }, []);
 
   // ! Get all users wala
-  const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get("company_id"));
+  const roleList = useGetCompanyRolesByCompanyQuery(company_id);
 
   const [roleSelect, setRoleSelect] = useState("");
   const [companyRoleList, setCompanyRoleList] = useState([]);
 
   const userList = useGetUsersByCompanyRoleIdQuery({
-    id: Cookies.get("company_id"),
+    id: company_id,
     page: roleSelect === null ? undefined : roleSelect,
   });
 
@@ -108,7 +110,7 @@ const UserSearch = () => {
   // !on search
   const onSearch = (e) => {
     const searchQuery = e.target.value;
-    const company_id = Cookies.get("company_id");
+    const company_id = company_id;
     setSearchResults({ search: searchQuery, company_id });
     searchUser(searchResults);
     //
@@ -159,9 +161,9 @@ const UserSearch = () => {
     formData.append("station_type", user.station_type);
     formData.append("company_area", user.company_area.id);
     formData.append("id", user.id);
-    formData.append("company_id", Cookies.get("company_id"));
-    formData.append("refresh", Cookies.get("refresh"));
-    formData.append("access", Cookies.get("access"));
+    formData.append("company_id", company_id);
+    formData.append("refresh", refresh);
+    formData.append("access", access);
     formData.append("date_of_joining", user.user_name.date_of_joining);
     UserStatus(formData).then((res) => {
       if (res.data) {

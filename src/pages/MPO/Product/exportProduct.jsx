@@ -1,18 +1,21 @@
 import { Close } from "@mui/icons-material";
 import { Autocomplete, Box, Button, Drawer, IconButton, Stack, TextField, Typography } from "@mui/material";
 import Cookies from "js-cookie";
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { useGetFilteredDivisionsQuery } from "@/api/DivisionSilces/companyDivisionSlice";
 import { useGetProductsByDivisionWithoutPaginationQuery } from "@/api/MPOSlices/ProductSlice";
 import ExportToExcel from "@/reusable/utils/exportSheet";
+import { CookieContext } from '@/App'
 
 const ExportProduct = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [mpoName, setMPOName] = useState('');
     const companyArea = [];
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
 
-    const { data: companyAreaData } = useGetFilteredDivisionsQuery(Cookies.get('company_id'))
+    const { data: companyAreaData } = useGetFilteredDivisionsQuery(company_id)
 
 
     if (companyAreaData) {
@@ -24,7 +27,7 @@ const ExportProduct = () => {
         })
     }
 
-    const { data } = useGetProductsByDivisionWithoutPaginationQuery({ company_name: Cookies.get('company_id'), division_name: mpoName.id === undefined ? "" : mpoName.id })
+    const { data } = useGetProductsByDivisionWithoutPaginationQuery({ company_name: company_id, division_name: mpoName.id === undefined ? "" : mpoName.id })
 
 
 

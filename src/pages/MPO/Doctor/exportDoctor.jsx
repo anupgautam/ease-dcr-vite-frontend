@@ -1,12 +1,16 @@
+import { useContext } from 'react'
 import { Close } from "@mui/icons-material";
 import { Autocomplete, Box, Button, Drawer, IconButton, Stack, TextField, Typography } from "@mui/material";
-import Cookies from "js-cookie";
 import React, { useEffect, useState, useMemo } from "react";
 import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
 import { useGetAllVisitedMpoWiseDoctorQuery } from "@/api/MPOSlices/doctorApiSlice";
 import ExportToExcel from "@/reusable/utils/exportSheet";
+import { CookieContext } from '@/App'
 
 const ExportDoctor = () => {
+
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [MpoData] = usePostAllMPONamesNoPageMutation();
     const [mpoName, setMPOName] = useState('');
     const [MpoList, setMpoList] = useState([]);
@@ -20,7 +24,7 @@ const ExportDoctor = () => {
         return [];
     }, [MpoList])
 
-    const { data } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: Cookies.get('company_id'), mpo_name: mpoName.id === undefined ? "" : mpoName.id, mpo_area: "" });
+    const { data } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_name: mpoName.id === undefined ? "" : mpoName.id, mpo_area: "" });
 
     const headers = [
 
@@ -50,15 +54,15 @@ const ExportDoctor = () => {
     }))
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     const handleMPONameChange = (event, value) => {
         setMPOName(value)
@@ -113,10 +117,10 @@ const ExportDoctor = () => {
                                     <TextField {...params} />
                                 )}
                                 renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
                             />
                         </Box>
                         <Stack spacing={1} direction="row">

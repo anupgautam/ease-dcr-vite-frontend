@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -40,8 +40,8 @@ import {
 import EditProduct from './EditProduct';
 import SearchIcon from '@mui/icons-material/Search';
 import Test from './DefaultList';
-import Cookies from 'js-cookie'
 import Scrollbar from '@/components/scrollbar/Scrollbar';
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'product_name', label: 'Product Name', alignRight: false },
@@ -52,9 +52,10 @@ const TABLE_HEAD = [
 ];
 
 const ProductSearch = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Company Division
-    const Division = useGetFilteredDivisionsQuery(Cookies.get('company_id'));
+    const Division = useGetFilteredDivisionsQuery(company_id);
 
 
     const [companyDivision, setCompanyDivision] = useState('')
@@ -68,7 +69,7 @@ const ProductSearch = () => {
         return [];
     }, [Division])
 
-    const { data: productDivision } = useGetProductsByDivisionIdQuery({ company_name: Cookies.get('company_id'), division_name: companyDivision })
+    const { data: productDivision } = useGetProductsByDivisionIdQuery({ company_name: company_id, division_name: companyDivision })
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -88,7 +89,7 @@ const ProductSearch = () => {
     //! Options
     const handleDivisionChange = useCallback((event, value) => {
         setCompanyDivision(value?.id || '')
-        setCompanyId(parseInt(Cookies.get('company_id')));
+        setCompanyId(parseInt(company_id));
     }, [])
 
     //!Pagination logic
@@ -118,7 +119,7 @@ const ProductSearch = () => {
             setSearchDataCondition(false);
             setSearchData([]);
         } else {
-            SearchChemist({ search: searchQuery, company_id: parseInt(Cookies.get('company_id')) })
+            SearchChemist({ search: searchQuery, company_id: parseInt(company_id) })
                 .then((res) => {
                     if (res.data) {
                         setSearchDataCondition(true);
@@ -180,7 +181,7 @@ const ProductSearch = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     {
-                        Cookies.get('user_role') === 'admin' &&
+                        user_role === 'admin' &&
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
                                 <TextField
@@ -264,7 +265,7 @@ const ProductSearch = () => {
                                                                     <TableCell align="left">
                                                                         {/* //! Edit  */}
                                                                         {
-                                                                            Cookies.get('user_role') === "admin" &&
+                                                                            user_role === "admin" &&
                                                                             <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(productsearch.id)} >
                                                                                 <Badge>
                                                                                     <Iconify icon="eva:edit-fill" />
@@ -273,7 +274,7 @@ const ProductSearch = () => {
                                                                         }
                                                                         {/* //! Delete  */}
                                                                         {
-                                                                            Cookies.get('user_role') === "admin" &&
+                                                                            user_role === "admin" &&
                                                                             <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(productsearch.id); handleClickOpen() }}>
                                                                                 <Badge>
                                                                                     <Iconify icon="eva:trash-2-outline" />
@@ -351,7 +352,7 @@ const ProductSearch = () => {
                                                                                         <TableCell align="left">
                                                                                             {/* //! Edit  */}
                                                                                             {
-                                                                                                Cookies.get('user_role') === "admin" &&
+                                                                                                user_role === "admin" &&
                                                                                                 <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(productsearch.id)} >
                                                                                                     <Badge>
                                                                                                         <Iconify icon="eva:edit-fill" />
@@ -360,7 +361,7 @@ const ProductSearch = () => {
                                                                                             }
                                                                                             {/* //! Delete  */}
                                                                                             {
-                                                                                                Cookies.get('user_role') === "admin" &&
+                                                                                                user_role === "admin" &&
                                                                                                 <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(productsearch.id); handleClickOpen() }}>
                                                                                                     <Badge>
                                                                                                         <Iconify icon="eva:trash-2-outline" />

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Badge,
     Button,
@@ -17,15 +17,16 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import EditDoctor from './EditDoctor';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie';
 import Iconify from '@/components/iconify/Iconify';
-
 import {
     useGetAllDoctorsQuery,
     useDeleteDoctorsByIdMutation
 } from "../../../api/MPOSlices/DoctorSlice";
+import { CookieContext } from '@/App'
 
 const DefaultList = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
@@ -50,9 +51,9 @@ const DefaultList = () => {
     }, [])
 
     const { data } = useGetAllDoctorsQuery({
-        id: Cookies.get("company_id"),
+        id: company_id,
         page: page,
-        mpo_name: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_user_id')
+        mpo_name: user_role === 'admin' ? "" : company_user_id
     });
 
     const [deleteDoctor] = useDeleteDoctorsByIdMutation();
@@ -100,7 +101,7 @@ const DefaultList = () => {
                             <TableCell align="left">{doc?.doctor_name?.doctor_qualification}</TableCell>
                             <TableCell align="left">{doc?.doctor_name?.doctor_specialization?.category_name}</TableCell>
                             <TableCell align="left">{doc?.doctor_name?.doctor_category}</TableCell>
-                            {Cookies.get('user_role') === 'admin' && (
+                            {user_role === 'admin' && (
                                 <>
                                     <TableCell align="left">
                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(doc.id, doc.doctor_name.id)} >

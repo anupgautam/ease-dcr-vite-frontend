@@ -1,12 +1,14 @@
 import { Close } from "@mui/icons-material";
 import { Autocomplete, Box, Button, Drawer, IconButton, Stack, TextField, Typography } from "@mui/material";
-import Cookies from "js-cookie";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
 import { useGetAllVisitedMpoWiseChemistQuery } from "@/api/MPOSlices/doctorApiSlice";
 import ExportToExcel from "@/reusable/utils/exportSheet";
+import { CookieContext } from '@/App'
 
 const ExportChemist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [MpoData] = usePostAllMPONamesNoPageMutation();
     const [mpoName, setMPOName] = useState('');
     const [MpoList, setMpoList] = useState([]);
@@ -19,7 +21,7 @@ const ExportChemist = () => {
         return [];
     }, [MpoList])
 
-    const { data } = useGetAllVisitedMpoWiseChemistQuery({ company_name: Cookies.get('company_id'), mpo_name: mpoName.id === undefined ? "" : mpoName.id, mpo_area: "" });
+    const { data } = useGetAllVisitedMpoWiseChemistQuery({ company_name: company_id, mpo_name: mpoName.id === undefined ? "" : mpoName.id, mpo_area: "" });
 
 
     const headers = [
@@ -47,15 +49,15 @@ const ExportChemist = () => {
     }))
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     const handleMPONameChange = (event, value) => {
         setMPOName(value)
@@ -109,10 +111,10 @@ const ExportChemist = () => {
                                     <TextField {...params} />
                                 )}
                                 renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
                             />
                         </Box>
                         <Stack spacing={1} direction="row">

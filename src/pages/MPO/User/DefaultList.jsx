@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useContext } from 'react';
 import {
     Badge,
     Button,
@@ -26,6 +26,7 @@ import { useTheme } from "@mui/material/styles";
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
 import { useUnlockUsersMutation } from '../../../api/MPOSlices/UserSlice'
+import { CookieContext } from '../../../App';
 
 const TABLE_HEAD = [
     { id: 'name', label: 'Name', alignRight: false },
@@ -37,6 +38,8 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = ({ filterValue, handleChangeStatus }) => {
+
+    const { company_id } = useContext(CookieContext);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -81,7 +84,7 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     // ! Get all users wala
-    const { data, refetch } = useGetAllcompanyUserRolesQuery({ company_name: Cookies.get('company_id'), page: page, is_active: filterValue });
+    const { data, refetch } = useGetAllcompanyUserRolesQuery({ company_name: company_id, page: page, is_active: filterValue });
 
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });

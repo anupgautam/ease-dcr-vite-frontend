@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography, Button, Grid
@@ -19,18 +19,19 @@ import {
     useGetDoctorsSpecialiationByIdQuery,
     useUpdateDoctorsMutation,
 } from "@/api/MPOSlices/DoctorSlice";
+import { CookieContext } from '@/App'
 
-
-import Cookies from 'js-cookie'
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 
 const EditDoctor = ({ id, onClose, divisionId }) => {
+
+    const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
 
     //! Getting doctor by ID
     const Doctor = useGetDoctorsByIdQuery(id);
 
     //! Get doctor categories
-    const DoctorSpecialization = useGetDoctorsSpecializationQuery(Cookies.get('company_id'))
+    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id)
 
 
     const doctorspecializations = useMemo(() => {
@@ -41,7 +42,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
     }, [DoctorSpecialization])
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Doctor?.data?.mpo_name });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: Doctor?.data?.mpo_name });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
@@ -155,10 +156,10 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
         formData.append("doctor_nmc_number", values.doctor_nmc_number);
         formData.append("doctor_qualification", values.doctor_qualification);
         formData.append("mpo_name", values.mpo_name);
-        formData.append("company_id", Cookies.get('company_id'));
+        formData.append("company_id", company_id);
         formData.append('id', Doctor.data.doctor_name.id);
-        formData.append('refresh', Cookies.get('refresh'))
-        formData.append('access', Cookies.get('access'));
+        formData.append('refresh', refresh)
+        formData.append('access', access);
         formData.append('is_investment', false)
         try {
             const response = await updateDoctors(formData)

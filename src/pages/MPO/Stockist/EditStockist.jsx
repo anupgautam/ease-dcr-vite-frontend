@@ -18,11 +18,12 @@ import {
     useUpdateStockistsMutation
 } from "@/api/MPOSlices/StockistSlice";
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 const EditStockist = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
 
     const companyAreaData = useMemo(() => {
         if (CompanyArea) {
@@ -113,7 +114,7 @@ const EditStockist = ({ idharu, onClose }) => {
         formData.append("pan_vat_number", values.pan_vat_number);
         formData.append("stockist_territory", values.stockist_territory);
         formData.append('id', idharu)
-        formData.append("company_name", Cookies.get("company_id"));
+        formData.append("company_name", company_id);
         formData.append("stockist_category", values.stockist_category);
         updateStockists(formData)
         try {

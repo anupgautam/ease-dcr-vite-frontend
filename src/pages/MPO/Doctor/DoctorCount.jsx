@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback,useContext } from 'react'
 import { Typography } from '@mui/material';
 import { useGetAllDoctorsQuery } from "../../../api/MPOSlices/DoctorSlice"
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 
 const DoctorCount = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
@@ -13,7 +14,7 @@ const DoctorCount = () => {
         setPage(thisArray[3]);
     }, [])
 
-    const { data } = useGetAllDoctorsQuery({ id: Cookies.get("company_id"), page: page, mpo_name: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_user_id') });
+    const { data } = useGetAllDoctorsQuery({ id: company_id, page: page, mpo_name: user_role === 'admin' ? "" : company_user_id });
     return (
         <>
             {

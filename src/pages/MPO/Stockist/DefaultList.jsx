@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Typography,
     IconButton,
@@ -16,15 +16,16 @@ import Skeleton from 'react-loading-skeleton';
 import EditStockist from './EditStockist';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie';
 import {
     useGetAllStockistsQuery,
     useDeleteStockistsByIdMutation
 } from "../../../api/MPOSlices/StockistSlice";
 import Iconify from '@/components/iconify/Iconify';
-
+import { CookieContext } from '@/App'
 
 const DefaultList = () => {
+    const { company_id, user_role, company_area_id } = useContext(CookieContext)
+
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
@@ -46,11 +47,11 @@ const DefaultList = () => {
     const handleChangePage = useCallback((event, newPage) => {
         setPage(newPage);
     }, [])
-    
+
     const { data } = useGetAllStockistsQuery({
-        id: Cookies.get('company_id'),
+        id: company_id,
         page: page,
-        company_area: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_area_id')
+        company_area: user_role === 'admin' ? "" : company_area_id
     });
 
     const [deleteStockist] = useDeleteStockistsByIdMutation();
@@ -93,7 +94,7 @@ const DefaultList = () => {
                             <TableCell align="left">{stockist.stockist_name.stockist_contact_number}</TableCell>
                             <TableCell align="left">{stockist.stockist_name.stockist_address}</TableCell>
                             <TableCell align="left">{stockist.stockist_name.stockist_category}</TableCell>
-                            {Cookies.get('user_role') === 'admin' && (
+                            {user_role === 'admin' && (
                                 <>
                                     <TableCell align="left">
                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(stockist.stockist_name.id)} >

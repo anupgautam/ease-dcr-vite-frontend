@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Grid,
@@ -21,10 +21,12 @@ import {
     useUpdateChemistsMutation,
 } from "@/api/MPOSlices/ChemistSlice";
 
-import Cookies from 'js-cookie'
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
+import { CookieContext } from '@/App'
 
 const EditChemist = ({ idharu, onClose }) => {
+
+    const { company_id, access, refresh } = useContext(CookieContext)
 
     //! Getting chemist by ID
     const Chemist = useGetChemistsByIdQuery(idharu);
@@ -36,7 +38,7 @@ const EditChemist = ({ idharu, onClose }) => {
     ]
 
     //! Get chemist area
-    const ChemistArea = useGetChemistsAreaQuery(Cookies.get('company_id'))
+    const ChemistArea = useGetChemistsAreaQuery(company_id)
 
     const chemistareas = useMemo(() => {
         if (ChemistArea?.data) {
@@ -49,7 +51,7 @@ const EditChemist = ({ idharu, onClose }) => {
 
     const AreaById = useGetChemistsAreaByIdQuery(idharu);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Chemist?.data?.mpo_name });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: Chemist?.data?.mpo_name });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
@@ -153,10 +155,10 @@ const EditChemist = ({ idharu, onClose }) => {
         formData.append("chemist_territory", values.chemist_territory);
         formData.append("chemist_contact_person", values.chemist_contact_person);
         formData.append("mpo_name", values.mpo_name);
-        formData.append("company_id", Cookies.get('company_id'));
+        formData.append("company_id", company_id);
         formData.append('id', Chemist?.data?.id);
-        formData.append('refresh', Cookies.get('refresh'));
-        formData.append('access', Cookies.get('access'));
+        formData.append('refresh', refresh);
+        formData.append('access', access);
         formData.append('is_investment', false)
         try {
 
