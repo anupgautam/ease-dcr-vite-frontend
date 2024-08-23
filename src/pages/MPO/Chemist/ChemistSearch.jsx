@@ -49,7 +49,7 @@ const TABLE_HEAD = [
     { id: 'chemist_address', label: 'Address', alignRight: false },
     { id: 'chemist_category', label: 'Category', alignRight: false },
     // { id: 'is_invested', label: 'Is Invested', alignRight: false },
-    { id: '' },
+    // { id: '' },
 ];
 
 const ChemistSearch = () => {
