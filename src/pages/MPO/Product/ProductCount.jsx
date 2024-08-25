@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import { Typography } from '@mui/material';
 import { useGetAllProductsQuery } from '@/api/MPOSlices/ProductSlice';
-import Cookies from 'js-cookie'
-
+import { CookieContext } from '@/App'
 
 const ProductCount = () => {
+    const { company_id, user_role, company_division_name } = useContext(CookieContext)
+
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
@@ -14,7 +15,7 @@ const ProductCount = () => {
     }, [])
 
     // !  Get all the products
-    const { data } = useGetAllProductsQuery({ id: Cookies.get('company_id'), page: page, division_name: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_division_name') });
+    const { data } = useGetAllProductsQuery({ id: company_id, page: page, division_name: user_role === 'admin' ? "" : company_division_name });
     return (
         <>
             {

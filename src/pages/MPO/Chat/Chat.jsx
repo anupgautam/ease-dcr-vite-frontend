@@ -1,16 +1,17 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState, useContext } from "react";
 import { WEBSOCKET_BASE_URL } from '../../../baseURL'
 import connectWebSocket from "../../../reusable/utils/multipleWSConnection";
 import { useDispatch } from "react-redux";
 import { addData } from "../../../reducer/chatReducer";
-import {useGetChatsByUserMutation} from '../../../api/newChatSlices/chatSlice'
+import { useGetChatsByUserMutation } from '../../../api/newChatSlices/chatSlice'
 import EventUserList from "../../../userList/eventAdminList";
 import { generate8CharacterUUID } from "../../../reusable/utils/generate8bitUUID";
 import { Box } from "@mui/system";
 import { Card, Grid, Typography } from "@mui/material";
 import { BsFillChatDotsFill } from "react-icons/bs";
-import Cookies from 'js-cookie'
 import ChatContainer from "./chatMessageList";
+import { CookieContext } from '@/App'
+
 
 const ChatApp = () => {
     return (
@@ -24,6 +25,8 @@ const ChatApp = () => {
 
 
 const Chat = () => {
+
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const dispatch = useDispatch();
 
@@ -42,10 +45,10 @@ const Chat = () => {
     const [dataLength, setDataLength] = useState(1);
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
+        if (company_id) {
             setUrls([groupName]);
         }
-    }, [Cookies.get('company_id'), groupName])
+    }, [company_id, groupName])
 
     const [isLoading, setIsLoading] = useState(false);
     const scrollRef = useRef();
@@ -57,7 +60,7 @@ const Chat = () => {
                 setDataLength((prevDataLength) => prevDataLength + 1);
                 setIsLoading(true);
                 const res = await userChats({
-                    user_list: [Cookies.get('company_id'), userId],
+                    user_list: [company_id, userId],
                     data_length: dataLength,
                 });
                 setChatData((prevChatData) => [...prevChatData, ...res.data.data]);
@@ -85,7 +88,7 @@ const Chat = () => {
     useEffect(() => {
         if (userId !== 0) {
             userChats({
-                user_list: [Cookies.get('company_id'), userId],
+                user_list: [company_id, userId],
                 data_length: dataLength,
             }).
                 then((res) => {
@@ -93,7 +96,7 @@ const Chat = () => {
                     setChatData(res?.data?.data);
                 })
         }
-    }, [userId, Cookies.get('company_id')])
+    }, [userId, company_id])
 
     const onMessageReceived = useCallback((message) => {
         setChatData((prevChatData) => [...prevChatData, message]);
@@ -103,7 +106,7 @@ const Chat = () => {
         const openWebSocketConnections = () => {
             if (urls && Array.isArray(urls)) {
                 const newSockets = urls.map((url) => {
-                    return connectWebSocket(url, Cookies.get('company_id'), onMessageReceived);
+                    return connectWebSocket(url, company_id, onMessageReceived);
                 });
                 setSockets(newSockets);
             }
@@ -114,7 +117,7 @@ const Chat = () => {
                 socket.close();
             });
         };
-    }, [urls, Cookies.get('company_id'), onMessageReceived]);
+    }, [urls, company_id, onMessageReceived]);
 
 
     const submitMessage = () => {
@@ -123,9 +126,9 @@ const Chat = () => {
                 socket.send(JSON.stringify({
                     'type': 'chat',
                     'message': typingMsg.msg,
-                    'initiator': Cookies.get('company_id'),
+                    'initiator': company_id,
                     'receiver': userId,
-                    'user': Cookies.get('company_id'),
+                    'user': company_id,
                     'group_name': groupName,
                     'is_group': isGroup,
                     'default': false,
@@ -147,7 +150,7 @@ const Chat = () => {
                             <div style={{ padding: "20px" }}>
                                 <div>
                                     {
-                                        Cookies.get('user_role') === 'admin' &&
+                                        user_role === 'admin' &&
                                         <Typography
                                             style={{ fontSize: '18px', color: "black", fontWeight: "600", paddingBottom: '15px' }}>
                                             User List{' '}

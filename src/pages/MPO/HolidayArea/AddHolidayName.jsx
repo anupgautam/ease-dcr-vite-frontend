@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -20,10 +20,11 @@ import { returnValidation } from '../../../validation';
 import {
     useGetAllCompanyAreasQuery,
 } from '@/api/CompanySlices/companyAreaSlice';
-import Cookies from 'js-cookie'
 import { useCreateHolidayNamesMutation } from '@/api/HolidaySlices/holidaySlices';
+import { CookieContext } from '@/App'
 
 const AddHolidayName = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Create Holiday Name
     const [createHolidayName] = useCreateHolidayNamesMutation()
@@ -74,7 +75,7 @@ const AddHolidayName = () => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("holiday_name", values.holiday_name);
-        formData.append("company_name", Cookies.get("company_id"));
+        formData.append("company_name", company_id);
         try {
             const response = await createHolidayName(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Added Holidays' });

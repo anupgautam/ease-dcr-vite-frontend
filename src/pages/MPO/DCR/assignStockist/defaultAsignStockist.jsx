@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -23,8 +23,7 @@ import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { useDeleteStockistsAssignByIdMutation, useGetAllAssignStockistsQuery } from '@/api/MPOSlices/StockistSlice';
@@ -38,6 +37,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultAsignStockist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -52,11 +52,11 @@ const DefaultAsignStockist = () => {
         setSelectedUpdateId(id);
         setMPOId(mpo_id);
         setIsDrawerOpen(true);
-    },[]);
+    }, []);
 
     const onCloseDrawer = useCallback(() => {
         setIsDrawerOpen(false);
-    },[]);
+    }, []);
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
@@ -65,11 +65,11 @@ const DefaultAsignStockist = () => {
 
     const handleClickOpen = useCallback(() => {
         setOpenDialogue(true)
-    },[])
+    }, [])
 
     const handleClose = useCallback(() => {
         setOpenDialogue(false)
-    },[])
+    }, [])
 
     //!Pagination logic
     const [page, setPage] = useState(1)
@@ -77,9 +77,9 @@ const DefaultAsignStockist = () => {
         const data = e.target.ariaLabel
         let thisArray = data.split(" ")
         setPage(thisArray[3]);
-    },[])
+    }, [])
 
-    const { data } = useGetAllAssignStockistsQuery({ id: Cookies.get("company_id"), page: page, company_area: "", mpo_name: "" });
+    const { data } = useGetAllAssignStockistsQuery({ id: company_id, page: page, company_area: "", mpo_name: "" });
 
     const [deleteDoctorEvents] = useDeleteStockistsAssignByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]

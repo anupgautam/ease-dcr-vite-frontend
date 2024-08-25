@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import {
     Card,
     Table,
@@ -31,10 +31,10 @@ import {
     useSearchCompanyUserRolesMutation
 } from '@/api/CompanySlices/companyUserRoleSlice';
 import SearchIcon from '@mui/icons-material/Search';
-import Cookies from 'js-cookie'
 import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRolesSlice';
 import { useGetUsersByCompanyRoleIdQuery } from '@/api/MPOSlices/UserSlice';
 import { Link } from 'react-router-dom';
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'user_name', label: 'User Name', alignRight: false },
@@ -45,10 +45,11 @@ const TABLE_HEAD = [
 ];
 
 const AllUserTp = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     // ! Get all users wala
-    // const { data } = useGetAllcompanyUserRolesQuery({ id: Cookies.get('company_id'), page: page });
-    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+    // const { data } = useGetAllcompanyUserRolesQuery({ id: company_id, page: page });
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
 
     const [roleSelect, setRoleSelect] = useState('');
     const [companyRoleList, setCompanyRoleList] = useState([]);
@@ -69,7 +70,7 @@ const AllUserTp = () => {
     //     setRoleSelect('');
     // };
 
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: roleSelect === null ? undefined : roleSelect });
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: roleSelect === null ? undefined : roleSelect });
 
     useEffect(() => {
         let dataList = []
@@ -112,7 +113,7 @@ const AllUserTp = () => {
     // !on search
     const onSearch = (e) => {
         const searchQuery = e.target.value;
-        const company_id = Cookies.get('company_id');
+        const company_id = company_id;
         setSearchResults({ search: searchQuery, company_id })
         searchUser(searchResults);
     }

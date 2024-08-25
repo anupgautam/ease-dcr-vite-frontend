@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback, useContext } from 'react';
 import {
     Box,
     Typography,
@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import Close from '@mui/icons-material/Close';
 import Iconify from '../../../components/iconify';
-
+import { CookieContext } from '@/App'
 import { useForm } from '../../../reusable/forms/useForm';
 import Controls from '@/reusable/forms/controls/Controls';
 import { returnValidation } from '../../../validation';
@@ -20,12 +20,11 @@ import {
     useCreateDoctorsMutation,
     usePostAllMPONamesNoPageMutation,
 } from '../../../api/MPOSlices/DoctorSlice';
-import Cookies from 'js-cookie';
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { Link } from 'react-router-dom';
 
 const AddDoctor = () => {
-
+    const { company_id, company_user_id, user_role } = useContext(CookieContext)
     const [MutipleDoctor, setAddMutipleDoctor] = useState(false);
     const doctorRef = useRef(null);
 
@@ -42,7 +41,7 @@ const AddDoctor = () => {
     ];
 
     //! Get Doctor Specialization
-    const DoctorSpecialization = useGetDoctorsSpecializationQuery(Cookies.get('company_id'));
+    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id);
 
     const doctorspecializations = useMemo(() => {
         if (DoctorSpecialization?.data) {
@@ -62,8 +61,8 @@ const AddDoctor = () => {
     }, [MpoList])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
@@ -123,8 +122,8 @@ const AddDoctor = () => {
 
     //! Get MPO Area
     const MpoArea = useGetMpoAreaQuery({
-        company_name: Cookies.get('company_id'),
-        mpo_name: Cookies.get('user_role') === 'admin' ? values.mpo_name : Cookies.get('company_user_id'),
+        company_name: company_id,
+        mpo_name: user_role === 'admin' ? values.mpo_name : company_user_id,
     });
 
     const mpoAreaData = useMemo(() => {
@@ -147,10 +146,10 @@ const AddDoctor = () => {
         formData.append('doctor_gender', values.doctor_gender);
         formData.append('doctor_territory', values.doctor_territory);
         formData.append('doctor_category', values.category_name);
-        formData.append('mpo_name', Cookies.get('user_role') === 'admin' ? values.mpo_name : Cookies.get('company_user_id'));
+        formData.append('mpo_name', user_role === 'admin' ? values.mpo_name : company_user_id);
         formData.append('doctor_qualification', values.doctor_qualification);
         formData.append('doctor_specialization', values.doctor_specialization);
-        formData.append('company_id', Cookies.get('company_id'));
+        formData.append('company_id', company_id);
         try {
             const response = await createDoctors(formData);
             if (response.data) {

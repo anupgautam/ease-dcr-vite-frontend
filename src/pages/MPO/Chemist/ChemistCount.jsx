@@ -1,20 +1,22 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback,useContext } from 'react'
 import { Typography } from '@mui/material';
 import { useGetAllChemistsQuery } from '@/api/MPOSlices/ChemistSlice';
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 
 const ChemistCount = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
         const data = e.target.ariaLabel
-    let thisArray = data.split(" ")
+        let thisArray = data.split(" ")
         setPage(thisArray[3]);
     }, [])
 
     // !  Get all the chemists
-    const { data } = useGetAllChemistsQuery({ id: Cookies.get("company_id"), page: page, mpo_name: Cookies.get('user_role') === "admin" ? "" : Cookies.get('company_user_id') });
+    const { data } = useGetAllChemistsQuery({ id: company_id, page: page, mpo_name: user_role === "admin" ? "" : company_user_id });
     return (
         <>
             {

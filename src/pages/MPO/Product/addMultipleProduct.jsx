@@ -1,6 +1,5 @@
 import { Box, Button, Card, Grid, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
-import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
@@ -12,6 +11,7 @@ import { useCreateStockistsMutation } from "@/api/MPOSlices/stockistApiSlice";
 import { useGetAllCompanyAreasQuery } from "@/api/CompanySlices/companyAreaSlice";
 import { useCreateProductsMutation, useGetCompDivisionQuery } from "@/api/MPOSlices/productApiSlice";
 import { useForm } from "@/reusable/forms/useForm";
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'product_name', label: 'Product Name', alignRight: false },
@@ -25,6 +25,8 @@ const TABLE_HEAD = [
 ];
 
 const AddMultipleProduct = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('number');
     var array = Array.from({ length: id }, (_, index) => index + 1);
@@ -172,7 +174,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
     }
 
     const companyAreaData = [];
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
 
     if (CompanyArea !== undefined) {
         CompanyArea?.forEach((key) => {
@@ -180,7 +182,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         })
     }
 
-    const Division = useGetCompDivisionQuery(Cookies.get('company_id'));
+    const Division = useGetCompDivisionQuery(company_id);
 
 
     const divisions = [];
@@ -191,15 +193,15 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
     }
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     const [Formdata, setFormData] = useState({
         product_name: "",
@@ -211,7 +213,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         bonus: "",
         product_type: "",
         image: [],
-        company_id: Cookies.get('company_id'),
+        company_id: company_id,
     })
 
     const {
@@ -241,7 +243,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
     };
     const mpoAreaData = [];
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('user_role') === 'admin' ? Formdata.mpo_name : Cookies.get('company_user_id') });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? Formdata.mpo_name : company_user_id });
     if (MpoArea?.data) {
         MpoArea?.data.forEach((key) => {
             mpoAreaData.push({ id: key.id, title: key.area_name })

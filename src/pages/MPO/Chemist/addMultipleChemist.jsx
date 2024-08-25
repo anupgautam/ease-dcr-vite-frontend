@@ -1,6 +1,5 @@
 import { Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
-import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
@@ -9,6 +8,7 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
 import { Circles } from 'react-loader-spinner';
 import { useCreateChemistsMutation } from "@/api/MPOSlices/ChemistSlice";
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: 'Chemist Name', alignRight: false },
@@ -21,8 +21,9 @@ const TABLE_HEAD = [
     { id: 'chemist_territory', label: 'Chemist Territory', alignRight: false },
 ];
 
-
 const AddMultipleChemist = () => {
+    const { company_id, user_role, company_user_id, email } = useContext(CookieContext)
+
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('number');
     var array = Array.from({ length: id }, (_, index) => index + 1);
@@ -164,15 +165,15 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
     }
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     const [Formdata, setFormData] = useState({
         chemist_name: "",
@@ -181,9 +182,9 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
         chemist_category: "",
         chemist_pan_number: "",
         chemist_contact_person: "",
-        mpo_name: Cookies.get("user_role") === 'MPO' ? Cookies.get('company_user_id') : "",
+        mpo_name: user_role === 'MPO' ? company_user_id : "",
         chemist_territory: "",
-        company_id: Cookies.get('company_id'),
+        company_id: company_id,
         is_investment: false,
     })
 
@@ -203,7 +204,7 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
 
     const mpoAreaData = [];
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('user_role') === 'admin' ? Formdata.mpo_name : Cookies.get('company_user_id') });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? Formdata.mpo_name : company_user_id });
     if (MpoArea?.data) {
         MpoArea?.data.forEach((key) => {
             mpoAreaData.push({ id: key.id, title: key.area_name })
@@ -281,7 +282,7 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
             </TableCell> */}
             <TableCell align="left" style={{ width: "200px" }}>
                 {
-                    Cookies.get('user_role') === 'admin' ?
+                    user_role === 'admin' ?
                         <Controls.Select
                             name="mpo_name"
                             label="MPO*"
@@ -289,7 +290,7 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                             onChange={handleInputChange}
                             // error={errors.mpo_name}
                             options={mpoNames}
-                        /> : <>{Cookies.get('email')}</>
+                        /> : <>{email}</>
                 }
             </TableCell>
             <TableCell align="left" style={{ width: "200px" }}>

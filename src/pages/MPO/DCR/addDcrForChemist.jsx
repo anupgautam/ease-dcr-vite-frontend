@@ -1,5 +1,4 @@
 import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Table, TableBody, TableCell, TableContainer, TableRow, Typography, Autocomplete, TextField } from "@mui/material";
-import Cookies from "js-cookie";
 import React, { useEffect, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
@@ -22,6 +21,7 @@ import { UserListHead } from "@/sections/@dashboard/user";
 
 import { useGetChemistAllDCRByIdQuery } from "@/api/DCRs Api Slice/chemistDCR/ChemistDCRAllSlice";
 import ChemistOrderProduct from "./orderProduct/chemistOrderProduct";
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: ' Name', alignRight: false },
@@ -36,12 +36,13 @@ const TABLE_HEAD = [
 
 //! Add DCR For Chemist Component
 const AddDCRforChemist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const location = useLocation();
     const id = new URLSearchParams(window.location.search).get('id');
     // 
 
-    const { data: tourplanData } = usePostToGetTheTourPlanQuery(Cookies.get('company_user_id'));
+    const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_id);
     const [updateDcr] = useUpdateDcrForChemistValuesMutation();
     const [createMpoDcr] = useCreateMpoShiftWiseDcrForChemistMutation();
     const [DcrForChemist] = useCreateDcrForChemistWithNullValuesMutation();
@@ -224,7 +225,7 @@ const AddDCRforChemist = () => {
     )
 
 
-    const chemists = useGetAllVisitedMpoWiseChemistQuery({ company_name: Cookies.get('company_id'), mpo_area: values.visited_area, mpo_name: Cookies.get('company_user_id') });
+    const chemists = useGetAllVisitedMpoWiseChemistQuery({ company_name: company_id, mpo_area: values.visited_area, mpo_name: company_user_id });
 
     const chemistOptions = useMemo(() => {
         if (chemists !== undefined) {
@@ -238,7 +239,7 @@ const AddDCRforChemist = () => {
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
     useEffect(() => {
-        executiveUsers({ id: Cookies.get('company_user_id') })
+        executiveUsers({ id: company_user_id })
             .then(res => {
                 if (res.data) {
                     const executive = [];
@@ -254,9 +255,9 @@ const AddDCRforChemist = () => {
             .catch(err => {
 
             });
-    }, [Cookies.get('company_user_id')]);
+    }, [company_user_id]);
 
-    const rewards = useGetAllRewardsQuery(Cookies.get('company_id'));
+    const rewards = useGetAllRewardsQuery(company_id);
 
     const rewardsOptions = useMemo(() => {
         if (rewards !== undefined) {
@@ -268,7 +269,7 @@ const AddDCRforChemist = () => {
     }, [rewards])
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
-        Cookies.get('company_id')
+        company_id
     );
 
     const productOptions = useMemo(() => {
@@ -349,7 +350,7 @@ const AddDCRforChemist = () => {
                     sendingData['shift'] = null;
                 }
                 const mpoShiftData = {
-                    mpo_name: Cookies.get('company_user_id'),
+                    mpo_name: company_user_id,
                     shift: allData.shift,
                     dcr_id: allData.id,
                 };
@@ -600,7 +601,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
     useEffect(() => {
-        executiveUsers({ id: Cookies.get('company_user_id') })
+        executiveUsers({ id: company_user_id })
             .then(res => {
                 if (res.data) {
                     const executive = [];
@@ -616,7 +617,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
             .catch(err => {
 
             });
-    }, [Cookies.get('company_user_id')]);
+    }, [company_user_id]);
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
 
@@ -633,7 +634,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
     }
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
-        Cookies.get('company_id')
+        company_id
     );
 
     const productOptions = useMemo(() => {
@@ -666,7 +667,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
         setPromotedProduct(mpotparea)
     }
 
-    const rewards = useGetAllRewardsQuery(Cookies.get('company_id'));
+    const rewards = useGetAllRewardsQuery(company_id);
 
     const rewardsOptions = useMemo(() => {
         if (rewards !== undefined) {

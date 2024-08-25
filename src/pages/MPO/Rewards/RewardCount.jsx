@@ -1,12 +1,14 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import { Typography } from '@mui/material';
 import {
     useGetAllRewardsQuery
 } from '../../../api/MPOSlices/rewardsApiSlice'
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 
 const RewardCount = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
@@ -15,7 +17,7 @@ const RewardCount = () => {
         setPage(thisArray[3]);
     }, [])
 
-    const { data } = useGetAllRewardsQuery(Cookies.get('company_id'));
+    const { data } = useGetAllRewardsQuery(company_id);
     return (
         <>
             {

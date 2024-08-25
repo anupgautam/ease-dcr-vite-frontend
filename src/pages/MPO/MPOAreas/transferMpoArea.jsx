@@ -1,14 +1,16 @@
 import { Close } from "@mui/icons-material";
 import { Box, Button, Drawer, Grid, IconButton, Stack, Typography } from "@mui/material";
-import Cookies from "js-cookie";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { usePostAllMPONamesNoPageMutation, useTransferMpoAreaMutation } from "@/api/MPOSlices/DoctorSlice";
 import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
 import Iconify from "@/components/iconify/Iconify";
 import Controls from "@/reusable/forms/controls/Controls";
 import { useForm } from "@/reusable/forms/useForm";
+import { CookieContext } from '@/App'
 
 const TransferMpoArea = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const [MpoData] = usePostAllMPONamesNoPageMutation();
@@ -16,22 +18,22 @@ const TransferMpoArea = () => {
     const [MpoList, setMpoList] = useState([]);
 
     const mpoNames = useMemo(() => {
-        if (MpoList.data) {
+        if (MpoList?.data) {
             return MpoList.map(key => ({ id: key.id, title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name }))
         }
         return [];
     }, [MpoList])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
-                    setMpoList(res.data);
+                    setMpoList(res?.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
 
     const initialFValues = {
@@ -48,7 +50,7 @@ const TransferMpoArea = () => {
     } = useForm(initialFValues, true)
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: values.transfer_from });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: values.transfer_from });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
@@ -92,7 +94,7 @@ const TransferMpoArea = () => {
 
     return (
         <>
-            {Cookies.get('user_role') === "admin" ?
+            {user_role === "admin" ?
                 <Button
                     variant="contained"
                     startIcon={<Iconify icon="tabler:transfer" />} onClick={() => setIsDrawerOpen(true)} >

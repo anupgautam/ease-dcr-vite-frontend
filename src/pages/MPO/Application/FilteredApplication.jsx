@@ -1,5 +1,5 @@
 import { sentenceCase } from 'change-case';
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback, useContext } from 'react';
 //! @mui
 import {
     Card,
@@ -23,7 +23,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import DefaultApplication from './DefaultApplication';
 import EditApplication from './EditApplication'
 import 'react-datepicker/dist/react-datepicker.css';
@@ -45,6 +44,7 @@ import {
     useGetAllcompanyUserRolesWithoutPaginationQuery,
 } from '@/api/CompanySlices/companyUserRoleSlice';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
+import { CookieContext } from '@/App'
 
 
 const TABLE_HEAD = [
@@ -59,6 +59,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredApplication = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
 
@@ -77,7 +78,7 @@ const FilteredApplication = () => {
     }, [])
 
     //! Get User roles wala
-    const { data, isSuccess } = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: Cookies.get('company_id') })
+    const { data, isSuccess } = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: company_id })
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
@@ -91,7 +92,7 @@ const FilteredApplication = () => {
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleOptionChange = useCallback((value) => {
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
         setSelectedOption(value?.id || "");
     }, [])
 
@@ -159,7 +160,7 @@ const FilteredApplication = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
                             {
-                                Cookies.get('user_role') === "admin" &&
+                                user_role === "admin" &&
                                 <Autocomplete
                                     options={rolesOptions}
                                     getOptionLabel={(option) => option.title}
@@ -257,7 +258,7 @@ const FilteredApplication = () => {
                                                                         </TableCell>
                                                                         <TableCell align="left">
                                                                             {
-                                                                                Cookies.get('user_role') === 'admin' &&
+                                                                                user_role === 'admin' &&
                                                                                 <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application.id, application.mpo_name.id)} >
                                                                                     <Badge>
                                                                                         <Iconify icon="eva:edit-fill" />
@@ -265,7 +266,7 @@ const FilteredApplication = () => {
                                                                                 </IconButton>
                                                                             }
                                                                             {
-                                                                                Cookies.get('user_role') === 'admin' &&
+                                                                                user_role === 'admin' &&
                                                                                 <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(application.id); handleClickOpen() }}>
                                                                                     <Badge>
                                                                                         <Iconify icon="eva:trash-2-outline" />

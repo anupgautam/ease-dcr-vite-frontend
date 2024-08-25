@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import RoundButton from "@/reusable/components/button/roundbutton";
 import { FaPlus } from "react-icons/fa";
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useContext } from "react";
 import { useTransition } from 'react-transition-state';
 import {
     useGetStockistOrderedProductByDCRIdQuery,
@@ -10,14 +10,16 @@ import {
     useUpdateStockistOrderedProductMutation
 } from "@/api/DCRs Api Slice/stockistDCR/stockistOrderedProductSlice";
 import Controls from "@/reusable/components/forms/controls/Controls";
-import Cookies from "js-cookie";
 import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
+import { CookieContext } from '@/App'
 
 const EditStockistDCRProducts = ({ id, context, editApi, division }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
     const [postData, setPostData] = useState({});
     // const companyProducts = useSelector(state => state.dcrData.company_products);
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: Cookies.get('company_id'), division_name: division })
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {

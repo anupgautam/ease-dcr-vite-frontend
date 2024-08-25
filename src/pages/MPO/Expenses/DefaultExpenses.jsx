@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
     Card,
     Table,
@@ -14,11 +14,11 @@ import {
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Scrollbar from '@/components/iconify/Iconify';
-import { UserListHead} from '../../../sections/@dashboard/user';
+import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import Cookies from 'js-cookie'
 import { useGetAllDetailedExpensesMutation } from '@/api/ExpensesSlices/expensesSlices';
+import { CookieContext } from '@/App'
 
 
 const TABLE_HEAD = [
@@ -29,7 +29,8 @@ const TABLE_HEAD = [
     { id: '' },
 ];
 
-const DefaultExpenses = ({user, year, month}) => {
+const DefaultExpenses = ({ user, year, month }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -38,14 +39,14 @@ const DefaultExpenses = ({user, year, month}) => {
 
     const [detailedExpenses] = useGetAllDetailedExpensesMutation();
 
-    useEffect(()=>{
-        detailedExpenses({'mpo_name': user, 'company_name': Cookies.get('company_id'), 'year': year, 'month': month}).then(
-            (res)=>{
-                
+    useEffect(() => {
+        detailedExpenses({ 'mpo_name': user, 'company_name': company_id, 'year': year, 'month': month }).then(
+            (res) => {
+
                 setExpenses(res.data)
             })
 
-    },[user, year, month])
+    }, [user, year, month])
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));

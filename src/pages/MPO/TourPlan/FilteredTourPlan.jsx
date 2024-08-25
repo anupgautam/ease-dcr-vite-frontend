@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -24,7 +24,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import DefaultTourPlan from './DefaultTourPlan';
 import EditTourPlan from './EditTourPlan'
 import 'react-datepicker/dist/react-datepicker.css';
@@ -55,6 +54,7 @@ import Scrollbar from '@/components/scrollbar/Scrollbar';
 import moment from 'moment';
 import ApprovedTP from '../dashboard/myExecutivesTp/approveTp';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'mpo_name', label: 'Name', alignRight: false },
@@ -66,6 +66,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredTourPlan = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -84,7 +85,7 @@ const FilteredTourPlan = () => {
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
 
-    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
 
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');
@@ -102,7 +103,7 @@ const FilteredTourPlan = () => {
 
 
     // const [companyUserList, setCompanyUserList] = useState([]);
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: '' });
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' });
 
     const companyUserList = [];
 
@@ -199,7 +200,7 @@ const FilteredTourPlan = () => {
 
     // const dateOnly = dateString.split('T')[0];
 
-    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: Cookies.get('company_id'), date: selectedYear, month: selectedMonth, mpo_name: Cookies.get('user_role') === 'admin' ? id : Cookies.get('company_user_id'), page: page, role_data: Cookies.get('user_role') === 'admin' ? "" : '' })
+    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: user_role === 'admin' ? id : company_user_id, page: page, role_data: user_role === 'admin' ? "" : '' })
 
     //! Search results
 
@@ -304,7 +305,7 @@ const FilteredTourPlan = () => {
                         <Grid item xs={5.5}>
                         </Grid>
                         {
-                            Cookies.get('user_role') === 'admin' &&
+                            user_role === 'admin' &&
                             <Grid item md={2.5} xs={6}>
                                 <ApprovedTP mpoName={id} role={role} />
                             </Grid>
@@ -313,7 +314,7 @@ const FilteredTourPlan = () => {
                 </Box>
                 <>
                     {
-                        role === "MPO" || Cookies.get('user_role') === "MPO" ?
+                        role === "MPO" || user_role === "MPO" ?
                             <>
                                 {
                                     selectedMonth || selectedYear ?
@@ -394,7 +395,7 @@ const FilteredTourPlan = () => {
                                                                                             {/* //! Edit  */}
                                                                                             <TableCell align="left">
                                                                                                 {
-                                                                                                    Cookies.get('user_role') === 'admin' &&
+                                                                                                    user_role === 'admin' &&
                                                                                                     <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
                                                                                                         <Badge>
                                                                                                             <Iconify icon="eva:edit-fill" />
@@ -402,7 +403,7 @@ const FilteredTourPlan = () => {
                                                                                                     </IconButton>
                                                                                                 }
                                                                                                 {
-                                                                                                    Cookies.get('user_role') === "MPO" &&
+                                                                                                    user_role === "MPO" &&
                                                                                                     <>
                                                                                                         {
                                                                                                             tourplan.is_approved === false ?
@@ -416,7 +417,7 @@ const FilteredTourPlan = () => {
                                                                                                 }
                                                                                                 {/* //! Delete  */}
                                                                                                 {
-                                                                                                    Cookies.get('user_role') === 'admin' &&
+                                                                                                    user_role === 'admin' &&
                                                                                                     <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
                                                                                                         <Badge>
                                                                                                             <Iconify icon="eva:trash-2-outline" />

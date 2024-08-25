@@ -1,8 +1,7 @@
 import { Autocomplete, Box, Button, Card, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableRow, TextField, IconButton, Badge } from "@mui/material";
-import Cookies from "js-cookie";
 import moment from "moment";
 import { BSDate } from "nepali-datepicker-react";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useGetcompanyUserRolesByIdQuery } from "@/api/CompanySlices/companyUserRoleSlice";
 import { useGetUsersByCompanyRoleIdQuery } from "@/api/MPOSlices/UserSlice";
@@ -11,6 +10,7 @@ import Scrollbar from "@/components/scrollbar/Scrollbar";
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import { UserListHead } from "@/sections/@dashboard/user";
 import Iconify from '@/components/iconify/Iconify';
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'user_name', label: 'User Name', alignRight: false },
@@ -24,7 +24,7 @@ const TABLE_HEAD = [
     { id: 'target', label: 'Target', alignRight: false },
     { id: 'pob', label: 'POB', alignRight: false },
     { id: 'remarks', label: 'Remarks', alignRight: false },
-    { id: '' },
+    // { id: '' },
 ];
 const TABLE_HEAD1 = [
     { id: 'user_name', label: 'User Name', alignRight: false },
@@ -36,6 +36,8 @@ const TABLE_HEAD1 = [
 
 
 const DcrListData = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id');
@@ -43,7 +45,7 @@ const DcrListData = () => {
     const navigate = useNavigate();
     const [companyUserList, setCompanyUserList] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: '' })
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' })
 
     const singleUser = useGetcompanyUserRolesByIdQuery(id);
 
@@ -153,7 +155,7 @@ const DcrListData = () => {
                             </FormControl>
                         </Grid>
                         {
-                            Cookies.get('user_role') === 'admin' &&
+                            user_role === 'admin' &&
                             <Grid item xs={2.5}>
                                 <FormControl>
                                     <Autocomplete

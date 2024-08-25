@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography, Button, Grid
@@ -19,9 +19,11 @@ import {
     useUpdateProductsMutation,
     useGetCompanyDivisionByCompanyIdQuery
 } from "@/api/MPOSlices/ProductSlice";
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 const EditProduct = ({ idharu, onClose, mpoGet }) => {
+
+    const { company_id, user_role, company_user_id, access, refresh } = useContext(CookieContext)
 
     //!  Getting Users by ID
     const Product = useGetProductsByIdQuery(idharu);
@@ -36,7 +38,7 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
     }, [Product.data])
 
     //! Get division 
-    const Division = useGetCompanyDivisionByCompanyIdQuery(Cookies.get('company_id'));
+    const Division = useGetCompanyDivisionByCompanyIdQuery(company_id);
 
     const divisions = useMemo(() => {
         if (Division?.data) {
@@ -154,11 +156,11 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
         formData.append("product_price_per_strip_in_mrp", values.product_price_per_strip_in_mrp);
         formData.append("product_price_for_stockist", values.product_price_for_stockist);
         formData.append("product_type", values.product_type);
-        formData.append("company_id", Cookies.get('company_id'));
+        formData.append("company_id", company_id);
         formData.append("division_name", values.division_name);
         formData.append('product_id', idharu);
-        formData.append('refresh', Cookies.get('refresh'))
-        formData.append('access', Cookies.get('access'));
+        formData.append('refresh', refresh)
+        formData.append('access', access);
         try {
             const response = await updateProducts(formData).unwrap();
             if (response) {

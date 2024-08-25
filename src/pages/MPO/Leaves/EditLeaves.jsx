@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
     Box,
     Typography, Button, Grid
@@ -18,10 +18,12 @@ import {
 
 } from "../../../api/Leaves/LeavesApiSlice";
 
-import Cookies from 'js-cookie'
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
+import { CookieContext } from '@/App'
+
 
 const EditLeaves = ({ id, onClose, divisionId }) => {
+    const { company_id, user_role, company_user_id, access, refresh } = useContext(CookieContext)
 
     //! Getting doctor by ID
     const Leaves = useGetLeavesByIdQuery(id);
@@ -127,10 +129,10 @@ const EditLeaves = ({ id, onClose, divisionId }) => {
     //     formData.append("doctor_nmc_number", values.doctor_nmc_number);
     //     formData.append("doctor_qualification", values.doctor_qualification);
     //     formData.append("mpo_name", values.mpo_name);
-    //     formData.append("company_id", Cookies.get('company_id'));
+    //     formData.append("company_id", company_id);
     //     formData.append('id', Doctor.data.doctor_name.id);
-    //     formData.append('refresh', Cookies.get('refresh'))
-    //     formData.append('access', Cookies.get('access'));
+    //     formData.append('refresh', refresh)
+    //     formData.append('access', access);
     //     try {
     //         const response = await updateDoctors(formData).unwrap();
     //         setSuccessMessage({ show: true, message: 'Successfully Edited Doctor' });

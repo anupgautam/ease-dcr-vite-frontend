@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React, { useMemo } from "react";
+import React, { useMemo, useContext } from "react";
 import ReusableFormsSelect from "@/reusable/components/forms/controls/ReusableFormSelect";
 import {
   useGetChemistAllDCRByIdQuery,
@@ -8,12 +8,11 @@ import {
 } from "@/api/DCRs Api Slice/chemistDCR/ChemistDCRAllSlice";
 import { useTransition } from 'react-transition-state';
 import { useGetAllRewardsByCompanyIdQuery } from "@/api/DCRs Api Slice/rewardsAPISlice";
-import Cookies from "js-cookie";
 
 const EditDCRChemistRewards = ({ id, context, editApi }) => {
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const companyRewards = useSelector(state => state.dcrData.rewards);
-  const { data: rewardAllData } = useGetAllRewardsByCompanyIdQuery(Cookies.get('company_id'));
+  const { data: rewardAllData } = useGetAllRewardsByCompanyIdQuery(company_id);
 
   const rewardList = useMemo(() => {
     if (rewardAllData !== undefined) {

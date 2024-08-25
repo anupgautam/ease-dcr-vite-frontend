@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Stack,
     Container,
@@ -7,20 +7,21 @@ import {
     useMediaQuery,
     useTheme
 } from '@mui/material';
-
+import { CookieContext } from '@/App'
 import CompanyAreasCount from './CompanyAreasCount';
 import AddCompanyAreas from './AddCompanyAreas';
 import DefaultList from './DefaultList'
-import Cookies from 'js-cookie';
 import { useGetAllCompanyAreasWithoutPaginationQuery } from '@/api/CompanySlices/companyAreaSlice';
 import ExportToExcel from '@/reusable/utils/exportSheet';
 
 
 const ListOfCompanyAreas = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { data } = useGetAllCompanyAreasWithoutPaginationQuery(Cookies.get('company_id'))
+    const { data } = useGetAllCompanyAreasWithoutPaginationQuery(company_id)
 
     const headers = [
         { label: 'S.No.', key: 'sno' },

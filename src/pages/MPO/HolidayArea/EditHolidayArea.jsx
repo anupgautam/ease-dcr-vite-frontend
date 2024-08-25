@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useMemo, useCallback, useRef, useContext } from 'react'
 import {
     Box,
     Typography, Button, Grid,
@@ -13,19 +13,21 @@ import Close from "@mui/icons-material/Close";
 import { useForm, Form } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
-import Cookies from 'js-cookie'
 //! Api Slices 
 import { useGetCompanyHolidaysQuery, useGetHolidayNamesByIdQuery, useUpdateHolidaysMutation } from '@/api/HolidaySlices/holidaySlices';
 import {
     useGetAllCompanyAreasQuery,
 } from '@/api/CompanySlices/companyAreaSlice';
+import { CookieContext } from '@/App'
+
 
 const EditHolidayArea = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Getting  by ID
     const HolidayArea = useGetHolidayNamesByIdQuery(idharu);
     //! Company Area
-    const Areas = useGetAllCompanyAreasQuery(Cookies.get("company_id"));
+    const Areas = useGetAllCompanyAreasQuery(company_id);
 
     const areas = useMemo(() => {
         if (Areas.data) {
@@ -56,7 +58,7 @@ const EditHolidayArea = ({ idharu, onClose }) => {
     }, []);
 
     //! Company holidays
-    const Holidays = useGetCompanyHolidaysQuery(Cookies.get("company_id"));
+    const Holidays = useGetCompanyHolidaysQuery(company_id);
     const holidays = useMemo(() => {
         if (Holidays.data) {
             return Holidays.data.map((key) => ({ id: key.id, title: key.holiday_name }))

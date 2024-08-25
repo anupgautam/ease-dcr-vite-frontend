@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -10,10 +10,10 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Iconify from '../../../components/iconify';
-import Cookies from 'js-cookie'
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
+import { CookieContext } from '@/App'
 
 import {
     useCreateChemistsMutation
@@ -23,6 +23,8 @@ import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { Link } from 'react-router-dom';
 
 const AddChemist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
 
     const chemistcategories = [
         { id: "A", title: "A" },
@@ -44,15 +46,15 @@ const AddChemist = () => {
     }, [MpoList])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     const initialFValues = {
         is_invested: false
@@ -98,7 +100,7 @@ const AddChemist = () => {
     }, [values.chemist_name, values.category_name, values.chemist_address, values.chemist_phone_number])
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('user_role') === 'admin' ? values.mpo_name : Cookies.get('company_user_id') });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? values.mpo_name : company_user_id });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
@@ -122,8 +124,8 @@ const AddChemist = () => {
         formData.append("chemist_category", values.chemist_category);
         formData.append("chemist_contact_person", values.chemist_contact_person);
         formData.append("chemist_pan_number", values.chemist_pan_number);
-        formData.append('company_id', Cookies.get('company_id'));
-        formData.append('mpo_name', Cookies.get('user_role') === 'admin' ? values.mpo_name : Cookies.get('company_user_id'));
+        formData.append('company_id', company_id);
+        formData.append('mpo_name', user_role === 'admin' ? values.mpo_name : company_user_id);
         formData.append('is_investment', false)
         try {
             const response = await createChemists(formData)
@@ -307,7 +309,7 @@ const AddChemist = () => {
                                     </Grid>
                                 </Grid>
                                 {
-                                    Cookies.get('user_role') === 'admin' &&
+                                    user_role === 'admin' &&
                                     <Box marginBottom={2}>
                                         <Controls.Select
                                             name="mpo_name"

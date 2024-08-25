@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import {
     Card,
     MenuItem,
@@ -10,7 +10,6 @@ import {
     Autocomplete,
     TextField
 } from '@mui/material';
-import Cookies from 'js-cookie'
 import 'react-datepicker/dist/react-datepicker.css';
 import ChemistDCR from './DCRLists/chemistDCR';
 import DoctorDCR from './DCRLists/doctorDCR';
@@ -30,8 +29,12 @@ import SelectDataDCR from './SelectDataDCR';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { CookieContext } from '@/App'
+
 
 const FilteredDCR = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id');
@@ -41,10 +44,10 @@ const FilteredDCR = () => {
     const dispatch = useDispatch();
 
     const [selectedId, setSelectedId] = useState(null);
-    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
 
     const [companyUserList, setCompanyUserList] = useState([]);
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: '' })
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' })
     const [selectedDCRType, setSelectedDCRType] = useState("Doctor");
 
     const handleOptionDCRType = useCallback((e) => {
@@ -111,7 +114,7 @@ const FilteredDCR = () => {
     // const handleNepaliMonthChange = (event) => {
     //     setSelectedMonth(event.target.value);
     //     // 
-    //     setCompanyId(Cookies.get('company_id'));
+    //     setCompanyId(company_id);
     // };
 
     //! Date Format 
@@ -149,7 +152,7 @@ const FilteredDCR = () => {
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
                         {
-                            Cookies.get('user_role') !== "admin" &&
+                            user_role !== "admin" &&
                             <Grid item md={2}>
                                 <FormControl>
                                     <InputLabel id="mpo-select-label">Year</InputLabel>
@@ -171,7 +174,7 @@ const FilteredDCR = () => {
                             </Grid>
                         }
                         {
-                            Cookies.get('user_role') !== "admin" &&
+                            user_role !== "admin" &&
                             <Grid item md={2}>
                                 <FormControl fullWidth>
                                     <InputLabel>Month</InputLabel>
@@ -190,7 +193,7 @@ const FilteredDCR = () => {
                             </Grid>
                         }
                         {/* {
-                            Cookies.get('user_role') === 'admin' &&
+                            user_role === 'admin' &&
                             <Grid item xs={2.5}>
                                 <FormControl>
                                     <Autocomplete
@@ -209,10 +212,10 @@ const FilteredDCR = () => {
                                 </FormControl>
                             </Grid>
                         } */}
-                        {role === "MPO" || Cookies.get('user_role') === "MPO" ?
+                        {role === "MPO" || user_role === "MPO" ?
                             <Grid item md={2}>
                                 {
-                                    Cookies.get('user_role') === "MPO" &&
+                                    user_role === "MPO" &&
                                     <FormControl>
                                         <InputLabel id="mpo-select-label">DCR Type</InputLabel>
                                         <Select
@@ -236,7 +239,7 @@ const FilteredDCR = () => {
                                     </FormControl>
                                 }
                                 {
-                                    Cookies.get('user_role') === "admin" &&
+                                    user_role === "admin" &&
                                     <FormControl>
                                         <InputLabel id="mpo-select-label">DCR Type</InputLabel>
                                         <Select
@@ -262,7 +265,7 @@ const FilteredDCR = () => {
                             </Grid>
                             : <></>}
                         {/* {
-                            Cookies.get('user_role') === "admin" &&
+                            user_role === "admin" &&
                             <Grid item md={2}>
                                 <FormControl>
                                     <Autocomplete
@@ -283,10 +286,10 @@ const FilteredDCR = () => {
                         } */}
                     </Grid>
                 </Box>
-                {role === "MPO" || Cookies.get('user_role') === "MPO" ?
+                {role === "MPO" || user_role === "MPO" ?
                     <>
                         {
-                            Cookies.get('user_role') === "admin" &&
+                            user_role === "admin" &&
                             <>
                                 {selectedDCRType === "Doctor" ?
                                     <>
@@ -305,7 +308,7 @@ const FilteredDCR = () => {
                             </>
                         }
                         {
-                            Cookies.get('user_role') === "MPO" &&
+                            user_role === "MPO" &&
                             <>
                                 {selectedDCRType === "Doctor" ?
                                     <>
@@ -324,7 +327,7 @@ const FilteredDCR = () => {
                             </>
                         }
                         {
-                            Cookies.get('user_role') === "admin" &&
+                            user_role === "admin" &&
                             <>
                                 {selectedDCRType === "Chemist" ?
                                     <>
@@ -343,7 +346,7 @@ const FilteredDCR = () => {
                             </>
                         }
                         {
-                            Cookies.get('user_role') === "MPO" &&
+                            user_role === "MPO" &&
                             <>
                                 {selectedDCRType === "Chemist" ?
                                     <>
@@ -362,7 +365,7 @@ const FilteredDCR = () => {
                             </>
                         }
                         {
-                            Cookies.get('user_role') === "admin" &&
+                            user_role === "admin" &&
                             <>
                                 {selectedDCRType === "Stockist" ?
                                     <>
@@ -381,7 +384,7 @@ const FilteredDCR = () => {
                             </>
                         }
                         {
-                            Cookies.get('user_role') === "MPO" &&
+                            user_role === "MPO" &&
                             <>
                                 {selectedDCRType === "Stockist" ?
                                     <>
@@ -398,7 +401,7 @@ const FilteredDCR = () => {
                             </>
                         }
                         {
-                            Cookies.get('user_role') === "other-roles" &&
+                            user_role === "other-roles" &&
                             <>
                                 {selectedYear && selectedMonth ?
                                     <HODCR

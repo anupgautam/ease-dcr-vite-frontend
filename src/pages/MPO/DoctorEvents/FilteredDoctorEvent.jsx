@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -21,9 +21,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import DefaultDoctorEvent from './DefaultDoctorEvents';
 import 'react-datepicker/dist/react-datepicker.css';
+import { CookieContext } from '@/App'
 
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -51,6 +51,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredDoctorEvent = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -70,7 +71,7 @@ const FilteredDoctorEvent = () => {
     }, []);
 
     //! Get User roles wala
-    const { data, isLoading, isSuccess, isError, error } = useGetUsersMPOWalaQuery(Cookies.get("company_id"))
+    const { data, isLoading, isSuccess, isError, error } = useGetUsersMPOWalaQuery(company_id)
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
@@ -83,7 +84,7 @@ const FilteredDoctorEvent = () => {
     }, [isSuccess])
 
     //! Get All doctors 
-    const Doctors = useGetAllDoctorsWithoutPaginateQuery({ id: Cookies.get("company_id") })
+    const Doctors = useGetAllDoctorsWithoutPaginateQuery({ id: company_id })
 
     const doctorOptions = [];
     if (Doctors?.isSuccess) {
@@ -96,7 +97,7 @@ const FilteredDoctorEvent = () => {
     }
 
     //! Get MPO Names
-    // const MPO_Name = useGetAllMPONamesNoPageQuery({ company_name: Cookies.get('company_id') })
+    // const MPO_Name = useGetAllMPONamesNoPageQuery({ company_name: company_id })
 
     const [MpoData] = usePostAllMPONamesNoPageMutation()
 
@@ -113,18 +114,18 @@ const FilteredDoctorEvent = () => {
         })
     }
 
-    const { data: DoctorEventData } = useGetFliterDoctorEventByMpoIdQuery({ mpo_name: mpoName, company_name: Cookies.get('company_id') })
+    const { data: DoctorEventData } = useGetFliterDoctorEventByMpoIdQuery({ mpo_name: mpoName, company_name: company_id })
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
 
     //! Options
@@ -134,12 +135,12 @@ const FilteredDoctorEvent = () => {
 
     const handleMPONameChange = useCallback((event, value) => {
         setMPOName(value?.id || "")
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
         // setSelectedOption(value?.id);
     }, []);
 
     const handleDoctorOptionChange = useCallback((event, value) => {
-        // setCompanyId(Cookies.get('company_id'));
+        // setCompanyId(company_id);
         setSelectedDoctor(value?.id || "");
     }, []);
 
@@ -237,7 +238,7 @@ const FilteredDoctorEvent = () => {
                         </Grid> */}
                         <Grid item xs={3}>
                             {
-                                Cookies.get('user_role') === 'admin' &&
+                                user_role === 'admin' &&
                                 <Autocomplete
                                     options={mpoNames}
                                     getOptionLabel={(option) => option.title}

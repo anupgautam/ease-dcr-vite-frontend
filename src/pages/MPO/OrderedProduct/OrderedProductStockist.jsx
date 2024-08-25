@@ -1,17 +1,17 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useCallback, useMemo, useContext } from 'react'
 import { useGetStockistsWithoutPaginationQuery } from '@/api/MPOSlices/stockistApiSlice';
 import { Box, Grid, FormControl, Autocomplete, TextField } from '@mui/material';
 import {
   useGetStockistOrderedProductsByChemistIdMutation
 } from '@/api/OrderedProductslices/stockistOrderedProductSlice';
 import DefaultStockistOrderedProduct from './DefaultStockistOrderedProduct';
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 const OrderedProductStockist = ({ index, value, other }) => {
-
+  const { company_id, user_role, company_user_id } = useContext(CookieContext)
   const [selectedStockist, setSelectedStockist] = useState(null);
   const [orderedData, setOrderedData] = useState([]);
-  const stockists = useGetStockistsWithoutPaginationQuery(Cookies.get('company_id'))
+  const stockists = useGetStockistsWithoutPaginationQuery(company_id)
   const [stockistList, setStockistList] = useState([]);
   const [stockistOrderedProductData] = useGetStockistOrderedProductsByChemistIdMutation();
 

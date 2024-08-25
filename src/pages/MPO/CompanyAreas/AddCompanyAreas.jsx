@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -18,9 +18,10 @@ import { returnValidation } from '../../../validation';
 import {
     useCreateCompanyAreasMutation
 } from '@/api/CompanySlices/companyAreaSlice';
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 const AddCompanyAreas = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! react-google-map-picker 
     const DefaultLocation = { lat: 10, lng: 106 };
@@ -116,13 +117,12 @@ const AddCompanyAreas = () => {
         const formData = new FormData();
         formData.append("company_area", values.company_area);
         formData.append("station_type", values.station_type);
-        formData.append("company_name", Cookies.get("company_id"));
+        formData.append("company_name", company_id);
         // formData.append("state", values.state);
         // formData.append("longitude", initialFvalues);
         // formData.append("latitude", values.latitude);
         // formData.append("longitude", "0.000000");
         // formData.append("latitude", "0.000000");
-        // formData.append("company_id", Cookies.get("company_id"));
         try {
             const response = await createCompanyAreas(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Added Company Areas' });

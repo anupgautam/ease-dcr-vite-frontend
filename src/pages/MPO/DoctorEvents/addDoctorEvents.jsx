@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -18,20 +18,22 @@ import { returnValidation } from '../../../validation';
 import {
     useCreateDoctorsEventsMutation
 } from '../../../api/MPOSlices/DoctorSlice'
-import Cookies from 'js-cookie'
 import {
     NepaliDateConverter,
 } from "react-nepali-date-picker-lite";
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
+import { CookieContext } from '@/App'
+
 
 const AddDoctorEvents = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     let today;
     // const today = NepaliDateConverter.getNepaliDate();
     const [selectedDates, setSelectedDates] = useState(today);
 
-    const DoctorData = useGetAllVisitedMpoWiseDoctorQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('company_user_id'), mpo_area: "" })
+    const DoctorData = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_name: company_user_id, mpo_area: "" })
 
     const doctor = useMemo(() => {
         if (DoctorData?.data) {
@@ -89,8 +91,8 @@ const AddDoctorEvents = () => {
         formData.append("doctor_id", values.doctor_id);
         formData.append("event_date", selectedDates);
         formData.append("event_type", "");
-        formData.append("mpo_id", Cookies.get('company_user_id'));
-        formData.append('company_name', Cookies.get('company_id'))
+        formData.append("mpo_id", company_user_id);
+        formData.append('company_name', company_id)
         try {
             const response = await createDoctors(formData)
             if (response.data) {

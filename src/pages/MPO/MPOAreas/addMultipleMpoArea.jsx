@@ -1,5 +1,4 @@
 import { Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
-import Cookies from "js-cookie";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
@@ -9,6 +8,7 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { useGetMpoAreaQuery, usePostAreaofMPOMutation } from "@/api/MPOSlices/TourPlanSlice";
 import { Circles } from 'react-loader-spinner';
 import { useGetAllCompanyAreasQuery } from "@/api/CompanySlices/companyAreaSlice";
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'area_name', label: 'Area Name', alignRight: false },
@@ -17,8 +17,8 @@ const TABLE_HEAD = [
     { id: 'company_area', label: 'Head Quarter', alignRight: false },
 ];
 
-
 const AddMultipleMpoArea = () => {
+    const { company_id, user_role, company_user_id, email } = useContext(CookieContext)
 
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('number');
@@ -158,7 +158,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         { id: "NONE WORKING", title: "NONE WORKING" },
     ]
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
     const companyAreaData = useMemo(() => {
         if (CompanyArea) {
             return CompanyArea?.map(key => ({ id: key.id, title: key.company_area }))
@@ -176,22 +176,22 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
     }, [MpoList])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     const [Formdata, setFormData] = useState({
         area_name: "",
-        mpo_name: Cookies.get('user_role') === "admin" ? "" : Cookies.get('company_user_id'),
+        mpo_name: user_role === "admin" ? "" : company_user_id,
         station_type: "",
         company_area: "",
-        company_name: Cookies.get('company_id')
+        company_name: company_id
     })
 
 
@@ -210,7 +210,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         });
     };
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('user_role') === 'admin' ? Formdata.mpo_name : Cookies.get('company_user_id') });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? Formdata.mpo_name : company_user_id });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
@@ -235,7 +235,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
             </TableCell>
             <TableCell align="left" style={{ width: "220px" }}>
                 {
-                    Cookies.get('user_role') === 'admin' ?
+                    user_role === 'admin' ?
                         <Controls.Select
                             name="mpo_name"
                             label="MPO*"
@@ -243,7 +243,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                             onChange={handleInputChange}
                             // error={errors.mpo_name}
                             options={mpoNames}
-                        /> : <>{Cookies.get('email')}</>
+                        /> : <>{email}</>
                 }
             </TableCell>
             <TableCell align="left" style={{ width: "220px" }}>

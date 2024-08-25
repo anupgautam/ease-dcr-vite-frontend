@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography, Button, Grid,
@@ -13,14 +13,15 @@ import Close from "@mui/icons-material/Close";
 import { useForm, Form } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
-import Cookies from 'js-cookie'
 //! Api Slices 
 import { useGetCompanyHolidaysQuery, useGetHolidayNamesByIdQuery, useUpdateHolidayNameMutation } from '@/api/HolidaySlices/holidaySlices';
 import {
     useGetAllCompanyAreasQuery,
 } from '@/api/CompanySlices/companyAreaSlice';
+import { CookieContext } from '@/App'
 
 const EditHolidayName = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Getting  by ID
     const HolidayName = useGetHolidayNamesByIdQuery(idharu);
@@ -77,7 +78,7 @@ const EditHolidayName = ({ idharu, onClose }) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("holiday_name", values.holiday_name);
-        formData.append("company_name", Cookies.get("company_id"));
+        formData.append("company_name", company_id);
         try {
             const response = await updateHolidayName({ "holiday_name": values.holiday_name, "company_area": areaOptions }).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited CompanyRoles' });

@@ -1,11 +1,16 @@
 import { Typography } from "@mui/material";
-import Cookies from "js-cookie";
-import React from "react";
+import React, {
+    useContext
+} from "react";
 import { chatReverse } from "./chatReverse";
+import { CookieContext } from '@/App'
+
 
 export default function ChatContainer({ messages, scrollRef }) {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const data = [...new Set(chatReverse(messages).map(JSON.stringify))].map(JSON.parse);
-    const id = Cookies.get('company_id');
+    const id = company_id;
 
 
     return (

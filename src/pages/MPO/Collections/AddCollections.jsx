@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -10,7 +10,6 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Iconify from '../../../components/iconify';
-import Cookies from 'js-cookie'
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
@@ -18,8 +17,12 @@ import { returnValidation } from '../../../validation';
 import {
     useCreateCollectionsMutation
 } from '@/api/MPOSlices/CollectionsApiSlice';
+import { CookieContext } from '@/App'
+
 
 const AddCollections = () => {
+
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Create Chemist
     const [createChemists] = useCreateCollectionsMutation()
@@ -79,7 +82,7 @@ const AddCollections = () => {
         formData.append("chemist_gender", values.chemist_gender);
         formData.append("chemist_area", values.chemist_area);
         formData.append("category_name", values.category_name);
-        formData.append('company_id', Cookies.get('company_id'))
+        formData.append('company_id', company_id)
         try {
             const response = await createChemists(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Added Chemists' });

@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
 import Iconify from '../../../components/iconify/Iconify';
 import PropTypes from 'prop-types';
 import { noCase } from 'change-case';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie'
 // @mui
 import {
     Card,
@@ -30,8 +29,12 @@ import { fToNow } from '@/utils/formatTime';
 
 //! notification slices
 import { useGetNotificationListByIdQuery, usePatchNotificationListByIdMutation } from "../../../api/MPOSlices/notificationSlices";
+import { CookieContext } from '@/App'
+
 
 export default function NotificationsPopover() {
+    const { User_id, company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [notifications, setNotifications] = useState();
 
     // const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
@@ -61,9 +64,9 @@ export default function NotificationsPopover() {
     }
 
     //! Notification
-    const { data, isLoading, isError, error } = useGetNotificationListByIdQuery(Cookies.get('User_id'));
+    const { data, isLoading, isError, error } = useGetNotificationListByIdQuery(User_id);
     const [NotificationData] = usePatchNotificationListByIdMutation();
-    
+
 
     const [Show, setShow] = useState(true);
 
@@ -86,7 +89,7 @@ export default function NotificationsPopover() {
     const countFalseValues = data.reduce((count, obj) => count + (obj.is_read === false ? 1 : 0), 0);
 
     // Output the result
-    
+
 
 
 

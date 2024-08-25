@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback,useContext } from 'react'
 import { Close } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Drawer, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
-import Cookies from "js-cookie";
 import { BSDate } from "nepali-datepicker-react";
 import { useBulkUpdateTourplanByHoMutation, useBulkUpdateTourplanByMpoMutation } from "@/api/MPOSlices/TourPlanSlice";
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
+import { CookieContext } from '@/App'
 
 const ApprovedTP = ({ mpoName, role }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const now = new BSDate().now();
 
@@ -60,7 +61,7 @@ const ApprovedTP = ({ mpoName, role }) => {
             const data = {
                 month: selectedMonth,
                 year: selectedYear,
-                approved_by: Cookies.get('company_user_id'),
+                approved_by: company_user_id,
                 mpo_name: mpoName,
             };
             UpdateBulkTourPlan(data)
@@ -88,7 +89,7 @@ const ApprovedTP = ({ mpoName, role }) => {
             const data = {
                 month: selectedMonth,
                 year: selectedYear,
-                approved_by: Cookies.get('company_user_id'),
+                approved_by: company_user_id,
                 user_id: mpoName,
             };
             UpdateHoTp(data)

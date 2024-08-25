@@ -28,7 +28,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import "nepali-datepicker-reactjs/dist/index.css"
@@ -62,6 +61,8 @@ import { useGetUsersByIdQuery } from '@/api/DemoUserSlice';
 import { useGetHOTourPlansByUserIdQuery } from '@/api/HighOrderSlices/hoTourPlanSlice';
 import moment from 'moment';
 import { useGetcompanyUserRolesByIdQuery } from '@/api/CompanySlices/companyUserRoleSlice';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
@@ -80,6 +81,8 @@ const TABLE_HEAD1 = [
 ];
 
 const MyExecutiveTp = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const now = new BSDate().now();
 
     const monthData = getNepaliMonthName(now._date.month);
@@ -92,8 +95,8 @@ const MyExecutiveTp = () => {
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
 
-    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
-    const { data: myHigherData } = useGetUsersByHigherLevelUserQuery(Cookies.get('company_user_id'));
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
+    const { data: myHigherData } = useGetUsersByHigherLevelUserQuery(company_user_id);
 
     const lowerList = useMemo(() => {
         if (myHigherData !== undefined) {
@@ -121,7 +124,7 @@ const MyExecutiveTp = () => {
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [companyUserList, setCompanyUserList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: '' });
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' });
 
     useEffect(() => {
         let dataList = []
@@ -232,11 +235,11 @@ const MyExecutiveTp = () => {
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
-    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: Cookies.get('company_id'), date: selectedYear, month: selectedMonth, mpo_name: selectedOption !== null ? selectedOption?.id : "", page: page, role_data: '' })
+    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedOption !== null ? selectedOption?.id : "", page: page, role_data: '' })
 
-    const userData = useGetUsersByIdQuery(Cookies.get('company_user_id'));
+    const userData = useGetUsersByIdQuery(company_user_id);
 
-    const hoTourPlan = useGetHOTourPlansByUserIdQuery({ user_id: selectedOption !== null ? selectedOption?.id : "", month: selectedMonth, date: selectedYear, page: page, company_name: Cookies.get('company_id') })
+    const hoTourPlan = useGetHOTourPlansByUserIdQuery({ user_id: selectedOption !== null ? selectedOption?.id : "", month: selectedMonth, date: selectedYear, page: page, company_name: company_id })
     return (
         <>
             <Grid item xs={10}>
@@ -421,7 +424,7 @@ const MyExecutiveTp = () => {
                                                                                 }
                                                                                 {/* //! Delete  */}
                                                                                 {
-                                                                                    Cookies.get('user_role') === 'admin' &&
+                                                                                    user_role === 'admin' &&
                                                                                     <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
                                                                                         <Badge>
                                                                                             <Iconify icon="eva:trash-2-outline" />

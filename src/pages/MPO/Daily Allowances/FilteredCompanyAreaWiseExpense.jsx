@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 //! @mui
 import {
     Card,
@@ -22,7 +22,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import 'react-datepicker/dist/react-datepicker.css';
 
 import Skeleton from 'react-loading-skeleton'
@@ -39,6 +38,8 @@ import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice
 
 import DefaultCompanyAreaWiseExpense from './DefaultCompanyAreaWiseExpense';
 import EditCompanyAreaWiseExpenses from './EditCompanyAreaWiseExpenses';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'expenses_type', label: 'Expenses Type', alignRight: false },
@@ -48,6 +49,8 @@ const TABLE_HEAD = [
 ];
 
 const FilteredCompanyAreaWiseExpense = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -69,12 +72,12 @@ const FilteredCompanyAreaWiseExpense = () => {
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleOptionChange = useCallback((event, value) => {
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
         setSelectedOption(value?.id);
     }, []);
 
     //! Get all company area 
-    const { data, isSuccess } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const { data, isSuccess } = useGetAllCompanyAreasQuery(company_id);
 
     const companyareas = useMemo(() => {
         if (isSuccess) {
@@ -129,10 +132,10 @@ const FilteredCompanyAreaWiseExpense = () => {
                                     <TextField {...params} label="Company Areas" />
                                 )}
                                 renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
                             />
 
                         </Grid>

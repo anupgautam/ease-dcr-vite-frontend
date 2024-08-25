@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useContext } from 'react'
 import {
     Box,
     Grid,
@@ -17,8 +17,11 @@ import { returnValidation } from '../../../validation';
 import {
     useGetCompanyAreasByIdQuery, useUpdateCompanyAreasMutation
 } from '../../../api/CompanySlices/companyAreaSlice';
+import { CookieContext } from '@/App'
+
 
 const EditCompanyAreas = ({ idharu, onClose }) => {
+    const { company_id, refresh, access } = useContext(CookieContext)
 
     //! Getting chemist by ID
     const CompanyAreas = useGetCompanyAreasByIdQuery(idharu);
@@ -116,8 +119,8 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
         // formData.append("latitude", values.latitude);
         formData.append("company_name", values.company_name);
         formData.append('id', CompanyAreas?.data?.id);
-        // formData.append('refresh', Cookies.get('refresh'));
-        // formData.append('access', Cookies.get('access'));
+        // formData.append('refresh', refresh);
+        // formData.append('access', access);
         try {
             const response = await updateCompanyAreas(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited CompanyAreas' });
@@ -228,11 +231,11 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
                         </Grid> */}
                         <Stack spacing={1} direction="row">
                             <Controls.SubmitButton
-                            variant="contained"
-                            className="submit-button"
-                            onClick={(e) => handleSubmit(e)}
-                            text="Submit"
-                        />
+                                variant="contained"
+                                className="submit-button"
+                                onClick={(e) => handleSubmit(e)}
+                                text="Submit"
+                            />
                             <Button
                                 variant="outlined"
                                 className="cancel-button"

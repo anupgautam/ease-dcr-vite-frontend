@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import Cookies from 'js-cookie'
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Drawer, Typography } from '@mui/material';
 import useResponsive from '@/hooks/useResponsive';
@@ -30,7 +29,6 @@ export default function SettingsNav({ openNav, onCloseNav }) {
 
   const isDesktop = useResponsive('up', 'lg');
 
-  const [sidebar, setSidebar] = useState(Cookies.get('sidebar'))
 
   useEffect(() => {
     if (openNav) {

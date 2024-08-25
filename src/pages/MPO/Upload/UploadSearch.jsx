@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useContext } from 'react';
 import {
     TextField,
     InputAdornment,
@@ -9,7 +9,6 @@ import {
     Autocomplete
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import Cookies from 'js-cookie'
 import { useForm1 } from '../../../reusable/components/forms/useForm';
 
 import {
@@ -21,8 +20,10 @@ import {
 } from '../../../api/MPOSlices/UserSlice';
 import DefaultList from './DefaultList'
 import { SearchUploadList } from '../../../sections/@dashboard/uploads';
+import { CookieContext } from '@/App'
 
 const UploadSearch = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //!Pagination logic
     const [page, setPage] = useState(1)
@@ -34,7 +35,7 @@ const UploadSearch = () => {
     }, [])
 
     //! Get User roles wala
-    const { data, isSuccess } = useGetUsersByCompanyRoleWithOutPageQuery(Cookies.get('company_id'))
+    const { data, isSuccess } = useGetUsersByCompanyRoleWithOutPageQuery(company_id)
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
@@ -55,7 +56,7 @@ const UploadSearch = () => {
 
 
     // ! Get all uploads wala
-    const UploadsWala = useGetUploadQuery({ page: page, id: Cookies.get('company_id') });
+    const UploadsWala = useGetUploadQuery({ page: page, id: company_id });
 
     //! Search results
     const [searchResults, setSearchResults] = useState({ search: "" });
@@ -85,7 +86,7 @@ const UploadSearch = () => {
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2} alignItems="center">
                         <Grid item xs={3}>
-                            {Cookies.get('user_role') === 'admin' &&
+                            {user_role === 'admin' &&
                                 <Autocomplete
                                     options={rolesOptions}
                                     getOptionLabel={(option) => option.title}

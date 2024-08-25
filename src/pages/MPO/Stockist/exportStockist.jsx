@@ -1,16 +1,18 @@
 import { Close } from "@mui/icons-material";
 import { Autocomplete, Box, Button, Drawer, IconButton, Stack, TextField, Typography } from "@mui/material";
-import Cookies from "js-cookie";
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useContext } from "react";
 import { useGetAllCompanyAreasWithoutPaginationQuery } from "@/api/CompanySlices/companyAreaSlice";
 import { useGetAllStockistsWithoutPaginationQuery } from "@/api/MPOSlices/StockistSlice";
 import ExportToExcel from "@/reusable/utils/exportSheet";
+import { CookieContext } from '@/App'
 
 const ExportStockist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [mpoName, setMPOName] = useState('');
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const { data: companyAreaData } = useGetAllCompanyAreasWithoutPaginationQuery(Cookies.get('company_id'))
+    const { data: companyAreaData } = useGetAllCompanyAreasWithoutPaginationQuery(company_id)
 
     const companyArea = useMemo(() => {
         if (companyAreaData) {
@@ -19,7 +21,7 @@ const ExportStockist = () => {
         return [];
     }, [companyAreaData])
 
-    const { data } = useGetAllStockistsWithoutPaginationQuery({ company_name: Cookies.get('company_id'), company_area: mpoName.id === undefined ? "" : mpoName.id });
+    const { data } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoName.id === undefined ? "" : mpoName.id });
 
     const headers = [
         { label: 'S.No.', key: 'sno' },

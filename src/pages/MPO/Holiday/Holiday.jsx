@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useMemo, useCallback, } from 'react'
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
 import Controls from '@/reusable/components/forms/controls/Controls';
 import { Grid, Typography, FormControl, Autocomplete, TextField, Box, Stack } from '@mui/material';
 import moment from 'moment';
 import { useBulkHolidayAddMutation, useGetHolidayByMonthAndYearMutation, useGetHolidayNamesQuery, useFilterHolidayBigCalendarMutation } from '@/api/HolidaySlices/holidaySlices';
-import Cookies from 'js-cookie';
 import "react-patro/src/styles.css";
 import { BSDate } from "nepali-datepicker-react";
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useNavigate } from 'react-router-dom';
+import { CookieContext } from '@/App'
 
 const localizer = momentLocalizer(moment);
 
@@ -26,11 +26,12 @@ const eventStyleGetter = (event, start, end, isSelected) => {
 };
 
 const Holiday = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const [DefaultData, setDetaultData] = useState();
 
     //! Company holidays
-    const Holiday = useGetHolidayNamesQuery(Cookies.get("company_id"));
+    const Holiday = useGetHolidayNamesQuery(company_id);
 
     const holidays = useMemo(() => {
         if (Holiday?.isSuccess) {
@@ -64,7 +65,7 @@ const Holiday = () => {
     const [AllHolidays, setAllHolidays] = useState([]);
 
     useEffect(() => {
-        const data = { company_name: Cookies.get('company_id'), month: getNepaliMonthName(now._date.month), year: now._date.year }
+        const data = { company_name: company_id, month: getNepaliMonthName(now._date.month), year: now._date.year }
         GetHoliday(data)
             .then((res) => {
                 setAllHolidays(res.data)
@@ -90,7 +91,7 @@ const Holiday = () => {
             bulkHoliday({
                 holiday_date: SelectedDate,
                 company_holiday_type: holidaySelect,
-                company_name: parseInt(Cookies.get('company_id')),
+                company_name: parseInt(company_id),
             })
                 .then((res) => {
                     if (res.data) {
@@ -116,12 +117,12 @@ const Holiday = () => {
         }
     }, [SelectedDate, bulkHoliday, holidaySelect]);
 
-    // const { data, error, isLoading } = useFilterGetHolidaysQuery(Cookies.get('company_id'));
+    // const { data, error, isLoading } = useFilterGetHolidaysQuery(company_id);
 
     const [filterHolidayBigCalendar, { data, error, isLoading }] = useFilterHolidayBigCalendarMutation();
     useEffect(() => {
         if (holidaySelect) {
-            filterHolidayBigCalendar({ company_name: parseInt(Cookies.get('company_id')), holidaySelect });
+            filterHolidayBigCalendar({ company_name: parseInt(company_id), holidaySelect });
         }
     }, [holidaySelect, filterHolidayBigCalendar]);
 

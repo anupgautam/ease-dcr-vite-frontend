@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import { Typography } from '@mui/material';
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
-import Cookies from 'js-cookie'
-
+import { CookieContext } from '@/App'
 
 const CompanyAreasCount = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
@@ -14,7 +15,7 @@ const CompanyAreasCount = () => {
     }, [])
 
     // !  Get all the company areas
-    const { data } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const { data } = useGetAllCompanyAreasQuery(company_id);
     return (
         <>
             {

@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Container, Grid, Box, Stack, useMediaQuery, useTheme } from '@mui/material';
-import Cookies from 'js-cookie';
 import UserCount from './UserCount';
 import UserSearch from './UserSearch';
 import AddUser from './AddUser';
 import { useGetAllDefaultUsersQuery } from '@/api/CompanySlices/companyUserRoleSlice';
 import ExportToExcel from '@/reusable/utils/exportSheet';
+import { CookieContext } from '@/App'
 
 const ListofUser = () => {
+    const { company_id } = useContext(CookieContext)
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const { data } = useGetAllDefaultUsersQuery({ company_name: Cookies.get('company_id') });
+    const { data } = useGetAllDefaultUsersQuery({ company_name: company_id });
 
     const headers = [
         { label: 'S.No.', key: 'sno' },

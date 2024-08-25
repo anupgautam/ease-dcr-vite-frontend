@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
     Grid,
     Box,
@@ -16,15 +16,17 @@ import { useTheme } from "@mui/material/styles";
 import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from '../../../../reusable/components/forms/controls/Controls';
 import { returnValidation } from '../../../../validation';
-import Cookies from 'js-cookie'
 import {
     useGetTourPlanValidityByIdQuery,
     useUpdateTourPlanValidityMutation
 } from '@/api/MPOSlices/TourPlanValidityApiSlice';
+import { CookieContext } from '@/App'
 
 
 const DCRValidDate = () => {
-    const companyId = Cookies.get('company_id');
+    const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
+
+    const companyId = company_id;
     const DCR = useGetTourPlanValidityByIdQuery(companyId);
 
     //! Dialogue
@@ -98,8 +100,8 @@ const DCRValidDate = () => {
         formData.append("days", values.tourplan_validity);
         formData.append("id", DCR.data.id);
         formData.append('company', companyId)
-        formData.append('refresh', Cookies.get('refresh'))
-        formData.append('access', Cookies.get('access'));
+        formData.append('refresh', refresh)
+        formData.append('access', access);
         try {
             const response = await updateDCR(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Added TourPlan Validity dates' });

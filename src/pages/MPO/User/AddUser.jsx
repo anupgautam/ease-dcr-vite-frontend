@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -24,17 +24,19 @@ import {
 import {
     useGetAllCompanyAreasQuery
 } from '@/api/CompanySlices/companyAreaSlice'
-import Cookies from 'js-cookie';
 import {
     NepaliDateConverter
 } from "react-nepali-date-picker-lite";
+import { CookieContext } from '@/App'
 
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 
 const AddUser = () => {
 
+    const { company_id } = useContext(CookieContext)
+
     //! Get user roles
-    const { data, isSuccess, } = useGetUsersRoleQuery(Cookies.get('company_id'));
+    const { data, isSuccess, } = useGetUsersRoleQuery(company_id);
 
     const rolesharu = useMemo(() => {
         if (isSuccess) {
@@ -44,7 +46,7 @@ const AddUser = () => {
     }, [isSuccess, data]);
 
     //! Get company wise area
-    const CompanyAreas = useGetAllCompanyAreasQuery(Cookies.get('company_id'))
+    const CompanyAreas = useGetAllCompanyAreasQuery(company_id)
 
     const companyAreas = useMemo(() => {
         if (CompanyAreas?.data) {
@@ -54,7 +56,7 @@ const AddUser = () => {
     }, [CompanyAreas]);
 
     //! Get division
-    const Divisions = useGetFilteredDivisionsQuery(Cookies.get('company_id'));
+    const Divisions = useGetFilteredDivisionsQuery(company_id);
 
     const divisionList = useMemo(() => {
         if (Divisions?.data) {
@@ -66,7 +68,7 @@ const AddUser = () => {
     //! Executive level
     const [executiveLevels, setExecutiveLevels] = useState([]);
     const [getExecLevel] = useGetAllExecutiveLevelsMutation();
-    const companyId = Cookies.get('company_id');
+    const companyId = company_id;
 
     useEffect(() => {
         const exce = [];
@@ -190,7 +192,7 @@ const AddUser = () => {
         formData.append("role_name", values.role_name);
         formData.append("division_name", values.division_name);
         formData.append("executive_level", values.executive_level);
-        formData.append("company_id", Cookies.get("company_id"));
+        formData.append("company_id", company_id);
         formData.append("company_area", values.company_area);
         formData.append("station_type", values.station_type);
         formData.append("is_active", true);

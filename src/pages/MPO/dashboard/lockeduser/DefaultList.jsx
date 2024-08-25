@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 // @mui
 import {
     Card,
@@ -23,7 +23,8 @@ import Iconify from '@/components/iconify/Iconify';
 import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
 import 'react-loading-skeleton/dist/skeleton.css'
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
+
 
 import {
     useGetLockedTourPlanForHigherQuery,
@@ -41,6 +42,8 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = ({ mpo_name }) => {
+
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -83,7 +86,7 @@ const DefaultList = ({ mpo_name }) => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetLockedUsersQuery(Cookies.get('company_id'));
+    const { data } = useGetLockedUsersQuery(company_id);
 
     const { data: LockedTourPlan } = useGetLockedTourPlanQuery(mpo_name.id);
     const { data: HoTourPlanData } = useGetLockedTourPlanForHigherQuery(mpo_name.id);

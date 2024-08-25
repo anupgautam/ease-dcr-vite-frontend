@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useContext } from 'react'
 import {
     Box,
     Typography, Button, Grid
@@ -12,14 +12,15 @@ import Close from "@mui/icons-material/Close";
 import { useForm, Form } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
-import Cookies from 'js-cookie'
 //! Api Slices 
 import {
     useGetCompanyRolesByIdQuery,
     useUpdateCompanyRolesMutation
 } from '@/api/MPOSlices/companyRolesSlice';
+import { CookieContext } from '@/App'
 
 const EditCompanyRoles = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Getting CompanyRoles by ID
     const CompanyRoles = useGetCompanyRolesByIdQuery(idharu);
@@ -85,9 +86,9 @@ const EditCompanyRoles = ({ idharu, onClose }) => {
         formData.append("role_name", values.role_name);
         formData.append("is_highest_priority", values.is_highest_priority);
         formData.append('id', idharu);
-        formData.append("company_id", Cookies.get('company_id'));
-        formData.append('refresh', Cookies.get('refresh'))
-        formData.append('access', Cookies.get('access'));
+        formData.append("company_id", company_id);
+        formData.append('refresh', refresh)
+        formData.append('access', access);
         try {
             const response = await updateCompanyRoles(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited CompanyRoles' });

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Stack,
     Container,
@@ -8,14 +8,14 @@ import {
     useTheme
 } from '@mui/material';
 
-
 import StockistCount from './StockistCount';
 import StockistSearch from './StockistSearch';
 import AddStockist from './AddStockist';
 import ExportStockist from './exportStockist';
-import Cookies from 'js-cookie';
+import { CookieContext } from '@/App'
 
 const ListofStockist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     return (
@@ -36,11 +36,11 @@ const ListofStockist = () => {
                                 justifyContent="flex-end"
                             >
                                 {
-                                    Cookies.get('user_role') === 'admin' &&
+                                    user_role === 'admin' &&
                                     <ExportStockist />
                                 }
                                 {
-                                    Cookies.get('user_role') === 'admin' &&
+                                    user_role === 'admin' &&
                                     <AddStockist />
                                 }
                             </Stack>

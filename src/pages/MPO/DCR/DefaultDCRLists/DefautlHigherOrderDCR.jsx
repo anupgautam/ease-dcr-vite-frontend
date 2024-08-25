@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -24,7 +24,6 @@ import { UserListHead } from '../../../../sections/@dashboard/user';
 import 'react-loading-skeleton/dist/skeleton.css'
 import EditHoDCR from '../EditDCRs/EditHoDCR';
 
-import Cookies from 'js-cookie'
 import {
     useGetHODCRsQuery,
     useDeleteHODCRsByIdMutation,
@@ -86,7 +85,7 @@ const DefaultHODCR = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetHODCRsQuery({ page: page, id: Cookies.get("company_id") });
+    const { data } = useGetHODCRsQuery({ page: page, id: company_id });
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteHODCRsByIdMutation();
@@ -137,7 +136,7 @@ const DefaultHODCR = () => {
                                                     </TableCell>
                                                     <TableCell align="left">
                                                         {
-                                                            Cookies.get('user_role') === 'admin' &&
+                                                            user_role === 'admin' &&
                                                             <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id, tourplan.user_id.id)}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:edit-fill" />
@@ -145,7 +144,7 @@ const DefaultHODCR = () => {
                                                             </IconButton>
                                                         }
                                                         {
-                                                            Cookies.get('user_role') === 'admin' &&
+                                                            user_role === 'admin' &&
                                                             <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:trash-2-outline" />

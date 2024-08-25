@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Link } from 'react-router-dom';
 import "../../../styles/bootstrap.min.css"
 import "../../../styles/lineicons.css"
 import "../../../styles/animate.css"
 import "../../../styles/ud-styles.css"
 import "../../../styles/ud-styles.css.map"
-import Cookies from 'js-cookie';
 import { Grid } from '@mui/material';
+import { CookieContext } from '@/App'
+
 // import "../../../styles/boxicons.css"
 
 const Header = () => {
+    const { company_id, user_role, company_user_id, user_role } = useContext(CookieContext)
+
     const [Show, setShow] = useState(false);
 
     const handleShow = () => {
         setShow(!Show);
     }
-    const login = Cookies.get('user_role');
+    const login = user_role;
     return (
         <>
             <header className="ud-header">
@@ -163,7 +166,7 @@ const Header = () => {
                                 {
                                     login ?
                                         <div className="navbar-btn d-none d-sm-inline-block res-display">
-                                            <Link to={Cookies.get('user_role') === 'admin' ? "/dashboard/admin" : "/dashboard/admin/listofdoctor"} className="ud-main-btn ud-white-btn">
+                                            <Link to={user_role === 'admin' ? "/dashboard/admin" : "/dashboard/admin/listofdoctor"} className="ud-main-btn ud-white-btn">
                                                 Go to Dashboard
                                             </Link>
                                             {/* <Link className="ud-main-btn ud-white-btn" to="/register">

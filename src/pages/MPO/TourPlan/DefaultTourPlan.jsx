@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -24,12 +24,12 @@ import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import EditTourPlan from './EditTourPlan';
+import { CookieContext } from '@/App'
 
 import {
     useGetTourPlansQuery,
     useDeleteTourPlansByIdMutation,
 } from '@/api/MPOSlices/TourPlanSlice';
-import Cookies from 'js-cookie'
 
 const TABLE_HEAD = [
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
@@ -41,11 +41,11 @@ const TABLE_HEAD = [
 
 
 const DefaultList = () => {
-
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Get Tour Plan
     const { data, refetch } = useGetTourPlansQuery({
-        id: Cookies.get("company_id"),
+        id: company_id,
         page: page
     });
 
@@ -89,7 +89,7 @@ const DefaultList = () => {
         setPage(thisArray[3]);
     }, [])
 
-    const id = Cookies.get("company_id");
+    const id = company_id;
 
 
     // !Delete TourPlan
@@ -140,7 +140,7 @@ const DefaultList = () => {
                                                         <TableCell align="left">
                                                             {/*//! Edit  */}
                                                             {
-                                                                Cookies.get('user_role') === 'admin' &&
+                                                                user_role === 'admin' &&
                                                                 <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)}>
                                                                     <Badge>
                                                                         <Iconify icon="eva:edit-fill" />
@@ -149,7 +149,7 @@ const DefaultList = () => {
                                                             }
                                                             {/*//! Delete  */}
                                                             {
-                                                                Cookies.get('user_role') === 'admin' &&
+                                                                user_role === 'admin' &&
                                                                 <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
                                                                     <Badge>
                                                                         <Iconify icon="eva:trash-2-outline" />

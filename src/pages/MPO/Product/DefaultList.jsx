@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Badge,
     Button,
@@ -22,7 +22,8 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import EditProduct from './EditProduct';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'name', label: 'Name', alignRight: false },
@@ -34,6 +35,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = () => {
+    const { company_id, user_role, company_division_name } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -76,7 +78,7 @@ const DefaultList = () => {
     }, [])
 
     // ! Get all users wala
-    const { data } = useGetAllProductsQuery({ id: Cookies.get('company_id'), page: page, division_name: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_division_name') });
+    const { data } = useGetAllProductsQuery({ id: company_id, page: page, division_name: user_role === 'admin' ? "" : company_division_name });
 
     // !Delete chemists
     const [deleteProduct] = useDeleteProductsByIdMutation()
@@ -113,7 +115,7 @@ const DefaultList = () => {
                             <TableCell align="left">
                                 {/* //!Edit */}
                                 {
-                                    Cookies.get('user_role') === "admin" &&
+                                    user_role === "admin" &&
                                     <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(product.id)} >
                                         <Badge>
                                             <Iconify icon="eva:edit-fill" />
@@ -122,7 +124,7 @@ const DefaultList = () => {
                                 }
                                 {/*//! Delete  */}
                                 {
-                                    Cookies.get('user_role') === "admin" &&
+                                    user_role === "admin" &&
                                     <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(product.id); handleClickOpen() }}>
                                         <Badge>
                                             <Iconify icon="eva:trash-2-outline" />

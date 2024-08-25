@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Container,
     Grid,
@@ -11,11 +11,12 @@ import {
 import UploadCount from './UploadCount';
 import UploadSearch from './UploadSearch';
 import AddUpload from './addUpload';
-import Cookies from 'js-cookie';
+import { CookieContext } from '@/App'
 
 const ListOfUpload = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     return (
         <>
@@ -36,7 +37,7 @@ const ListOfUpload = () => {
                                 justifyContent="flex-end"
                             >
                                 {
-                                    Cookies.get('user_role') === 'MPO' &&
+                                    user_role === 'MPO' &&
                                     <AddUpload />
                                 }
                             </Stack>

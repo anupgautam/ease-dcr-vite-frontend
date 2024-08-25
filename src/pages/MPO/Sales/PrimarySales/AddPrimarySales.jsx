@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -10,10 +10,10 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Iconify from '../../../../components/iconify';
-import Cookies from 'js-cookie'
 import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from '../../../../reusable/components/forms/controls/Controls';
 import { returnValidation } from '../../../../validation';
+import { CookieContext } from '@/App'
 
 import {
     useCreatePrimarySalesMutation
@@ -24,9 +24,10 @@ import {
 } from '@/api/MPOSlices/productApiSlice'
 
 const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Get doctor categories
-    const Products = useGetAllProductsOptionsQuery(Cookies.get('company_id'))
+    const Products = useGetAllProductsOptionsQuery(company_id)
 
     const products = useMemo(() => {
         if (Products.status === 'fulfilled') {
@@ -121,7 +122,7 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
         formData.append("l_rate", values.l_rate);
         formData.append("st_value", values.st_value);
         formData.append("sl_value", values.sl_value);
-        formData.append('company_name', Cookies.get('company_id'))
+        formData.append('company_name', company_id)
         try {
             const response = await createPrimarySales(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Added Primary Sales' });

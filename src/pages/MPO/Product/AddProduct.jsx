@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import {
     Box,
     Typography,
@@ -20,10 +20,13 @@ import {
     useGetCompDivisionQuery,
     useCreateProductsMutation,
 } from '@/api/MPOSlices/ProductSlice';
-import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
+import { CookieContext } from '@/App'
+
 
 const AddProduct = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [File, setFile] = useState(null);
 
     const [createProducts] = useCreateProductsMutation();
@@ -68,7 +71,7 @@ const AddProduct = () => {
         resetForm,
     } = useForm(initialFValues, true, validate);
 
-    const Division = useGetCompDivisionQuery(Cookies.get('company_id'));
+    const Division = useGetCompDivisionQuery(company_id);
 
     const divisions = useMemo(() => {
         if (Division?.data) {
@@ -119,7 +122,7 @@ const AddProduct = () => {
         formData.append("product_price_for_stockist", values.product_price_for_stockist);
         formData.append("product_description", values.product_description);
         formData.append("division_name", values.division_name);
-        formData.append('company_id', Cookies.get('company_id'));
+        formData.append('company_id', company_id);
         formData.append("bonus", values.bonus);
         formData.append("product_type", values.product_type);
         try {

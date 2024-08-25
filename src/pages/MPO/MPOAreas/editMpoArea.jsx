@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useCallback, useMemo, useContext } from 'react'
 import {
     Box,
     Typography, Button, Grid
@@ -15,7 +15,6 @@ import { useGetAllCompanyRolesQuery } from '@/api/CompanySlices/companyRolesSlic
 import {
     usePostAllMPONamesNoPageMutation
 } from '../../../api/MPOSlices/DoctorSlice'
-import Cookies from 'js-cookie'
 import {
     useGetCompanyDivisionsByCompanyIdQuery
 } from '@/api/CompanySlices/companyDivisionSlice';
@@ -25,8 +24,12 @@ import {
 import {
     useGetAreaMPOByIdQuery,
 } from '@/api/MPOSlices/TourPlanSlice.js';
+import { CookieContext } from '@/App'
+
 
 const EditMpoArea = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const mpoStation = [
         { id: "HOME STATION", title: "HOME STATION" },
         { id: "EX STATION", title: "EX STATION" },
@@ -40,11 +43,11 @@ const EditMpoArea = ({ idharu, onClose }) => {
     const [higherUserOptions, setHigherUserOptions] = useState([]);
 
     //! Get user roles
-    const data = useGetAllCompanyRolesQuery(Cookies.get('company_id'));
+    const data = useGetAllCompanyRolesQuery(company_id);
 
     const rolesharu = useMemo(() => {
-        if (rolesharu?.data) {
-            return data.data.map((key => ({
+        if (data) {
+            return data?.data?.map((key => ({
                 id: key.id,
                 title: key.role_name_value
             })))
@@ -53,11 +56,11 @@ const EditMpoArea = ({ idharu, onClose }) => {
     }, [data])
 
     //! Get Divisions
-    const Divisions = useGetCompanyDivisionsByCompanyIdQuery(Cookies.get('company_id'));
+    const Divisions = useGetCompanyDivisionsByCompanyIdQuery(company_id);
 
     const divisions = useMemo(() => {
         if (Divisions?.data) {
-            return divisions?.data?.map(key => ({
+            return Divisions?.data?.map(key => ({
                 id: key.id,
                 title: key.division_name
             }))
@@ -84,7 +87,7 @@ const EditMpoArea = ({ idharu, onClose }) => {
     }, [User])
 
     //! Get company wise area
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
 
     const companyAreaData = useMemo(() => {
         if (CompanyArea?.data) {
@@ -106,15 +109,15 @@ const EditMpoArea = ({ idharu, onClose }) => {
     }, [MpoList])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
@@ -186,7 +189,7 @@ const EditMpoArea = ({ idharu, onClose }) => {
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
-        const data = { area_name: values.area_name, mpo_name: values.mpo_name, station_type: values.station_type, company_area: values.company_area, id: idharu, company_name: Cookies.get('company_id') }
+        const data = { area_name: values.area_name, mpo_name: values.mpo_name, station_type: values.station_type, company_area: values.company_area, id: idharu, company_name: company_id }
         try {
             await updateUsers({ id: idharu, data: data })
                 .then((response) => {
@@ -209,6 +212,7 @@ const EditMpoArea = ({ idharu, onClose }) => {
                         setErrorMessage({ show: false, message: '' });
                     }, 3000);
                 })
+            setIsDrawerOpen(false)
         }
         catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
@@ -216,8 +220,10 @@ const EditMpoArea = ({ idharu, onClose }) => {
                 setErrorMessage({ show: false, message: '' });
             }, 3000);
         }
+        setIsDrawerOpen(false)
     }, [updateUsers, values])
 
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     return (
         <>
             <Drawer
@@ -263,7 +269,7 @@ const EditMpoArea = ({ idharu, onClose }) => {
                     </Box>
 
                     {
-                        Cookies.get('user_role') === 'admin' &&
+                        user_role === 'admin' &&
                         <Box marginBottom={2}>
                             <Controls.Select
                                 name="mpo_name"
@@ -306,7 +312,7 @@ const EditMpoArea = ({ idharu, onClose }) => {
                         <Button
                             variant="outlined"
                             className="cancel-button"
-                            onClick={() => setIsDrawerOpen(false)}
+                            onClick={onClose}
                         >
                             Cancel
                         </Button>

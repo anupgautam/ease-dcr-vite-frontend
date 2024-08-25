@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Card,
     Table,
@@ -20,7 +20,6 @@ import { UserListHead } from '../../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
-import Cookies from 'js-cookie'
 import {
     useGetAllChemistsDCRQuery,
     useDeleteChemistsDCRByIdMutation,
@@ -30,6 +29,8 @@ import { addSelectedUser } from '@/reducers/dcrSelectData';
 import { useDispatch } from 'react-redux';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import moment from 'moment';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
@@ -41,6 +42,7 @@ const TABLE_HEAD = [
 ];
 
 const MyExecutiveChemistDcr = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const dispatch = useDispatch();
 
@@ -84,7 +86,7 @@ const MyExecutiveChemistDcr = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetAllChemistsDCRQuery({ page: page, id: Cookies.get("company_id") });
+    const { data } = useGetAllChemistsDCRQuery({ page: page, id: company_id });
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteChemistsDCRByIdMutation();

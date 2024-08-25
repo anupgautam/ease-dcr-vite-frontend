@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography, Button, Grid
@@ -19,7 +19,6 @@ import {
 import { useGetAllExecutiveLevelsMutation } from '@/api/CompanySlices/companyUserSlice';
 import { useGetAllCompanyRolesQuery } from '@/api/CompanySlices/companyRolesSlice';
 
-import Cookies from 'js-cookie'
 import {
     useGetCompanyDivisionsByCompanyIdQuery
 } from '@/api/CompanySlices/companyDivisionSlice';
@@ -28,8 +27,10 @@ import {
 } from '@/api/CompanySlices/companyAreaSlice'
 import { useUpdateUsersMutation } from '@/api/MPOSlices/UserSlice'
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
-
+import { CookieContext } from '@/App'
 const EditUser = ({ idharu, onClose }) => {
+
+    const { company_id, refresh, access } = useContext(CookieContext)
 
     const now = new BSDate().now();
 
@@ -37,7 +38,7 @@ const EditUser = ({ idharu, onClose }) => {
     const User = useGetcompanyUserRolesByIdQuery(idharu);
 
     //! Get user roles
-    const data = useGetAllCompanyRolesQuery(Cookies.get('company_id'));
+    const data = useGetAllCompanyRolesQuery(company_id);
 
     const rolesharu = useMemo(() => {
         if (data?.data) {
@@ -47,7 +48,7 @@ const EditUser = ({ idharu, onClose }) => {
     }, [data])
 
     //! Get Divisions
-    const Divisions = useGetCompanyDivisionsByCompanyIdQuery(Cookies.get('company_id'));
+    const Divisions = useGetCompanyDivisionsByCompanyIdQuery(company_id);
 
     const divisions = useMemo(() => {
         if (Divisions?.data) {
@@ -77,7 +78,7 @@ const EditUser = ({ idharu, onClose }) => {
     }, [User])
 
     //! Get company wise area
-    const CompanyAreas = useGetAllCompanyAreasQuery(Cookies.get('company_id'))
+    const CompanyAreas = useGetAllCompanyAreasQuery(company_id)
 
     const companyAreas = useMemo(() => {
         if (CompanyAreas?.data) {
@@ -196,9 +197,9 @@ const EditUser = ({ idharu, onClose }) => {
         formData.append("station_type", values.station_type);
         formData.append("company_area", values.company_area);
         formData.append('id', idharu);
-        formData.append("company_id", Cookies.get('company_id'));
-        formData.append('refresh', Cookies.get('refresh'))
-        formData.append('access', Cookies.get('access'));
+        formData.append("company_id", company_id);
+        formData.append('refresh', refresh)
+        formData.append('access', access);
         formData.append("date_of_joining", dateData);
         formData.append("is_active", true);
         try {

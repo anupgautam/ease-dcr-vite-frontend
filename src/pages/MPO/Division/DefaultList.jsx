@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -23,7 +23,8 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import EditDivision from './EditDivision';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'division_name', label: 'Division Name', alignRight: false },
@@ -31,6 +32,8 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
@@ -61,7 +64,7 @@ const DefaultList = () => {
     }, [])
 
     //! Get Company Area
-    const { data } = useGetFilteredDivisionsQuery(Cookies.get('company_id'));
+    const { data } = useGetFilteredDivisionsQuery(company_id);
 
     // !Delete companydivisionists
     const [deleteCompanyDivision] = useDeleteCompanyDivisionsByIdMutation()

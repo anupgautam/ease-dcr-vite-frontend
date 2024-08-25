@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Stack,
     Grid,
@@ -11,11 +11,13 @@ import {
 import TourPlanCount from './TourPlanCount';
 import FilteredTourPlan from './FilteredTourPlan';
 import ExcelCSVTourPlan from './ExcelCSVTourPlan';
-import Cookies from 'js-cookie';
 import AddTourPlan from './addTourPlan';
 import AddUnplannedTp from './addUnplannedTp';
+import { CookieContext } from '@/App'
 
 const ListOfTourPlan = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -23,7 +25,7 @@ const ListOfTourPlan = () => {
         <Container>
             <Box style={{ marginBottom: '30px' }}>
                 <Grid container spacing={2}>
-                    <Grid item xs={Cookies.get('user_role') === 'admin' ? 12 : 9} md={9}>
+                    <Grid item xs={user_role === 'admin' ? 12 : 9} md={9}>
                         <TourPlanCount />
                     </Grid>
 
@@ -35,14 +37,14 @@ const ListOfTourPlan = () => {
                             justifyContent={isSmallScreen ? 'flex-start' : 'flex-end'}
                         >
                             {
-                                Cookies.get('user_role') !== 'admin' &&
+                                user_role !== 'admin' &&
                                 <Box>
                                     <AddUnplannedTp />
                                 </Box>
                             }
                             <Box>
                                 {
-                                    Cookies.get('user_role') === 'admin' ?
+                                    user_role === 'admin' ?
                                         <ExcelCSVTourPlan /> :
                                         <AddTourPlan />
                                 }

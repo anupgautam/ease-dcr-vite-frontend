@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -25,11 +25,11 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import EditChemistDCR from '../EditDCRs/EditChemistDCR';
 
-import Cookies from 'js-cookie'
 import {
     useGetAllChemistsDCRQuery,
     useDeleteChemistsDCRByIdMutation,
 } from '../../../../api/DCRs Api Slice/chemistDCR/ChemistDCRSlice';
+import { CookieContext } from '@/App'
 
 import { addSelectedUser } from '@/reducers/dcrSelectData';
 import { useDispatch } from 'react-redux';
@@ -45,6 +45,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultChemistDCR = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const dispatch = useDispatch();
 
@@ -88,7 +89,7 @@ const DefaultChemistDCR = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetAllChemistsDCRQuery({ page: page, id: Cookies.get("company_id") });
+    const { data } = useGetAllChemistsDCRQuery({ page: page, id: company_id });
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteChemistsDCRByIdMutation();
@@ -138,7 +139,7 @@ const DefaultChemistDCR = () => {
                                                     {/*//! Edit  */}
                                                     <TableCell align="left">
                                                         {
-                                                            Cookies.get('user_role') === 'admin' &&
+                                                            user_role === 'admin' &&
                                                             <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.dcr.dcr.id, tourplan.mpo_name.id)}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:edit-fill" />
@@ -147,7 +148,7 @@ const DefaultChemistDCR = () => {
                                                         }
                                                         {/*//! Delete  */}
                                                         {
-                                                            Cookies.get('user_role') === 'admin' &&
+                                                            user_role === 'admin' &&
                                                             <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.dcr.dcr.id); handleClickOpen() }}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:trash-2-outline" />

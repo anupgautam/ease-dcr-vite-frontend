@@ -62,6 +62,8 @@ export default function AccountPopover() {
       Cookies.remove('company_user_role_id');
       Cookies.remove('company_division_name');
       Cookies.remove('role');
+      Cookies.remove('is_highest_priority');
+      Cookies.remove('company_area_id');
       navigate("/")
 
     }

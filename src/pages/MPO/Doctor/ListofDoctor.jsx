@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Grid,
     Box,
@@ -12,9 +12,11 @@ import DoctorCount from './DoctorCount';
 import DoctorSearch from './DoctorSearch';
 import ExportDoctor from './exportDoctor';
 import AddDoctor from './AddDoctor';
-import Cookies from 'js-cookie';
+import { CookieContext } from '@/App'
 
 const ListOfDoctor = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     return (
@@ -27,7 +29,7 @@ const ListOfDoctor = () => {
                                 <DoctorCount />
                             </Box>
                         </Grid>
-                        
+
                         <Grid item xs={12} md={3}>
                             <Stack
                                 direction={isSmallScreen ? 'column' : 'row'}
@@ -36,7 +38,7 @@ const ListOfDoctor = () => {
                                 justifyContent="flex-end"
                             >
                                 {
-                                    Cookies.get('user_role') === "admin" &&
+                                    user_role === "admin" &&
                                     <ExportDoctor />
                                 }
                                 <AddDoctor />

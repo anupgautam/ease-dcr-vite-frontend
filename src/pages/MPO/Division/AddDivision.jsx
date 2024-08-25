@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -10,7 +10,6 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Iconify from '../../../components/iconify';
-import Cookies from 'js-cookie'
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
@@ -18,8 +17,10 @@ import { returnValidation } from '../../../validation';
 import {
     useCreateCompanyDivisionsMutation
 } from '@/api/DivisionSilces/companyDivisionSlice';
+import { CookieContext } from '@/App'
 
 const AddDivision = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Create Chemist
     const [createDivisions] = useCreateCompanyDivisionsMutation()
@@ -42,7 +43,7 @@ const AddDivision = () => {
 
 
     const [initialFValues, setInitialFValues] = useState({
-        company_name: Cookies.get('company_id'),
+        company_name: company_id,
     })
 
     const {
@@ -68,7 +69,7 @@ const AddDivision = () => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("division_name", values.division_name);
-        formData.append("company_name", Cookies.get('company_id'));
+        formData.append("company_name", company_id);
         try {
             const response = await createDivisions(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Added Company Division' });

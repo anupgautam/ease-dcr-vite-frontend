@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useRef, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -17,7 +17,6 @@ import Close from "@mui/icons-material/Close";
 
 import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
-import Cookies from 'js-cookie'
 import { useGetChemistOrderProductDataQuery } from '@/api/DCRs Api Slice/chemistDCR/chemistOrderedProductInformation';
 import { useGetAllCompanyProductsWithoutPaginationQuery } from '@/api/productSlices/companyProductSlice';
 import { useAddOrderedProductInformationChemistMutation } from '@/api/MPOSlices/tourPlan&Dcr';
@@ -30,7 +29,7 @@ import { useGetStockistsByCompanyAreaQuery } from '@/api/MPOSlices/StockistSlice
 const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) => {
     const [updateDcr] = useUpdateDcrForChemistValuesMutation();
 
-    const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(Cookies.get('company_id'))
+    const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_id)
 
     useEffect(() => {
         if (allData?.Formdata?.ordered_products?.length !== 0) {
@@ -53,7 +52,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
     }, [productData])
 
 
-    const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: Cookies.get('company_id'), company_area: Cookies.get('company_area_id') })
+    const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: company_area_id })
 
 
     const chemistList = useMemo(() => {
@@ -367,7 +366,7 @@ const MyChemist = ({ id, AddProduct, chemistList, setAddProduct, dcr_id }) => {
                 }
             });
         }
-    }, [orderedInformation.id , OrderData, orderedQuantity]);
+    }, [orderedInformation.id, OrderData, orderedQuantity]);
 
     return (
         <>

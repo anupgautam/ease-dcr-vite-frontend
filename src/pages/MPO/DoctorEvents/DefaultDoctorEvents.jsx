@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -24,8 +24,8 @@ import { UserListHead } from '../../../sections/@dashboard/user';
 // mock
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { CookieContext } from '@/App'
 
-import Cookies from 'js-cookie'
 import {
     useGetAllDoctorEventsQuery,
     useDeleteDoctorsEventsByIdMutation,
@@ -41,6 +41,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultDoctorEvents = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -84,7 +85,7 @@ const DefaultDoctorEvents = () => {
     }, [])
 
     // !Get Doctor Events
-    const { data } = useGetAllDoctorEventsQuery({ id: Cookies.get("company_id"), page: page, mpo_name: Cookies.get('company_user_id') });
+    const { data } = useGetAllDoctorEventsQuery({ id: company_id, page: page, mpo_name: company_user_id });
 
     // !Delete Doctor Events
     const [deleteDoctorEvents] = useDeleteDoctorsEventsByIdMutation();

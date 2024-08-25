@@ -1,10 +1,11 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useContext } from 'react'
 import { Typography } from '@mui/material';
 import { useGetHolidayAreasQuery } from '@/api/HolidaySlices/holidaySlices';
-import Cookies from 'js-cookie'
-
+import { CookieContext } from '@/App'
 
 const HolidayAreaCount = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
@@ -14,7 +15,7 @@ const HolidayAreaCount = () => {
     }, [])
 
     // !  Get all Holiday Areas
-    const { data } = useGetHolidayAreasQuery(Cookies.get('company_id'));
+    const { data } = useGetHolidayAreasQuery(company_id);
     return (
         <>
             {

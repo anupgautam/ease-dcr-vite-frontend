@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Card,
     Table,
@@ -19,12 +19,13 @@ import { useTheme } from "@mui/material/styles";
 import { UserListHead } from '../../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import Cookies from 'js-cookie'
 import {
     useGetHODCRsQuery,
     useDeleteHODCRsByIdMutation,
 } from '@/api/HighOrderSlices/hoDCRSlice';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'user_name', label: 'User Name', alignRight: false },
@@ -35,6 +36,7 @@ const TABLE_HEAD = [
 ];
 
 const MyHoDcr = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [selectedId, setSelectedId] = useState(null);
@@ -58,7 +60,7 @@ const MyHoDcr = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetHODCRsQuery({ page: page, id: Cookies.get("company_id") });
+    const { data } = useGetHODCRsQuery({ page: page, id: company_id });
     // 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteHODCRsByIdMutation();

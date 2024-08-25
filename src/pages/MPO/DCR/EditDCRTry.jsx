@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
     Box, Grid,
-    Typography,InputLabel
+    Typography, InputLabel
 } from '@mui/material'
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -17,7 +17,6 @@ import {
     useUpdateDoctorsAllDCRMutation
 } from '@/api/DCRs Api Slice/doctorDCR/doctorDCRAllApiSlice';
 
-import Cookies from 'js-cookie'
 import editWithoutImage from '@/reusable/components/forms/utils/editUtils/editWithoutImage';
 import useDebounce from '@/reusable/components/forms/utils/debounce';
 import { useGetAllVisitedDoctorsOptionsQuery } from '@/api/MPOSlices/doctorApiSlice';
@@ -26,8 +25,12 @@ import { useGetAllCompanyProductsWithoutPaginationQuery } from '@/api/productSli
 import { useGetAllRewardsQuery } from '@/api/DCRs Api Slice/rewardsAPISlice';
 import { useGetAllCompanyRolesQuery } from '@/api/MPOSlices/companyRolesSlice';
 import { GetNameListFromOptions } from '@/reusable/components/forms/utils/getNameListFromOptions';
+import { CookieContext } from '@/App'
+
 
 const EditDCR = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [noLoop, setNoLoop] = useState(true);
     const [doctors, setDoctors] = useState([]);
     const [areas, setAreas] = useState([]);
@@ -61,7 +64,7 @@ const EditDCR = ({ idharu, onClose }) => {
         }
     }, [areaData])
 
-    const productData = useGetAllCompanyProductsWithoutPaginationQuery(Cookies.get('company_id'));
+    const productData = useGetAllCompanyProductsWithoutPaginationQuery(company_id);
     useEffect(() => {
         const intermediateProducts = [];
         const intermediateMultiProducts = [];
@@ -75,7 +78,7 @@ const EditDCR = ({ idharu, onClose }) => {
         }
     }, [productData])
 
-    const rewardData = useGetAllRewardsQuery(Cookies.get('company_id'));
+    const rewardData = useGetAllRewardsQuery(company_id);
     useEffect(() => {
         const intermediateRewards = []
         const intermediateMultiRewards = []
@@ -89,7 +92,7 @@ const EditDCR = ({ idharu, onClose }) => {
         }
     }, [rewardData])
 
-    const rolesData = useGetAllCompanyRolesQuery(Cookies.get('company_id'));
+    const rolesData = useGetAllCompanyRolesQuery(company_id);
     useEffect(() => {
         const intermediateRoles = [];
         const intermediateMultiRoles = [];

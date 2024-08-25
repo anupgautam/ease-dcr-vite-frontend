@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import logo from "/assets/ease.svg";
 import { Link as ScrollLink, Events, scrollSpy } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
 import "./Navbar.css";
-import Cookies from "js-cookie";
+import { CookieContext } from '@/App'
+
 
 const Navbar = () => {
-  const login = Cookies.get("user_role");
+  const { company_id, company_user_id, user_role } = useContext(CookieContext)
+
+  const login = user_role;
   const navItems = [
     {
       id: 0,
@@ -33,7 +36,7 @@ const Navbar = () => {
   return (
     <div className=" container cursor-pointer">
       <div className=" font-public_sans flex items-center justify-between font-semibold lg:font-bold">
-          <img src={logo} alt="logo" className="  h-16 lg:h-20" />
+        <img src={logo} alt="logo" className="  h-16 lg:h-20" />
         <div className="flex gap-x-2.5 md:gap-x-8 text-xl">
           {navItems.map((item, idx) => (
             <ScrollLink
@@ -55,7 +58,7 @@ const Navbar = () => {
           <button className="bg-[#6364f2] p-2  px-4 md:px-8  rounded-[30px] text-[9px] md:text-[18px] text-white hover:scale-105 hover:bg-violet-800 duration-300">
             <RouterLink
               to={
-                Cookies.get("user_role") === "admin"
+                user_role === "admin"
                   ? "/dashboard/admin"
                   : "/dashboard/admin/listofdoctor"
               }

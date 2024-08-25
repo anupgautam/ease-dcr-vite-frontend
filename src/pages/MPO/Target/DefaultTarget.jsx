@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback,useContext } from 'react'
 import {
     useGetTargetsQuery,
     useDeleteTargetsByIdMutation,
@@ -22,10 +22,12 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import EditTarget from './EditTarget';
-import Cookies from 'js-cookie';
+import { CookieContext } from '@/App'
 
 const DefaultTarget = () => {
-    const { data } = useGetTargetsQuery(Cookies.get('company_id'));
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
+    const { data } = useGetTargetsQuery(company_id);
     const [deleteTarget] = useDeleteTargetsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 

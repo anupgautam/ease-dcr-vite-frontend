@@ -1,6 +1,5 @@
 import { Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
-import Cookies from "js-cookie";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
@@ -10,6 +9,7 @@ import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
 import { Circles } from 'react-loader-spinner';
 import { useCreateStockistsMutation } from "@/api/MPOSlices/stockistApiSlice";
 import { useGetAllCompanyAreasQuery } from "@/api/CompanySlices/companyAreaSlice";
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'stockist_name', label: 'Stockist Name', alignRight: false },
@@ -21,6 +21,8 @@ const TABLE_HEAD = [
 ];
 
 const AddMultipleStockist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('number');
     var array = Array.from({ length: id }, (_, index) => index + 1);
@@ -162,7 +164,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         return [];
     }, [MpoList])
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
 
     const companyAreaData = useMemo(() => {
         if (CompanyArea) {
@@ -172,15 +174,15 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
     }, [CompanyArea])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     const [Formdata, setFormData] = useState({
         stockist_name: "",
@@ -188,9 +190,9 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         stockist_address: "",
         stockist_category: "",
         pan_vat_number: "",
-        mpo_name: Cookies.get("user_role") === 'admin' ? "" : Cookies.get('company_user_role'),
+        mpo_name: user_role === 'admin' ? "" : company_user_role,
         stockist_territory: "",
-        company_name: Cookies.get('company_id')
+        company_name: company_id
     })
 
 
@@ -210,7 +212,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
     };
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('user_role') === 'admin' ? Formdata.mpo_name : Cookies.get('company_user_id') });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? Formdata.mpo_name : company_user_id });
 
 
     // const mpoAreaData = useMemo(() => {

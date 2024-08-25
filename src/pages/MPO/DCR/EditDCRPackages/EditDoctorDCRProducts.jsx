@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useContext } from "react";
 import {
   useGetPromotedProductByDcrIdQuery
 } from "../../../../api/DCRs Api Slice/doctorDCR/DoctorDCRAllSlice";
@@ -7,15 +7,18 @@ import { useTransition } from 'react-transition-state';
 import RoundButton from "@/reusable/components/button/roundbutton";
 import { FaPlus } from "react-icons/fa";
 import { useGetAllProductsOptionsWithDivisionQuery, usePostProductPromotionsMutation } from "@/api/MPOSlices/productApiSlice";
-import Cookies from "js-cookie";
 import { useGetProductForDcrByIdQuery } from "@/api/MPOSlices/ProductSlice";
 import Controls from "@/reusable/forms/controls/Controls";
+import { CookieContext } from '@/App'
+
 
 const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
+  const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const companyProducts = useSelector(state => state.dcrData.company_products);
   const { data } = useGetPromotedProductByDcrIdQuery(id);
-  const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: Cookies.get('company_id'), division_name: division })
+  const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division })
 
   const productList = useMemo(() => {
     if (productData !== undefined) {

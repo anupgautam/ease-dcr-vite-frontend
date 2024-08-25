@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import {
     Card,
     Table,
@@ -23,8 +23,8 @@ import {
     useDeletecompanyUserRolesByIdMutation,
     useSearchCompanyUserRolesMutation
 } from '@/api/CompanySlices/companyUserRoleSlice';
-import Cookies from 'js-cookie'
 import { useGetCompanyRolesByCompanyQuery, useGetLowerExecutivebyMyIdMutation } from '@/api/CompanySlices/companyRolesSlice';
+import { CookieContext } from '@/App'
 
 
 const TABLE_HEAD = [
@@ -36,6 +36,8 @@ const TABLE_HEAD = [
 ];
 
 const MyExecutives = () => {
+
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -61,8 +63,8 @@ const MyExecutives = () => {
     }, [])
 
     // ! Get all users wala
-    // const { data } = useGetAllcompanyUserRolesQuery({ id: Cookies.get('company_id'), page: page });
-    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+    // const { data } = useGetAllcompanyUserRolesQuery({ id: company_id, page: page });
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
 
     const [roleSelect, setRoleSelect] = useState('');
     const [companyRoleList, setCompanyRoleList] = useState([]);
@@ -85,8 +87,8 @@ const MyExecutives = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        if (Cookies.get('company_user_id')) {
-            LowerLevel({ id: Cookies.get('company_user_id') })
+        if (company_user_id) {
+            LowerLevel({ id: company_user_id })
                 .then((res) => {
                     if (res.data) {
                         setData(res.data)
@@ -95,12 +97,12 @@ const MyExecutives = () => {
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_user_id')])
+    }, [company_user_id])
 
     // !on search
     const onSearch = (e) => {
         const searchQuery = e.target.value;
-        const company_id = Cookies.get('company_id');
+        const company_id = company_id;
         setSearchResults({ search: searchQuery, company_id })
         searchUser(searchResults);
     }

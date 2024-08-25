@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useContext } from 'react';
 //! @mui
 import {
     Card,
@@ -26,7 +26,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import 'react-datepicker/dist/react-datepicker.css';
 
 import Skeleton from 'react-loading-skeleton'
@@ -47,6 +46,7 @@ import EditTravelAllowances from './EditTravelAllowances';
 import ExcelCSVTravelAllowances from './ExcelCSVTravelAllowances';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'date', label: 'Date', alignRight: false },
@@ -60,6 +60,7 @@ const TABLE_HEAD = [
 ];
 
 const FilterTravelAllowances = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -79,7 +80,7 @@ const FilterTravelAllowances = () => {
     }, []);
 
     //! Get company roles
-    const { data, isLoading, isSuccess, isError, error } = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'))
+    const { data, isLoading, isSuccess, isError, error } = useGetCompanyRolesByCompanyQuery(company_id)
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
@@ -92,7 +93,7 @@ const FilterTravelAllowances = () => {
     }, [data])
 
     //! Options
-    const [companyId, setCompanyId] = useState(parseInt(Cookies.get('company_id')));
+    const [companyId, setCompanyId] = useState(parseInt(company_id));
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedUser, setSelecterUser] = useState('');
     const [mpoName, setMPOName] = useState('');
@@ -156,7 +157,7 @@ const FilterTravelAllowances = () => {
 
     const handleNepaliMonthChange = useCallback((event) => {
         setSelectedMonth(event.target.value);
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
     }, []);
 
     //! Year
@@ -179,10 +180,10 @@ const FilterTravelAllowances = () => {
 
     const handleYearChange = useCallback((event) => {
         setSelectedYear(event.target.value);
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
     }, []);
 
-    const Users = useGetCompanyUserByUserRoleQuery({ company_name: Cookies.get('company_id'), role_name: selectedOption })
+    const Users = useGetCompanyUserByUserRoleQuery({ company_name: company_id, role_name: selectedOption })
 
     const usersoptions = useMemo(() => {
         if (Users?.data) {
@@ -196,7 +197,7 @@ const FilterTravelAllowances = () => {
 
     //! onSearch
     const FilteredData = { companyId: companyId, selectedOption: selectedOption, monthData: selectedMonth, users: selectedUser.id }
-    const results = useSearchTravelAllowancesQuery({ company_name: Cookies.get('company_id'), user_id: selectedUser.id ? selectedUser.id : "", year: selectedYear ? selectedYear : "", month: selectedMonth ? selectedMonth : "" })
+    const results = useSearchTravelAllowancesQuery({ company_name: company_id, user_id: selectedUser.id ? selectedUser.id : "", year: selectedYear ? selectedYear : "", month: selectedMonth ? selectedMonth : "" })
 
     return (
         <>

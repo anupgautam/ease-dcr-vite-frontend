@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -21,9 +21,9 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import Cookies from 'js-cookie';
 
 import { useLazyFilterGetHolidaysAreaQuery, useGetCompanyHolidaysQuery, useDeleteHolidayAreasByIdMutation } from '@/api/HolidaySlices/holidaySlices';
+import { CookieContext } from '@/App'
 
 import EditHolidayArea from './EditHolidayArea';
 
@@ -34,6 +34,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultHolidayArea = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
@@ -68,7 +69,7 @@ const DefaultHolidayArea = () => {
     }, []);
 
     //! Company holidays
-    const Holidays = useGetCompanyHolidaysQuery(Cookies.get("company_id"));
+    const Holidays = useGetCompanyHolidaysQuery(company_id);
     const holidays = useMemo(() => {
         if (Holidays.data) {
             return Holidays.data.map((key) => (key.holiday_name));
@@ -91,7 +92,9 @@ const DefaultHolidayArea = () => {
             const results = [];
             for (const holidayName of holidays) {
                 try {
-                    const response = await triggerFilterGetHolidaysAreaQuery({ holidayName, companyId: Cookies.get('company_id') }).unwrap();
+                    const response = await triggerFilterGetHolidaysAreaQuery({
+                        holidayName, companyId: company_id
+                    }).unwrap();
                     if (Array.isArray(response)) {
                         if (response.length > 0) {
                             results.push(...response);

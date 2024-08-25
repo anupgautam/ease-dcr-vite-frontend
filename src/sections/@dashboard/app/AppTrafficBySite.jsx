@@ -25,7 +25,7 @@ export default function AppTrafficBySite({ title, subheader, list, ...other }) {
                         gridTemplateColumns: 'repeat(2, 1fr)',
                     }}
                 >
-                    {list.map((site) => (
+                    {list?.map((site) => (
                         <Paper key={site.name} variant="outlined" sx={{ py: 2.5, textAlign: 'center' }}>
                             {/* <Box sx={{ mb: 0.5 }}>{site.icon}</Box> */}
 

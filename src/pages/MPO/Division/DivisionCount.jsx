@@ -1,9 +1,11 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import { Typography } from '@mui/material';
 import { useGetAllCompanyDivisionsQuery } from '@/api/DivisionSilces/companyDivisionSlice';
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 const DivisionCount = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
@@ -13,7 +15,7 @@ const DivisionCount = () => {
     }, [])
 
     // !  Get all the chemists
-    const { data } = useGetAllCompanyDivisionsQuery(Cookies.get('company_id'));
+    const { data } = useGetAllCompanyDivisionsQuery(company_id);
 
     return (
         <>

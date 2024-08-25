@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -18,12 +18,13 @@ import { returnValidation } from '../../../validation';
 import {
     usePostAllMPONamesNoPageMutation
 } from '../../../api/MPOSlices/DoctorSlice'
-import Cookies from 'js-cookie'
 import { useGetMpoAreaQuery, usePostAreaofMPOMutation } from '@/api/MPOSlices/TourPlanSlice';
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import { Link } from 'react-router-dom';
+import { CookieContext } from '@/App'
 
 const AddMpoArea = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const mpoStation = [
         { id: "HOME STATION", title: "HOME STATION" },
@@ -32,7 +33,7 @@ const AddMpoArea = () => {
         { id: "NONE WORKING", title: "NONE WORKING" },
     ]
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
 
     const companyAreaData = useMemo(() => {
         if (CompanyArea) {
@@ -53,15 +54,15 @@ const AddMpoArea = () => {
     }, [MpoList])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     const [createMpoArea] = usePostAreaofMPOMutation()
 
@@ -102,7 +103,7 @@ const AddMpoArea = () => {
 
     }, [values.area_name, values.mpo_name, values.station_type])
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: values.mpo_name });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: values.mpo_name });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
@@ -119,10 +120,10 @@ const AddMpoArea = () => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("area_name", values.area_name);
-        formData.append("mpo_name", Cookies.get('user_role') === 'admin' ? values.mpo_name : Cookies.get('company_user_id'));
+        formData.append("mpo_name", user_role === 'admin' ? values.mpo_name : company_user_id);
         formData.append("station_type", values.station_type);
         formData.append('company_area', values.company_area);
-        formData.append('company_name', Cookies.get('company_id'))
+        formData.append('company_name', company_id)
         try {
             const response = await createMpoArea(formData)
             if (response.data) {
@@ -244,7 +245,7 @@ const AddMpoArea = () => {
                                     />
                                 </Box>
                                 {
-                                    Cookies.get('user_role') === 'admin' &&
+                                    user_role === 'admin' &&
                                     <Box marginBottom={2}>
                                         <Controls.Select
                                             name="mpo_name"

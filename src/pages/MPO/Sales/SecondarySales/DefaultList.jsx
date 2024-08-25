@@ -1,41 +1,18 @@
-import { Helmet } from 'react-helmet-async';
-import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import React, { useState, useMemo, useCallback } from 'react';
-// @mui
 import {
-    Card,
     Badge,
-    Table,
-    Stack,
-    Paper,
-    Avatar,
     Button,
-    Popover,
-    Checkbox,
     TableRow,
-    MenuItem,
-    TableBody,
     TableCell,
-    Container,
     Typography,
     IconButton,
-    TableContainer,
-    TablePagination,
     Pagination,
-    Box, Grid
+    Box,
 } from '@mui/material';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
-// components
-import Label from '@/components/label';
 import Iconify from '@/components/iconify/Iconify';
-import Scrollbar from '@/components/scrollbar';
-//@sections
-import { UserListHead, UserListToolbar } from '@/sections/@dashboard/user';
-//mock 
-import USERLIST from '../../../../_mock/user';
 import {
     useGetAllSecondarySalesQuery,
     useDeleteSecondarySalesByIdMutation

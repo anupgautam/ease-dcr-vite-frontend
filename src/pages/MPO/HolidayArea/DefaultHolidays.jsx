@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -21,9 +21,9 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import Cookies from 'js-cookie';
 
 import { useGetHolidayNamesQuery, useDeleteHolidayAreasByIdMutation } from '@/api/HolidaySlices/holidaySlices';
+import { CookieContext } from '@/App'
 
 import EditHolidayName from './EditHolidayName';
 
@@ -33,6 +33,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultHolidays = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
@@ -67,7 +68,7 @@ const DefaultHolidays = () => {
     }, []);
 
     //! Company holidays
-    const Holidays = useGetHolidayNamesQuery(Cookies.get("company_id"));
+    const Holidays = useGetHolidayNamesQuery(company_id);
 
     const [deleteHolidayName] = useDeleteHolidayAreasByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7];

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -20,16 +20,17 @@ import { returnValidation } from '../../../validation';
 import {
     useGetAllCompanyAreasQuery,
 } from '@/api/CompanySlices/companyAreaSlice';
-import Cookies from 'js-cookie'
 import { useGetCompanyHolidaysQuery, useCreateHolidayAreasMutation } from '@/api/HolidaySlices/holidaySlices';
+import { CookieContext } from '@/App'
 
 const AddHolidayArea = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Create Chemist
     const [createHolidayArea] = useCreateHolidayAreasMutation()
 
     //! Company Area
-    const Areas = useGetAllCompanyAreasQuery(Cookies.get("company_id"));
+    const Areas = useGetAllCompanyAreasQuery(company_id);
 
     const areas = useMemo(() => {
         if (Areas.data) {
@@ -46,7 +47,7 @@ const AddHolidayArea = () => {
     };
 
     //! Company holidays
-    const Holidays = useGetCompanyHolidaysQuery(Cookies.get("company_id"));
+    const Holidays = useGetCompanyHolidaysQuery(company_id);
     const holidays = useMemo(() => {
         if (Holidays.data) {
             return Holidays.data.map((key) => ({ id: key.id, title: key.holiday_name }))

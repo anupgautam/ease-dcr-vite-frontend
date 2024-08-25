@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Stack,
     Container,
@@ -12,9 +12,11 @@ import ProductCount from './ProductCount';
 import ProductSearch from './ProductSearch';
 import AddProduct from './AddProduct';
 import ExportProduct from './exportProduct';
-import Cookies from 'js-cookie';
+import { CookieContext } from '@/App'
 
 const ListofProduct = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     return (
@@ -35,11 +37,11 @@ const ListofProduct = () => {
                                 justifyContent="flex-end"
                             >
                                 {
-                                    Cookies.get('user_role') === 'admin' &&
+                                    user_role === 'admin' &&
                                     <ExportProduct />
                                 }
                                 {
-                                    Cookies.get('user_role') === 'admin' &&
+                                    user_role === 'admin' &&
                                     <AddProduct />
                                 }
                             </Stack>

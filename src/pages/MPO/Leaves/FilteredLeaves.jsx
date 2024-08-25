@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 //! @mui
 import {
     Card,
@@ -18,7 +18,6 @@ import {
 } from '@mui/material';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import 'react-datepicker/dist/react-datepicker.css';
 import { NepaliDatePicker } from "nepali-datepicker-reactjs"
 import "nepali-datepicker-reactjs/dist/index.css"
@@ -32,7 +31,7 @@ import {
     useSearchLeaveMutation
 } from '../../../api/Leaves/LeavesApiSlice'
 import EditLeaves from './EditLeaves'
-
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
@@ -45,6 +44,8 @@ const TABLE_HEAD = [
 ];
 
 const FilteredLeaves = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -61,7 +62,7 @@ const FilteredLeaves = () => {
     }, [])
 
     //! Get User roles wala
-    const { data, isLoading, isSuccess, isError, error } = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'))
+    const { data, isLoading, isSuccess, isError, error } = useGetCompanyRolesByCompanyQuery(company_id)
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
@@ -71,14 +72,13 @@ const FilteredLeaves = () => {
     }, [isSuccess])
 
     //! Options
-    const [companyId, setCompanyId] = useState(parseInt(Cookies.get('company_id')));
+    const [companyId, setCompanyId] = useState(parseInt(company_id));
     const [selectedOption, setSelectedOption] = useState('');
     const [mpoName, setMPOName] = useState('');
 
     const handleOptionChange = useCallback((event, value) => {
         setSelectedOption(value?.id || "");
     }, [])
-
 
     //! Search results
     const [searchApplicationFilter, results] = useSearchLeaveMutation()

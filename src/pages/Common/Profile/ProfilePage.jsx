@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
 import {
     Grid, Box
 } from '@mui/material';
@@ -8,10 +8,13 @@ import Controls from "../../../reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 import BlobToFile from '../../../reusable/forms/utils/blobToFile';
 import { useGetProfileQuery, useUpdateProfilesMutation } from "../../../api/MPOSlices/ProfileApiSlice"
-import Cookies from 'js-cookie'
 import { LoadingButton } from '@mui/lab';
+import { CookieContext } from '@/App'
+
 
 const ProfilePage = () => {
+    const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
+
     //! Get profile display
     const { data } = useGetProfileQuery();
 
@@ -114,8 +117,8 @@ const ProfilePage = () => {
         formData.append("company_address", values.company_address);
         formData.append("company_phone_number", values.company_phone_number);
         formData.append("company_email_address", values.company_email_address);
-        formData.append('refresh', Cookies.get('refresh'));
-        formData.append('access', Cookies.get('access'));
+        formData.append('refresh', refresh);
+        formData.append('access', access);
         try {
             const response = await updateProfile(formData).unwrap();
             if (response.data) {

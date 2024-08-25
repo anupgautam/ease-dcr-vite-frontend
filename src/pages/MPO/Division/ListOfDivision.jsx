@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Container,
     Grid,
@@ -12,15 +12,17 @@ import DivisionCount from './DivisionCount';
 import AddDivision from './AddDivision';
 import DefaultList from './DefaultList'
 import { useGetAllCompanyDivisionsQuery } from '@/api/DivisionSilces/companyDivisionSlice';
+import { CookieContext } from '@/App'
 
-import Cookies from 'js-cookie'
 import ExportToExcel from '@/reusable/utils/exportSheet';
 
 const ListOfDivision = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { data } = useGetAllCompanyDivisionsQuery(Cookies.get('company_id'))
+    const { data } = useGetAllCompanyDivisionsQuery(company_id)
 
     const headers = [
         { label: 'S.No.', key: 'sno' },

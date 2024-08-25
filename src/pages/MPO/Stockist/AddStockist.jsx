@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -18,11 +18,12 @@ import { returnValidation } from '../../../validation';
 import {
     useCreateStockistsMutation
 } from '@/api/MPOSlices/StockistSlice';
-import Cookies from 'js-cookie'
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import { Link } from 'react-router-dom';
+import { CookieContext } from '@/App'
 
 const AddStockist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -48,7 +49,7 @@ const AddStockist = () => {
 
     const [createStockists] = useCreateStockistsMutation();
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
 
     const companyAreaData = useMemo(() => {
         if (CompanyArea) {
@@ -94,7 +95,7 @@ const AddStockist = () => {
         formData.append("pan_vat_number", values.pan_vat_number);
         formData.append("stockist_territory", values.stockist_territory);
         formData.append("stockist_category", values.stockist_category);
-        formData.append("company_name", Cookies.get("company_id"));
+        formData.append("company_name", company_id);
         try {
             const response = await createStockists(formData)
             if (response.data) {

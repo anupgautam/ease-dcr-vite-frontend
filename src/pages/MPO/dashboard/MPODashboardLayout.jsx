@@ -18,7 +18,6 @@ import {
   AppCurrentSubject,
   AppConversionRates,
 } from '../../../sections/@dashboard/app';
-import Cookies from 'js-cookie'
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;

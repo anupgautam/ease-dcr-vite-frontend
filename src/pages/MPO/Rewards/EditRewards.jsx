@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useContext } from 'react'
 import {
     Box,
     Typography, Button, Grid
@@ -12,18 +12,20 @@ import Close from "@mui/icons-material/Close";
 import { useForm, Form } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
-import Cookies from 'js-cookie'
 //! Api Slices 
 import {
     useGetRewardsByIdQuery,
     useUpdateRewardsMutation
 } from '@/api/MPOSlices/rewardsApiSlice';
+import { CookieContext } from '@/App'
+
 
 const EditRewards = ({ idharu, onClose }) => {
+    const { company_id, refresh, access } = useContext(CookieContext)
 
     //! Getting Rewards by ID
     const Rewards = useGetRewardsByIdQuery(idharu);
-    const Divisions = useGetRewardsByIdQuery(Cookies.get('company_id'));
+    const Divisions = useGetRewardsByIdQuery(company_id);
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
@@ -80,9 +82,9 @@ const EditRewards = ({ idharu, onClose }) => {
         const formData = new FormData();
         formData.append("reward", values.reward);
         formData.append('id', idharu);
-        formData.append("company_name", Cookies.get('company_id'));
-        formData.append('refresh', Cookies.get('refresh'))
-        formData.append('access', Cookies.get('access'));
+        formData.append("company_name", company_id);
+        formData.append('refresh', refresh)
+        formData.append('access', access);
         try {
             const response = await updateRewards(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited Rewards' });

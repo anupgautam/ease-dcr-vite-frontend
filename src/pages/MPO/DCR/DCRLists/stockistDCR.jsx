@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -35,9 +35,8 @@ import EditStockistDCR from '../EditDCRs/EditStockistDCR';
 import { useDispatch } from 'react-redux';
 import { addSelectedUser } from '@/reducers/dcrSelectData';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
-import Cookies from 'js-cookie';
 import moment from 'moment';
-
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
@@ -50,6 +49,7 @@ const TABLE_HEAD = [
 ];
 
 const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const dispatch = useDispatch()
 
@@ -70,7 +70,7 @@ const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
         setIsDrawerOpen(false);
     }, []);
 
-    const FilteredData = { company_name: Cookies.get('company_id'), user_id: Cookies.get('user_role') === "admin" ? selectedUser : Cookies.get('company_user_id'), month: selectedMonth, date: selectedDate }
+    const FilteredData = { company_name: company_id, user_id: user_role === "admin" ? selectedUser : company_user_id, month: selectedMonth, date: selectedDate }
 
     //! Search Results 
     const results = useSearchStockistsDCRQuery(FilteredData);
@@ -197,7 +197,7 @@ const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
                                                                 {/* //! Edit  */}
                                                                 <TableCell align="left">
                                                                     {
-                                                                        Cookies.get('user_role') === 'admin' &&
+                                                                        user_role === 'admin' &&
                                                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.dcr.dcr.id, tourplan.mpo_name.id)} >
                                                                             <Badge>
                                                                                 <Iconify icon="eva:edit-fill" />
@@ -206,7 +206,7 @@ const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
                                                                     }
                                                                     {/* //! Delete  */}
                                                                     {
-                                                                        Cookies.get('user_role') === 'admin' &&
+                                                                        user_role === 'admin' &&
                                                                         <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.dcr.dcr.id); handleClickOpen() }}>
                                                                             <Badge>
                                                                                 <Iconify icon="eva:trash-2-outline" />

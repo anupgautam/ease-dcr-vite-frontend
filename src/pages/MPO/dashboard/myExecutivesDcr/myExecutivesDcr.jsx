@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import {
     Card,
     MenuItem,
@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import "nepali-datepicker-reactjs/dist/index.css"
@@ -37,6 +36,7 @@ import MyExecutiveChemistDcr from './myExecutiveChemistDcr';
 import MyExecutiveStockistDcr from './myExecutiveStockistDcr';
 import { useGetUsersByIdQuery } from '@/api/DemoUserSlice';
 import MyHoDcr from './myHoDcr';
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
@@ -48,6 +48,8 @@ const TABLE_HEAD = [
 ];
 
 const MyExecutivesDcr = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const now = new BSDate().now();
 
     const monthData = getNepaliMonthName(now._date.month);
@@ -60,8 +62,8 @@ const MyExecutivesDcr = () => {
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
 
-    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
-    const { data: myHigherData } = useGetUsersByHigherLevelUserQuery(Cookies.get('company_user_id'));
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
+    const { data: myHigherData } = useGetUsersByHigherLevelUserQuery(company_user_id);
 
     const lowerList = useMemo(() => {
         if (myHigherData !== undefined) {
@@ -90,9 +92,9 @@ const MyExecutivesDcr = () => {
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [companyUserList, setCompanyUserList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: roleSelect.id });
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: roleSelect.id });
 
-    const userData = useGetUsersByIdQuery(Cookies.get('company_user_id'));
+    const userData = useGetUsersByIdQuery(company_user_id);
 
     useEffect(() => {
         let dataList = []
@@ -208,7 +210,7 @@ const MyExecutivesDcr = () => {
     }, [])
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
-    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: Cookies.get('company_id'), date: selectedYear, month: selectedMonth, mpo_name: selectedOption, page: page })
+    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedOption, page: page })
 
     return (
         <>

@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -25,7 +25,6 @@ import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Test from './DefaultList';
-import Cookies from 'js-cookie'
 import EditChemist from './EditChemist'
 
 import Iconify from '@/components/iconify/Iconify';
@@ -42,6 +41,8 @@ import {
     useGetAllMPOAreasNoPageQuery, usePostAllMPONamesNoPageMutation
 } from '../../../api/MPOSlices/DoctorSlice'
 import Scrollbar from '@/components/scrollbar/Scrollbar';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: 'Name', alignRight: false },
@@ -53,6 +54,8 @@ const TABLE_HEAD = [
 ];
 
 const ChemistSearch = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     //! MPO Data
     const [MpoData] = usePostAllMPONamesNoPageMutation()
     const [mpoName, setMPOName] = useState('');
@@ -66,18 +69,18 @@ const ChemistSearch = () => {
     }, [MpoList])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     //! MPO Area
-    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: Cookies.get('company_id'), mpo_name: mpoName })
+    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: company_id, mpo_name: mpoName })
 
     const [mpoArea, setMPOArea] = useState('')
 
@@ -108,13 +111,13 @@ const ChemistSearch = () => {
     const [companyId, setCompanyId] = useState();
 
     const handleOptionChange = useCallback((event, value) => {
-        setCompanyId(parseInt(Cookies.get('company_id')));
+        setCompanyId(parseInt(company_id));
         setMPOArea(value?.id || "")
     }, [])
 
     const handleMPONameChange = useCallback((event, value) => {
         setMPOName(value?.id || "")
-        setCompanyId(parseInt(Cookies.get('company_id')));
+        setCompanyId(parseInt(company_id));
     }, [])
 
     //! Pagination Logic
@@ -127,7 +130,7 @@ const ChemistSearch = () => {
     }, [])
 
     //! Search Logic
-    const { data: chemistData } = useGetChemistsByMpoAreaAndIdQuery({ company_name: Cookies.get('company_id'), mpo_area: mpoArea, mpo_name: mpoName, page: page })
+    const { data: chemistData } = useGetChemistsByMpoAreaAndIdQuery({ company_name: company_id, mpo_area: mpoArea, mpo_name: mpoName, page: page })
 
     const [searchResults, setSearchResults] = useState({ search: "" });
     const [searchChemist, results] = useSearchChemistsMutation()
@@ -143,7 +146,7 @@ const ChemistSearch = () => {
             setSearchDataCondition(false);
             setSearchData([]);
         } else {
-            SearchChemist({ search: searchQuery, company_id: parseInt(Cookies.get('company_id')) })
+            SearchChemist({ search: searchQuery, company_id: parseInt(company_id) })
                 .then((res) => {
                     if (res.data) {
                         setSearchDataCondition(true);
@@ -214,7 +217,7 @@ const ChemistSearch = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     {
-                        Cookies.get('user_role') === "admin" &&
+                        user_role === "admin" &&
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
                                 <TextField

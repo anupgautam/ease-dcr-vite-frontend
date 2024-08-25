@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -30,9 +30,9 @@ import {
 } from '../../../../api/DCRs Api Slice/doctorDCR/DoctorDCRSlice';
 import { addSelectedUser } from '@/reducers/dcrSelectData';
 import { useDispatch } from 'react-redux';
-import Cookies from 'js-cookie'
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import moment from 'moment';
+import { CookieContext } from '@/App'
 
 
 const TABLE_HEAD = [
@@ -45,6 +45,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultDoctorDCR = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const dispatch = useDispatch();
     //! For drawer 
@@ -87,7 +88,7 @@ const DefaultDoctorDCR = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetAllDataofDCRDoctorQuery({ page: page, id: Cookies.get("company_id") });
+    const { data } = useGetAllDataofDCRDoctorQuery({ page: page, id: company_id });
 
     const [deleteTourPlan] = useDeleteDoctorsDCRByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -144,7 +145,7 @@ const DefaultDoctorDCR = () => {
                                                     {/*//! Edit  */}
                                                     <TableCell align="left">
                                                         {
-                                                            Cookies.get('user_role') === 'admin' &&
+                                                            user_role === 'admin' &&
                                                             <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id, tourplan.mpo_name.id)}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:edit-fill" />
@@ -153,7 +154,7 @@ const DefaultDoctorDCR = () => {
                                                         }
                                                         {/*//! Delete  */}
                                                         {
-                                                            Cookies.get('user_role') === 'admin' &&
+                                                            user_role === 'admin' &&
                                                             <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.dcr.dcr.id); handleClickOpen() }}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:trash-2-outline" />

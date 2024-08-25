@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
     Box, Grid,
     Typography
@@ -17,11 +17,14 @@ import {
     useUpdateHODCRsMutation,
 } from '@/api/HighOrderSlices/hoDCRSlice';
 import { useSelector } from 'react-redux';
-import Cookies from 'js-cookie';
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '@/api/MPOSlices/UserSlice';
+import { CookieContext } from '@/App'
 
 
 const EditHoDCR = ({ idharu, onClose }) => {
+
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [noLoop, setNoLoop] = useState(true);
     const [lowerLevels, setLowerLevels] = useState([]);
     const shifts = useSelector(state => state.dcrData.shifts);
@@ -33,7 +36,7 @@ const EditHoDCR = ({ idharu, onClose }) => {
     const DCRAll = useGetHODCRsByIdQuery(idharu);
 
 
-    const { data: userLists } = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: Cookies.get("company_id"), page: user_id })
+    const { data: userLists } = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: user_id })
 
     useEffect(() => {
         const lower = [];
@@ -62,7 +65,7 @@ const EditHoDCR = ({ idharu, onClose }) => {
                 edit: true,
                 id: DCRAll?.data?.id,
                 date: DCRAll?.data?.date,
-                company_id: Cookies.get('company_id'),
+                company_id: company_id,
                 user_id: DCRAll?.data?.user_id?.id,
                 visited_with: DCRAll?.data?.visited_with?.id,
                 shift: DCRAll?.data?.shift?.id

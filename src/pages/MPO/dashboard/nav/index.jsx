@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import Cookies from 'js-cookie'
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Drawer, Typography } from '@mui/material';
 import useResponsive from '@/hooks/useResponsive';
@@ -10,6 +9,8 @@ import NavSection from '@/components/nav-section';
 import navConfig from './config';
 import MpoNavConfig from './mpoConfig';
 import OtherRoleConfig from './otherRoleConfig';
+import { CookieContext } from '@/App'
+
 
 const NAV_WIDTH = 270;
 
@@ -27,11 +28,12 @@ Nav.propTypes = {
 };
 
 export default function Nav({ openNav, onCloseNav }) {
+  const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');
 
-  const [sidebar, setSidebar] = useState(Cookies.get('sidebar'))
 
   useEffect(() => {
     if (openNav) {
@@ -52,15 +54,15 @@ export default function Nav({ openNav, onCloseNav }) {
       </Box>
 
       {
-        Cookies.get('user_role') === "admin" &&
+        user_role === "admin" &&
         <NavSection data={navConfig} />
       }
       {
-        Cookies.get('user_role') === "MPO" &&
+        user_role === "MPO" &&
         <NavSection data={MpoNavConfig} />
       }
       {
-        Cookies.get('user_role') === "other-roles" &&
+        user_role === "other-roles" &&
         <NavSection data={OtherRoleConfig} />
       }
 

@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -42,8 +42,9 @@ import {
 import EditStockist from './EditStockist';
 import SearchIcon from '@mui/icons-material/Search';
 import Test from './DefaultList';
-import Cookies from 'js-cookie'
 import Scrollbar from '@/components/scrollbar/Scrollbar';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'stockist_name', label: 'Stockist Name', alignRight: false },
@@ -54,12 +55,13 @@ const TABLE_HEAD = [
 ];
 
 const StockistSearch = () => {
+    const { company_id, user_role, company_area_id } = useContext(CookieContext)
 
     //! Get Company Area
-    const Company_Areas = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const Company_Areas = useGetAllCompanyAreasQuery(company_id);
 
     const [companyArea, setCompanyArea] = useState('');
-    const [companyId, setCompanyId] = useState(Cookies.get('company_id'));
+    const [companyId, setCompanyId] = useState(company_id);
 
     const companyareas = useMemo(() => {
         if (Company_Areas?.data) {
@@ -68,7 +70,7 @@ const StockistSearch = () => {
         return [];
     }, [Company_Areas]);
 
-    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: Cookies.get('company_id'), company_area: Cookies.get("user_role") === "admin" ? companyArea : Cookies.get("company_area_id") });
+    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: user_role === "admin" ? companyArea : company_area_id });
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -88,7 +90,7 @@ const StockistSearch = () => {
     //! Options
     const handleCompanyNameChange = (event, value) => {
         setCompanyArea(value?.id || '');
-        setCompanyId(parseInt(Cookies.get('company_id')));
+        setCompanyId(parseInt(company_id));
     };
 
     //!Pagination logic
@@ -117,7 +119,7 @@ const StockistSearch = () => {
             setSearchDataCondition(false);
             setSearchData([]); // Clear the search data immediately
         } else {
-            SearchChemist({ search: searchQuery, company_id: parseInt(Cookies.get('company_id')) })
+            SearchChemist({ search: searchQuery, company_id: parseInt(company_id) })
                 .then((res) => {
                     if (res.data) {
                         setSearchDataCondition(true);
@@ -177,7 +179,7 @@ const StockistSearch = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     {
-                        Cookies.get('user_role') === 'admin' &&
+                        user_role === 'admin' &&
                         <Grid container spacing={2}>
                             <Grid item xs={5} sm={3}>
                                 <TextField

@@ -24,10 +24,11 @@ import {
 } from '@/api/ExpensesSlices/expensesTypeSlices';
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice'
 import { useSelector } from 'react-redux';
+import { CookieContext } from '@/App'
 
-import Cookies from 'js-cookie'
 
 const EditCompanyAreaWiseExpenses = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const userList = useSelector(state => state?.tourPlan?.dataList);
 
@@ -123,7 +124,7 @@ const EditCompanyAreaWiseExpenses = ({ idharu, onClose }) => {
         formData.append("expenses_rate", values.expenses_rate);
         formData.append("area_name", values.area_name);
         formData.append('id', idharu)
-        formData.append('company_name', Cookies.get('company_id'))
+        formData.append('company_name', company_id)
         try {
             const response = await updateCompanyAreaWiseExpenses(formData).unwrap();
 

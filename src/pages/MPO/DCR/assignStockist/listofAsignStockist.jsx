@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Container,
     Grid, Box, Typography
 } from '@mui/material';
-import Cookies from 'js-cookie';
 import FilteredAsignStockist from './filterAsignStockist';
 import AddAsignStockist from './addAsignStokist';
+import { CookieContext } from '@/App'
 
 const ListOfAsignStokist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     return (
         <>
             <Container>
@@ -23,7 +25,7 @@ const ListOfAsignStokist = () => {
                             </Grid>
                             <Grid item xs={10}>
                                 {
-                                    Cookies.get('user_role') === 'admin' &&
+                                    user_role === 'admin' &&
                                     <Box style={{ float: 'right', marginBottom: "20px" }}>
                                         <AddAsignStockist />
                                     </Box>

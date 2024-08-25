@@ -1,21 +1,23 @@
 import { Close } from "@mui/icons-material";
 import { Box, Button, Drawer, Grid, IconButton, Stack, Typography } from "@mui/material";
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useContext } from "react";
 import Iconify from "@/components/iconify/Iconify";
 import {
     NepaliDateConverter,
 } from "react-nepali-date-picker-lite";
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
-import Cookies from "js-cookie";
 import Controls from "@/reusable/forms/controls/Controls";
 import { useForm } from '../../../reusable/forms/useForm'
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from "@/api/MPOSlices/tourPlan&Dcr";
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import moment from "moment";
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from "@/api/MPOSlices/UserSlice";
+import { CookieContext } from '@/App'
 
 const AddUnplannedTp = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const toggleDrawer = useCallback(() => {
@@ -31,7 +33,7 @@ const AddUnplannedTp = () => {
 
     const [selectedDates, setSelectedDates] = useState(today);
 
-    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: Cookies.get('company_id'), page: Cookies.get('company_user_id') })
+    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_id })
 
     const executiveLevelOptions = useMemo(() => {
         if (mpoAccordingToExecutiveLevel !== undefined) {
@@ -44,7 +46,7 @@ const AddUnplannedTp = () => {
     }, [mpoAccordingToExecutiveLevel])
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('company_user_id') });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_id });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
@@ -72,10 +74,10 @@ const AddUnplannedTp = () => {
     const [AddHigherOrder] = useAddHigherTourPlanMutation();
 
     const addTourPlan = () => {
-        if (Cookies.get('user_role') === 'MPO') {
+        if (user_role === 'MPO') {
             const data = [{
-                company_name: Cookies.get('company_id'),
-                mpo_name: Cookies.get('company_user_id'),
+                company_name: company_id,
+                mpo_name: company_user_id,
                 mpo_area: [{ company_mpo_area_id: values.select_the_area }],
                 tour_plan: {
                     shift: { shift: 1 },
@@ -119,8 +121,8 @@ const AddUnplannedTp = () => {
                 });
         } else {
             const data = {
-                company_id: Cookies.get('company_id'),
-                user_id: Cookies.get('company_user_id'),
+                company_id: company_id,
+                user_id: company_user_id,
                 dates: [selectedDates],
                 shift: 1,
                 visit_data: MpoAreaData,
@@ -205,7 +207,7 @@ const AddUnplannedTp = () => {
                                     onChange={(value) => setSelectedDates(value)} />
                             </Box>
                             {
-                                Cookies.get('user_role') === "MPO" ?
+                                user_role === "MPO" ?
                                     <>
                                         <Box marginBottom={2}>
                                             <Controls.Select
@@ -306,7 +308,7 @@ const AddUnplannedTp = () => {
 const MpoUserWiseArea = ({ id, setMpoAreaData }) => {
     const [visitData, setVisitData] = useState([]);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('role') === 'other' ? '' : id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

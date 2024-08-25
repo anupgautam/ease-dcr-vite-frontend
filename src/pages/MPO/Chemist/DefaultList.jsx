@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Typography,
     IconButton,
@@ -16,14 +16,16 @@ import Skeleton from 'react-loading-skeleton';
 import EditChemist from './EditChemist';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie';
 import Iconify from '@/components/iconify/Iconify';
 import {
     useGetAllChemistsQuery,
     useDeleteChemistsByIdMutation
 } from "../../../api/MPOSlices/ChemistSlice";
+import { CookieContext } from '@/App'
 
 const DefaultList = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
@@ -49,8 +51,8 @@ const DefaultList = () => {
     }, [])
 
     const { data } = useGetAllChemistsQuery({
-        id: Cookies.get("company_id"),
-        mpo_name: Cookies.get('user_role') === 'admin' ? '' : Cookies.get('company_user_id'),
+        id: company_id,
+        mpo_name: user_role === 'admin' ? '' : company_user_id,
         page: page
     });
 
@@ -94,7 +96,7 @@ const DefaultList = () => {
                             <TableCell align="left">{chem.chemist_name.chemist_address}</TableCell>
                             <TableCell align="left">{chem.chemist_name.chemist_category}</TableCell>
                             {/* <TableCell align="left">{chem.is_investment ? "Invested" : "Not Invested"}</TableCell> */}
-                            {Cookies.get('user_role') === 'admin' && (
+                            {user_role === 'admin' && (
                                 <>
                                     <TableCell align="left">
                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(chem.chemist_name.id)}>

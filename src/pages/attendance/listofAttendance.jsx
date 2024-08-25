@@ -1,12 +1,13 @@
 import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import Cookies from "js-cookie";
 
 import { BSDate } from "nepali-datepicker-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useGetAllUserAttendanceQuery, usePostingAllUserAttendanceMutation } from "../../api/CompanySlices/companyUserSlice";
 import { useGetUsersByCompanyRoleIdQuery } from "../../api/MPOSlices/UserSlice";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
 import ExportToExcel from "../../reusable/utils/exportSheet";
+import { CookieContext } from '@/App'
+
 
 const bsMonthDays = {
     2080: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30],
@@ -56,6 +57,8 @@ function getAllDaysInMonth(year, month) {
 
 
 const ListofAttendance = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const now = new BSDate().now();
     const year = now._date.year;
     const month = now._date.month;
@@ -110,7 +113,7 @@ const ListofAttendance = () => {
     };
 
     const allDaysInMonth = getAllDaysInMonth(selectedYear, selectedMonth);
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: '' });
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' });
 
     const companyUserList = [];
 

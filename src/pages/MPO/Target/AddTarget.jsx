@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -22,12 +22,14 @@ import { returnValidation } from '../../../validation';
 import {
     useCreateTargetMutation
 } from '../../../api/ExpensesSlices/targetSlices';
-import Cookies from 'js-cookie'
 import { useGetExecutiveLevelUsersQuery } from '../../../api/CompanySlices/companyUserRoleSlice';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
+import { CookieContext } from '@/App'
 
 const AddTarget = () => {
+    const { company_id, user_role, company_user_id, company_user_role_id } = useContext(CookieContext)
+
     const now = new BSDate().now();
 
     const monthData = getNepaliMonthName(now._date.month);
@@ -53,7 +55,7 @@ const AddTarget = () => {
         setSelectedYear(event.target.value);
     }, [])
 
-    const { data: rolesData } = useGetExecutiveLevelUsersQuery(Cookies.get('company_user_id'));
+    const { data: rolesData } = useGetExecutiveLevelUsersQuery(company_user_id);
 
     const users = useMemo(() => {
         if (rolesData !== undefined) {
@@ -122,12 +124,12 @@ const AddTarget = () => {
     const onAddStockists = useCallback(async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append("target_from", Cookies.get('company_user_role_id'));
+        formData.append("target_from", company_user_role_id);
         formData.append("target_to", values.target_to);
         // formData.append("sales", values.sales);
         formData.append("year", selectedYear);
         formData.append("target_amount", values.target_amount);
-        formData.append("company_name", Cookies.get("company_id"));
+        formData.append("company_name", company_id);
         try {
             const response = await createTarget(formData)
             if (response.data) {

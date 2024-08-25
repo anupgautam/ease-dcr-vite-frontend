@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useCallback, useMemo, useContext } from 'react'
 import {
     Box, Grid,
     Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel
@@ -22,13 +22,16 @@ import {
 } from '../../../../api/HighOrderSlices/hoTourPlanSlice';
 import { useGetMpoAreaQuery } from '../../../../api/MPOSlices/TourPlanSlice';
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '../../../../api/MPOSlices/UserSlice';
-import Cookies from 'js-cookie';
 import moment from 'moment';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
+import { CookieContext } from '@/App'
 
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
+
+    const { company_id, user_role, company_user_id, role } = useContext(CookieContext)
+
     const now = new BSDate().now();
     const [users, setUsers] = useState([]);
     const [dateData, setDateData] = useState();
@@ -38,7 +41,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     const TourPlan = useGetHOTourPlansByIdQuery(idharu);
 
 
-    const userLists = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: Cookies.get("company_id"), page: TourPlan?.data?.user_id?.id })
+    const userLists = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: TourPlan?.data?.user_id?.id })
 
     useEffect(() => {
         const user = []
@@ -170,7 +173,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         formData.append("hulting_station", values.hulting_station);
         formData.append('month', monthData)
         formData.append('id', idharu)
-        formData.append('company_id', Cookies.get('company_id'))
+        formData.append('company_id', company_id)
         try {
             await updateTourPlans(formData).unwrap();
             setEdited(true);
@@ -348,8 +351,10 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 };
 
 const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
+    const { company_id, user_role, company_user_id, role } = useContext(CookieContext)
+
     const [visitData, setVisitData] = useState([]);
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('role') === 'other' ? '' : id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

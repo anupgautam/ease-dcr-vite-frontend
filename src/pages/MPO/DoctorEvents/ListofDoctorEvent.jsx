@@ -1,14 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Container,
     Grid, Box, Typography
 } from '@mui/material';
-
+import { CookieContext } from '@/App'
 import FilteredDoctorEvent from './FilteredDoctorEvent';
 import AddDoctorEvents from './addDoctorEvents';
-import Cookies from 'js-cookie';
 
 const ListofDoctorEvent = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     return (
         <>
             <Container>
@@ -24,7 +25,7 @@ const ListofDoctorEvent = () => {
                             </Grid>
                             <Grid item xs={10}>
                                 {
-                                    Cookies.get('user_role') === 'MPO' &&
+                                    user_role === 'MPO' &&
                                     <Box style={{ float: 'right', marginBottom: "20px" }}>
                                         <AddDoctorEvents />
                                     </Box>

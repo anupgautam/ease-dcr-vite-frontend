@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
     Box,
     Grid,
@@ -18,10 +18,11 @@ import {
     useGetCollectionsByIdQuery,
     useUpdateCollectionsMutation,
 } from "@/api/MPOSlices/CollectionsApiSlice";
+import { CookieContext } from '@/App'
 
-import Cookies from 'js-cookie'
 
 const EditCollections = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
 
     //! Getting chemist by ID
     const Chemist = useGetCollectionsByIdQuery(idharu);
@@ -34,7 +35,7 @@ const EditCollections = ({ idharu, onClose }) => {
             temp.chemist_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.chemist_name)
         temp.chemist_address = returnValidation(['null'], values.chemist_address)
         temp.chemist_gender = returnValidation(['null'], values.chemist_gender)
-        temp.chemist_phone_number = returnValidation(['null', 'phonenumber','specialcharacter'], values.chemist_phone_number)
+        temp.chemist_phone_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.chemist_phone_number)
         temp.chemist_area = returnValidation(['null'], values.chemist_area)
         temp.category_name = returnValidation(['null'], values.category_name)
 
@@ -112,10 +113,10 @@ const EditCollections = ({ idharu, onClose }) => {
         formData.append("chemist_phone_number", values.chemist_phone_number);
         formData.append("chemist_area", values.chemist_area);
         formData.append("category_name", values.category_name);
-        formData.append("company_id", Cookies.get('company_id'));
+        formData.append("company_id", company_id);
         formData.append('id', Chemist?.data?.results[0]?.chemist_name?.id);
-        formData.append('refresh', Cookies.get('refresh'));
-        formData.append('access', Cookies.get('access'));
+        formData.append('refresh', refresh);
+        formData.append('access', access);
         try {
 
             const response = await updateChemists(formData).unwrap();
