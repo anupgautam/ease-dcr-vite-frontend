@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import DefaultSpecialization from './DefaultSpecialization';
 import {
     Container,
@@ -11,16 +11,18 @@ import {
 } from '../../../../api/MPOSlices/DoctorSlice'
 import AddDoctorSpecialization from './AddDoctorSpecialization';
 import SpecializationCount from './SpecializationCount';
+import { CookieContext } from '@/App'
 
-import Cookies from 'js-cookie'
 import ExportToExcel from '@/reusable/utils/exportSheet';
 
 
 const ListOfDoctorSpecialization = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { data } = useGetDoctorsSpecializationQuery(Cookies.get('company_id'))
+    const { data } = useGetDoctorsSpecializationQuery(company_id)
     const headers = [
         { label: 'S.No.', key: 'sno' },
         { label: 'Specialization', key: 'category_name' },

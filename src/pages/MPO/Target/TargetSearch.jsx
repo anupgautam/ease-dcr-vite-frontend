@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -39,12 +39,12 @@ import DefaultTarget from './DefaultTarget';
 import EditTarget from './EditTarget';
 import SearchIcon from '@mui/icons-material/Search';
 
-import Cookies from 'js-cookie'
 import FilteredTarget from './FilteredTarget';
 import SelectDataDCR from '../DCR/SelectDataDCR';
 import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRolesSlice';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'user_name', label: 'User Name', alignRight: false },
@@ -56,6 +56,7 @@ const TABLE_HEAD = [
 ];
 
 const TargetSearch = (props) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const now = new BSDate().now();
 
@@ -87,7 +88,7 @@ const TargetSearch = (props) => {
         setSelectedYear(event.target.value);
     }, [])
 
-    const { data: rolesData } = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+    const { data: rolesData } = useGetCompanyRolesByCompanyQuery(company_id);
 
     const roles = useMemo(() => {
         if (rolesData !== undefined) {
@@ -138,7 +139,7 @@ const TargetSearch = (props) => {
     // !on search
     const onSearch = (e) => {
         const searchQuery = e.target.value;
-        const company_id = Cookies.get('company_id');
+        const company_id = company_id;
         setSearchResults({ search: searchQuery, company_id })
         searchTarget(searchResults);
         // 

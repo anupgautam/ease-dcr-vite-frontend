@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Container,
     Grid, Box,
@@ -12,13 +12,15 @@ import DCRLockCount from './DCRLockCount';
 import {
     useGetTPlockDaysQuery
 } from '../../../api/MPOSlices/TourPlanSlice'
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 const ListOfDCRLockDays = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { data } = useGetTPlockDaysQuery(Cookies.get('company_id'))
+    const { data } = useGetTPlockDaysQuery(company_id)
 
     return (
         <>

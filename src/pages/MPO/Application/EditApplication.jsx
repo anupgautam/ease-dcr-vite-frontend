@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useContext } from 'react'
 import {
     Box, Grid,
     Typography, Button, InputLabel
@@ -19,10 +19,10 @@ import {
     useUpdateApplicationsMutation,
 } from '@/api/ApplicationSlices/ApplicationSlices'
 import { NepaliDatePicker } from "nepali-datepicker-react";
-
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 const EditApplication = ({ mpoId, idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Getting Application by ID
     const Application = useGetApplicationsByIdQuery(idharu);
@@ -31,7 +31,7 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
     const company_user_role = 3;
     const [HigherUser, setHigherUser] = useState();
     const [HigherLevelUser] = useGetUpperLevelCompanyUserRoleByIdMutation();
-    
+
     const [dateData, setDateData] = useState();
     const [dateDataAnother, setDateDataAnother] = useState();
 
@@ -160,7 +160,7 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
         formData.append("is_approved", values.is_approved);
         formData.append("company_name", values.company_name);
         formData.append('id', idharu)
-        formData.append('company_name', Cookies.get('company_id'))
+        formData.append('company_name', company_id)
         formData.append('mpo_name', mpoId);
         formData.append('is_submitted', values.is_submitted);
         try {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useContext } from 'react'
 import {
     Box, Grid,
     Typography
@@ -31,11 +31,13 @@ import {
     useGetShiftWiseChemistDCRByDCRIdQuery
 } from '@/api/DCRs Api Slice/chemistDCR/shiftWiseChemistDCRSlice';
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
-import Cookies from 'js-cookie';
 import { useGetAllVisitedMpoWiseChemistQuery } from '@/api/MPOSlices/doctorApiSlice';
+import { CookieContext } from '@/App'
 
 
 const EditChemistDCR = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [noLoop, setNoLoop] = useState(true);
     const [initialShift, setInitialShift] = useState("");
     // const areas = useSelector(state => state.dcrData.company_areas);
@@ -103,7 +105,7 @@ const EditChemistDCR = ({ idharu, onClose }) => {
 
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: mpo_id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: mpo_id });
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
@@ -112,7 +114,7 @@ const EditChemistDCR = ({ idharu, onClose }) => {
         return [];
     }, [MpoArea])
 
-    const { data: chemistData } = useGetAllVisitedMpoWiseChemistQuery({ company_name: Cookies.get('company_id'), mpo_name: mpo_id, mpo_area: values.visited_area })
+    const { data: chemistData } = useGetAllVisitedMpoWiseChemistQuery({ company_name: company_id, mpo_name: mpo_id, mpo_area: values.visited_area })
 
     const chemists = useMemo(() => {
         if (chemistData !== undefined) {

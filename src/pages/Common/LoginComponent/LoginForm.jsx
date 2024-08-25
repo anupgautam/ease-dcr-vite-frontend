@@ -85,9 +85,7 @@ const LoginFormInputs = () => {
                             Cookies.set('access', res.data.token.access);
                             Cookies.set('email', email);
                             Cookies.set('is_highest_priority', res.data.is_highest_priority)
-                            Cookies.set('company_area_id', res.data.company_area_id);
                             setSuccessMessage({ show: true, message: 'Successfully Logged In' })
-                            setTimeout(() => setSuccessMessage({ show: false, message: "" }), 2000);
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                 Cookies.set('user_role', 'admin')
                                 navigate('/dashboard/admin');
@@ -110,12 +108,10 @@ const LoginFormInputs = () => {
                                 }, [2000])
                             }
                         } if (res.error) {
-                            if (res.error?.originalStatus === 500) {
-                                setErrorMessage({ show: true, message: 'Backend Error' });
-                            } else {
-                                setErrorMessage({ show: true, message: res.error.data });
-                            }
-                            setTimeout(() => setErrorMessage({ show: false, message: "" }), 2000);
+                            setErrorMessage({ show: true, message: res.error.error });
+                            setTimeout(() => {
+                                setErrorMessage({ show: false, message: "" });
+                            }, [2000])
                         } else {
                             setErrorMessage({ show: true, message: 'Login Failed' });
                             setTimeout(() => {
@@ -139,11 +135,9 @@ const LoginFormInputs = () => {
         }
     }, [email, password])
 
-
     useEffect(() => {
         const handleKeyDown = e => {
             if (e.key === 'Enter' && email && password) {
-                e.preventDefault();
                 handleSubmission();
             }
         };
@@ -200,7 +194,7 @@ const LoginFormInputs = () => {
                                         </InputAdornment>
                                     ),
                                 }}
-                                style={{ cursor: 'pointer' }}
+                            style={{ cursor: 'pointer' }}
                             // className="cursor-pointer"
                             />
                         </Box>
@@ -223,7 +217,7 @@ const LoginFormInputs = () => {
                             Forgot Password?
                         </Link>
                     </Stack>
-                    <LoadingButton className="loginbutton" fullWidth size="large" type="submit" variant="contained">
+                    <LoadingButton className="loginbutton" fullWidth size="large" type="submit" variant="contained" onClick={handleSubmission} >
                         Login
                     </LoadingButton>
                     {/* <p className=' text-center my-3 font-public_sans font-semibold text-gray-400'>—————— or ——————</p>
@@ -252,8 +246,8 @@ const LoginFormInputs = () => {
                         )
                             : null
                     }
-                </Box >
-            </form >
+                </Box>
+            </form>
         </>
     )
 }

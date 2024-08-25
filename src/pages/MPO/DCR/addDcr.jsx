@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -10,7 +10,6 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Iconify from '../../../components/iconify';
-import Cookies from 'js-cookie'
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { usePostAllMPONamesNoPageMutation } from '@/api/MPOSlices/DoctorSlice';
@@ -25,8 +24,12 @@ import {
 } from '@/api/MPOSlices/tourPlan&Dcr';
 import { useNavigate } from 'react-router-dom';
 import { useGetcompanyUserRolesByIdQuery } from '@/api/CompanySlices/companyUserRoleSlice';
+import { CookieContext } from '@/App'
+
 
 const AddDcrForHo = () => {
+
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const chemistcategories = [
         { id: "A", title: "A" },
@@ -43,7 +46,7 @@ const AddDcrForHo = () => {
         return [];
     }, [ShiftData])
 
-    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: Cookies.get('company_id'), page: Cookies.get('company_user_id') })
+    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_id })
 
     const executiveLevelOptions = useMemo(() => {
         if (mpoAccordingToExecutiveLevel) {
@@ -61,13 +64,13 @@ const AddDcrForHo = () => {
     const [GethingherOrder] = useGetHigherOrderTourPlanUsingIdMutation();
 
     useEffect(() => {
-        GethingherOrder({ user_id: Cookies.get('company_user_id') })
+        GethingherOrder({ user_id: company_user_id })
             .then((res) => {
                 setHigherOrderTourplans(res.data);
             })
             .catch((err) => {
             })
-    }, [Cookies.get('company_user_id')])
+    }, [company_user_id])
 
     const [MpoData] = usePostAllMPONamesNoPageMutation()
 
@@ -84,15 +87,15 @@ const AddDcrForHo = () => {
     }, [MpoList])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     const [initialFValues, setInitialFvalues] = useState({
         id: "",
@@ -168,8 +171,8 @@ const AddDcrForHo = () => {
             date: values.date,
             visited_with: values.visited_with,
             shift: values.shift,
-            user_id: Cookies.get('company_user_id'),
-            company_id: Cookies.get('company_id')
+            user_id: company_user_id,
+            company_id: company_id
         }
         createDCR(data)
             .then((res) => {
@@ -238,7 +241,7 @@ const AddDcrForHo = () => {
                         </Typography>
                     </Box>
                     {
-                        Cookies.get('user_role') === 'other-roles' &&
+                        user_role === 'other-roles' &&
                         <>
                             <Box style={{ marginBottom: "20px" }}>
                                 <>
@@ -326,7 +329,7 @@ const AddDcrForHo = () => {
                         </>
                     }
                     {
-                        Cookies.get('user_role') === 'MPO' &&
+                        user_role === 'MPO' &&
                         <Box style={{ marginTop: "20px" }}>
                             <Button
                                 variant="outlined"

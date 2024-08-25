@@ -25,12 +25,12 @@ import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
-import Cookies from 'js-cookie'
 import {
     useGetAllCompanyAreaWiseExpensesQuery,
     useDeleteCompanyAreaWiseExpensesByIdMutation,
 } from '@/api/CompanySlices/companyAreaWiseExpenses';
 import EditCompanyAreaWiseExpenses from './EditCompanyAreaWiseExpenses';
+import { CookieContext } from '@/App'
 
 
 const TABLE_HEAD = [
@@ -40,6 +40,8 @@ const TABLE_HEAD = [
 ];
 
 const DefaultCompanyAreaWiseExpense = () => {
+
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -81,7 +83,7 @@ const DefaultCompanyAreaWiseExpense = () => {
 
     // !Get Tour Plans
     const { data } = useGetAllCompanyAreaWiseExpensesQuery({
-        id: Cookies.get('company_id'), page: page
+        id: company_id, page: page
     });
 
     // !Delete TourPlan

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Cookies from 'js-cookie'
 
 // ! Common Pages  
 import StartPage from "@/pages/Common/StartPage";
@@ -58,10 +57,6 @@ import MPODashboard from '@/pages/MPO/dashboard'
 const Routing = () => {
 
   const [isAuth, setIsAuth] = useState(false);
-  const access = Cookies.get('access')
-  const refresh = Cookies.get('refresh')
-  const email = Cookies.get('email');
-  const userrole = Cookies.get('user_role');
   const TOKEN_KEY = { access, refresh, email, userrole }
 
   useEffect(() => {

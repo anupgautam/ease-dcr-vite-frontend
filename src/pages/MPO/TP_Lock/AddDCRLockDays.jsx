@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import {
     Box,
     Typography,
@@ -21,13 +21,14 @@ import {
 import {
     useGetUsersRoleQuery,
 } from '@/api/MPOSlices/UserSlice';
+import { CookieContext } from '@/App'
 
-import Cookies from 'js-cookie';
 
 const AddTPLock = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Get user roles
-    const { data, isSuccess, } = useGetUsersRoleQuery(Cookies.get('company_id'));
+    const { data, isSuccess, } = useGetUsersRoleQuery(company_id);
 
     const rolesharu = useMemo(() => {
         if (isSuccess) {
@@ -80,7 +81,7 @@ const AddTPLock = () => {
             const formData = new FormData();
             formData.append("company_roles", values.company_roles);
             formData.append("tp_lock_days", values.tp_lock_days);
-            formData.append("company_name", Cookies.get('company_id'));
+            formData.append("company_name", company_id);
             try {
                 const response = await createTPDays(formData).unwrap();
                 setSuccessMessage({ show: true, message: 'Successfully Added TP Lock Days' });

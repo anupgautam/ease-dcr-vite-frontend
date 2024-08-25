@@ -23,7 +23,6 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import EditUser from './EditUser';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
 import { useUnlockUsersMutation } from '../../../api/MPOSlices/UserSlice'
 import { CookieContext } from '../../../App';

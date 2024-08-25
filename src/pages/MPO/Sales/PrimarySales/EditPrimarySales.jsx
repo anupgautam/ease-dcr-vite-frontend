@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useContext } from 'react'
 import {
     Box,
     Grid,
@@ -22,13 +22,14 @@ import {
 import {
     useGetAllProductsOptionsQuery
 } from '@/api/MPOSlices/productApiSlice'
+import { CookieContext } from '@/App'
 
-import Cookies from 'js-cookie'
 
 const EditPrimarySales = ({ idharu, onClose, selectedOption, monthData, selectedYear }) => {
+    const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
 
     //! Get doctor categories
-    const Products = useGetAllProductsOptionsQuery(Cookies.get('company_id'))
+    const Products = useGetAllProductsOptionsQuery(company_id)
 
     const products = useMemo(() => {
         if (Products.status === 'fulfilled') {
@@ -159,9 +160,9 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption, monthData, selected
         formData.append("l_rate", values.l_rate);
         formData.append("st_value", values.st_value);
         formData.append("sl_value", values.sl_value);
-        formData.append("company_name", Cookies.get('company_id'));
-        formData.append('refresh', Cookies.get('refresh'));
-        formData.append('access', Cookies.get('access'));
+        formData.append("company_name", company_id);
+        formData.append('refresh', refresh);
+        formData.append('access', access);
         formData.append('id', idharu);
         try {
 

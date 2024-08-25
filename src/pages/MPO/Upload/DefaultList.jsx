@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { Container } from '@mui/material';
 import { DefaultUploadList } from '../../../sections/@dashboard/uploads';
 import { useGetUploadQuery } from '../../../api/Uploads/uploadApiSlice'
 import 'react-loading-skeleton/dist/skeleton.css'
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 const DefaultList = () => {
 
@@ -17,7 +17,8 @@ const DefaultList = () => {
     }, [])
 
     //! GET Uploads 
-    const { data } = useGetUploadQuery({ page: page, id: Cookies.get('company_id') });
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { data } = useGetUploadQuery({ page: page, id: company_id });
 
     return (
         <>

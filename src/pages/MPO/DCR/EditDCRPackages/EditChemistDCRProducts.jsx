@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React, { useMemo } from "react";
+import React, { useMemo, useContext } from "react";
 import ReusableFormsSelect from "@/reusable/components/forms/controls/ReusableFormSelect";
 
 import {
@@ -10,14 +10,13 @@ import {
 import { useTransition } from 'react-transition-state';
 import { useSelector } from "react-redux";
 import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
-import Cookies from "js-cookie";
 import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
 
 const EditChemistDCRProducts = ({ id, context, editApi }) => {
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   const mpo_id = useSelector(state => state.dcrData.selected_user);
   const { data: mpoArea } = useGetUsersByIdQuery(mpo_id);
-  const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: Cookies.get('company_id'), division_name: mpoArea?.division_name })
+  const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: mpoArea?.division_name })
 
   const companyProducts = useMemo(() => {
     if (productData !== undefined) {

@@ -1,8 +1,8 @@
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
 import { noCase } from 'change-case';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie'
 import {
   Box,
   List,
@@ -20,12 +20,15 @@ import {
 import { fToNow } from '@/utils/formatTime';
 import Iconify from '@/components/iconify/Iconify';
 import Scrollbar from '@/components/scrollbar/Scrollbar'
-
+import { CookieContext } from '@/App'
 
 //! notification slices
 import { useGetNotificationListByIdQuery, usePatchNotificationListByIdMutation } from "../../../../api/MPOSlices/notificationSlices";
 
 export default function NotificationsPopover() {
+
+  const { User_id, company_id, user_role, company_user_id } = useContext(CookieContext)
+
   const [notifications, setNotifications] = useState();
 
   const [open, setOpen] = useState(null);
@@ -44,7 +47,7 @@ export default function NotificationsPopover() {
   }
 
   //! Notification
-  const { data, isLoading, isError, error } = useGetNotificationListByIdQuery(Cookies.get('User_id'));
+  const { data, isLoading, isError, error } = useGetNotificationListByIdQuery(User_id);
   const [NotificationData] = usePatchNotificationListByIdMutation();
 
   const [Show, setShow] = useState(true);
@@ -70,7 +73,7 @@ export default function NotificationsPopover() {
 
   return (
     <>
-      {Cookies.get('user_role') === 'admin' &&
+      {user_role === 'admin' &&
         <Tooltip title="Chat" arrow>
           <Link to={'/dashboard/admin/chat'}>
             <IconButton color={open ? 'primary' : 'default'} sx={{ width: 40, height: 40 }}>

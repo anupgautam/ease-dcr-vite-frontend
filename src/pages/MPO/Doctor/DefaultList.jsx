@@ -26,7 +26,6 @@ import { CookieContext } from '@/App'
 
 const DefaultList = () => {
     const { company_id, user_role, company_user_id } = useContext(CookieContext)
-
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);

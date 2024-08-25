@@ -1,5 +1,5 @@
 import { sentenceCase } from 'change-case';
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 //! @mui
 import {
     Card,
@@ -24,7 +24,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import DefaultList from './DefaultList';
 import EditLockedUser from './EditLockedUser'
 import 'react-datepicker/dist/react-datepicker.css';
@@ -46,6 +45,8 @@ import {
     useSearchLockedUsersMPOMutation,
     useSearchLockedUsersHigherOrderMutation
 } from '@/api/MPOSlices/TourPlanSlice';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'select_the_date_id', label: 'Tour Plan Date', alignRight: false },
@@ -57,11 +58,13 @@ const TABLE_HEAD = [
 
 const FilteredLockedUsers = () => {
 
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     //! Company Roles list
-    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
 
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');
@@ -95,7 +98,7 @@ const FilteredLockedUsers = () => {
     }, []);
 
     //! Get User roles wala
-    const { data, isLoading, isSuccess, isError, error } = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: Cookies.get('company_id') })
+    const { data, isLoading, isSuccess, isError, error } = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: company_id })
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
@@ -112,7 +115,7 @@ const FilteredLockedUsers = () => {
     const [selectedOption, setSelectedOption] = useState('');
     const [mpoName, setMPOName] = useState('');
     const handleOptionChange = (event, value) => {
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
         setSelectedOption(value?.id);
     };
 
@@ -222,10 +225,10 @@ const FilteredLockedUsers = () => {
                                     <TextField {...params} label="Users" />
                                 )}
                                 renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
                             />
                             {/* <NepaliDatePicker
                                 inputClassName="form-control-design"

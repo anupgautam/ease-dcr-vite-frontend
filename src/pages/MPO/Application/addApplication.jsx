@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -14,15 +14,16 @@ import Iconify from '../../../components/iconify';
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "../../../reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
-import Cookies from 'js-cookie'
 import {
     NepaliDateConverter
 } from "react-nepali-date-picker-lite";
+import { CookieContext } from '@/App'
 
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useCreateApplicationsMutation } from '../../../api/ApplicationSlices/ApplicationSlices';
 
 const AddApplication = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Format Date
     const today = NepaliDateConverter.getNepaliDate();
@@ -83,9 +84,9 @@ const AddApplication = () => {
         formData.append("leave_type", values.leave_type);
         formData.append("leave_from", selectedDates);
         formData.append("leave_to", selectedDatesTo);
-        formData.append("mpo_name", Cookies.get('company_user_id'));
-        // formData.append("mpo_name", Cookies.get('user_role'));
-        formData.append('company_name', Cookies.get('company_id'))
+        formData.append("mpo_name", company_user_id);
+        // formData.append("mpo_name", user_role);
+        formData.append('company_name', company_id)
         formData.append('is_submitted', true);
         formData.append('leave_status', 'pending');
         try {

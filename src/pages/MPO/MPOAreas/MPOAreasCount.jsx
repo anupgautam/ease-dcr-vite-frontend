@@ -1,12 +1,14 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import { Typography } from '@mui/material';
 import {
     useAreaMPOQuery,
 } from '@/api/MPOSlices/TourPlanSlice.js';
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 
 const MPOAreasCount = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
@@ -16,7 +18,7 @@ const MPOAreasCount = () => {
     }, [])
 
     // !  Get all the company areas
-    const { data } = useAreaMPOQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_user_id') });
+    const { data } = useAreaMPOQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? "" : company_user_id });
     return (
         <>
             {

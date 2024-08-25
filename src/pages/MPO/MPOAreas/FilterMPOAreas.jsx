@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 //! @mui
 import {
     Card,
@@ -23,7 +23,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import DefaultList from './DefaultList';
 import 'react-datepicker/dist/react-datepicker.css';
 import "nepali-datepicker-reactjs/dist/index.css"
@@ -44,6 +43,7 @@ import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import EditMpoArea from './editMpoArea';
 import Iconify from '@/components/iconify/Iconify';
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'area_name"', label: 'Tour Plan Date', alignRight: false },
@@ -52,12 +52,13 @@ const TABLE_HEAD = [
 ];
 
 const FilterMPOAreas = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     //! Company Roles list
-    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
 
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');
@@ -90,10 +91,10 @@ const FilterMPOAreas = () => {
     }, []);
 
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
 
     const companyAreaData = useMemo(() => {
-        if (CompanyArea!==undefined) {
+        if (CompanyArea !== undefined) {
             return CompanyArea.map(key => ({ id: key.id, title: key.company_area }))
         }
         return [];
@@ -123,21 +124,21 @@ const FilterMPOAreas = () => {
     }, [MpoList])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     //! Options
     const [companyId, setCompanyId] = useState();
     const [selectedOption, setSelectedOption] = useState('');
     const handleOptionChange = (event, value) => {
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
         setSelectedOption(value?.id);
     };
 
@@ -198,7 +199,7 @@ const FilterMPOAreas = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
                             {
-                                Cookies.get('user_role') === 'admin' &&
+                                user_role === 'admin' &&
                                 <Autocomplete
                                     options={mpoNames}
                                     getOptionLabel={(option) => option.title}
@@ -216,7 +217,7 @@ const FilterMPOAreas = () => {
                         </Grid>
                         <Grid item xs={3}>
                             {
-                                Cookies.get('user_role') === 'admin' &&
+                                user_role === 'admin' &&
                                 <Autocomplete
                                     options={companyAreaData}
                                     getOptionLabel={(option) => option.title}
@@ -298,7 +299,7 @@ const FilterMPOAreas = () => {
 
                                                                         <TableCell align="left">
                                                                             {
-                                                                                Cookies.get('user_role') === 'admin' &&
+                                                                                user_role === 'admin' &&
                                                                                 <>
                                                                                     <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(mpoareas.id)}>
                                                                                         <Badge>

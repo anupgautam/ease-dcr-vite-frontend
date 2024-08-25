@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link as ScrollLink, Events, scrollSpy } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
 import logo from "/assets/ease.svg";
 import "./Scrollnav.css";
 import { navItems } from "./Elements";
-import Cookies from "js-cookie";
+import { CookieContext } from '@/App'
 
 const Scrollnav = () => {
-  const login = Cookies.get("user_role");
+  const { company_id, company_user_id, user_role } = useContext(CookieContext)
+
+  const login = user_role;
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -34,14 +36,13 @@ const Scrollnav = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 lg:h-24 bg-white transition-transform duration-300 flex items-center ease-in-out z-50 drop-shadow-md ${
-        isVisible ? "transform translate-y-0" : "transform -translate-y-full"
-      }`}
+      className={`fixed top-0 left-0 right-0 h-16 lg:h-24 bg-white transition-transform duration-300 flex items-center ease-in-out z-50 drop-shadow-md ${isVisible ? "transform translate-y-0" : "transform -translate-y-full"
+        }`}
     >
       <div className=" flex font-semibold gap-x-2 lg:gap-x-2 md:gap-x-6 items-center container justify-between">
-       
-          <img src={logo} alt="LOGO" className=" h-16 lg:h-20" />
-  
+
+        <img src={logo} alt="LOGO" className=" h-16 lg:h-20" />
+
         <div className=" flex gap-[1rem] md:gap-[2rem] lg:gap-[3rem] font-bold">
           {navItems.map((item, idx) => {
             return (
@@ -68,7 +69,7 @@ const Scrollnav = () => {
           <button className="bg-[#6364f2] px-4 md:px-8  py-1.5  lg:py-2.5 rounded-[30px] text-[9px] md:text-[18px] text-white hover:scale-105 hover:bg-violet-800 duration-300">
             <RouterLink
               to={
-                Cookies.get("user_role") === "admin"
+                user_role === "admin"
                   ? "/dashboard/admin"
                   : "/dashboard/admin/listofdoctor"
               }

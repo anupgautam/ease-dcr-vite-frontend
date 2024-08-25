@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import {
     Box,
     Typography,
@@ -18,9 +18,11 @@ import { returnValidation } from '../../../validation';
 import {
     useCreateRewardsMutation
 } from '@/api/MPOSlices/rewardsApiSlice';
-import Cookies from 'js-cookie';
+import { CookieContext } from '@/App'
 
 const AddRewards = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const [createRewards] = useCreateRewardsMutation();
@@ -65,7 +67,7 @@ const AddRewards = () => {
         if (validate()) {
             const formData = new FormData();
             formData.append("reward", values.reward);
-            formData.append("company_name", Cookies.get('company_id'));
+            formData.append("company_name", company_id);
             try {
                 const response = await createRewards(formData).unwrap();
                 setSuccessMessage({ show: true, message: 'Successfully Added Rewards' });

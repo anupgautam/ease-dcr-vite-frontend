@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -14,11 +14,12 @@ import Iconify from '../../../components/iconify';
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
-import Cookies from 'js-cookie'
 import { usePostUploadDataMutation } from '@/api/Uploads/uploadApiSlice';
 import BlobToFile from '@/reusable/utils/blobToFile';
+import { CookieContext } from '@/App'
 
 const AddUpload = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const [File, setFile] = useState([]);
 
@@ -76,9 +77,9 @@ const AddUpload = () => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("upload_name", values.upload_name);
-        formData.append("mpo_name", Cookies.get('company_user_id'));
+        formData.append("mpo_name", company_user_id);
         formData.append("upload_type", values.upload_type);
-        formData.append('company_name', Cookies.get('company_id'))
+        formData.append('company_name', company_id)
         var file = BlobToFile(File, "upload");
         if (file.length !== 0) {
             formData.append("upload", file);

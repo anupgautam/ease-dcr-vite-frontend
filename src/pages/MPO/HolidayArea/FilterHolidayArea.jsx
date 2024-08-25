@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -33,9 +33,9 @@ import {
 } from '../../../api/MPOSlices/DoctorSlice';
 import { useGetHolidayAreasQuery, useSearchHolidayAreasMutation } from '@/api/HolidaySlices/holidaySlices';
 import SearchIcon from '@mui/icons-material/Search';
-import Cookies from 'js-cookie'
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import EditHolidayArea from './EditHolidayArea';
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'holiday_type', label: 'Holiday Type', alignRight: false },
@@ -44,9 +44,10 @@ const TABLE_HEAD = [
 ];
 
 const FilterHolidayArea = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Company Area
-    const Areas = useGetHolidayAreasQuery(Cookies.get("company_id"));
+    const Areas = useGetHolidayAreasQuery(company_id);
 
     const areas = useMemo(() => {
         if (Areas.data) {
@@ -94,7 +95,7 @@ const FilterHolidayArea = () => {
             setSearchDataCondition(false);
             setSearchData([]);
         } else {
-            SearchHolidayAreas({ holiday_type: searchQuery, company_id: Cookies.get('company_id'), company_area: holidayArea })
+            SearchHolidayAreas({ holiday_type: searchQuery, company_id: company_id, company_area: holidayArea })
                 .then((res) => {
                     setSearchDataCondition(true);
                     if (res.data) {
@@ -110,7 +111,7 @@ const FilterHolidayArea = () => {
     const [holidayArea, setHolidayArea] = useState()
     const handleHolidayAreaChange = useCallback((event, value) => {
         setHolidayArea(value?.id)
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
     }, []);
 
 
@@ -172,10 +173,10 @@ const FilterHolidayArea = () => {
                                     <TextField {...params} label="Company Areas" />
                                 )}
                                 renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
                             />
                         </Grid>
                     </Grid>

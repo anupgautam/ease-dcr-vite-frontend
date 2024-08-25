@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -17,8 +17,7 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 import {
     useGetTPlockDaysQuery,
@@ -32,6 +31,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -73,7 +73,7 @@ const DefaultList = () => {
     }, [])
 
     //! Get Categories
-    const { data } = useGetTPlockDaysQuery(Cookies.get('company_id'));
+    const { data } = useGetTPlockDaysQuery(company_id);
 
     const handleDelete = async (id) => {
         await deleteRewards(id);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -23,7 +23,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import SearchIcon from '@mui/icons-material/Search';
 import Test from './DefaultList';
-import Cookies from 'js-cookie'
 import EditCollections from './EditCollections'
 
 import Iconify from '@/components/iconify/Iconify';
@@ -38,7 +37,7 @@ import {
     useSearchCollectionsMutation,
     useDeleteCollectionsByIdMutation
 } from '../../../api/MPOSlices/CollectionsApiSlice';
-
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: 'Chemist Name', alignRight: false },
@@ -49,6 +48,8 @@ const TABLE_HEAD = [
 ];
 
 const CollectionsSearch = () => {
+
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -104,8 +105,8 @@ const CollectionsSearch = () => {
     // !on search
     const onSearch = (e) => {
         const searchQuery = e.target.value;
-        const company_id = Cookies.get('company_id');
-        setSearchResults({ search: searchQuery, company_id })
+        const company_Id = company_id;
+        setSearchResults({ search: searchQuery, company_Id })
         searchChemist(searchResults);
     }
 

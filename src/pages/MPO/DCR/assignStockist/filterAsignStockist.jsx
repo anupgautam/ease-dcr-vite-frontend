@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 //! @mui
 import {
     Card,
@@ -23,7 +23,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import 'react-datepicker/dist/react-datepicker.css';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -34,6 +33,8 @@ import {
     useGetAllDoctorsWithoutPaginateQuery,
     usePostAllMPONamesNoPageMutation,
 } from '../../../../api/MPOSlices/DoctorSlice';
+import { CookieContext } from '@/App'
+
 import {
     useGetUsersMPOWalaQuery
 } from '../../../../api/MPOSlices/UserSlice';
@@ -49,6 +50,8 @@ const TABLE_HEAD = [
 ];
 
 const FilteredAsignStockist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -68,7 +71,7 @@ const FilteredAsignStockist = () => {
     }, []);
 
     //! Get User roles wala
-    const { data, isLoading, isSuccess, isError, error } = useGetUsersMPOWalaQuery(Cookies.get("company_id"))
+    const { data, isLoading, isSuccess, isError, error } = useGetUsersMPOWalaQuery(company_id)
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
@@ -80,7 +83,7 @@ const FilteredAsignStockist = () => {
     }, [isSuccess])
 
     //! Get All doctors 
-    const Doctors = useGetAllDoctorsWithoutPaginateQuery({ id: Cookies.get("company_id") })
+    const Doctors = useGetAllDoctorsWithoutPaginateQuery({ id: company_id })
 
     const doctorOptions = useMemo(() => {
         if (Doctors?.isSuccess) {
@@ -115,19 +118,19 @@ const FilteredAsignStockist = () => {
         return [];
     }, [MpoList])
 
-    const { data: StokistData } = useGetAllAssignStockistsQuery({ id: Cookies.get("company_id"), page: page, company_area: " ", mpo_name: mpoName });
+    const { data: StokistData } = useGetAllAssignStockistsQuery({ id: company_id, page: page, company_area: " ", mpo_name: mpoName });
 
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
 
     //! Options
@@ -137,12 +140,12 @@ const FilteredAsignStockist = () => {
 
     const handleMPONameChange = useCallback((event, value) => {
         setMPOName(value?.id)
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
         // setSelectedOption(value?.id);
     }, []);
 
     const handleDoctorOptionChange = useCallback((event, value) => {
-        // setCompanyId(Cookies.get('company_id'));
+        // setCompanyId(company_id);
         setSelectedDoctor(value?.id);
     }, []);
 
@@ -223,7 +226,7 @@ const FilteredAsignStockist = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={2}>
                             {
-                                Cookies.get('user_role') === 'admin' &&
+                                user_role === 'admin' &&
                                 <Autocomplete
                                     options={mpoNames}
                                     getOptionLabel={(option) => option.title}

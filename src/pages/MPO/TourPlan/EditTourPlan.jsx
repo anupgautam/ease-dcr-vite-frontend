@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
 import {
     Box, Grid, Typography, Button, Autocomplete, TextField
 } from '@mui/material'
@@ -24,18 +24,20 @@ import {
 import { useSelector } from 'react-redux';
 import DateToString from '@/reusable/forms/utils/dateToString';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
+import { CookieContext } from '@/App'
 
-import Cookies from 'js-cookie'
 import moment from 'moment';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 
 const EditTourPlan = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const now = new Date();
     const [dateData, setDateData] = useState();
     const userList = useSelector(state => state?.tourPlan?.dataList);
 
     const TourPlan = useGetTourPlansByIdQuery(idharu);
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: TourPlan?.data?.mpo_name?.id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: TourPlan?.data?.mpo_name?.id });
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
@@ -126,7 +128,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
             select_the_month: getNepaliMonthName(moment(values.select_the_date_id).month() + 1),
             select_the_date: typeof values.select_the_date_id === "string" ? values.select_the_date_id : DateToString(values.select_the_date_id),
             id: idharu,
-            company_name: Cookies.get('company_id')
+            company_name: company_id
         };
         try {
             const response = await updateTourPlans({ id: idharu, value: data }).unwrap();
@@ -233,7 +235,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                         </Grid>
                         <Box marginBottom={2}>
                             {
-                                Cookies.get('user_role') !== 'MPO' &&
+                                user_role !== 'MPO' &&
                                 <Controls.Checkbox
                                     name="is_approved"
                                     value={values.is_approved}

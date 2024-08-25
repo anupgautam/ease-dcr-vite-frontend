@@ -50,6 +50,7 @@ const TABLE_HEAD = [
     { id: 'doctor_qualification', label: 'Qualification', alignRight: false },
     { id: 'doctor_specialization', label: 'Specialization', alignRight: false },
     { id: 'doctor_category', label: 'Category', alignRight: false },
+    { id: '' }
 ];
 
 const DoctorSearch = () => {

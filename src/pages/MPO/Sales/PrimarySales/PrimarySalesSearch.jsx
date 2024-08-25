@@ -1,30 +1,19 @@
-import { Helmet } from 'react-helmet-async';
-import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-// @mui
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import {
     Card,
     Badge,
     Table,
-    Stack,
     Paper,
-    Avatar,
     Button,
-    Popover,
-    Checkbox,
     TableRow,
     MenuItem,
     TextField,
     TableBody,
-    InputAdornment,
     TableCell,
     Container,
     Typography,
     IconButton,
     TableContainer,
-    TablePagination,
-    Pagination,
     Box,
     Grid,
     Select,
@@ -35,33 +24,14 @@ import {
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
-import { Search } from '@mui/icons-material';
-import { Clear } from '@mui/icons-material';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import DefaultList from './DefaultList';
-import SearchIcon from '@mui/icons-material/Search';
-import Test from './DefaultList';
-import Cookies from 'js-cookie'
 import EditPrimarySales from './EditPrimarySales'
 import AddPrimarySales from './AddPrimarySales';
 import PrimarySalesCount from './PrimarySalesCount';
-import DatePicker from 'react-datepicker';
-// components
 import Iconify from '@/components/iconify/Iconify';
-import Label from '@/components/iconify/Iconify';
-// sections
-import { UserListHead, UserListToolbar } from '../../../../sections/@dashboard/user';
-// mock
-import USERLIST from '../../../../_mock/user';
-
-import Controls from '../../../../reusable/components/forms/controls/Controls'
-import { useForm1 } from '../../../../reusable/components/forms/useForm';
-
+import { UserListHead } from '../../../../sections/@dashboard/user';
 import {
-    useGetAllPrimarySalesQuery,
     useSearchPrimarySalesMutation,
     useDeletePrimarySalesByIdMutation
 } from '../../../../api/MPOSlices/PrimarySalesApiSlice';
@@ -69,12 +39,11 @@ import {
     useGetAllStockistsWithoutPaginationQuery,
 } from "../../../../api/MPOSlices/StockistSlice";
 import { useGetUsersByCompanyUserByIdQuery } from "@/api/MPOSlices/UserSlice";
-import { eventProviderSlice } from '@/api/newChatSlices/eventSlices';
-import { yearsToMonths } from 'date-fns/fp';
 import ExcelCSVPrimarySales from './ExcelCSVPrimarySales';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD = [
     { id: 'product_name', label: 'Product Name', alignRight: false },
@@ -97,6 +66,7 @@ const TABLE_HEAD = [
 ];
 
 const PrimarySalesSearch = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -126,9 +96,9 @@ const PrimarySalesSearch = () => {
 
     //! Get Stockist
 
-    const companyUserArea = useGetUsersByCompanyUserByIdQuery(Cookies.get('company_user_id'));
+    const companyUserArea = useGetUsersByCompanyUserByIdQuery(company_user_id);
 
-    const Stockist = useGetAllStockistsWithoutPaginationQuery({ company_name: Cookies.get('company_id'), company_area: companyUserArea?.data?.company_area?.company_area });
+    const Stockist = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: companyUserArea?.data?.company_area?.company_area });
 
     const rolesOptions = useMemo(() => {
         if (Stockist?.data) {
@@ -145,12 +115,12 @@ const PrimarySalesSearch = () => {
 
     const handleOptionChange = useCallback((event, value) => {
         setSelectedOption(value?.id || "");
-        setCompanyId(Cookies.get("company_id"))
+        setCompanyId(company_id)
     }, []);
 
     // const handleOptionChange = useCallback((event, value) => {
     //     setSelectedOption(value.id === null ? "" : value.id);
-    //     setCompanyId(Cookies.get("company_id"))
+    //     setCompanyId(company_id)
     // }, []);
 
 
@@ -203,7 +173,7 @@ const PrimarySalesSearch = () => {
 
     const handleNepaliMonthChange = useCallback((event) => {
         setSelectedMonth(event.target.value);
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
     }, []);
 
     //! Year
@@ -229,7 +199,7 @@ const PrimarySalesSearch = () => {
 
     const handleYearChange = useCallback((event) => {
         setSelectedYear(event.target.value);
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
     }, []);
 
     //! onSearch

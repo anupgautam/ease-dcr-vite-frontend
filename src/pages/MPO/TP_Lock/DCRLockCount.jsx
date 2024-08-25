@@ -1,12 +1,13 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import { Typography } from '@mui/material';
 import {
     useGetTPlockDaysQuery
 } from '../../../api/MPOSlices/TourPlanSlice'
-import Cookies from 'js-cookie'
-
+import { CookieContext } from '@/App'
 
 const DCRLockCount = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
@@ -15,7 +16,7 @@ const DCRLockCount = () => {
         setPage(thisArray[3]);
     }, [])
 
-    const { data } = useGetTPlockDaysQuery(Cookies.get('company_id'));
+    const { data } = useGetTPlockDaysQuery(company_id);
     return (
         <>
             {

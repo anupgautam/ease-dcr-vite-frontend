@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Card,
     Table,
@@ -13,8 +13,8 @@ import { Link } from 'react-router-dom';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { CookieContext } from '@/App'
 
-import Cookies from 'js-cookie'
 import {
     usePostAllMPONamesNoPageMutation,
 } from '../../../api/MPOSlices/DoctorSlice';
@@ -27,6 +27,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultMPONames = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     // !Get MPO Names
     const [MpoData] = usePostAllMPONamesNoPageMutation()
@@ -36,8 +37,8 @@ const DefaultMPONames = () => {
 
 
     const mpoNames = [];
-    if (MpoList.length !== 0) {
-        MpoList.map((key) => {
+    if (MpoList?.length !== 0) {
+        MpoList?.map((key) => {
             mpoNames.push({
                 id: key.id,
                 title: key.user_name.first_name + ' ' + key.user_name.last_name
@@ -46,15 +47,15 @@ const DefaultMPONames = () => {
     }
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
@@ -99,7 +100,7 @@ const DefaultMPONames = () => {
                                                     <TableCell align="left">
                                                         <Link to={`/dashboard/admin/mpo/doctorevents?id=${doctorevent.id}&role=${doctorevent.title}`}>
                                                             <Button>VIEW Events</Button>
-                                                            
+
                                                         </Link>
                                                     </TableCell>
 

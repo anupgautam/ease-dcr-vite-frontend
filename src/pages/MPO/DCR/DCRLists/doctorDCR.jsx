@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -33,9 +33,9 @@ import {
 import EditDCR from '../EditDCRs/EditDCR';
 import { useDispatch } from 'react-redux';
 import { addSelectedUser } from '@/reducers/dcrSelectData';
-import Cookies from 'js-cookie'
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import moment from 'moment';
+import { CookieContext } from '@/App'
 
 
 const TABLE_HEAD = [
@@ -48,6 +48,9 @@ const TABLE_HEAD = [
 ];
 
 const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
+
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const dispatch = useDispatch();
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -72,7 +75,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
     // 
 
     //! onSearch
-    const FilteredData = { company_name: Cookies.get('company_id'), user_id: Cookies.get('user_role') === "admin" ? selectedUser : Cookies.get('company_user_id'), month: Cookies.get('user_role') === "admin" ? "" : selectedMonth, date: Cookies.get('user_role') === "admin" ? "" : selectedDate, fullDate: Cookies.get('user_role') === "admin" ? dateOnly : "" }
+    const FilteredData = { company_name: company_id, user_id: user_role === "admin" ? selectedUser : company_user_id, month: user_role === "admin" ? "" : selectedMonth, date: user_role === "admin" ? "" : selectedDate, fullDate: user_role === "admin" ? dateOnly : "" }
 
     //! Search Results 
     const results = useSearchDoctorsDCRQuery(FilteredData);
@@ -191,7 +194,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
                                                                 </TableCell>
                                                                 <TableCell align="left">
                                                                     {
-                                                                        Cookies.get('user_role') === 'admin' &&
+                                                                        user_role === 'admin' &&
                                                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id, tourplan.mpo_name.id)} >
                                                                             <Badge>
                                                                                 <Iconify icon="eva:edit-fill" />
@@ -199,7 +202,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
                                                                         </IconButton>
                                                                     }
                                                                     {
-                                                                        Cookies.get('user_role') === 'admin' &&
+                                                                        user_role === 'admin' &&
                                                                         <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
                                                                             <Badge>
                                                                                 <Iconify icon="eva:trash-2-outline" />

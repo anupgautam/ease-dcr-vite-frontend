@@ -1,9 +1,10 @@
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 // @mui
 import { styled } from '@mui/material/styles';
 import { Container, Typography, Stack, Box, Grid } from '@mui/material';
 // hooks
+import Cookies from 'js-cookie'
 import useResponsive from '../../hooks/useResponsive';
 import { LoadingButton } from '@mui/lab';
 // components
@@ -13,7 +14,7 @@ import { returnValidation } from '../../validation';
 import OtpInput from 'react-otp-input';
 import '../../styles/otpstyle.css'
 import { useOtpVerificationMutation } from '../../api/MPOSlices/AccountApiSlice';
-import Cookies from 'js-cookie';
+import { CookieContext } from '@/App'
 
 //! reset mutation hook
 
@@ -46,6 +47,7 @@ const StyledContent = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function OTP() {
+    const { company_id, user_role, company_user_id, OTPgmail } = useContext(CookieContext)
 
     const [otpVerify] = useOtpVerificationMutation();
     const navigate = useNavigate();
@@ -118,7 +120,7 @@ export default function OTP() {
 
     const handleSubmission = async (e) => {
         try {
-            const res = await otpVerify({ 'email': Cookies.get('OTPgmail'), 'otp': otp })
+            const res = await otpVerify({ 'email': OTPgmail, 'otp': otp })
             if (res?.data) {
                 setSuccess(true);
                 setSuccessMessage({ show: true, message: 'OTP Verified' })

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useContext } from 'react'
 import {
     Box, Grid,
     Typography
@@ -24,11 +24,14 @@ import EditDoctorDCRRoles from '../EditDCRPackages/EditDoctorDCRRoles';
 import EditDCRRewards from '../EditDCRPackages/EditDCRRewards';
 import { useSelector } from 'react-redux';
 import { useGetShiftWiseDoctorDCRByIdQuery, useUpdateShiftWiseDoctorDCRMutation } from '@/api/DCRs Api Slice/doctorDCR/shiftWiseDoctorDCRSlice';
-import Cookies from 'js-cookie';
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
 import { useGetAllCompanyAreasQuery } from '../../../../api/CompanySlices/companyAreaSlice'
+import { CookieContext } from '@/App'
+
 
 const EditDCR = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const now = new BSDate().now();
     const [noLoop, setNoLoop] = useState(true);
     const [initialShift, setInitialShift] = useState("");
@@ -100,7 +103,7 @@ const EditDCR = ({ idharu, onClose }) => {
         true
     )
 
-    const { data: doctorsdata } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: Cookies.get('company_id'), mpo_name: values.mpo_name, mpo_area: values.visited_area })
+    const { data: doctorsdata } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_name: values.mpo_name, mpo_area: values.visited_area })
 
     const doctors = useMemo(() => {
         if (doctorsdata !== undefined) {
@@ -109,7 +112,7 @@ const EditDCR = ({ idharu, onClose }) => {
         return [];
     }, [doctorsdata])
 
-    const MpoArea = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const MpoArea = useGetAllCompanyAreasQuery(company_id);
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {

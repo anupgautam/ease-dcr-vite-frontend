@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -22,8 +22,7 @@ import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 import {
     useAreaMPOQuery,
@@ -40,6 +39,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -80,7 +80,7 @@ const DefaultList = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useAreaMPOQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('user_role') === 'admin' ? "" : Cookies.get('company_user_id') });
+    const { data } = useAreaMPOQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? "" : company_user_id });
 
     //! Delete MPO Areas
     const [deleteAreas] = useDeleteareaMPOMutation()
@@ -120,7 +120,7 @@ const DefaultList = () => {
                                                     <TableCell align="left">{mpoareas.station_type}</TableCell>
                                                     <TableCell align="left">
                                                         {
-                                                            Cookies.get('user_role') === 'admin' &&
+                                                            user_role === 'admin' &&
                                                             <>
                                                                 <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(mpoareas.id)} >
                                                                     <Badge>

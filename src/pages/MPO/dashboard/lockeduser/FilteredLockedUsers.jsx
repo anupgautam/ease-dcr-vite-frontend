@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 //! @mui
 import {
     Card,
@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Cookies from 'js-cookie'
 import DefaultList from './DefaultList';
 import 'react-datepicker/dist/react-datepicker.css';
 import "nepali-datepicker-reactjs/dist/index.css"
@@ -27,6 +26,8 @@ import {
     useSearchLockedUsersMPOMutation,
 } from '@/api/MPOSlices/TourPlanSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'select_the_date_id', label: 'Tour Plan Date', alignRight: false },
@@ -37,6 +38,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredLockedUsers = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -47,7 +49,7 @@ const FilteredLockedUsers = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     //! Company Roles list
-    const roleList = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
 
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');
@@ -81,8 +83,8 @@ const FilteredLockedUsers = () => {
     }, []);
 
     //! Get User roles wala
-    const { data, isLoading, isSuccess, isError, error } = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: Cookies.get('company_id') })
-    
+    const { data, isLoading, isSuccess, isError, error } = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: company_id })
+
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
             return data?.map((key) => ({
@@ -99,7 +101,7 @@ const FilteredLockedUsers = () => {
     const [selectedOption, setSelectedOption] = useState();
     const [mpoName, setMPOName] = useState('');
     const handleOptionChange = useCallback((event, value) => {
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
         setSelectedOption(value);
     }, []);
 
@@ -198,10 +200,10 @@ const FilteredLockedUsers = () => {
                                     <TextField {...params} label="Users" />
                                 )}
                                 renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
                             />
                         </Grid>
                     </Grid>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -16,7 +16,6 @@ import Close from "@mui/icons-material/Close";
 import Iconify from '../../../../components/iconify';
 import { CSVLink } from "react-csv";
 import DatePicker from 'react-datepicker';
-import Cookies from 'js-cookie'
 import {
     useGetTourPlansWithoutPaginateQuery
 } from '../../../../api/MPOSlices/TourPlanSlice'
@@ -24,9 +23,10 @@ import {
     useSearchSecondarySalesCSVMutation
 } from '../../../../api/MPOSlices/SecondarySalesApiSlice'
 import ExportToExcel from "@/reusable/utils/exportSheet";
-
+import { CookieContext } from '@/App'
 
 const ExcelCSVSecondarySales = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Month Format 
     // const [startMonth, setStartMonth] = useState();
@@ -37,7 +37,7 @@ const ExcelCSVSecondarySales = () => {
     //     if (date) {
     //         const MonthData = date.toLocaleString('default', { month: "short" }).toLowerCase();
     //         setMonthData(MonthData)
-    //         setCompanyId(Cookies.get('company_id'))
+    //         setCompanyId(company_id)
     //     }
     // }
 
@@ -61,7 +61,7 @@ const ExcelCSVSecondarySales = () => {
 
     const handleNepaliMonthChange = useCallback((event) => {
         setSelectedMonth(event.target.value);
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
     }, []);
 
     //! Year
@@ -89,7 +89,7 @@ const ExcelCSVSecondarySales = () => {
 
     const handleYearChange = useCallback((event) => {
         setSelectedYear(event.target.value);
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
     }, []);
 
     //! Search results

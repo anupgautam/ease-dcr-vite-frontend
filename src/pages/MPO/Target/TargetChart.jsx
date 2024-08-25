@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useContext } from 'react'
 import {
   MenuItem,
   Box,
@@ -12,9 +12,11 @@ import ApexChart from '@/reusable/components/charts/apexChart';
 import { useGetTargetsByUserMutation } from '@/api/ExpensesSlices/targetSlices';
 import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRolesSlice';
 import { useGetAllCompanyUserRoleByRoleQuery } from '@/api/CompanySlices/companyUserRoleSlice';
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 export default function TargetChart(props) {
+  const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
+
   const { children, value, index, ...other } = props;
   const [selectedRole, setSelectedRole] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
@@ -26,7 +28,7 @@ export default function TargetChart(props) {
 
   const companyUser = useGetAllCompanyUserRoleByRoleQuery(selectedRole);
 
-  const { data: rolesData } = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'));
+  const { data: rolesData } = useGetCompanyRolesByCompanyQuery(company_id);
 
   const roles = useMemo(() => {
     if (rolesData !== undefined) {
@@ -60,17 +62,17 @@ export default function TargetChart(props) {
               id: 'bar'
             },
             xaxis: {
-              categories: res.data.year
+              categories: res?.data?.year
             }
           },
           series: [
             {
               name: "Target Amount",
-              data: res.data.target_amount
+              data: res?.data?.target_amount
             },
             {
               name: "Sales",
-              data: res.data.sales
+              data: res?.data?.sales
             }
           ],
           type: "bar",

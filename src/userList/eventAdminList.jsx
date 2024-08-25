@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useGetAllUsersQuery, useGetAllUsersWithoutPaginationQuery } from "../api/MPOSlices/UserSlice";
-import Cookies from "js-cookie";
 import { useGetGroupWsConnectionMutation } from "../api/newChatSlices/groupSlice";
 import { Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { CookieContext } from '@/App'
+
 
 const EventUserList = ({ setGroupName, setUserId }) => {
-    const userList = useGetAllUsersWithoutPaginationQuery(Cookies.get("company_id"));
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
+    const userList = useGetAllUsersWithoutPaginationQuery(company_id);
     const [getUserWSConnection] = useGetGroupWsConnectionMutation();
     const handleUser = (id) => {
         setUserId(id);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -18,9 +18,11 @@ import { returnValidation } from '../../../../validation';
 import {
     useCreateDoctorsSpecializationMutation
 } from '@/api/MPOSlices/DoctorSlice';
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
+
 
 const AddDoctorSpecialization = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Create Chemist
     const [createDoctorCategory] = useCreateDoctorsSpecializationMutation()
@@ -68,7 +70,7 @@ const AddDoctorSpecialization = () => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("category_name", values.category_name);
-        formData.append("company_name", Cookies.get("company_id"));
+        formData.append("company_name", company_id);
         try {
             await createDoctorCategory(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Added Doctor Categories' });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 //! @mui
 import {
     Card,
@@ -18,7 +18,6 @@ import {
     MenuItem,
     InputLabel
 } from '@mui/material';
-import Cookies from 'js-cookie'
 import 'react-datepicker/dist/react-datepicker.css';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -26,6 +25,7 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import { useGetUsersByCompanyRoleIdQuery } from '@/api/MPOSlices/UserSlice';
 import { useGetMissedDataByMpoQuery } from '@/api/MPOSlices/MissedCallsApiSlice';
+import { CookieContext } from '@/App'
 
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
@@ -40,13 +40,14 @@ const TABLE_HEAD = [
 ];
 
 const FilteredMissedCalls = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const now = new BSDate().now();
 
     const monthData = getNepaliMonthName(now._date.month);
     const yearData = now._date.year;
 
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: Cookies.get('company_id'), page: "" })
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: "" })
 
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');
@@ -106,7 +107,7 @@ const FilteredMissedCalls = () => {
         setRoleSelect(value?.id || "")
     }, [])
 
-    const { data: missedCalledData } = useGetMissedDataByMpoQuery({ company_name: Cookies.get('company_id'), month: selectedMonth, mpo_name: roleSelect, year: selectedYear })
+    const { data: missedCalledData } = useGetMissedDataByMpoQuery({ company_name: company_id, month: selectedMonth, mpo_name: roleSelect, year: selectedYear })
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 

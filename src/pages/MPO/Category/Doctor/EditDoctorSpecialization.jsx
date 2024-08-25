@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useContext } from 'react'
 import {
     Box, Grid,
     Typography, Button
@@ -19,10 +19,11 @@ import {
     useGetDoctorsSpecialiationByIdQuery,
     useUpdateDoctorsSpecializationMutation,
 } from '@/api/MPOSlices/DoctorSlice'
-
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 const EditDoctorCategories = ({ idharu, onClose }) => {
+
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Getting Category by ID
     const Category = useGetDoctorsSpecialiationByIdQuery(idharu);
@@ -84,7 +85,7 @@ const EditDoctorCategories = ({ idharu, onClose }) => {
         const formData = new FormData();
         formData.append("category_name", values.category_name);
         formData.append('id', idharu)
-        formData.append('company_id', Cookies.get('company_id'))
+        formData.append('company_id', company_id)
         try {
             const response = await updateCategorys(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited Doctor Specialization' });

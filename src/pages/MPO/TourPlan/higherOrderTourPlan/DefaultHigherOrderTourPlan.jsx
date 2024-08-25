@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -24,9 +24,9 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { CookieContext } from '@/App'
 
 import EditHOTourPlan from './EditHigherOrderTourPlan';
-import Cookies from 'js-cookie'
 import {
     useGetHOTourPlansQuery,
     useDeleteHOTourPlansByIdMutation,
@@ -42,6 +42,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultHOTourPlan = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer
     const [isEdited, setEdited] = useState(false);
@@ -83,7 +84,7 @@ const DefaultHOTourPlan = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetHOTourPlansQuery({ page: page, company_name: Cookies.get('company_id') })
+    const { data } = useGetHOTourPlansQuery({ page: page, company_name: company_id })
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteHOTourPlansByIdMutation()

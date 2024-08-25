@@ -23,10 +23,13 @@ import {
     useUpdateApplicationsMutation,
 } from '@/api/ApplicationSlices/ApplicationSlices'
 import { useSelector } from 'react-redux';
+import { CookieContext } from '@/App'
 
-import Cookies from 'js-cookie'
+
 
 const EditApplication = ({ mpoId, idharu, onClose }) => {
+
+    const { company_id, user_role, company_user_id, company_user_role_id, User_id } = useContext(CookieContext)
 
     const userList = useSelector(state => state?.tourPlan?.dataList);
 
@@ -39,7 +42,7 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
     const Application = useGetApplicationsByIdQuery(idharu);
 
     //! Get Higher level user roles
-    // const company_user_role = Cookies.get("company_user_role_id");
+    // const company_user_role = company_user_role_id;
     const company_user_role = 3;
     const [HigherUser, setHigherUser] = useState();
     const [HigherLevelUser] = useGetUpperLevelCompanyUserRoleByIdMutation();
@@ -169,10 +172,10 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
         formData.append("is_submitted", values.is_submitted);
         formData.append("is_approved", values.is_approved);
         formData.append("company_name", values.company_name);
-        formData.append("approved_by", Cookies.get("User_id"));
+        formData.append("approved_by", User_id);
         formData.append("submit_to", values.submit_to);
         formData.append('id', idharu)
-        formData.append('company_name', Cookies.get('company_id'))
+        formData.append('company_name', company_id)
         formData.append('mpo_name', mpoId);
         try {
             const response = await updateApplications(formData).unwrap();

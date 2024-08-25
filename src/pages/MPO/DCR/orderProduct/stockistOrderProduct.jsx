@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -17,16 +17,18 @@ import { returnValidation } from '../../../../validation';
 import {
     useCreateDoctorsEventsMutation
 } from '../../../../api/MPOSlices/DoctorSlice'
-import Cookies from 'js-cookie'
 import { useGetAllProductsOptionsWithDivisionQuery } from '@/api/MPOSlices/productApiSlice';
 import { useGetUsersByIdQuery } from '@/api/DemoUserSlice';
 import { useAddChemistOrderedProductMutation } from '@/api/DCRs Api Slice/chemistDCR/chemistOrderedProductInformation';
 import { useAddStockistOrderedProductMutation } from '@/api/DCRs Api Slice/stockistDCR/stockistOrderedProductSlice';
+import { CookieContext } from '@/App'
+
 
 const StockistOrderedProduct = ({ id }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
-    const { data: mpoArea } = useGetUsersByIdQuery(Cookies.get('company_user_id'));
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: Cookies.get('company_id'), division_name: mpoArea?.division_name?.id })
+    const { data: mpoArea } = useGetUsersByIdQuery(company_user_id);
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: mpoArea?.division_name?.id })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {

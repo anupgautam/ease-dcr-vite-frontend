@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -23,20 +23,23 @@ import { returnValidation } from '../../../../validation';
 import {
     usePostAllMPONamesNoPageMutation
 } from '../../../../api/MPOSlices/DoctorSlice'
-import Cookies from 'js-cookie'
 import NepaliDatePicker, {
     NepaliDateConverter,
 } from "react-nepali-date-picker-lite";
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import { useGetAllStockistsQuery } from '@/api/MPOSlices/stockistApiSlice';
 import { useCreateAssignStockistsMutation } from '@/api/MPOSlices/StockistSlice';
+import { CookieContext } from '@/App'
+
 
 const AddAsignStockist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const today = NepaliDateConverter.getNepaliDate();
     const [selectedDates, setSelectedDates] = useState(today);
 
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
 
     const companyAreaData = [];
     if (CompanyArea !== undefined) {
@@ -92,7 +95,7 @@ const AddAsignStockist = () => {
         validate();
     }, [values.mpo_name, RewardOptions])
 
-    const { data } = useGetAllStockistsQuery({ id: Cookies.get('company_id'), page: 1, company_area: values.company_area });
+    const { data } = useGetAllStockistsQuery({ id: company_id, page: 1, company_area: values.company_area });
 
     const stockistData = useMemo(() => {
         if (data !== undefined) {
@@ -121,15 +124,15 @@ const AddAsignStockist = () => {
     }, [MpoList])
 
     useEffect(() => {
-        if (Cookies.get('company_id')) {
-            MpoData({ company_name: Cookies.get('company_id') })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [Cookies.get('company_id')])
+    }, [company_id])
 
 
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -141,7 +144,7 @@ const AddAsignStockist = () => {
         let data = RewardOptions.map((tour) => ({
             stockist_name: tour,
             mpo_name: values.mpo_name,
-            company_name: Cookies.get('company_id')
+            company_name: company_id
         }));
         try {
             const response = await createMpoWise(data)

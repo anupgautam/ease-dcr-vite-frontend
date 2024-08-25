@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -26,22 +26,23 @@ import { UserListHead } from '../../../../sections/@dashboard/user';
 import USERLIST from '@/_mock/user';
 import 'react-loading-skeleton/dist/skeleton.css'
 
-import Cookies from 'js-cookie'
-
 import {
     useGetDoctorsSpecializationQuery,
     useDeleteDoctorsSpecializationByIdMutation
 } from '../../../../api/MPOSlices/DoctorSlice'
 import EditDoctorSpecialization from './EditDoctorSpecialization';
 import ExportToExcel from '@/reusable/utils/exportSheet';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'doctor_specialization', label: 'Doctor Specialization', alignRight: false },
     { id: '' },
-    { id: '' },
+    // { id: '' },
 ];
 
 const DefaultSpecialization = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -72,7 +73,7 @@ const DefaultSpecialization = () => {
     }, [])
 
     //! Get Categories
-    const { data } = useGetDoctorsSpecializationQuery(Cookies.get('company_id'));
+    const { data } = useGetDoctorsSpecializationQuery(company_id);
     // !Delete Doctor Category
     const [deleteCategories] = useDeleteDoctorsSpecializationByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]

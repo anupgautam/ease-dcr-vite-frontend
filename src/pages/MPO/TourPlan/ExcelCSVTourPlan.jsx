@@ -1,4 +1,4 @@
-import React, { useState, useMemo, } from 'react'
+import React, { useState, useMemo, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -15,7 +15,6 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Iconify from '../../../components/iconify';
-import Cookies from 'js-cookie'
 
 import {
     useGetAreaMPOByIdQuery,
@@ -32,6 +31,7 @@ import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import ExportToExcel from '@/reusable/utils/exportSheet';
 import { useGetHOTourPlansByUserIdQuery } from '@/api/HighOrderSlices/hoTourPlanSlice';
+import { CookieContext } from '@/App'
 
 function useAreaData(areaId) {
     const { data } = useGetAreaMPOByIdQuery(areaId).unwrap();
@@ -44,9 +44,10 @@ function useVisitedWithData(visitedWithId) {
 }
 
 const ExcelCSVTourPlan = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Get Company Roles wala
-    const Role = useGetCompanyRolesByCompanyQuery(Cookies.get('company_id'))
+    const Role = useGetCompanyRolesByCompanyQuery(company_id)
 
     const rolesOptions = useMemo(() => {
         if (Role?.data) {
@@ -59,12 +60,12 @@ const ExcelCSVTourPlan = () => {
 
     const [selectedRole, setSelectedRole] = useState('');
     const handleRoleChange = (event, value) => {
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
         setSelectedRole(value?.id);
     };
 
     //! Get users wala
-    const User = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: Cookies.get('company_id') })
+    const User = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: company_id })
 
     const userOptions = useMemo(() => {
         if (User?.data) {
@@ -80,7 +81,7 @@ const ExcelCSVTourPlan = () => {
     const [companyId, setCompanyId] = useState();
     const [selectedUser, setSelectedUser] = useState()
     const handleUserChange = (event, value) => {
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
         setSelectedUser(value);
     };
 
@@ -132,7 +133,7 @@ const ExcelCSVTourPlan = () => {
 
     const handleYearChange = (event) => {
         setSelectedYear(event.target.value);
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
     };
 
 
@@ -156,7 +157,7 @@ const ExcelCSVTourPlan = () => {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: Cookies.get('company_id'), date: selectedYear, month: selectedMonth, mpo_name: selectedUser?.id, page: 1, role_data: Cookies.get('user_role') === 'admin' ? "" : '' })
+    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedUser?.id, page: 1, role_data: user_role === 'admin' ? "" : '' })
 
     const templateData1 = TourPlanSearch?.results?.map((values, index) => ({
         sno: index + 1,
@@ -166,7 +167,7 @@ const ExcelCSVTourPlan = () => {
         hulting_station: values?.tour_plan?.tour_plan.hulting_station,
     }))
 
-    const hoTourPlan = useGetHOTourPlansByUserIdQuery({ user_id: selectedUser?.id, month: selectedMonth, date: selectedYear, page: 1, company_name: Cookies.get('company_id') });
+    const hoTourPlan = useGetHOTourPlansByUserIdQuery({ user_id: selectedUser?.id, month: selectedMonth, date: selectedYear, page: 1, company_name: company_id });
     // const hoTourPlanData = hoTourPlan.data;
 
     // const [templateData, setTemplateData] = useState([]);

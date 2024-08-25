@@ -1,6 +1,6 @@
 
 import { sentenceCase } from 'change-case';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import {
     Card,
     Badge,
@@ -26,8 +26,8 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { CookieContext } from '@/App'
 
-import Cookies from 'js-cookie'
 import {
     useGetApplicationsQuery,
     useDeleteApplicationsByIdMutation,
@@ -47,6 +47,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultApplication = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -80,7 +81,7 @@ const DefaultApplication = () => {
 
 
     // !Get Tour Plans
-    const { data } = useGetApplicationsQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('user_role') === "admin" ? "" : Cookies.get('company_user_id') });
+    const { data } = useGetApplicationsQuery({ company_name: company_id, mpo_name: user_role === "admin" ? "" : company_user_id });
 
 
     // !Delete TourPlan
@@ -166,7 +167,7 @@ const DefaultApplication = () => {
                                                     <TableCell align="left">
                                                         {/*//! Edit  */}
                                                         {
-                                                            Cookies.get('user_role') === 'admin' &&
+                                                            user_role === 'admin' &&
                                                             <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application.id, application.mpo_name.id)}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:edit-fill" />
@@ -175,7 +176,7 @@ const DefaultApplication = () => {
                                                         }
                                                         {/*//! Delete  */}
                                                         {
-                                                            Cookies.get('user_role') === 'admin' &&
+                                                            user_role === 'admin' &&
                                                             <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(application.id); handleClickOpen() }}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:trash-2-outline" />

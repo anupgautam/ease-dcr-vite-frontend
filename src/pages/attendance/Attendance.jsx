@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import {
     Box,
     Card,
@@ -20,13 +20,14 @@ import {
     IconButton,
     Stack
 } from "@mui/material";
-import Cookies from "js-cookie";
 import { BSDate } from "nepali-datepicker-react";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
 import { useGetUsersByCompanyRoleIdQuery } from "../../api/MPOSlices/UserSlice";
 import { usePostingAllUserAttendanceMutation } from "../../api/CompanySlices/companyUserSlice";
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import ExportToExcel from '@/reusable/utils/exportSheet';
+import { CookieContext } from '@/App'
+
 
 const bsMonthDays = {
     2080: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30],
@@ -74,6 +75,7 @@ function getAllDaysInMonth(year, month) {
 }
 
 const ListofAttendance = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Export To excel wala
     const headers = [
@@ -165,7 +167,7 @@ const ListofAttendance = () => {
 
     const allDaysInMonth = getAllDaysInMonth(selectedYear, selectedMonth);
     const userList = useGetUsersByCompanyRoleIdQuery({
-        id: Cookies.get("company_id"),
+        id: company_id,
         page: ""
     });
 

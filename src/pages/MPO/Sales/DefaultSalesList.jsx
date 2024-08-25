@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 // @mui
 import {
     Card,
@@ -50,7 +50,6 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import SearchIcon from '@mui/icons-material/Search';
-import Cookies from 'js-cookie'
 // import {
 //     useGetApplicationsQuery,
 //     useGetApplicationsByIdQuery,
@@ -64,6 +63,8 @@ import {
 import {
     AppNewsUpdate,
 } from '../../../sections/@dashboard/app';
+import { CookieContext } from '@/App'
+
 
 const TABLE_HEAD = [
     { id: 'user', label: 'User', alignRight: false },
@@ -72,11 +73,12 @@ const TABLE_HEAD = [
 ];
 
 const DefaultSalesList = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     const [getSalesList] = useSearchSaleMutation();
-    const companyId = parseInt(Cookies.get('company_id'));
+    const companyId = parseInt(company_id);
     const [salesResults, setSalesResults] = useState([])
 
     useEffect(() => {

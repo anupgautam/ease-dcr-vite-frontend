@@ -10,7 +10,6 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Iconify from '../../../components/iconify';
-import Cookies from 'js-cookie'
 
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
@@ -23,9 +22,11 @@ import {
     useGetAllExpensesTypeQuery
 } from '@/api/ExpensesSlices/expensesTypeSlices';
 import { useGetAllCompanyRolesQuery } from '@/api/CompanySlices/companyRolesSlice';
+import { CookieContext } from '@/App'
 
 const AddCompanyAreaWiseExpense = () => {
 
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Create Travel Allowances
     const [createCompanyAreaWiseExpenses] = useCreateCompanyAreaWiseExpensesMutation()
@@ -43,7 +44,7 @@ const AddCompanyAreaWiseExpense = () => {
     }, [ExpensesType])
 
     //! Get all company area 
-    const CompanyRole = useGetAllCompanyRolesQuery(Cookies.get('company_id'));
+    const CompanyRole = useGetAllCompanyRolesQuery(company_id);
 
     const companyroles = useMemo(() => {
         if (CompanyRole?.data) {
@@ -104,7 +105,7 @@ const AddCompanyAreaWiseExpense = () => {
         // formData.append("expenses_type", values.expenses_type);
         formData.append("role_type", values.role_type);
         formData.append("company_role", values.company_role);
-        formData.append('company_name', Cookies.get('company_id'))
+        formData.append('company_name', company_id)
         formData.append("allowace", values.allowance);
         try {
             const response = await createCompanyAreaWiseExpenses(formData).unwrap();

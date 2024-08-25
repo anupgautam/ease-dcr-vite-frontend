@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useCallback, useMemo, useContext } from 'react'
 import {
     Box,
     Typography, Button, Grid
@@ -12,7 +12,6 @@ import Close from "@mui/icons-material/Close";
 import { useForm, Form } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
-import Cookies from 'js-cookie'
 //! Api Slices 
 import {
     useGetTPLockDaysByIdQuery,
@@ -21,8 +20,10 @@ import {
 import {
     useGetUsersRoleQuery,
 } from '@/api/MPOSlices/UserSlice';
+import { CookieContext } from '@/App'
 
 const EditTPLock = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Getting TPDays by ID
     const TPDays = useGetTPLockDaysByIdQuery(idharu);
@@ -35,7 +36,7 @@ const EditTPLock = ({ idharu, onClose }) => {
     }, [TPDays])
 
     //! Get user roles
-    const { data, isSuccess, } = useGetUsersRoleQuery(Cookies.get('company_id'));
+    const { data, isSuccess, } = useGetUsersRoleQuery(company_id);
 
     const rolesharu = useMemo(() => {
         if (isSuccess) {
@@ -106,7 +107,7 @@ const EditTPLock = ({ idharu, onClose }) => {
         const formData = new FormData();
         formData.append("company_roles", companyRoles);
         formData.append("tp_lock_days", values.tp_lock_days);
-        formData.append("company_name", Cookies.get('company_id'));
+        formData.append("company_name", company_id);
         formData.append("id", idharu);
         try {
             const response = await updateTPDays(formData).unwrap();

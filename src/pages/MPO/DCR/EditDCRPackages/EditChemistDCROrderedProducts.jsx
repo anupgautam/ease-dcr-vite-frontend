@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useContext } from "react";
 import ReusableFormsSelect from "@/reusable/components/forms/controls/ReusableFormSelect";
 import {
     useGetChemistAllDCRByIdQuery,
@@ -14,15 +14,17 @@ import {
 } from '@mui/material';
 import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
 import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
-import Cookies from "js-cookie";
+import { CookieContext } from '@/App'
 
 const EditChemistDCROrderedProducts = ({ id, context, editApi }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
     const [updateClick, setUpdateClick] = useState(false);
     const [productID, setProductID] = useState(null);
     const mpo_id = useSelector(state => state.dcrData.selected_user);
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id);
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: Cookies.get('company_id'), division_name: mpoArea?.division_name })
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: mpoArea?.division_name })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {

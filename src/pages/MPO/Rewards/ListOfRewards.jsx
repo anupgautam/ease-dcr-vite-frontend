@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Container,
     Grid, Box,
@@ -12,14 +12,16 @@ import RewardCount from './RewardCount';
 import {
     useGetAllRewardsQuery
 } from '../../../api/MPOSlices/rewardsApiSlice'
-import Cookies from 'js-cookie'
 import ExportToExcel from '@/reusable/utils/exportSheet';
+import { CookieContext } from '@/App'
 
 const ListOfRewards = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { data } = useGetAllRewardsQuery(Cookies.get('company_id'))
+    const { data } = useGetAllRewardsQuery(company_id)
 
     const headers = [
         { label: 'S.No.', key: 'sno' },

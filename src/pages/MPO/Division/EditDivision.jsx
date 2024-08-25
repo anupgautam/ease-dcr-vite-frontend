@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useContext } from 'react'
 import {
     Box,
     Grid,
@@ -18,10 +18,10 @@ import {
     useGetCompanyDivisionsByIdQuery,
     useUpdateCompanyDivisionsMutation
 } from '@/api/DivisionSilces/companyDivisionSlice';
-
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
 
 const EditDivision = ({ idharu, onClose }) => {
+    const { company_id, refresh, access } = useContext(CookieContext)
 
     //! Getting company division by ID
     const CompanyDivisions = useGetCompanyDivisionsByIdQuery(idharu);
@@ -87,10 +87,10 @@ const EditDivision = ({ idharu, onClose }) => {
         const formData = new FormData();
         formData.append("division_name", values.division_name);
         formData.append("company_name", values.company_name);
-        formData.append("company_id", Cookies.get('company_id'));
+        formData.append("company_id", company_id);
         formData.append('id', CompanyDivisions?.data?.id);
-        formData.append('refresh', Cookies.get('refresh'));
-        formData.append('access', Cookies.get('access'));
+        formData.append('refresh', refresh);
+        formData.append('access', access);
         try {
             const response = await updateCompanyDivisions(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited CompanyDivisions' });

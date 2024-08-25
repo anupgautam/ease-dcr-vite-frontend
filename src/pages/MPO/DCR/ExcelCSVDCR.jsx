@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -16,7 +16,6 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Iconify from '../../../components/iconify';
-import Cookies from 'js-cookie'
 
 import {
     useGetAllcompanyUserRolesWithoutPaginationQuery,
@@ -24,11 +23,14 @@ import {
 
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
+import { CookieContext } from '@/App'
+
 
 const ExcelCSVDCR = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Get users wala
-    const User = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: Cookies.get('company_id') })
+    const User = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: company_id })
 
     const userOptions = useMemo(() => {
         if (User?.data) {
@@ -99,7 +101,7 @@ const ExcelCSVDCR = () => {
     // 
     const handleYearChange = useCallback((event) => {
         setSelectedYear(event.target.value);
-        setCompanyId(Cookies.get('company_id'));
+        setCompanyId(company_id);
     }, [])
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -152,10 +154,10 @@ const ExcelCSVDCR = () => {
                                 <TextField {...params} label="Users" />
                             )}
                             renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
+                                <li {...props} key={option.id}>
+                                    {option.title}
+                                </li>
+                            )}
                         />
                     </Box>
                     <Box marginBottom={2}>

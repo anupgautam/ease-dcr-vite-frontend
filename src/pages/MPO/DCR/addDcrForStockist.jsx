@@ -1,6 +1,5 @@
 import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Typography, Autocomplete, TextField } from "@mui/material";
-import Cookies from "js-cookie";
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
 import { useGetShiftsQuery } from "@/api/DCRs Api Slice/TourPlanApiSlice";
@@ -18,13 +17,15 @@ import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSli
 import Controls from "@/reusable/forms/controls/Controls";
 import { useForm } from "@/reusable/forms/useForm";
 import StockistOrderedProduct from "./orderProduct/stockistOrderProduct";
+import { CookieContext } from '@/App'
 
 const AddDCRForStockist = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('id');
 
-    const { data: tourplanData } = usePostToGetTheTourPlanQuery(Cookies.get('company_user_id'));
+    const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_id);
 
 
     const [PromotedProduct, setPromotedProduct] = useState([]);
@@ -85,9 +86,9 @@ const AddDCRForStockist = () => {
         return [];
     }, [ShiftData])
 
-    const companyUserArea = useGetUsersByCompanyUserByIdQuery(Cookies.get('company_user_id'));
+    const companyUserArea = useGetUsersByCompanyUserByIdQuery(company_user_id);
 
-    const doctors = useGetAllStockistsWithoutPaginationQuery({ company_name: Cookies.get('company_id'), company_area: companyUserArea?.data?.company_area?.id });
+    const doctors = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: companyUserArea?.data?.company_area?.id });
 
     const doctorOptions = useMemo(() => {
         if (doctors !== undefined) {
@@ -131,7 +132,7 @@ const AddDCRForStockist = () => {
 
     useEffect(() => {
         if (dcrForDoctor?.data || NewTourPlanData || companyUserArea?.data || CompanyRoles || RewardOptions) {
-        // if (dcrForDoctor?.data || NewTourPlanData) {
+            // if (dcrForDoctor?.data || NewTourPlanData) {
             setInitialFvalues({
                 edit: true,
                 tour_id: NewTourPlanData?.id,
@@ -166,7 +167,7 @@ const AddDCRForStockist = () => {
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
     useEffect(() => {
-        executiveUsers({ id: Cookies.get('company_user_id') })
+        executiveUsers({ id: company_user_id })
             .then(res => {
                 if (res.data) {
                     const executive = [];
@@ -182,9 +183,9 @@ const AddDCRForStockist = () => {
             .catch(err => {
 
             });
-    }, [Cookies.get('company_user_id')]);
+    }, [company_user_id]);
 
-    const rewards = useGetAllRewardsQuery(Cookies.get('company_id'));
+    const rewards = useGetAllRewardsQuery(company_id);
 
     const rewardsOptions = useMemo(() => {
         if (rewards !== undefined) {
@@ -196,7 +197,7 @@ const AddDCRForStockist = () => {
     }, [rewards])
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
-        Cookies.get('company_id')
+        company_id
     );
 
     const productOptions = useMemo(() => {
@@ -271,7 +272,7 @@ const AddDCRForStockist = () => {
                 .then((res) => {
                     if (res.data) {
                         createMpoDcr({
-                            mpo_name: Cookies.get('company_user_id'),
+                            mpo_name: company_user_id,
                             dcr_id: id,
                             shift: values.shift,
                         })

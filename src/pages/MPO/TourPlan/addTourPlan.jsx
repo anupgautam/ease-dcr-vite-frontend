@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -19,7 +19,6 @@ import Close from "@mui/icons-material/Close";
 import Iconify from '../../../components/iconify';
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
-import Cookies from 'js-cookie'
 import { useGetShiftsQuery } from '@/api/DCRs Api Slice/TourPlanApiSlice';
 import {
     NepaliDateConverter,
@@ -30,8 +29,11 @@ import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from '@/api/MPOSlices/tourPlan&Dcr';
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '@/api/MPOSlices/UserSlice';
 import moment from 'moment';
+import { CookieContext } from '@/App'
+
 
 const AddTourPlan = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -44,7 +46,7 @@ const AddTourPlan = () => {
     }, [])
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('company_user_id') });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_id });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
@@ -73,7 +75,7 @@ const AddTourPlan = () => {
         return []
     }, [ShiftData])
 
-    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: Cookies.get('company_id'), page: Cookies.get('company_user_id') })
+    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_id })
 
     const executiveLevelOptions = useMemo(() => {
         if (mpoAccordingToExecutiveLevel !== undefined) {
@@ -155,7 +157,7 @@ const AddTourPlan = () => {
         shift: "",
         visit_data: MpoAreaData,
         hulting_station: "",
-        user_id: Cookies.get('company_user_id'),
+        user_id: company_user_id,
     }
 
     const {
@@ -191,10 +193,10 @@ const AddTourPlan = () => {
 
 
     const handleSave = () => {
-        if (Cookies.get('user_role') === "MPO") {
+        if (user_role === "MPO") {
             let new_data = TourPlanTodos.map((tour) => ({
-                company_name: Cookies.get('company_id'),
-                mpo_name: Cookies.get('company_user_id'),
+                company_name: company_id,
+                mpo_name: company_user_id,
                 mpo_area: newData,
                 tour_plan: {
                     shift: { shift: 1 },
@@ -364,7 +366,7 @@ const AddTourPlan = () => {
                             onChange={(value) => setSelectedDates(value)} />
                     </Box>
                     {
-                        Cookies.get('user_role') === "MPO" ?
+                        user_role === "MPO" ?
                             <>
                                 <Box>
                                     <Box marginBottom={2}>
@@ -449,12 +451,12 @@ const AddTourPlan = () => {
                         <Button
                             variant="contained"
                             className="summit-button"
-                            onClick={Cookies.get('user_role') === 'MPO' ? addTodo : handleSave}
+                            onClick={user_role === 'MPO' ? addTodo : handleSave}
                         >
                             Add TP{" "}
                         </Button>
                         {
-                            Cookies.get('user_role') === 'MPO' ?
+                            user_role === 'MPO' ?
                                 <Button
                                     variant="contained"
                                     className="summit-button"
@@ -498,7 +500,7 @@ const AddTourPlan = () => {
 const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
     const [visitData, setVisitData] = useState([]);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: Cookies.get('company_id'), mpo_name: Cookies.get('role') === 'other' ? '' : id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'other' ? '' : id });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

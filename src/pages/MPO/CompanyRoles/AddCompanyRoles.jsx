@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
 import {
     Box,
     Typography,
@@ -19,15 +19,17 @@ import {
     useCreateCompanyRolesMutation,
     useGetAllRolesQuery
 } from '@/api/MPOSlices/companyRolesSlice';
-import Cookies from 'js-cookie'
+import { CookieContext } from '@/App'
+
 
 const AddCompanyRoles = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     //! Create Chemist
     const [createCompanyRoles] = useCreateCompanyRolesMutation()
 
     //! Get other roles
-    const Roles = useGetAllRolesQuery(Cookies.get("company_id"));
+    const Roles = useGetAllRolesQuery(company_id);
 
     const roles = useMemo(() => {
         if (Roles.data) {
@@ -85,7 +87,7 @@ const AddCompanyRoles = () => {
         formData.append("priority_value", values.priority_value);
         formData.append('role_name_value', values.roles_name)
         formData.append('is_highest_priority', values.is_highest_priority)
-        formData.append("company_name", Cookies.get("company_id"));
+        formData.append("company_name", company_id);
         try {
             const response = await createCompanyRoles(formData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Added Roles' });

@@ -6,8 +6,6 @@ import {
 
 import FilteredApplication from './FilteredApplication';
 import AddApplication from './addApplication';
-import Cookies from 'js-cookie';
-
 
 const ListofApplication = () => {
     return (

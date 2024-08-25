@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo} from 'react'
+import React, { useEffect, useState, useMemo, useContext } from 'react'
 import {
     Box, Grid,
     Typography
@@ -28,12 +28,13 @@ import EditDCRStockistRewards from '../EditDCRPackages/EditDCRStockistRewards';
 import EditStockistDCRRoles from '../EditDCRPackages/EditStockistDCRRoles';
 import EditStockistDCRProducts from '../EditDCRPackages/EditStockistDCRProducts';
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
-import Cookies from 'js-cookie';
 import { useGetAllStockistsWithoutPaginationQuery } from '@/api/MPOSlices/StockistSlice';
 import { useGetUsersByIdQuery } from '@/api/MPOSlices/UserSlice';
+import { CookieContext } from '@/App'
 
 
 const EditStockistDCR = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
 
     const [noLoop, setNoLoop] = useState(true);
@@ -49,8 +50,7 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     const shiftWiseDCR = useGetShiftWiseStockistDCRByDCRIdQuery(idharu);
 
 
-
-    const MpoArea = useGetAllCompanyAreasQuery(Cookies.get('company_id'));
+    const MpoArea = useGetAllCompanyAreasQuery(company_id);
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
@@ -68,7 +68,7 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     const DCRAll = useGetStockistAllDCRByIdQuery(idharu);
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id);
 
-    const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: Cookies.get('company_id'), company_area: mpoArea?.company_area?.id })
+    const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id })
 
     const stockists = useMemo(() => {
         if (StockistData !== undefined) {

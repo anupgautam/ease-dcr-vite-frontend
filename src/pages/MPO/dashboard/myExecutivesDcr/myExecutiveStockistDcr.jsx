@@ -31,8 +31,8 @@ import {
 import { useDispatch } from 'react-redux';
 import { addSelectedUser } from '@/reducers/dcrSelectData';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
-import Cookies from 'js-cookie';
 import moment from 'moment';
+import { CookieContext } from '@/App'
 
 
 const TABLE_HEAD = [
@@ -45,6 +45,7 @@ const TABLE_HEAD = [
 ];
 
 const MyExecutiveStockistDcr = ({ selectedUser, selectedMonth, selectedDate }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const dispatch = useDispatch()
 
@@ -65,7 +66,7 @@ const MyExecutiveStockistDcr = ({ selectedUser, selectedMonth, selectedDate }) =
         setIsDrawerOpen(false);
     }, []);
 
-    const FilteredData = { company_name: Cookies.get('company_id'), user_id: selectedUser, month: selectedMonth, date: selectedDate }
+    const FilteredData = { company_name: company_id, user_id: selectedUser, month: selectedMonth, date: selectedDate }
 
     //! Search Results 
     const results = useSearchStockistsDCRQuery(FilteredData);

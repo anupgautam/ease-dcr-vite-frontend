@@ -1,15 +1,15 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { Card, Grid, Container, Typography, TableCell, Table, TableContainer, TableRow, TableBody } from '@mui/material';
 import { AppTrafficBySite, AppWidgetSummary } from '../../../sections/@dashboard/app';
 import { useGetAllStatsMutation } from '../../../api/MPOSlices/StatApiSlice';
-import Cookies from 'js-cookie';
 import Scrollbar from '@/components/iconify/Iconify';
 import { DashboardListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { CookieContext } from '@/App'
 
 const TABLE_HEAD_CHEMIST = [
   { id: 'chemist_name', label: 'Chemist Name', alignRight: false },
@@ -33,7 +33,9 @@ const TABLE_HEAD_STOCKIST = [
 ];
 
 export default function DashboardAppPage() {
-  const companyName = Cookies.get('company_id');
+  const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
+  const companyName = company_id;
   const tenArrays = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   //! Get all stat

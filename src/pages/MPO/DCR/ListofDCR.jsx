@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 // @mui
 import {
     Container, Grid, Box
@@ -6,10 +6,12 @@ import {
 
 import FilteredDCR from './FilteredDCR';
 import ExcelCSVDCR from './ExcelCSVDCR';
-import Cookies from 'js-cookie';
 import AddDcrForHo from './addDcr';
+import { CookieContext } from '@/App'
 
 const ListOfDCR = () => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     return (
         <Container>
             <Box style={{ marginBottom: '30px' }}>
@@ -18,7 +20,7 @@ const ListOfDCR = () => {
                         {/* <TourPlanCount /> */}
                     </Grid>
                     {
-                        Cookies.get('user_role') === 'admin' ?
+                        user_role === 'admin' ?
                             <Grid item xs={2}>
 
                                 <Box style={{ float: "right" }}>

@@ -2,11 +2,14 @@ import { Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Controls from "./controls/Controls";
 import { Form, useForm1 } from "./useForm";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { OriginalForm, SelectForm } from "./originalForm";
+import { CookieContext } from '@/App'
 
-const AddFormSkeleton = ({initialData, AddAPI, isNavigation, navigation, navigationId}) => {
+
+const AddFormSkeleton = ({ initialData, AddAPI, isNavigation, navigation, navigationId }) => {
+    const { company_id, user_role, company_user_id, access } = useContext(CookieContext)
+
     const [keyData, setKeyData] = useState({});
     const navigate = useNavigate();
     useEffect(() => {
@@ -44,7 +47,7 @@ const AddFormSkeleton = ({initialData, AddAPI, isNavigation, navigation, navigat
         initialData.map((key) => {
             Data[key.name] = values[key.name]
         })
-        Data['access'] = Cookies.get('access');
+        Data['access'] = access;
         HotelRoom(Data);
 
     }
@@ -55,33 +58,33 @@ const AddFormSkeleton = ({initialData, AddAPI, isNavigation, navigation, navigat
                 <Grid item xs={6}>
                     {initialData.map((key) => (
                         <>
-                        {key.ControlType === "input" ?
-                            <Controls.Input
-                                name={key.name}
-                                label={key.label}
-                                value={values[key.name]}
-                                onChange={handleInputChange}
-                            /> : <>{key.ControlType === "checkbox" ?
-                                <Controls.Checkbox
+                            {key.ControlType === "input" ?
+                                <Controls.Input
                                     name={key.name}
                                     label={key.label}
                                     value={values[key.name]}
                                     onChange={handleInputChange}
-                                /> : 
-                                <></>} 
-                                <>
-                                {
-                                   key.ControlType === "select" ?
-                                   <SelectForm 
-                                     allKey={key} 
-                                     values={values} 
-                                     handleInputChange={handleInputChange}
-                                  />:
-                                <></>
-                                }
+                                /> : <>{key.ControlType === "checkbox" ?
+                                    <Controls.Checkbox
+                                        name={key.name}
+                                        label={key.label}
+                                        value={values[key.name]}
+                                        onChange={handleInputChange}
+                                    /> :
+                                    <></>}
+                                    <>
+                                        {
+                                            key.ControlType === "select" ?
+                                                <SelectForm
+                                                    allKey={key}
+                                                    values={values}
+                                                    handleInputChange={handleInputChange}
+                                                /> :
+                                                <></>
+                                        }
+                                    </>
                                 </>
-                              </>
-                           }
+                            }
                         </>
 
                     ))}

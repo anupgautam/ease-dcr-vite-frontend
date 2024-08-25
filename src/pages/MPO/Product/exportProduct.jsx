@@ -1,6 +1,5 @@
 import { Close } from "@mui/icons-material";
 import { Autocomplete, Box, Button, Drawer, IconButton, Stack, TextField, Typography } from "@mui/material";
-import Cookies from "js-cookie";
 import React, { useState,useContext } from "react";
 import { useGetFilteredDivisionsQuery } from "@/api/DivisionSilces/companyDivisionSlice";
 import { useGetProductsByDivisionWithoutPaginationQuery } from "@/api/MPOSlices/ProductSlice";
