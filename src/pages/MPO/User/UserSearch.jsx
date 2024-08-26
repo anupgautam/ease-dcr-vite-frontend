@@ -59,6 +59,7 @@ const TABLE_HEAD = [
 const UserSearch = () => {
   const { company_id, access, refresh } = useContext(CookieContext)
 
+  const companykoID = company_id
   //! For drawer
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -110,7 +111,8 @@ const UserSearch = () => {
   // !on search
   const onSearch = (e) => {
     const searchQuery = e.target.value;
-    const company_id = company_id;
+    const company_id = companykoID;
+    // const companyId = company_id
     setSearchResults({ search: searchQuery, company_id });
     searchUser(searchResults);
     //
@@ -177,12 +179,12 @@ const UserSearch = () => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  const handleClickOpen = useCallback(() => {
-    setOpenDialogue(true);
+  const handleClickOpen = useCallback((userId) => {
+    setOpenDialogues((prev) => ({ ...prev, [userId]: true }));
   }, []);
 
-  const handleClose = useCallback(() => {
-    setOpenDialogue(false);
+  const handleClose = useCallback((userId) => {
+    setOpenDialogues((prev) => ({ ...prev, [userId]: false }));
   }, []);
 
 
@@ -315,12 +317,12 @@ const UserSearch = () => {
                                   )}
                                 </TableCell>
                                 <TableCell align="left">
-                                  {/* {user.is_tp_locked === false ? (
+                                  {usersearch.is_tp_locked === false ? (
                                     <>
                                       <IconButton
                                         color={'primary'}
                                         sx={{ width: 40, height: 40, mt: 0.75 }}
-                                        onClick={() => { setSelectedId(user.id); handleClickOpen(user.id); }}
+                                        onClick={() => { setSelectedId(usersearch.id); handleClickOpen(usersearch.id); }}
                                       >
                                         <Badge>
                                           <Iconify icon="dashicons:unlock" />
@@ -332,7 +334,7 @@ const UserSearch = () => {
                                       <IconButton
                                         color={'error'}
                                         sx={{ width: 40, height: 40, mt: 0.75 }}
-                                        onClick={() => { setSelectedId(user.id); handleClickOpen(user.id); }}
+                                        onClick={() => { setSelectedId(usersearch.id); handleClickOpen(usersearch.id); }}
                                       >
                                         <Badge>
                                           <Iconify icon="material-symbols:lock" />
@@ -340,22 +342,22 @@ const UserSearch = () => {
                                       </IconButton>
                                       <Dialog
                                         fullScreen={fullScreen}
-                                        open={openDialogues[user.id] || false}
-                                        onClose={() => handleClose(user.id)}
+                                        open={openDialogues[usersearch.id] || false}
+                                        onClose={() => handleClose(usersearch.id)}
                                         aria-labelledby="responsive-dialog-title"
                                       >
                                         <DialogTitle id="responsive-dialog-title">
-                                          {"Do you want to unlock this user?"}
+                                          {"Do you want to unlock this usersearch?"}
                                         </DialogTitle>
                                         <DialogActions>
                                           <Button
                                             autoFocus
-                                            onClick={() => UserLocks({ userId: user.id, isTpLocked: user.is_tp_locked })}
+                                            onClick={() => usersearchLocks({ usersearchId: usersearch.id, isTpLocked: usersearch.is_tp_locked })}
                                           >
                                             Yes
                                           </Button>
                                           <Button
-                                            onClick={() => handleClose(user.id)}
+                                            onClick={() => handleClose(usersearch.id)}
                                             autoFocus
                                           >
                                             No
@@ -363,9 +365,17 @@ const UserSearch = () => {
                                         </DialogActions>
                                       </Dialog>
                                     </>
-                                  )} */}
+                                  )}
                                 </TableCell>
                                 <TableCell align="left">
+                                  {/* //!User Login */}
+                                  {usersearch?.user_name?.is_admin === false ? <>
+                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }}>
+                                      <Badge>
+                                        <Iconify icon="ic:sharp-login" />
+                                      </Badge>
+                                    </IconButton>
+                                  </> : <></>}
                                   <IconButton
                                     color={"primary"}
                                     sx={{ width: 40, height: 40, mt: 0.75 }}

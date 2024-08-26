@@ -118,7 +118,6 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
     }, [unlockUser, handleClose]);
 
     const totalPages = useMemo(() => Math.ceil((data?.count || 0) / 30), [data]);
-
     return (
         <>
             {
@@ -216,6 +215,15 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
 
                             </TableCell>
                             <TableCell align="right">
+                                {/* //!User Login */}
+                                {user?.user_name?.is_admin === false ? <>
+                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }}>
+                                        <Badge>
+                                            <Iconify icon="ic:sharp-login" />
+                                        </Badge>
+                                    </IconButton>
+                                </> : <></>}
+
                                 {/* //!Edit */}
                                 <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(user.id)} >
                                     <Badge>

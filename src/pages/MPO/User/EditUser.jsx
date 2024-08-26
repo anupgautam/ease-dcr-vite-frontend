@@ -207,23 +207,24 @@ const EditUser = ({ idharu, onClose }) => {
         formData.append("is_active", true);
         try {
             const response = await updateUsers(formData).unwrap();
-            if (response.data) {
+            if (response) {
+                console.log("Response aayo")
                 setSuccessMessage({ show: true, message: 'Successfully Edited User' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+                }, 2000);
             } else {
                 setErrorMessage({ show: true, message: 'Data failed to add.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                }, 2000);
             }
         }
         catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            }, 2000);
         } finally {
             setLoading(false)
         }
@@ -395,30 +396,26 @@ const EditUser = ({ idharu, onClose }) => {
                         </Button>
                     </Stack>
                 </Box>
-            </Drawer>
-            {loading && (
-                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
-                    <CircularProgress />
-                </Grid>
-            )}
-            {
-                ErrorMessage.show === true ? (
+                {loading && (
+                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                        <CircularProgress />
+                    </Grid>
+                )}
+                {ErrorMessage.show && (
                     <Grid>
                         <Box className="messageContainer errorMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
+                )}
+                {SuccessMessage.show && (
                     <Grid>
                         <Box className="messageContainer successMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
+                )}
+            </Drawer>
         </>
     );
 };

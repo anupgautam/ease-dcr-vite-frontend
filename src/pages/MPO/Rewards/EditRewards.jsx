@@ -91,6 +91,7 @@ const EditRewards = ({ idharu, onClose }) => {
             const response = await updateRewards(formData).unwrap();
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Rewards' });
+                setLoading(false);
                 setTimeout(() => {
                     onClose();
                     setSuccessMessage({ show: false, message: '' });
@@ -183,24 +184,20 @@ const EditRewards = ({ idharu, onClose }) => {
                         <CircularProgress />
                     </Grid>
                 )}
-                {
-                    ErrorMessage.show === true ? (
-                        <Grid>
-                            <Box className="messageContainer errorMessage">
-                                <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                            </Box>
-                        </Grid>
-                    ) : null
-                }
-                {
-                    SuccessMessage.show === true ? (
-                        <Grid>
-                            <Box className="messageContainer successMessage">
-                                <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                            </Box>
-                        </Grid>
-                    ) : null
-                }
+                {ErrorMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer errorMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )}
+                {SuccessMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer successMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )}
             </Drawer>
         </>
     );
