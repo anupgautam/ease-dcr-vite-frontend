@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { Box, Button, Drawer, Grid, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Button, Drawer, Grid, IconButton, Stack, Typography, CircularProgress } from "@mui/material";
 import React, { useState, useEffect, useMemo, useCallback, useContext } from "react";
 import Iconify from "@/components/iconify/Iconify";
 import {
@@ -66,6 +66,7 @@ const AddUnplannedTp = () => {
         resetForm,
     } = useForm(initialFValues, true)
 
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
     const [MpoAreaData, setMpoAreaData] = useState([]);
@@ -74,6 +75,7 @@ const AddUnplannedTp = () => {
     const [AddHigherOrder] = useAddHigherTourPlanMutation();
 
     const addTourPlan = () => {
+        setLoading(true)
         if (user_role === 'MPO') {
             const data = [{
                 company_name: company_id,
@@ -118,7 +120,10 @@ const AddUnplannedTp = () => {
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
                     }, 3000);
-                });
+                })
+                .finally(() => {
+                    setLoading(false)
+                })
         } else {
             const data = {
                 company_id: company_id,
@@ -151,7 +156,10 @@ const AddUnplannedTp = () => {
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
                     }, 3000);
-                });
+                })
+                .finally(() => {
+                    setLoading(false)
+                })
         }
     }
 
@@ -223,7 +231,7 @@ const AddUnplannedTp = () => {
                                             <Controls.Input
                                                 name={`purpose_of_visit`}
                                                 label="Remark"
-                                                value={values.purpose_of_visit}
+                                                value={values.name}
                                                 onChange={handleInputChange}
                                             />
                                         </Box>
@@ -231,7 +239,7 @@ const AddUnplannedTp = () => {
                                             <Controls.Input
                                                 name={`hulting_station`}
                                                 label="Hulting Station"
-                                                value={values.hulting_station}
+                                                value={values.name}
                                                 onChange={handleInputChange}
                                             />
                                         </Box>
@@ -255,7 +263,7 @@ const AddUnplannedTp = () => {
                                             <Controls.Input
                                                 name={`hulting_station`}
                                                 label="Hulting Station"
-                                                value={values.hulting_station || ""}
+                                                value={values.name}
                                                 onChange={handleInputChange}
                                             />
                                         </Box>
@@ -283,24 +291,25 @@ const AddUnplannedTp = () => {
                     </Box>
                 </Box>
             </Drawer>
-            {
-                ErrorMessage.show === true ? (
-                    <Grid>
-                        <Box className="messageContainer errorMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
-                    <Grid>
-                        <Box className="messageContainer successMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                ) : null
-            }
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                    <CircularProgress />
+                </Grid>
+            )}
+            {ErrorMessage.show && (
+                <Grid>
+                    <Box className="messageContainer errorMessage">
+                        <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                    </Box>
+                </Grid>
+            )}
+            {SuccessMessage.show && (
+                <Grid>
+                    <Box className="messageContainer successMessage">
+                        <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                    </Box>
+                </Grid>
+            )}
         </>
     )
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
 import {
     Box,
-    Typography, Button, Grid
+    Typography, Button, Grid, CircularProgress
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -180,11 +180,14 @@ const EditUser = ({ idharu, onClose }) => {
     //! Edit user
     const [updateUsers] = useUpdateUsersMutation();
     const history = useNavigate()
+
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
+        setLoading(true)
         const formData = new FormData();
         formData.append("first_name", values.first_name);
         formData.append("middle_name", values.middle_name);
@@ -205,7 +208,6 @@ const EditUser = ({ idharu, onClose }) => {
         try {
             const response = await updateUsers(formData).unwrap();
             if (response.data) {
-                // 
                 setSuccessMessage({ show: true, message: 'Successfully Edited User' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
@@ -222,7 +224,10 @@ const EditUser = ({ idharu, onClose }) => {
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
             }, 3000);
+        } finally {
+            setLoading(false)
         }
+
     }, [updateUsers, values, dateData, idharu]);
 
     return (
@@ -391,6 +396,11 @@ const EditUser = ({ idharu, onClose }) => {
                     </Stack>
                 </Box>
             </Drawer>
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                    <CircularProgress />
+                </Grid>
+            )}
             {
                 ErrorMessage.show === true ? (
                     <Grid>

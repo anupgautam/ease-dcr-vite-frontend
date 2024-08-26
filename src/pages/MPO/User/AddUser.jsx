@@ -3,7 +3,8 @@ import {
     Box,
     Typography,
     Button,
-    Grid
+    Grid,
+    CircularProgress
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -176,12 +177,14 @@ const AddUser = () => {
 
     }, [values])
 
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     //!Modal wala ko click event
     const onAddUsers = useCallback(async (e) => {
         e.preventDefault();
+        setLoading(true)
         const formData = new FormData();
         formData.append("first_name", values.first_name);
         formData.append("middle_name", values.middle_name);
@@ -216,6 +219,9 @@ const AddUser = () => {
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
             }, 3000);
+        }
+        finally {
+            setLoading(false)
         }
         setIsDrawerOpen(false);
     }, [createUsers, values]);
@@ -410,6 +416,11 @@ const AddUser = () => {
                     </Stack>
                 </Box>
             </Drawer>
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                    <CircularProgress />
+                </Grid>
+            )}
             {
                 ErrorMessage.show === true ? (
                     <Grid>

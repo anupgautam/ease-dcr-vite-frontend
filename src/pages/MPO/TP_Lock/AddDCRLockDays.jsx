@@ -4,6 +4,7 @@ import {
     Typography,
     Button,
     Grid,
+    CircularProgress
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -72,11 +73,13 @@ const AddTPLock = () => {
         validate();
     }, [values.company_roles, values.tp_lock_days]);
 
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     const onAddTPDays = useCallback(async (e) => {
         e.preventDefault();
+        setLoading(true)
         if (validate()) {
             const formData = new FormData();
             formData.append("company_roles", values.company_roles);
@@ -95,6 +98,8 @@ const AddTPLock = () => {
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
                 }, 3000);
+            } finally {
+                setLoading(false)
             }
         }
     }, [createTPDays, values]);
@@ -173,6 +178,11 @@ const AddTPLock = () => {
                     </Stack>
                 </Box>
             </Drawer>
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                    <CircularProgress />
+                </Grid>
+            )}
             {ErrorMessage.show && (
                 <Grid>
                     <Box className="messageContainer errorMessage">
