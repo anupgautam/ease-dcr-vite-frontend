@@ -33,7 +33,7 @@ import { CookieContext } from '@/App'
 
 
 const AddTourPlan = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, role } = useContext(CookieContext)
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -500,7 +500,7 @@ const AddTourPlan = () => {
 const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
     const [visitData, setVisitData] = useState([]);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'other' ? '' : id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

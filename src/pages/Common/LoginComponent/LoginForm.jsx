@@ -108,10 +108,13 @@ const LoginFormInputs = () => {
                                 }, [2000])
                             }
                         } if (res.error) {
-                            setErrorMessage({ show: true, message: res.error.error });
-                            setTimeout(() => {
-                                setErrorMessage({ show: false, message: "" });
-                            }, [2000])
+                            console.log(res.error)
+                            if (res.error?.originalStatus === 500) {
+                                setErrorMessage({ show: true, message: 'Backend Error' });
+                            } else {
+                                setErrorMessage({ show: true, message: res.error.data });
+                            }
+                            setTimeout(() => setErrorMessage({ show: false, message: "" }), 2000);
                         } else {
                             setErrorMessage({ show: true, message: 'Login Failed' });
                             setTimeout(() => {
@@ -134,6 +137,7 @@ const LoginFormInputs = () => {
             }, [2000])
         }
     }, [email, password])
+
 
     useEffect(() => {
         const handleKeyDown = e => {
@@ -194,7 +198,7 @@ const LoginFormInputs = () => {
                                         </InputAdornment>
                                     ),
                                 }}
-                            style={{ cursor: 'pointer' }}
+                                style={{ cursor: 'pointer' }}
                             // className="cursor-pointer"
                             />
                         </Box>
@@ -246,8 +250,8 @@ const LoginFormInputs = () => {
                         )
                             : null
                     }
-                </Box>
-            </form>
+                </Box >
+            </form >
         </>
     )
 }
