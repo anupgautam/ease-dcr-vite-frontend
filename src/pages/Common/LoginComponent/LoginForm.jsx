@@ -88,17 +88,21 @@ const LoginFormInputs = () => {
                             setSuccessMessage({ show: true, message: 'Successfully Logged In' })
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                 Cookies.set('user_role', 'admin')
+                                console.log("");
                                 navigate('/dashboard/admin');
                                 dispatch(setCredentials({ ...res, email }))
                             } else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
                                 Cookies.set('user_role', 'MPO')
+                                console.log("");
                                 navigate('/dashboard/admin/listofdoctor');
                             } else if (res.data.role === "ASM") {
                                 Cookies.set('user_role', 'other-roles')
+                                console.log("");
                                 navigate('/dashboard/admin/tourplan');
                             } else if (res.data.role === "RSM" || res.data.role === "SM" || res.data.role === "MM" || res.data.role === "CH") {
                                 Cookies.set('user_role', 'other-roles')
                                 Cookies.set('role', 'other')
+                                console.log("");
                                 navigate('/dashboard/admin/tourplan');
                             }
                             else {
