@@ -4,6 +4,7 @@ import {
     Typography,
     Button,
     Grid,
+    CircularProgress
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -75,13 +76,14 @@ const AddCompanyRoles = () => {
 
     }, [values.role_name, values.priority_value])
 
-
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     //!Modal wala ko click event
     const onAddRoles = useCallback(async (e) => {
         e.preventDefault();
+        setLoading(true)
         const formData = new FormData();
         formData.append("role_name", values.role_name);
         formData.append("priority_value", values.priority_value);
@@ -99,6 +101,8 @@ const AddCompanyRoles = () => {
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
             }, 3000);
+        } finally {
+            setLoading(false)
         }
 
         setIsDrawerOpen(false)
@@ -199,24 +203,25 @@ const AddCompanyRoles = () => {
                     </Stack>
                 </Box>
             </Drawer>
-            {
-                ErrorMessage.show === true ? (
-                    <Grid>
-                        <Box className="messageContainer errorMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
-                    <Grid>
-                        <Box className="messageContainer successMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                ) : null
-            }
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                    <CircularProgress />
+                </Grid>
+            )}
+            {ErrorMessage.show && (
+                <Grid>
+                    <Box className="messageContainer errorMessage">
+                        <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                    </Box>
+                </Grid>
+            )}
+            {SuccessMessage.show && (
+                <Grid>
+                    <Box className="messageContainer successMessage">
+                        <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                    </Box>
+                </Grid>
+            )}
         </>
     )
 }

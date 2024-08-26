@@ -1,4 +1,4 @@
-import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Table, TableBody, TableCell, TableContainer, TableRow, Typography, Autocomplete, TextField } from "@mui/material";
+import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Table, TableBody, TableCell, TableContainer, TableRow, Typography, Autocomplete, TextField, CircularProgress } from "@mui/material";
 import React, { useEffect, useState, useCallback, useMemo, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
@@ -276,12 +276,13 @@ const AddDcrForDoctor = () => {
     }, [companyProduct])
 
     const [LastData, setLastData] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
     const navigate = useNavigate();
 
     const handlePostDcr = () => {
-
+        setLoading(true)
         // if (AllMutipleData.length !== []) {
         if (AllMutipleData.length !== 0) {
             for (const allData of AllMutipleData) {
@@ -380,7 +381,10 @@ const AddDcrForDoctor = () => {
                         setTimeout(() => {
                             setErrorMessage({ show: false, message: '' });
                         }, 2000);
-                    });
+                    })
+                    .finally(() => {
+                        setLoading(false)
+                    })
             }
         }
     }
@@ -552,24 +556,25 @@ const AddDcrForDoctor = () => {
                     </Button>
                 </Box>
             </Box>
-            {
-                ErrorMessage.show === true ? (
-                    <Grid>
-                        <Box className="messageContainer errorMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
-                    <Grid>
-                        <Box className="messageContainer successMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                ) : null
-            }
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                    <CircularProgress />
+                </Grid>
+            )}
+            {ErrorMessage.show && (
+                <Grid>
+                    <Box className="messageContainer errorMessage">
+                        <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                    </Box>
+                </Grid>
+            )}
+            {SuccessMessage.show && (
+                <Grid>
+                    <Box className="messageContainer successMessage">
+                        <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                    </Box>
+                </Grid>
+            )}
         </Box>
     )
 }

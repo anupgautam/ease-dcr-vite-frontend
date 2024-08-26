@@ -4,6 +4,7 @@ import {
     Typography,
     Button,
     Grid,
+    CircularProgress,
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -59,12 +60,14 @@ const AddRewards = () => {
         validate();
     }, [values.reward, values.price]);
 
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     const onAddRewards = useCallback(async (e) => {
         e.preventDefault();
         if (validate()) {
+            setLoading(true)
             const formData = new FormData();
             formData.append("reward", values.reward);
             formData.append("company_name", company_id);
@@ -81,6 +84,8 @@ const AddRewards = () => {
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
                 }, 3000);
+            } finally {
+                setLoading(false)
             }
         }
     }, [createRewards, values]);
@@ -159,6 +164,11 @@ const AddRewards = () => {
                     </Stack>
                 </Box>
             </Drawer>
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                    <CircularProgress />
+                </Grid>
+            )}
             {ErrorMessage.show && (
                 <Grid>
                     <Box className="messageContainer errorMessage">
