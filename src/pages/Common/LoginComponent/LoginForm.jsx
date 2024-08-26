@@ -250,8 +250,8 @@ const LoginFormInputs = () => {
                         )
                             : null
                     }
-                </Box >
-            </form >
+                </Box>
+            </form>
         </>
     )
 }
