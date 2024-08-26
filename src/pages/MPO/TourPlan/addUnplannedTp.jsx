@@ -16,7 +16,7 @@ import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from "@/api/MPOSlices
 import { CookieContext } from '@/App'
 
 const AddUnplannedTp = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, role } = useContext(CookieContext)
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

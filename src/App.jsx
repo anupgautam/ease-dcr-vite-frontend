@@ -27,6 +27,8 @@ export default function App() {
   const [role, setRole] = useState(Cookies.get('role'))
   const [other, setOther] = useState(Cookies.get('other'))
   const [otherRoles, setOtherRoles] = useState(Cookies.get('other-roles'))
+  const [OTPgmail, setOTPgmail] = useState(Cookies.get('OTPgmail'))
+  const [otp, setotp] = useState(Cookies.get('otp'))
   const cookieContextValue = {
     User_id,
     access,
@@ -40,7 +42,9 @@ export default function App() {
     user_role,
     role,
     other,
-    otherRoles
+    otherRoles,
+    OTPgmail,
+    otp
   };
 
   return (
