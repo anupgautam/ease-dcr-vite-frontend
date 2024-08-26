@@ -184,11 +184,14 @@ const EditMpoArea = ({ idharu, onClose }) => {
     //! Edit user
     // const [updateUsers] = useUpdatecompanyUserRolesMutation();
     const [updateUsers] = useUpdateMpoAreasMutation();
+
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
+        setLoading(true)
         const data = { area_name: values.area_name, mpo_name: values.mpo_name, station_type: values.station_type, company_area: values.company_area, id: idharu, company_name: company_id }
         try {
             await updateUsers({ id: idharu, data: data })
@@ -196,14 +199,13 @@ const EditMpoArea = ({ idharu, onClose }) => {
                     if (response.data) {
                         setSuccessMessage({ show: true, message: 'Successfully Updated MPO Area' });
                         setTimeout(() => {
-                            window.location.reload();
                             setSuccessMessage({ show: false, message: '' });
-                        }, 3000);
+                        }, 2000);
                     } else {
                         setErrorMessage({ show: true, message: response.error.data[0] });
                         setTimeout(() => {
                             setErrorMessage({ show: false, message: '' });
-                        }, 3000);
+                        }, 2000);
                     }
                 })
                 .catch((err) => {
@@ -212,6 +214,9 @@ const EditMpoArea = ({ idharu, onClose }) => {
                         setErrorMessage({ show: false, message: '' });
                     }, 3000);
                 })
+                .finally(() => {
+                    setLoading(false)
+                })
             setIsDrawerOpen(false)
         }
         catch (error) {
@@ -219,6 +224,8 @@ const EditMpoArea = ({ idharu, onClose }) => {
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
             }, 3000);
+        } finally {
+            setLoading(false)
         }
         setIsDrawerOpen(false)
     }, [updateUsers, values])
@@ -318,25 +325,26 @@ const EditMpoArea = ({ idharu, onClose }) => {
                         </Button>
                     </Stack>
                 </Box>
-            </Drawer>
-            {
-                ErrorMessage.show === true ? (
+                {loading && (
+                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                        <CircularProgress />
+                    </Grid>
+                )}
+                {ErrorMessage.show && (
                     <Grid>
                         <Box className="messageContainer errorMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
+                )}
+                {SuccessMessage.show && (
                     <Grid>
                         <Box className="messageContainer successMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
+                )}
+            </Drawer>
         </>
     );
 };
