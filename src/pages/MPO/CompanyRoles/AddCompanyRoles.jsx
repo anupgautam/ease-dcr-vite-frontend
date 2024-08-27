@@ -59,7 +59,7 @@ const AddCompanyRoles = () => {
 
 
     const initialFValues = {
-
+        is_highest_priority: false
     }
 
     const {

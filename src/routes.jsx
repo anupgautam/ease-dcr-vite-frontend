@@ -65,6 +65,7 @@ import ListOfMpoController from './pages/MPO/DoctorEvents/ListOfMpoController';
 import ListOfTourPlanLock from './pages/MPO/TP_Lock/ListOfTourPlanLock';
 import NewLogin from './pages/Common/LoginComponent/NewLogin';
 import Attendance from './pages/attendance/Attendance';
+import DCRDetail from './pages/MPO/DCR/DCRDetail';
 
 export default function Router() {
   const routes = useRoutes([
@@ -161,6 +162,10 @@ export default function Router() {
         {
           path: 'admin/all/user/tourplan',
           element: <Authentication component={AllUserTp} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/all/user/dcrdetail',
+          element: <Authentication component={DCRDetail} allowRoles={['admin']} />,
         },
         {
           path: 'admin/all/user/dcr',
