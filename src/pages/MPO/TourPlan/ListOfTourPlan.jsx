@@ -25,11 +25,11 @@ const ListOfTourPlan = () => {
         <Container>
             <Box style={{ marginBottom: '30px' }}>
                 <Grid container spacing={2}>
-                    <Grid item xs={user_role === 'admin' ? 12 : 9} md={9}>
+                    <Grid item xs={user_role === 'admin' ? 12 : 8} md={8}>
                         <TourPlanCount />
                     </Grid>
 
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={12} md={4}>
                         <Stack
                             direction={isSmallScreen ? 'column' : 'row'}
                             spacing={2}

@@ -31,6 +31,9 @@ import { useAddHigherTourPlanMutation, useAddTourplanMutation } from '@/api/MPOS
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '@/api/MPOSlices/UserSlice';
 import moment from 'moment';
 import { CookieContext } from '@/App'
+import {
+    useDeleteTourPlansByIdMutation,
+} from '@/api/MPOSlices/TourPlanSlice';
 
 
 const AddTourPlan = () => {
@@ -108,15 +111,6 @@ const AddTourPlan = () => {
     const [MpoTpArea, setMpoTpArea] = useState([]);
     const [TPAreaName, setTPAreaName] = useState([])
 
-
-    // const handleMpoTpArea = useCallback((event) => {
-    //     const {
-    //         target: { value },
-    //     } = event;
-    //     setMpoTpArea(
-    //         typeof value === 'string' ? value.split(',') : value,
-    //     );
-    // }, []);
     const handleMpoTpArea = (event, value) => {
         const mpotparea = value.map(option => option.id)
         const mpotpareavalue = value.map(option => option.title)
@@ -127,6 +121,7 @@ const AddTourPlan = () => {
     const [MpoAreaData, setMpoAreaData] = useState([]);
 
     const addTodo = () => {
+        setLoading(true);
         const newTodo = {
             selected_date: selectedDates,
             purpose_of_visit: formValuesArray.purpose_of_visit || "",
@@ -134,12 +129,65 @@ const AddTourPlan = () => {
         };
 
         setTourPlanTodos(prevTodos => [...prevTodos, newTodo]);
+
         setFormValuesArray({
             select_the_area: "",
             purpose_of_visit: "",
             hulting_station: "",
+            mpo_area: [],
         });
-    }
+
+        setMpoTpArea([]);
+
+        let new_data = [...TourPlanTodos, newTodo].map((tour) => ({
+            company_name: company_id,
+            mpo_name: company_user_id,
+            mpo_area: newData,
+            tour_plan: {
+                shift: { shift: 1 },
+                tour_plan: {
+                    select_the_month: getNepaliMonthName(moment(tour.selected_date).month() + 1),
+                    select_the_date_id: tour.selected_date,
+                    purpose_of_visit: tour.purpose_of_visit,
+                    hulting_station: tour.hulting_station,
+                    is_dcr_added: false,
+                    is_unplanned: false,
+                    is_admin_opened: false,
+                    is_doctor_dcr_added: false,
+                    is_chemist_dcr_added: false,
+                    is_stockist_dcr_added: false,
+                },
+            },
+            approved_by: null,
+            is_approved: false,
+        }));
+
+        AddTourPlan(new_data)
+            .then(res => {
+                if (res.data) {
+                    setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
+                    setTimeout(() => {
+                        setSuccessMessage({ show: false, message: '' });
+                    }, 3000);
+                } else {
+                    setErrorMessage({ show: true, message: res.error.data[0] });
+                    setTimeout(() => {
+                        setErrorMessage({ show: false, message: '' });
+                    }, 3000);
+                }
+            })
+            .catch(err => {
+                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                setTimeout(() => {
+                    setErrorMessage({ show: false, message: '' });
+                }, 3000);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    const [deleteTourPlan] = useDeleteTourPlansByIdMutation()
 
     const deleteTourPlans = (dataToDelete) => {
         setTourPlanTodos((prevTourPlans) =>
@@ -184,12 +232,6 @@ const AddTourPlan = () => {
         return [];
     }, [MpoTpArea])
 
-    // const MPOAreaArray = useMemo(() => {
-    //     if (TPAreaName.length !== 0) {
-    //         return TPAreaName.map((key) => ({ tp_mpo_area: key }))
-    //     }
-    //     return [];
-    // }, [TPAreaName])
 
     const handleSave = () => {
         setLoading(true)
@@ -251,7 +293,6 @@ const AddTourPlan = () => {
             AddHigherOrder(sending_data)
                 .then(res => {
                     if (res.data) {
-                        setIsDrawerOpen(false)
                         setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
                         setTimeout(() => {
                             setSuccessMessage({ show: false, message: '' });
@@ -325,13 +366,13 @@ const AddTourPlan = () => {
                                                 <Box style={{ borderRadius: '5px', border: '1.2px solid #dbe0e4', padding: "5px", paddingTop: "10px", paddingLeft: "10px", paddingRight: '10px' }}>
                                                     <Grid container spacing={2}>
                                                         <Grid item xs={4.3}>
-                                                            <IconButton
+                                                            {/* <IconButton
                                                                 className="close-button"
                                                                 onClick={() => deleteTourPlans(key)}
                                                                 style={{ color: "red" }}
                                                             >
                                                                 <Close color='red' />
-                                                            </IconButton>
+                                                            </IconButton> */}
                                                             <Box style={{ padding: '5px', textAlign: 'center', border: '1.2px solid #2d8960', borderRadius: "5px" }}>
                                                                 <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{moment(key.selected_date).format('DD')}</Typography>
                                                                 {/* <Typography style={{ fontSize: '13px', color: "black", marginTop: "-5px" }}>{getNepaliMonthName(moment(key.selected_date).month() + 1).substring(0, 3)}</Typography> */}
@@ -344,7 +385,7 @@ const AddTourPlan = () => {
                                                                 </span>
                                                                 {/* <Typography style={{ marginTop: '10px', color: 'black', width: "60px", overflow: 'hidden', fontSize: "12px", color: 'black', fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.select_the_area.title}</Typography> */}
                                                                 {TPAreaName.map((key, index) => (
-                                                                    <Typography key={index} variant="body2">
+                                                                    <Typography key={index} variant="body2" style={{ fontSize: "12px", fontWeight: "600" }}>
                                                                         {key}
                                                                     </Typography>
                                                                 ))}
@@ -378,8 +419,9 @@ const AddTourPlan = () => {
                                     <Box marginBottom={2}>
                                         <Autocomplete
                                             multiple
-                                            options={mpoAreaData}
+                                            options={mpoAreaData} // Options for the autocomplete
                                             getOptionLabel={(option) => option.title}
+                                            value={MpoTpArea.map(id => mpoAreaData.find(option => option.id === id) || {})} // Bind selected values
                                             onChange={handleMpoTpArea}
                                             renderInput={(params) => (
                                                 <TextField {...params} label="Select the Areas" />
@@ -461,7 +503,7 @@ const AddTourPlan = () => {
                         >
                             Add TP{" "}
                         </Button>
-                        {
+                        {/* {
                             user_role === 'MPO' ?
                                 <Button
                                     variant="contained"
@@ -470,7 +512,7 @@ const AddTourPlan = () => {
                                 >
                                     Submit All TP{" "}
                                 </Button> : null
-                        }
+                        } */}
                         <Button
                             variant="outlined"
                             className="cancel-button"
