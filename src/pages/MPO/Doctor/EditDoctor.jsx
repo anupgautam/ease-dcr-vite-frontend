@@ -267,7 +267,6 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                                     <Controls.Select
                                         name="doctor_gender"
                                         label="Doctor Gender"
-                                        // className={"drawer-first-name-input"}
                                         value={values.doctor_gender || ''}
                                         options={doctorGender}
                                         onChange={handleInputChange}

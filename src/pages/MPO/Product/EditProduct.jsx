@@ -235,7 +235,7 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
                                 </Box>
                             </Grid>
                             <Grid item xs={6}>
-                                <Box style={{ marginTop: '-5px' }}>
+                                <Box style={{ marginTop: '1px' }}>
                                     <Controls.Select
                                         name="product_type"
                                         label="Product Type*"

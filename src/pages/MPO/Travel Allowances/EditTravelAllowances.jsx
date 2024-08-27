@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react'
 import {
     Box, Grid,
-    Typography, Button
+    Typography, Button, CircularProgress
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -98,7 +98,7 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
     values.travel_allowance
     ])
 
-
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
@@ -108,10 +108,11 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
+        setLoading(true)
         try {
             await updateTravelAllowances({ data: values, id: idharu })
                 .then((res) => {
-                    if (res.data) {
+                    if (res) {
                         setSuccessMessage({ show: true, message: 'Successfully Edited TravelAllowance' });
                         setTimeout(() => {
                             history("/dashboard/admin/application")
@@ -130,14 +131,19 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
                         setErrorMessage({ show: false, message: '' });
                     }, 3000);
                 })
+                .finally(() => {
+                    setLoading(false)
+                })
 
         }
         catch (error) {
-
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
             }, 3000);
+        }
+        finally {
+            setLoading(false)
         }
     }, [updateTravelAllowances, values])
 

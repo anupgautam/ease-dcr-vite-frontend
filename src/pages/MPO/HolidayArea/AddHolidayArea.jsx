@@ -25,7 +25,7 @@ import { useGetCompanyHolidaysQuery, useCreateHolidayAreasMutation } from '@/api
 import { CookieContext } from '@/App'
 
 const AddHolidayArea = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, access, refresh } = useContext(CookieContext)
 
     //! Create Chemist
     const [createHolidayArea] = useCreateHolidayAreasMutation()
@@ -102,7 +102,7 @@ const AddHolidayArea = () => {
         e.preventDefault();
         setLoading(true)
         try {
-            const response = await createHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptions }).unwrap();
+            const response = await createHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptions, "access": access, "refresh": refresh }).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Added Holiday Areas' });
             setTimeout(() => {
                 setSuccessMessage({ show: false, message: '' });

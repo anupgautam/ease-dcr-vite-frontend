@@ -100,7 +100,7 @@ const AddApplication = () => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
             } else {
-                setErrorMessage({ show: true, message: response.error.data[0] });
+                setErrorMessage({ show: true, message: "Unable to Add Application" });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
                 }, 3000);

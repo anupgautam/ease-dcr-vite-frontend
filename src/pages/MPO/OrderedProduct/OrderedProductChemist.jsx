@@ -43,8 +43,6 @@ const OrderedProductChemist = ({ index, value, other }) => {
     }
   }, [selectedChemist]);
 
-
-
   return (
     <>
       <div

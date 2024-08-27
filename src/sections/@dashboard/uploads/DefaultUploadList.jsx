@@ -17,7 +17,8 @@ export default function DefaultUploadList({ uploads, ...other }) {
         <Grid key={upload.id} item xs={12} sm={6} md={3}>
           <DefaultUploadCard uploads={upload} />
         </Grid>
-      ))}
+      ))
+      }
     </Grid>
   );
 }

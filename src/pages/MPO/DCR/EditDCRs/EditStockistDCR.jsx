@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useContext } from 'react'
 import {
     Box, Grid,
-    Typography
+    Typography, CircularProgress
 } from '@mui/material'
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -125,7 +125,7 @@ const EditStockistDCR = ({ idharu, onClose }) => {
         false,
         true
     )
-
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
@@ -154,8 +154,6 @@ const EditStockistDCR = ({ idharu, onClose }) => {
         form.append('mpo_name', mpo_id);
         updateShiftWiseDCR(form);
     }
-
-
 
     const handleInputChangeLoop = (e) => {
 
@@ -308,25 +306,26 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                         </Box>
                     </Form>
                 </Box>
-            </Drawer>
-            {
-                ErrorMessage.show === true ? (
+                {loading && (
+                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                        <CircularProgress />
+                    </Grid>
+                )}
+                {ErrorMessage.show && (
                     <Grid>
                         <Box className="messageContainer errorMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
+                )}
+                {SuccessMessage.show && (
                     <Grid>
                         <Box className="messageContainer successMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
+                )}
+            </Drawer>
         </>
     );
 };

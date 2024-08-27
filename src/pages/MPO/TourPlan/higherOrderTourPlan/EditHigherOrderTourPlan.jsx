@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo, useContext } from 'react'
 import {
     Box, Grid,
-    Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel
+    Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel, CircularProgress
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -36,10 +36,8 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     const [users, setUsers] = useState([]);
     const [dateData, setDateData] = useState();
 
-
     //! Getting TourPlan by ID
     const TourPlan = useGetHOTourPlansByIdQuery(idharu);
-
 
     const userLists = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: TourPlan?.data?.user_id?.id })
 
@@ -149,7 +147,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     values.month,
     values.is_approved])
 
-
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
@@ -157,11 +155,9 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     const [updateTourPlans] = useUpdateHOTourPlansMutation();
     const history = useNavigate();
 
-
     const monthData = getNepaliMonthName(moment(dateData).month() + 1);
-
-
     const handleSubmit = useCallback(async (e) => {
+        setLoading(true)
         e.preventDefault();
         const formData = new FormData();
         formData.append("user_id", TourPlan?.data?.user_id?.id);
@@ -181,14 +177,17 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
             setTimeout(() => {
                 history("/dashboard/admin/tourplan")
                 setSuccessMessage({ show: false, message: '' });
-            }, 3000);
+                onClose();
+            }, 2000);
         }
         catch (error) {
 
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            }, 2000);
+        } finally {
+            setLoading(false)
         }
     }, [updateTourPlans, values])
 
@@ -313,7 +312,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                             <Button
                                 variant="contained"
                                 className="summit-button"
-                                onClick={(e) => { handleSubmit(e); onClose() }}
+                                onClick={(e) => handleSubmit(e)}
                             >
                                 Submit{" "}
                             </Button>
@@ -327,25 +326,26 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                         </Stack>
                     </Form>
                 </Box>
-            </Drawer>
-            {
-                ErrorMessage.show === true ? (
+                {loading && (
+                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                        <CircularProgress />
+                    </Grid>
+                )}
+                {ErrorMessage.show && (
                     <Grid>
                         <Box className="messageContainer errorMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
+                )}
+                {SuccessMessage.show && (
                     <Grid>
                         <Box className="messageContainer successMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
+                )}
+            </Drawer>
         </>
     );
 };

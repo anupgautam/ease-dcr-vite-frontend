@@ -20,7 +20,7 @@ export default function App() {
   const [company_division_name, setcompany_division_name] = useState(Cookies.get('company_division_name'))
   const [company_id, setcompany_id] = useState(Cookies.get('company_id'))
   const [company_user_id, setcompany_user_id] = useState(Cookies.get('company_user_id'))
-  const [company_user_role_id, setcompany_user_role_id] = useState(Cookies.get('company_user_role_id	'))
+  const [company_user_role_id, setcompany_user_role_id] = useState(Cookies.get('company_user_role_id'))
   const [email, setemail] = useState(Cookies.get('email'))
   const [is_highest_priority, setis_highest_priority] = useState(Cookies.get('is_highest_priority'))
   const [user_role, setuser_role] = useState(Cookies.get('user_role'))

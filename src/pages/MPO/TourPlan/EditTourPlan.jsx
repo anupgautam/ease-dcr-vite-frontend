@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
 import {
-    Box, Grid, Typography, Button, Autocomplete, TextField
+    Box, Grid, Typography, Button, Autocomplete, TextField, CircularProgress
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -108,6 +108,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
         if (fieldValues === values) return Object.values(temp).every(x => x === "");
     };
 
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
@@ -118,6 +119,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
+        setLoading(true)
         const data = {
             mpo_area: MpoTpArea.map(area => ({ company_mpo_area_id: area.id })),
             shift: values.shift,
@@ -138,18 +140,21 @@ const EditTourPlan = ({ idharu, onClose }) => {
                 setTimeout(() => {
                     history("/dashboard/admin/tourplan");
                     setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+                    onClose();
+                }, 2000);
             } else {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                }, 2000);
             }
         } catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            }, 2000);
+        } finally {
+            setLoading(false)
         }
     }, [updateTourPlans, values, MpoTpArea, idharu]);
 
@@ -248,7 +253,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                             <Button
                                 variant="contained"
                                 className="summit-button"
-                                onClick={(e) => { handleSubmit(e); onClose() }}
+                                onClick={(e) => handleSubmit(e)}
                             >
                                 Submit{" "}
                             </Button>
@@ -262,25 +267,26 @@ const EditTourPlan = ({ idharu, onClose }) => {
                         </Stack>
                     </Form>
                 </Box>
-            </Drawer>
-            {
-                ErrorMessage.show === true ? (
+                {loading && (
+                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                        <CircularProgress />
+                    </Grid>
+                )}
+                {ErrorMessage.show && (
                     <Grid>
                         <Box className="messageContainer errorMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
+                )}
+                {SuccessMessage.show && (
                     <Grid>
                         <Box className="messageContainer successMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
+                )}
+            </Drawer>
         </>
     );
 }
