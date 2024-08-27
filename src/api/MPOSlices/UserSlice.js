@@ -169,6 +169,18 @@ export const userApiSlice = apiSlice.injectEndpoints({
             },
             invalidatesTags: ['User']
         }),
+        //admin user login query
+        loginUserByAdmin: builder.mutation({
+            query: (loginInfo) => {
+                // 
+                return {
+                    url: '/account/user-login-by-id/',
+                    method: 'POST',
+                    body: loginInfo
+                }
+            },
+            invalidatesTags: ['User']
+        }),
 
 
         //! Search User wala post
@@ -228,7 +240,8 @@ export const {
     useGetAllUsersWithoutPaginationQuery,
     useGetUsersByCompanyRoleIdExecutativeLevelQuery,
     useGetUsersByHigherLevelUserQuery,
-    useGetUsersByCompanyUserByIdQuery
+    useGetUsersByCompanyUserByIdQuery,
+    useLoginUserByAdminMutation,
 } = userApiSlice
 
 

@@ -4,10 +4,13 @@ import { Link as ScrollLink, Events, scrollSpy } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
 import "./Navbar.css";
 import Cookies from 'js-cookie'
+import { CookieContext } from "../../App";
 
 const Navbar = () => {
+  const { user_role } = useContext(CookieContext)
 
-  const login = Cookies.get("user_role");
+  const login = user_role;
+  console.log('login', login);
   const navItems = [
     {
       id: 0,
@@ -56,8 +59,8 @@ const Navbar = () => {
           <button className="bg-[#6364f2] p-2  px-4 md:px-8  rounded-[30px] text-[9px] md:text-[18px] text-white hover:scale-105 hover:bg-violet-800 duration-300">
             <RouterLink
               to={
-                user_role === "admin"
-                  ? "/dashboard/admin"
+                user_role === "admin" ?
+                  "/dashboard/admin"
                   : "/dashboard/admin/listofdoctor"
               }
               className="ud-main-btn ud-white-btn"
@@ -73,7 +76,7 @@ const Navbar = () => {
           </button>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 
