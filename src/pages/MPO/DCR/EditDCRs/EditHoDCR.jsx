@@ -35,7 +35,6 @@ const EditHoDCR = ({ idharu, onClose }) => {
     //! Getting TourPlan by ID
     const DCRAll = useGetHODCRsByIdQuery(idharu);
 
-
     const { data: userLists } = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: user_id })
 
     useEffect(() => {
@@ -57,8 +56,6 @@ const EditHoDCR = ({ idharu, onClose }) => {
         shift: "",
         id: ""
     });
-
-
     useEffect(() => {
         if (DCRAll.data) {
             setInitialFValues({
@@ -88,6 +85,7 @@ const EditHoDCR = ({ idharu, onClose }) => {
         false,
         true
     )
+    const [loading, setLoading] = useState(false);
 
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
@@ -180,25 +178,26 @@ const EditHoDCR = ({ idharu, onClose }) => {
                         </Box>
                     </Form>
                 </Box>
-            </Drawer>
-            {
-                ErrorMessage.show === true ? (
+                {loading && (
+                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                        <CircularProgress />
+                    </Grid>
+                )}
+                {ErrorMessage.show && (
                     <Grid>
                         <Box className="messageContainer errorMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
+                )}
+                {SuccessMessage.show && (
                     <Grid>
                         <Box className="messageContainer successMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
+                )}
+            </Drawer>
         </>
     );
 };

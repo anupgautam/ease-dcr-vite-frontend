@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react'
 import {
     Box, Grid,
-    Typography, Button, InputLabel
+    Typography, Button, InputLabel, CircularProgress
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -142,6 +142,7 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
     values.submit_to
     ])
 
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
@@ -151,6 +152,7 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
+        setLoading(true);
         const formData = new FormData();
         formData.append("leave_type", values.leave_type);
         formData.append("leave_cause", values.leave_cause);
@@ -166,26 +168,25 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
         try {
             const response = await updateApplications(formData).unwrap();
 
-            if (response.data) {
+            if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Application' });
                 setTimeout(() => {
                     history("/dashboard/admin/application")
                     setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+                }, 2000);
             }
             else {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                }, 2000);
             }
         }
         catch (error) {
-
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            }, 2000);
         }
     }, [updateApplications, values])
 
@@ -270,7 +271,7 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
                     <Stack spacing={1} direction="row">
                         <Button
                             variant="contained"
-                            onClick={(e) => { handleSubmit(e); onClose() }}
+                            onClick={(e) => handleSubmit(e)}
                         >
                             Submit{" "}
                         </Button>
@@ -282,25 +283,26 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
                         </Button>
                     </Stack>
                 </Box>
-            </Drawer>
-            {
-                ErrorMessage.show === true ? (
+                {loading && (
+                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                        <CircularProgress />
+                    </Grid>
+                )}
+                {ErrorMessage.show && (
                     <Grid>
                         <Box className="messageContainer errorMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
+                )}
+                {SuccessMessage.show && (
                     <Grid>
                         <Box className="messageContainer successMessage">
                             <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
                         </Box>
                     </Grid>
-                ) : null
-            }
+                )}
+            </Drawer>
         </>
     );
 };

@@ -82,9 +82,6 @@ const EditChemist = ({ idharu, onClose }) => {
         false,
         true
     )
-
-
-
     //! Validation wala  
     const validate = useCallback((fieldValues = values) => {
         // 
@@ -105,9 +102,6 @@ const EditChemist = ({ idharu, onClose }) => {
         if (fieldValues === values)
             return Object.values(temp).every(x => x == "")
     }, [values, errors])
-
-
-
 
     useEffect(() => {
         if (Chemist?.data || AreaById?.data) {

@@ -114,7 +114,7 @@ const DefaultList = () => {
                                                         </TableCell>
                                                         <TableCell align="left">{tpdays.tp_lock_days}</TableCell>
                                                         <TableCell align="left">
-                                                            <IconButton color={'primary'} onClick={(e) => onEdit(tpdays.company_roles.id)}>
+                                                            <IconButton color={'primary'} onClick={(e) => onEdit(tpdays.id)}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:edit-fill" />
                                                                 </Badge>

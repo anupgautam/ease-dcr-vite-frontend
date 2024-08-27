@@ -25,6 +25,10 @@ const OrderedProductStockist = ({ index, value, other }) => {
     }
   }, [stockists])
 
+  const handleRoleSelect = useCallback((e, value) => {
+    setSelectedStockist(value?.id || "")
+  }, [])
+  
   useEffect(() => {
     stockistOrderedProductData(selectedStockist).then((res) => {
       setOrderedData(res?.data?.results)
@@ -32,9 +36,6 @@ const OrderedProductStockist = ({ index, value, other }) => {
 
   }, [selectedStockist])
 
-  const handleRoleSelect = useCallback((e, value) => {
-    setSelectedStockist(value?.id || "")
-  }, [])
 
   // 
   return (
@@ -48,7 +49,7 @@ const OrderedProductStockist = ({ index, value, other }) => {
       >
         <Box style={{ padding: "20px" }}>
           <Grid container spacing={2}>
-            <Grid item xs={2}>
+            <Grid item xs={5.5} sm={2.5}>
               <Box marginBottom={3}>
                 <FormControl>
                   <Autocomplete

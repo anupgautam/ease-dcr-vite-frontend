@@ -208,10 +208,9 @@ const EditUser = ({ idharu, onClose }) => {
         try {
             const response = await updateUsers(formData).unwrap();
             if (response) {
-                console.log("Response aayo")
                 setSuccessMessage({ show: true, message: 'Successfully Edited User' });
                 setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
+                    onClose(); setSuccessMessage({ show: false, message: '' });
                 }, 2000);
             } else {
                 setErrorMessage({ show: true, message: 'Data failed to add.' });
@@ -384,7 +383,7 @@ const EditUser = ({ idharu, onClose }) => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
-                            onClick={(e) => { handleSubmit(e); onClose() }}
+                            onClick={(e) => handleSubmit(e)}
                             text="Submit"
                         />
                         <Button
