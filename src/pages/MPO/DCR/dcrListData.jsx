@@ -205,12 +205,12 @@ const DcrListData = () => {
                                                         <TableCell align="left"></TableCell>
                                                         <TableCell align="left">
                                                             <Link to={`/dashboard/admin/dcr?id=${id}&role=${role}&date=${key.date}`}>
-                                                                {/* <Button>VIEW DETAILS</Button> */}
-                                                                <IconButton>
+                                                                <Button>VIEW DETAILS</Button>
+                                                                {/* <IconButton>
                                                                     <Badge>
                                                                         <Iconify icon="mdi:eye" sx={{ color: 'primary.main' }} />
                                                                     </Badge>
-                                                                </IconButton>
+                                                                </IconButton> */}
                                                             </Link>
                                                         </TableCell>
                                                     </TableRow>
@@ -236,13 +236,12 @@ const DcrListData = () => {
                                                     <TableCell align="left" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600', marginLeft: "10px" }}>{key.call_data}</TableCell>
                                                     <TableCell align="left">
                                                         <Link to={`/dashboard/admin/dcr?id=${id}&role=${role}&date=${key.date}`}>
-                                                            {/* <Button>VIEW DETAILS</Button> */}
-                                                            <IconButton>
+                                                            <Button>VIEW DETAILS</Button>
+                                                            {/* <IconButton>
                                                                 <Badge>
-                                                                    {/* <Iconify icon="mdi:eye" sx={{ color: 'primary.main' }} /> */}
                                                                     <Iconify icon="mdi:eye" sx={{ color: 'primary.main' }} />
                                                                 </Badge>
-                                                            </IconButton>
+                                                            </IconButton> */}
                                                         </Link>
                                                     </TableCell>
                                                 </TableRow>
