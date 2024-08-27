@@ -14,56 +14,76 @@ export const CookieContext = createContext();
 
 export default function App() {
 
-  const [User_id, setUser_id] = useState(Cookies.get('User_id'))
-  const [access, setAccess] = useState(Cookies.get('access'))
-  const [refresh, setRefresh] = useState(Cookies.get('refresh'))
-  const [company_division_name, setCompanyDivisionName] = useState(Cookies.get('company_division_name'))
-  const [company_id, setCompany_id] = useState(Cookies.get('company_id'))
-  const [company_user_id, setCompanyUserId] = useState(Cookies.get('company_user_id'))
-  const [company_user_role_id, setCompanyUserRoleId] = useState(Cookies.get('company_user_role_id'))
-  const [email, setEmail] = useState(Cookies.get('email'))
-  const [is_highest_priority, setIsHighestPriority] = useState(Cookies.get('is_highest_priority'))
-  const [user_role, setUserRole] = useState(Cookies.get('user_role'))
-  const [role, setRole] = useState(Cookies.get('role'))
-  const [other, setOther] = useState(Cookies.get('other'))
-  const [otherRoles, setOtherRoles] = useState(Cookies.get('other-roles'))
-  const [OTPgmail, setOTPgmail] = useState(Cookies.get('OTPgmail'))
-  const [otp, setOtp] = useState(Cookies.get('otp'))
+  const [cookieData, setCookieData] = useState({
+    User_id: Cookies.get('User_id'),
+    access: Cookies.get('access'),
+    refresh: Cookies.get('refresh'),
+    company_division_name: Cookies.get('company_division_name'),
+    company_id: Cookies.get('company_id'),
+    company_user_id: Cookies.get('company_user_id'),
+    company_user_role_id: Cookies.get('company_user_role_id'),
+    email: Cookies.get('email'),
+    is_highest_priority: Cookies.get('is_highest_priority'),
+    user_role: Cookies.get('user_role'),
+    role: Cookies.get('role'),
+    other: Cookies.get('other'),
+    otherRoles: Cookies.get('other-roles'),
+    OTPgmail: Cookies.get('OTPgmail'),
+    otp: Cookies.get('otp'),
+  });
+
+  const updateStatesFromCookies = () => {
+    setCookieData({
+      User_id: Cookies.get('User_id'),
+      access: Cookies.get('access'),
+      refresh: Cookies.get('refresh'),
+      company_division_name: Cookies.get('company_division_name'),
+      company_id: Cookies.get('company_id'),
+      company_user_id: Cookies.get('company_user_id'),
+      company_user_role_id: Cookies.get('company_user_role_id'),
+      email: Cookies.get('email'),
+      is_highest_priority: Cookies.get('is_highest_priority'),
+      user_role: Cookies.get('user_role'),
+      role: Cookies.get('role'),
+      other: Cookies.get('other'),
+      otherRoles: Cookies.get('other-roles'),
+      OTPgmail: Cookies.get('OTPgmail'),
+      otp: Cookies.get('otp'),
+    });
+  };
 
   useEffect(() => {
-    setUser_id(Cookies.get('User_id'));
-    setAccess(Cookies.get('access'));
-    setRefresh(Cookies.get('refresh'));
-    setCompanyDivisionName(Cookies.get('company_division_name'));
-    setCompany_id(Cookies.get('company_id'));
-    setCompanyUserId(Cookies.get('company_user_id'));
-    setCompanyUserRoleId(Cookies.get('company_user_role_id'));
-    setEmail(Cookies.get('email'));
-    setIsHighestPriority(Cookies.get('is_highest_priority'));
-    setUserRole(Cookies.get('user_role'));
-    setRole(Cookies.get('role'));
-    setOther(Cookies.get('other'));
-    setOtherRoles(Cookies.get('other-roles'));
-    setOTPgmail(Cookies.get('OTPgmail'));
-    setOtp(Cookies.get('otp'));
-  }, []);
+    updateStatesFromCookies();
+
+    const handleCookieChange = () => {
+      updateStatesFromCookies();
+    };
+
+    // Listen for changes in cookies (if applicable)
+    window.addEventListener('cookieChange', handleCookieChange);
+
+    return () => {
+      window.removeEventListener('cookieChange', handleCookieChange);
+    };
+  }, []); // Empty dependency array to run only on mount
+
 
   const cookieContextValue = {
-    User_id,
-    access,
-    refresh,
-    company_division_name,
-    company_id,
-    company_user_id,
-    company_user_role_id,
-    email,
-    is_highest_priority,
-    user_role,
-    role,
-    other,
-    otherRoles,
-    OTPgmail,
-    otp,
+    User_id: cookieData.User_id,
+    access: cookieData.access,
+    refresh: cookieData.refresh,
+    company_division_name: cookieData.company_division_name,
+    company_id: cookieData.company_id,
+    company_user_id: cookieData.company_user_id,
+    company_user_role_id: cookieData.company_user_role_id,
+    email: cookieData.email,
+    is_highest_priority: cookieData.is_highest_priority,
+    user_role: cookieData.user_role,
+    role: cookieData.role,
+    other: cookieData.other,
+    otherRoles: cookieData.otherRoles,
+    OTPgmail: cookieData.OTPgmail,
+    otp: cookieData.otp,
   };
 
   return (
