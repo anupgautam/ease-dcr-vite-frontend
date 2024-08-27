@@ -36,6 +36,7 @@ import { addSelectedUser } from '@/reducers/dcrSelectData';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import moment from 'moment';
 import { CookieContext } from '@/App'
+import { Link } from 'react-router-dom';
 
 
 const TABLE_HEAD = [
@@ -193,6 +194,13 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
                                                                     </Typography>
                                                                 </TableCell>
                                                                 <TableCell align="left">
+                                                                    <Link to={`/dashboard/admin/all/user/dcrdoctordetail?id=${tourplan.id}`}>
+                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }}>
+                                                                            <Badge>
+                                                                                <Iconify icon="mdi:eye" sx={{ color: 'primary.main' }} />
+                                                                            </Badge>
+                                                                        </IconButton>
+                                                                    </Link>
                                                                     {
                                                                         user_role === 'admin' &&
                                                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id, tourplan.mpo_name.id)} >
