@@ -23,6 +23,8 @@ import {
     useDeleteDoctorsByIdMutation
 } from "../../../api/MPOSlices/DoctorSlice";
 import { CookieContext } from '@/App'
+import { decryptData } from '../User/excryption';
+import { useLocation } from 'react-router-dom';
 
 const DefaultList = () => {
     const { company_id, user_role, company_user_id } = useContext(CookieContext)
@@ -43,6 +45,9 @@ const DefaultList = () => {
         setOpenDialogue(false);
     }, []);
 
+    const localData = localStorage.getItem('user_login');
+    console.log('localData', localData)
+
     const [page, setPage] = useState(1);
 
     const handleChangePage = useCallback((event, newPage) => {
@@ -59,15 +64,15 @@ const DefaultList = () => {
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7];
 
-    const onEdit = useCallback((id, divisionId) => {
+    const onEdit = (id, divisionId) => {
         setSelectedUpdateId(id);
         setSelectedDivisionId(divisionId);
         setIsDrawerOpen(true);
-    }, []);
+    }
 
-    const onCloseDrawer = useCallback(() => {
+    const onCloseDrawer = () => {
         setIsDrawerOpen(false);
-    }, []);
+    }
 
     return (
         <>

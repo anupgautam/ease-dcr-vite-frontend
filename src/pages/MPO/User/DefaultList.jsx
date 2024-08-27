@@ -36,7 +36,7 @@ const TABLE_HEAD = [
     { id: '' },
 ];
 
-const DefaultList = ({ filterValue, handleChangeStatus }) => {
+const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
 
     const { company_id } = useContext(CookieContext);
 
@@ -217,7 +217,7 @@ const DefaultList = ({ filterValue, handleChangeStatus }) => {
                             <TableCell align="right">
                                 {/* //!User Login */}
                                 {user?.user_name?.is_admin === false ? <>
-                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }}>
+                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => UserLogin(user.user_name.id)}>
                                         <Badge>
                                             <Iconify icon="ic:sharp-login" />
                                         </Badge>

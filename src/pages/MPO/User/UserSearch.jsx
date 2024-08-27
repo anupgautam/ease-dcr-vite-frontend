@@ -28,7 +28,6 @@ import Iconify from "@/components/iconify/Iconify";
 import { UserListHead } from "../../../sections/@dashboard/user";
 import Controls from "../../../reusable/components/forms/controls/Controls";
 import { useForm1 } from "../../../reusable/components/forms/useForm";
-
 import {
   useDeletecompanyUserRolesByIdMutation,
   useSearchCompanyUserRolesMutation,
@@ -40,8 +39,11 @@ import { useGetCompanyRolesByCompanyQuery } from "@/api/CompanySlices/companyRol
 import { useGetUsersByCompanyRoleIdQuery } from "@/api/MPOSlices/UserSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
 import { useUpdateUsersMutation } from "@/api/DemoUserSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CookieContext } from '@/App'
+import { useLoginUserByAdminMutation } from "../../../api/MPOSlices/UserSlice";
+import { useDispatch } from "react-redux";
+import { encryptData } from "./excryption";
 
 const TABLE_HEAD = [
   { id: "user_name", label: "User Name", alignRight: false },
@@ -148,6 +150,7 @@ const UserSearch = () => {
   const [deleteUser] = useDeletecompanyUserRolesByIdMutation();
   const [UserStatus] = useUpdateUsersMutation();
 
+
   const handleChangeStatus = (e, user) => {
     const formData = new FormData();
     formData.append("first_name", user.user_name.first_name);
@@ -186,6 +189,57 @@ const UserSearch = () => {
   const handleClose = useCallback((userId) => {
     setOpenDialogues((prev) => ({ ...prev, [userId]: false }));
   }, []);
+
+  const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' })
+  const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' })
+  const dispatch = useDispatch();
+
+  const [AdminUserLogin] = useLoginUserByAdminMutation();
+  const navigate = useNavigate();
+
+
+  const UserLogin = (id) => {
+    AdminUserLogin({ user_id: id })
+      .then((res) => {
+        if (res.data) {
+          localStorage.setItem('user_login', JSON.stringify(res.data));
+          if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
+            setErrorMessage({ show: true, message: 'Admin Cannot be logged in.' });
+          } else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
+            window.open('/dashboard/admin/listofdoctor', '_blank')
+          } else if (res.data.role === "ASM") {
+            window.open(`/dashboard/admin/tourplan`, '_blank');
+          } else if (res.data.role === "RSM" || res.data.role === "SM" || res.data.role === "MM" || res.data.role === "CH") {
+            window.open(`/dashboard/admin/tourplan`, '_blank');
+          }
+          else {
+            setErrorMessage({ show: true, message: "User Does not exist." });
+            setTimeout(() => {
+              setErrorMessage({ show: false, message: "" });
+            }, [2000])
+          }
+        } if (res.error) {
+          if (res.error?.originalStatus === 500) {
+            setErrorMessage({ show: true, message: 'Backend Error' });
+          } else {
+            setErrorMessage({ show: true, message: res.error.data });
+          }
+          setTimeout(() => setErrorMessage({ show: false, message: "" }), 2000);
+        } else {
+          setErrorMessage({ show: true, message: 'Login Failed' });
+          setTimeout(() => {
+            setErrorMessage({ show: false, message: "" });
+          }, [2000])
+        }
+      })
+      .catch((err) => {
+        setErrorMessage({ show: true, message: 'Login Failed' });
+
+        setTimeout(() => {
+          setErrorMessage({ show: false, message: "" });
+        }, [2000])
+      })
+  }
 
 
   return (
@@ -370,7 +424,7 @@ const UserSearch = () => {
                                 <TableCell align="left">
                                   {/* //!User Login */}
                                   {usersearch?.user_name?.is_admin === false ? <>
-                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }}>
+                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => UserLogin(usersearch.user_name.id)}>
                                       <Badge>
                                         <Iconify icon="ic:sharp-login" />
                                       </Badge>
@@ -385,7 +439,7 @@ const UserSearch = () => {
                                       <Iconify icon="eva:edit-fill" />
                                     </Badge>
                                   </IconButton>
-                                  <IconButton
+                                  {/* <IconButton
                                     color={"error"}
                                     sx={{ width: 40, height: 40, mt: 0.75 }}
                                     onClick={() => {
@@ -396,7 +450,7 @@ const UserSearch = () => {
                                     <Badge>
                                       <Iconify icon="eva:trash-2-outline" />
                                     </Badge>
-                                  </IconButton>
+                                  </IconButton> */}
                                 </TableCell>
                                 <Dialog
                                   fullScreen={fullScreen}
@@ -431,6 +485,7 @@ const UserSearch = () => {
                       <Test
                         filterValue={filterValue}
                         handleChangeStatus={handleChangeStatus}
+                        UserLogin={UserLogin}
                       />
                     )}
                   </>
@@ -617,6 +672,29 @@ const UserSearch = () => {
             <EditUser idharu={selectedUpdateId} onClose={onCloseDrawer} />
           )}
         </Scrollbar>
+        {
+          ErrorMessage.show === true ? (
+            <>
+              <Grid>
+                <Box className="messageContainer errorMessage">
+                  <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                </Box>
+              </Grid>
+            </>
+          ) : null
+        }
+        {
+          SuccessMessage.show === true ? (
+            <>
+              <Grid>
+                <Box className="messageContainer successMessage">
+                  <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                </Box>
+              </Grid>
+            </>
+          )
+            : null
+        }
       </Card>
     </>
   );

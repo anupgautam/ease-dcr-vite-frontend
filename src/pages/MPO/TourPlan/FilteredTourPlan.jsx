@@ -68,6 +68,28 @@ const TABLE_HEAD = [
 const FilteredTourPlan = () => {
     const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
+    const localData = JSON.parse(localStorage.getItem('user_login'));
+    useEffect(() => {
+        if (localData) {
+            sessionStorage.setItem('User_id', localData.user_id);
+            sessionStorage.setItem('company_id', localData.company_id);
+            sessionStorage.setItem('company_user_id', localData.company_user_id);
+            sessionStorage.setItem('company_user_role_id', localData.company_user_role_id);
+            sessionStorage.setItem('company_division_name', localData.company_division_name);
+            sessionStorage.setItem('refresh', localData.token.refresh);
+            sessionStorage.setItem('access', localData.token.access);
+            sessionStorage.setItem('email', localData.email);
+            sessionStorage.setItem('is_highest_priority', localData.is_highest_priority)
+            if (localData.role === "ASM") {
+                sessionStorage.setItem('user_role', 'other-roles')
+            } else if (localData.role === "RSM" || localData.role === "SM" || localData.role === "MM" || localData.role === "CH") {
+                sessionStorage.setItem('user_role', 'other-roles')
+                sessionStorage.setItem('role', 'other')
+            }
+            localStorage.removeItem('user_login');
+        }
+    }, [localData])
+
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id');

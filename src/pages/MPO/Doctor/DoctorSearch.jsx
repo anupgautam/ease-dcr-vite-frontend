@@ -41,6 +41,8 @@ import Test from './DefaultList';
 import EditDoctor from './EditDoctor';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { CookieContext } from '@/App'
+import { decryptData } from '../User/excryption';
+import { useLocation } from 'react-router-dom';
 
 
 const TABLE_HEAD = [
@@ -56,7 +58,23 @@ const TABLE_HEAD = [
 const DoctorSearch = () => {
     const { company_id, user_role, company_user_id } = useContext(CookieContext)
     //! Get MPO Names
-    const [MpoData] = usePostAllMPONamesNoPageMutation()
+    const [MpoData] = usePostAllMPONamesNoPageMutation();
+    const localData = JSON.parse(localStorage.getItem('user_login'));
+    useEffect(() => {
+        if (localData) {
+            sessionStorage.setItem('User_id', localData.user_id);
+            sessionStorage.setItem('company_id', localData.company_id);
+            sessionStorage.setItem('company_user_id', localData.company_user_id);
+            sessionStorage.setItem('company_user_role_id', localData.company_user_role_id);
+            sessionStorage.setItem('company_division_name', localData.company_division_name);
+            sessionStorage.setItem('refresh', localData.token.refresh);
+            sessionStorage.setItem('access', localData.token.access);
+            sessionStorage.setItem('email', localData.email);
+            sessionStorage.setItem('is_highest_priority', localData.is_highest_priority)
+            sessionStorage.setItem('user_role', 'MPO')
+            localStorage.removeItem('user_login');
+        }
+    }, [localData])
 
     const [mpoName, setMPOName] = useState('');
     const [MpoList, setMpoList] = useState([]);
