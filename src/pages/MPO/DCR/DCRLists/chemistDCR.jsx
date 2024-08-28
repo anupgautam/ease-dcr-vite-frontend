@@ -202,7 +202,13 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
                                                                     </Typography>
                                                                     {/* </Stack> */}
                                                                 </TableCell>
-
+                                                                <Link to={`/dashboard/admin/all/user/dcrchemistdetail?id=${tourplan.dcr.dcr.id}`}>
+                                                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }}>
+                                                                        <Badge>
+                                                                            <Iconify icon="mdi:eye" sx={{ color: 'primary.main' }} />
+                                                                        </Badge>
+                                                                    </IconButton>
+                                                                </Link>
                                                                 {/* //! Edit  */}
                                                                 <TableCell align="left">
                                                                     {

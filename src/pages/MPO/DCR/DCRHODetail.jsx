@@ -7,16 +7,16 @@ import {
     Skeleton
 } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { useGetDoctorDcrByIdQuery } from '../../../api/DCRs Api Slice/doctorDCR/DoctorDCRAllSlice';
+import { useGetHODCRsByIdQuery } from '../../../api/HighOrderSlices/hoDCRSlice';
 import { CookieContext } from '@/App';
 
-const DCRDetail = () => {
+const DCRHODetail = () => {
     const { company_id, user_role, company_user_id } = useContext(CookieContext);
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const selectedUser = searchParams.get('id');
 
-    const { data, isLoading } = useGetDoctorDcrByIdQuery(selectedUser);
+    const { data, isLoading } = useGetHODCRsByIdQuery(selectedUser);
     console.log(data)
     return (
         <Container>
@@ -103,4 +103,4 @@ const DCRDetail = () => {
     );
 };
 
-export default React.memo(DCRDetail);
+export default React.memo(DCRHODetail);

@@ -21,12 +21,7 @@ const ListOfDCR = () => {
                     </Grid>
                     {
                         user_role === 'admin' ?
-                            <Grid item xs={2}>
-
-                                <Box style={{ float: "right" }}>
-                                    <ExcelCSVDCR />
-                                </Box>
-                            </Grid> :
+                            <></> :
                             <Grid item xs={2}>
                                 <Box style={{ float: "right" }}>
                                     <AddDcrForHo />

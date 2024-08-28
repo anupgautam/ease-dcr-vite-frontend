@@ -154,7 +154,7 @@ const DcrListData = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {
+                        {/* {
                             user_role === 'admin' &&
                             <Grid item xs={2.5}>
                                 <FormControl>
@@ -173,7 +173,7 @@ const DcrListData = () => {
                                     />
                                 </FormControl>
                             </Grid>
-                        }
+                        } */}
                         <Grid item xs={6.5}>
 
                         </Grid>

@@ -66,6 +66,9 @@ import ListOfTourPlanLock from './pages/MPO/TP_Lock/ListOfTourPlanLock';
 import NewLogin from './pages/Common/LoginComponent/NewLogin';
 import Attendance from './pages/attendance/Attendance';
 import DCRDetail from './pages/MPO/DCR/DCRDetail';
+import DCRChemistDetail from './pages/MPO/DCR/DCRChemistDetail';
+import DCRStockistDetail from './pages/MPO/DCR/DCRStockistDetail';
+import DCRHODetail from './pages/MPO/DCR/DCRHODetail';
 
 export default function Router() {
   const routes = useRoutes([
@@ -164,8 +167,20 @@ export default function Router() {
           element: <Authentication component={AllUserTp} allowRoles={['admin']} />,
         },
         {
-          path: 'admin/all/user/dcrdetail',
+          path: 'admin/all/user/dcrdoctordetail',
           element: <Authentication component={DCRDetail} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/all/user/dcrchemistdetail',
+          element: <Authentication component={DCRChemistDetail} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/all/user/dcrstockistdetail',
+          element: <Authentication component={DCRStockistDetail} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/all/user/dcrhodetail',
+          element: <Authentication component={DCRHODetail} allowRoles={['admin']} />,
         },
         {
           path: 'admin/all/user/dcr',
