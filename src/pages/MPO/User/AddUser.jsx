@@ -4,7 +4,7 @@ import {
     Typography,
     Button,
     Grid,
-    CircularProgress
+    CircularProgress, Autocomplete, TextField, InputLabel
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -55,6 +55,14 @@ const AddUser = () => {
         }
         return [];
     }, [CompanyAreas]);
+
+    //! Multiple Company wise Area
+    const [areaOptions, setAreaOptions] = useState([])
+
+    const handleMultipleCompanyAreas = (event, value) => {
+        const selectedIds = value.map(option => option.id);
+        setAreaOptions(selectedIds);
+    };
 
     //! Get division
     const Divisions = useGetFilteredDivisionsQuery(company_id);
@@ -193,10 +201,11 @@ const AddUser = () => {
         formData.append("phone_number", values.phone_number);
         formData.append("email", values.email);
         formData.append("role_name", values.role_name);
-        formData.append("division_name", values.division_name);
         formData.append("executive_level", values.executive_level);
         formData.append("company_id", company_id);
         formData.append("company_area", values.company_area);
+        formData.append("division_name", values.division_name);
+        // formData.append("company_area", JSON.stringify(areaOptions))
         formData.append("station_type", values.station_type);
         formData.append("is_active", true);
         formData.append("date_of_joining", formattedDate);
@@ -379,7 +388,7 @@ const AddUser = () => {
                         />
                     </Box>
                     <Box marginBottom={2}>
-                        <Controls.Select
+                        {/* <Controls.Select
                             name="company_area"
                             label="Company Wise Area*"
                             className={"drawer-role-name-select"}
@@ -387,6 +396,20 @@ const AddUser = () => {
                             onChange={handleInputChange}
                             error={errors.company_area}
                             options={companyAreas}
+                        /> */}
+                        <Autocomplete
+                            multiple
+                            options={companyAreas}
+                            getOptionLabel={(option) => option.title}
+                            onChange={handleMultipleCompanyAreas}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Company Areas" />
+                            )}
+                            renderOption={(props, option) => (
+                                <li {...props} key={option.id}>
+                                    {option.title}
+                                </li>
+                            )}
                         />
                     </Box>
                     <Box marginBottom={2}>

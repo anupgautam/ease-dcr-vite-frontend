@@ -25,7 +25,6 @@ const TABLE_HEAD = [
 
 
 const AddMutipleDoctor = () => {
-    const { company_id, email, company_user_id, user_role, } = useContext(CookieContext)
 
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('number');
@@ -152,6 +151,8 @@ const AddMutipleDoctor = () => {
 }
 
 const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
+    const { company_id, email, company_user_id, user_role, } = useContext(CookieContext)
+
     const doctorcategories = [
         { id: "A", title: "A" },
         { id: "B", title: "B" },

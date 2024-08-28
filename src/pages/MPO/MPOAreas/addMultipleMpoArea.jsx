@@ -1,5 +1,5 @@
 import { Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
@@ -18,7 +18,6 @@ const TABLE_HEAD = [
 ];
 
 const AddMultipleMpoArea = () => {
-    const { company_id, user_role, company_user_id, email } = useContext(CookieContext)
 
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('number');
@@ -143,6 +142,8 @@ const AddMultipleMpoArea = () => {
 }
 
 const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
+    const { company_id, user_role, company_user_id, email } = useContext(CookieContext)
+
     const doctorcategories = [
         { id: "A", title: "A" },
         { id: "B", title: "B" },

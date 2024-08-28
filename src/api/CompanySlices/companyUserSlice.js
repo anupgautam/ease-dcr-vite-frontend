@@ -144,7 +144,8 @@ export const CompanyUserSlice = apiSlice.injectEndpoints({
                     url: `user/company-user-without-pagination/?company_name=${id}`,
                     method: 'GET',
                 }),
-            invalidatesTags: ['CompanyUsers']
+            invalidatesTags: ['CompanyUsers'],
+            providesTags: ['Users']
         }),
         getAllUserAttendance: builder.query({
             query: (id) => ({

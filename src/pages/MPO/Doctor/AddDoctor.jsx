@@ -74,8 +74,8 @@ const AddDoctor = () => {
     const [createDoctors] = useCreateDoctorsMutation();
 
     const initialFValues = {
-        is_invested: false
-
+        is_invested: false,
+        mpo_name: company_user_id
     };
 
     const {
@@ -148,7 +148,7 @@ const AddDoctor = () => {
         formData.append('doctor_gender', values.doctor_gender);
         formData.append('doctor_territory', values.doctor_territory);
         formData.append('doctor_category', values.category_name);
-        formData.append('mpo_name', user_role === 'admin' ? values.mpo_name : company_user_id);
+        // formData.append('mpo_name', company_user_id);
         formData.append('doctor_qualification', values.doctor_qualification);
         formData.append('doctor_specialization', values.doctor_specialization);
         formData.append('company_id', company_id);
@@ -330,7 +330,7 @@ const AddDoctor = () => {
                                         />
                                     </Box>
                                 </Grid>
-                                <Grid item xs={12}>
+                                {/* <Grid item xs={12}>
                                     <Box marginBottom={2}>
                                         <Controls.Select
                                             name="mpo_name"
@@ -341,7 +341,7 @@ const AddDoctor = () => {
                                             error={errors.mpo_name}
                                         />
                                     </Box>
-                                </Grid>
+                                </Grid> */}
                                 <Grid item xs={12}>
                                     <Box marginBottom={2}>
                                         <Controls.Select
