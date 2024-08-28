@@ -74,6 +74,14 @@ const AddUser = () => {
         return [];
     }, [Divisions]);
 
+    //! Multiple Company Divsion
+    const [divisionOptions, setDivisionOptions] = useState([])
+
+    const handleMultipleDivision = (event, value) => {
+        const selectedIds = value.map(option => option.id);
+        setDivisionOptions(selectedIds);
+    };
+
     //! Executive level
     const [executiveLevels, setExecutiveLevels] = useState([]);
     const [getExecLevel] = useGetAllExecutiveLevelsMutation();
@@ -203,9 +211,10 @@ const AddUser = () => {
         formData.append("role_name", values.role_name);
         formData.append("executive_level", values.executive_level);
         formData.append("company_id", company_id);
-        formData.append("company_area", values.company_area);
-        formData.append("division_name", values.division_name);
-        // formData.append("company_area", JSON.stringify(areaOptions))
+        // formData.append("company_area", values.company_area);
+        // formData.append("division_name", values.division_name);
+        formData.append("company_area", JSON.stringify(areaOptions))
+        formData.append("division_name", JSON.stringify(divisionOptions))
         formData.append("station_type", values.station_type);
         formData.append("is_active", true);
         formData.append("date_of_joining", formattedDate);
@@ -386,9 +395,23 @@ const AddUser = () => {
                             error={errors.division_name}
                             options={divisionList}
                         />
+                        {/* <Autocomplete
+                            multiple
+                            options={divisionList}
+                            getOptionLabel={(option) => option.title}
+                            onChange={handleMultipleDivision}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Division*" />
+                            )}
+                            renderOption={(props, option) => (
+                                <li {...props} key={option.id}>
+                                    {option.title}
+                                </li>
+                            )}
+                        /> */}
                     </Box>
                     <Box marginBottom={2}>
-                        {/* <Controls.Select
+                        <Controls.Select
                             name="company_area"
                             label="Company Wise Area*"
                             className={"drawer-role-name-select"}
@@ -396,8 +419,8 @@ const AddUser = () => {
                             onChange={handleInputChange}
                             error={errors.company_area}
                             options={companyAreas}
-                        /> */}
-                        <Autocomplete
+                        />
+                        {/* <Autocomplete
                             multiple
                             options={companyAreas}
                             getOptionLabel={(option) => option.title}
@@ -410,7 +433,7 @@ const AddUser = () => {
                                     {option.title}
                                 </li>
                             )}
-                        />
+                        /> */}
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Input
