@@ -136,23 +136,22 @@ const ExcelCSVTourPlan = () => {
         setCompanyId(company_id);
     };
 
-
-
     const headers = [
-        { label: 'S.No.', key: 'sno', backgroundColor: '#2e8960', fontSize: 13, fontColor: '#FFFFFF' },
-        { label: 'Date', key: 'date', backgroundColor: '#2e8960', fontSize: 13, fontColor: '#FFFFFF' },
-        { label: 'Area', key: "area", backgroundColor: '#2e8960', fontSize: 13, fontColor: '#FFFFFF' },
-        { label: 'Visited With', key: 'visited_with', backgroundColor: '#2e8960', fontSize: 13, fontColor: '#FFFFFF' },
-        { label: 'Hulting Station', key: 'hulting_station', backgroundColor: '#2e8960', fontSize: 13, fontColor: '#FFFFFF' },
+        { label: 'S.No.', key: 'sno', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
+        { label: 'Date', key: 'date', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
+        { label: 'Area', key: 'area', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
+        { label: 'Visited With', key: 'visited_with', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
+        { label: 'Hulting Station', key: 'hulting_station', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
     ];
 
     const headers1 = [
-        { label: 'S.No.', key: 'sno', backgroundColor: '#2e8960', fontSize: 13, fontColor: '#FFFFFF' },
-        { label: 'Date', key: 'date', backgroundColor: '#2e8960', fontSize: 13, fontColor: '#FFFFFF' },
-        { label: 'Area', key: "area", backgroundColor: '#2e8960', fontSize: 13, fontColor: '#FFFFFF' },
-        { label: 'Remark', key: 'remark', backgroundColor: '#2e8960', fontSize: 13, fontColor: '#FFFFFF' },
-        { label: 'Hulting Station', key: 'hulting_station', backgroundColor: '#2e8960', fontSize: 13, fontColor: '#FFFFFF' },
+        { label: 'S.No.', key: 'sno', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
+        { label: 'Date', key: 'date', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
+        { label: 'Area', key: 'area', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
+        { label: 'Remark', key: 'remark', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
+        { label: 'Hulting Station', key: 'hulting_station', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
     ];
+
 
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -282,7 +281,10 @@ const ExcelCSVTourPlan = () => {
                         {TourPlanSearch &&
                             <>
                                 <Box marginTop={2}>
-                                    <ExportToExcel headers={selectedUser?.role === "MPO" ? headers1 : headers} fileName={`${selectedUser?.role === "MPO" ? selectedUser.title + ' ' + 'Tour Plan' : 'All Tour Plan'}`} data={selectedUser?.role === "MPO" ? templateData1 : templateData} />
+                                    <ExportToExcel
+                                        headers={selectedUser?.role === "MPO" ? headers1 : headers}
+                                        fileName={`${selectedUser?.role === "MPO" ? selectedUser.title + ' ' + 'Tour Plan' : 'All Tour Plan'}`}
+                                        data={selectedUser?.role === "MPO" ? templateData1 : templateData} />
                                 </Box>
                             </>
                         }

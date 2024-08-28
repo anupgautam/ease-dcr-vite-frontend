@@ -7,7 +7,7 @@ import {
     Skeleton
 } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { useGetStockistAllDCRByIdQuery } from '../../../api/DCRs Api Slice/stockistDCR/StockistDCRSlice';
+import { useGetStockistAllDCRByIdQuery } from '../../../api/DCRs Api Slice/stockistDCR/stockistDCRAllSlice';
 import { CookieContext } from '@/App';
 
 const DCRStockistDetail = () => {

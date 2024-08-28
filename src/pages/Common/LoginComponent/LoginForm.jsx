@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setCredentials } from '../../../api/RTK query/authSlice';
 import { useLoginUserMutation } from '../../../api/MPOSlices/UserSlice';
 // @mui
-import { Stack, Checkbox, Box, Grid, Link, useTheme, useMediaQuery, TextField, InputAdornment } from '@mui/material';
+import { Stack, Checkbox, Box, Grid, Link, useTheme, useMediaQuery, TextField, InputAdornment, CircularProgress } from '@mui/material';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { FaRegEyeSlash } from 'react-icons/fa';
 import { LoadingButton } from '@mui/lab';
@@ -32,6 +32,7 @@ const LoginFormInputs = () => {
     //! RTK Query loginHook
     const [login] = useLoginUserMutation()
     const dispatch = useDispatch()
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' })
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' })
 
@@ -67,80 +68,84 @@ const LoginFormInputs = () => {
     };
 
     //! RTKQuery login
-    const handleSubmission = useCallback(async (e) => {
-        e.preventDefault();
-        validateEmail(email);
-        validatePassword(password);
-        if (!emailError && !passwordError) {
-            try {
-                await login({ 'email': email, 'password': password })
-                    .then((res) => {
-                        if (res.data) {
-                            Cookies.set('User_id', res.data.user_id);
-                            Cookies.set('company_id', res.data.company_id);
-                            Cookies.set('company_user_id', res.data.company_user_id);
-                            Cookies.set('company_user_role_id', res.data.company_user_role_id);
-                            Cookies.set('company_division_name', res.data.company_division_name);
-                            Cookies.set('refresh', res.data.token.refresh);
-                            Cookies.set('access', res.data.token.access);
-                            Cookies.set('email', email);
-                            Cookies.set('is_highest_priority', res.data.is_highest_priority)
-                            setSuccessMessage({ show: true, message: 'Successfully Logged In' })
+    const handleSubmission = useCallback(
+        async (e) => {
+            e.preventDefault();
+            setLoading(true);
+            validateEmail(email);
+            validatePassword(password);
+
+            if (!emailError && !passwordError) {
+                try {
+                    const res = await login({ email, password });
+
+                    if (res.data) {
+                        Cookies.set('User_id', res.data.user_id);
+                        Cookies.set('company_id', res.data.company_id);
+                        Cookies.set('company_user_id', res.data.company_user_id);
+                        Cookies.set('company_user_role_id', res.data.company_user_role_id);
+                        Cookies.set('company_division_name', res.data.company_division_name);
+                        Cookies.set('refresh', res.data.token.refresh);
+                        Cookies.set('access', res.data.token.access);
+                        Cookies.set('email', email);
+                        Cookies.set('is_highest_priority', res.data.is_highest_priority);
+                        setSuccessMessage({ show: true, message: 'Successfully Logged In' });
+                        setLoading(true);
+
+                        setTimeout(() => {
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
-                                Cookies.set('user_role', 'admin')
-                                console.log("");
+                                Cookies.set('user_role', 'admin');
                                 navigate('/dashboard/admin');
-                                dispatch(setCredentials({ ...res, email }))
+                                dispatch(setCredentials({ ...res, email }));
                             } else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
-                                Cookies.set('user_role', 'MPO')
-                                console.log("");
+                                Cookies.set('user_role', 'MPO');
                                 navigate('/dashboard/admin/listofdoctor');
-                            } else if (res.data.role === "ASM") {
-                                Cookies.set('user_role', 'other-roles')
-                                console.log("");
+                            } else if (res.data.role === 'ASM') {
+                                Cookies.set('user_role', 'other-roles');
                                 navigate('/dashboard/admin/tourplan');
-                            } else if (res.data.role === "RSM" || res.data.role === "SM" || res.data.role === "MM" || res.data.role === "CH") {
-                                Cookies.set('user_role', 'other-roles')
-                                Cookies.set('role', 'other')
-                                console.log("");
+                            } else if (
+                                res.data.role === 'RSM'
+                                || res.data.role === 'SM'
+                                || res.data.role === 'MM'
+                                || res.data.role === 'CH'
+                            ) {
+                                Cookies.set('user_role', 'other-roles');
+                                Cookies.set('role', 'other');
                                 navigate('/dashboard/admin/tourplan');
-                            }
-                            else {
-                                setErrorMessage({ show: true, message: "User Does not exist." });
-                                setTimeout(() => {
-                                    setErrorMessage({ show: false, message: "" });
-                                }, [2000])
-                            }
-                        } if (res.error) {
-                            console.log(res.error)
-                            if (res.error?.originalStatus === 500) {
-                                setErrorMessage({ show: true, message: 'Backend Error' });
                             } else {
-                                setErrorMessage({ show: true, message: res.error.data });
+                                setErrorMessage({ show: true, message: 'User Does not exist.' });
+                                setTimeout(() => {
+                                    setErrorMessage({ show: false, message: '' });
+                                }, 2000);
                             }
-                            setTimeout(() => setErrorMessage({ show: false, message: "" }), 2000);
+                            setLoading(false);
+                        }, 1000);
+                    } else if (res.error) {
+                        if (res.error?.originalStatus === 500) {
+                            setErrorMessage({ show: true, message: 'Server Error. Please try again later.' });
                         } else {
                             setErrorMessage({ show: true, message: 'Login Failed' });
-                            setTimeout(() => {
-                                setErrorMessage({ show: false, message: "" });
-                            }, [2000])
                         }
-                    })
-            } catch (err) {
-                setErrorMessage({ show: true, message: 'Login Failed' });
-
+                        setLoading(false);
+                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                    }
+                } catch (err) {
+                    setErrorMessage({ show: true, message: 'Login Failed' });
+                    setLoading(false);
+                    setTimeout(() => {
+                        setErrorMessage({ show: false, message: '' });
+                    }, 2000);
+                }
+            } else {
+                setErrorMessage({ show: true, message: 'Enter correct values' });
+                setLoading(false);
                 setTimeout(() => {
-                    setErrorMessage({ show: false, message: "" });
-                }, [2000])
+                    setErrorMessage({ show: false, message: '' });
+                }, 2000);
             }
-        }
-        else {
-            setErrorMessage({ show: true, message: "Enter correct values" });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: "" });
-            }, [2000])
-        }
-    }, [email, password])
+        },
+        [email, password],
+    );
 
 
     useEffect(() => {
@@ -230,30 +235,25 @@ const LoginFormInputs = () => {
                     </LoadingButton>
                     {/* <p className=' text-center my-3 font-public_sans font-semibold text-gray-400'>—————— or ——————</p>
                     <p className=' text-center my-3 font-public_sans font-semibold'>Are you new? <span className=' underline-offset-2 underline text-[#6364f2]'> Create an Account</span></p> */}
-
-                    {
-                        ErrorMessage.show === true ? (
-                            <>
-                                <Grid>
-                                    <Box className="messageContainer errorMessage">
-                                        <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                                    </Box>
-                                </Grid>
-                            </>
-                        ) : null
-                    }
-                    {
-                        SuccessMessage.show === true ? (
-                            <>
-                                <Grid>
-                                    <Box className="messageContainer successMessage">
-                                        <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                                    </Box>
-                                </Grid>
-                            </>
-                        )
-                            : null
-                    }
+                    {ErrorMessage.show && (
+                        <Grid>
+                            <Box className="messageContainer errorMessage">
+                                <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                            </Box>
+                        </Grid>
+                    )}
+                    {SuccessMessage.show && (
+                        <Grid>
+                            <Box className="messageContainer successMessage">
+                                <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                            </Box>
+                        </Grid>
+                    )}
+                    {loading && (
+                        <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 100 }}>
+                            <CircularProgress />
+                        </Grid>
+                    )}
                 </Box>
             </form>
         </>
