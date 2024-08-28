@@ -102,7 +102,7 @@ const AddHolidayArea = () => {
         e.preventDefault();
         setLoading(true)
         try {
-            const response = await createHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptions, "access": access, "refresh": refresh }).unwrap();
+            const response = await createHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptions }).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Added Holiday Areas' });
             setTimeout(() => {
                 setSuccessMessage({ show: false, message: '' });

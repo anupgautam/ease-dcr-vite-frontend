@@ -25,7 +25,6 @@ const TABLE_HEAD = [
 ];
 
 const AddMultipleProduct = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('number');
@@ -144,6 +143,7 @@ const AddMultipleProduct = () => {
 }
 
 const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const prod_category = [
         { id: "tab", title: "Tablet" },

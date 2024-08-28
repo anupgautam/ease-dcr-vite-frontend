@@ -22,7 +22,6 @@ const TABLE_HEAD = [
 ];
 
 const AddMultipleChemist = () => {
-    const { company_id, user_role, company_user_id, email } = useContext(CookieContext)
 
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('number');
@@ -144,6 +143,8 @@ const AddMultipleChemist = () => {
 }
 
 const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
+    const { company_id, user_role, company_user_id, email } = useContext(CookieContext)
+
     const doctorcategories = [
         { id: "A", title: "A" },
         { id: "B", title: "B" },

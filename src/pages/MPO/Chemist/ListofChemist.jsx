@@ -42,7 +42,9 @@ const ListofChemist = () => {
                                     user_role === "admin" &&
                                     <ExportChemist />
                                 }
-                                <AddChemist />
+                                {user_role === "MPO" &&
+                                    <AddChemist />
+                                }
                             </Stack>
                         </Grid>
                     </Grid>

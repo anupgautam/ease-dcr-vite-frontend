@@ -21,7 +21,6 @@ const TABLE_HEAD = [
 ];
 
 const AddMultipleStockist = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
 
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('number');
@@ -147,6 +146,8 @@ const AddMultipleStockist = () => {
 }
 
 const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
+    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+
     const doctorcategories = [
         { id: "A", title: "A" },
         { id: "B", title: "B" },

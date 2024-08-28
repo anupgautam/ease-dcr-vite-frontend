@@ -41,7 +41,10 @@ const ListOfDoctor = () => {
                                     user_role === "admin" &&
                                     <ExportDoctor />
                                 }
-                                <AddDoctor />
+                                {
+                                    user_role === "MPO" &&
+                                    <AddDoctor />
+                                }
                             </Stack>
                         </Grid>
 
