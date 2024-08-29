@@ -55,6 +55,7 @@ export default function AccountPopover() {
     try {
       setSuccess(true);
       setSuccessMessage({ show: true, message: 'Successfully Logged Out' });
+      dispatch(clearCookie());
       Cookies.remove('access')
       Cookies.remove('refresh')
       Cookies.remove('user_role')
@@ -67,7 +68,6 @@ export default function AccountPopover() {
       Cookies.remove('role');
       Cookies.remove('is_highest_priority');
       Cookies.remove('company_area_id');
-      dispatch(clearCookie());
       navigate("/")
 
     }
