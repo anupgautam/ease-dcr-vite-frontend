@@ -42,7 +42,6 @@ import ExcelCSVSecondarySales from './ExcelCSVSecondarySales';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
-import { useSelector } from "react-redux";
 import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
 import { useSelector } from 'react-redux';
 

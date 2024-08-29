@@ -26,7 +26,6 @@ import { useSelector } from 'react-redux';
 import { useGetShiftWiseDoctorDCRByIdQuery, useUpdateShiftWiseDoctorDCRMutation } from '@/api/DCRs Api Slice/doctorDCR/shiftWiseDoctorDCRSlice';
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
 import { useGetAllCompanyAreasQuery } from '../../../../api/CompanySlices/companyAreaSlice'
-import { useSelector } from 'react-redux';
 
 
 const EditDCR = ({ idharu, onClose }) => {

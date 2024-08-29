@@ -12,7 +12,6 @@ import ApexChart from '@/reusable/components/charts/apexChart';
 import { useGetTargetsByUserMutation } from '@/api/ExpensesSlices/targetSlices';
 import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRolesSlice';
 import { useGetAllCompanyUserRoleByRoleQuery } from '@/api/CompanySlices/companyUserRoleSlice';
-import { useSelector } from 'react-redux';
 
 export default function TargetChart(props) {
   const { company_id, user_role, company_user_id, refresh, access } = useSelector((state) => state.cookie);

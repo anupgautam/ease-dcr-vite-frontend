@@ -7,7 +7,6 @@ import {
     useDeleteChemistsAllDCRByIdMutation
 } from "@/api/DCRs Api Slice/chemistDCR/ChemistDCRAllSlice";
 import { useTransition } from 'react-transition-state';
-import { useSelector } from "react-redux";
 import EditChemistOrderedProduct from "../EditDCRs/EditChemistOrderedProduct";
 import {
     Drawer,

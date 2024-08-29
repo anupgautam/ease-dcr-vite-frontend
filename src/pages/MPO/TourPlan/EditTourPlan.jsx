@@ -24,7 +24,6 @@ import {
 import { useSelector } from 'react-redux';
 import DateToString from '@/reusable/forms/utils/dateToString';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
-import { useSelector } from 'react-redux';
 
 import moment from 'moment';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';

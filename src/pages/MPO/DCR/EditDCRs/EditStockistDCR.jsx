@@ -18,7 +18,6 @@ import {
 } from '@/api/DCRs Api Slice/stockistDCR/stockistDCRAllSlice';
 import editWithoutImage from '@/reusable/components/forms/utils/editUtils/editWithoutImage';
 import useDebounce from '@/reusable/components/forms/utils/debounce';
-import { useSelector } from 'react-redux';
 import {
     useUpdateShiftWiseStockistDCRMutation,
     useGetShiftWiseStockistDCRByDCRIdQuery

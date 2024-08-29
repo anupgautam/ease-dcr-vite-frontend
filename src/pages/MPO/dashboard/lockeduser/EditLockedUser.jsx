@@ -23,7 +23,6 @@ import {
     useUpdateApplicationsMutation,
 } from '@/api/ApplicationSlices/ApplicationSlices'
 import { useSelector } from 'react-redux';
-import { useSelector } from 'react-redux';
 
 const EditApplication = ({ mpoId, idharu, onClose }) => {
 

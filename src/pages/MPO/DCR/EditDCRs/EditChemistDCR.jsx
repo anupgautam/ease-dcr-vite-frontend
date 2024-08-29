@@ -32,7 +32,6 @@ import {
 } from '@/api/DCRs Api Slice/chemistDCR/shiftWiseChemistDCRSlice';
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { useGetAllVisitedMpoWiseChemistQuery } from '@/api/MPOSlices/doctorApiSlice';
-import { useSelector } from 'react-redux';
 
 
 const EditChemistDCR = ({ idharu, onClose }) => {

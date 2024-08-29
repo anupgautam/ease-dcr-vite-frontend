@@ -24,7 +24,6 @@ import {
 } from '@/api/ExpensesSlices/expensesTypeSlices';
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice'
 import { useSelector } from 'react-redux';
-import { useSelector } from 'react-redux';
 
 
 const EditCompanyAreaWiseExpenses = ({ idharu, onClose }) => {
