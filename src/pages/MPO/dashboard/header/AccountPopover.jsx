@@ -11,6 +11,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Icon } from '@iconify/react';
 import { useGetUsersByIdQuery } from '../../../../api/MPOSlices/UserSlice'
+import { useDispatch } from 'react-redux';
+import { clearCookie } from '../../../../reducers/cookieReducer';
 
 const MENU_OPTIONS = [
   {
@@ -41,6 +43,7 @@ export default function AccountPopover() {
     navigate('/dashboard/admin/profile')
   }
 
+  const dispatch = useDispatch();
 
   const [Message, setMessage] = useState({ show: false, message: '' })
   const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' })
@@ -52,6 +55,7 @@ export default function AccountPopover() {
     try {
       setSuccess(true);
       setSuccessMessage({ show: true, message: 'Successfully Logged Out' });
+      dispatch(clearCookie());
       Cookies.remove('access')
       Cookies.remove('refresh')
       Cookies.remove('user_role')
