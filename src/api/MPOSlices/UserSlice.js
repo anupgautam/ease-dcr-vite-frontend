@@ -142,7 +142,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     body: createUsers,
                 }
             },
-            invalidatesTags: ['CompanyUserRoles']
+            invalidatesTags: ['CompanyUserRoles', 'User', "CompanyUsers"],
         }),
 
         //! POST users 

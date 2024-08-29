@@ -162,7 +162,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                     body: id
                 }
             },
-            invalidatesTags: ['TourPlan']
+            invalidatesTags: ['TourPlan','Doctor']
         }),
 
         updateAreaofMPO: builder.mutation({
