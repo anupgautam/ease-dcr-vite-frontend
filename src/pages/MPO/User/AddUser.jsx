@@ -211,10 +211,10 @@ const AddUser = () => {
         formData.append("role_name", values.role_name);
         formData.append("executive_level", values.executive_level);
         formData.append("company_id", company_id);
-        // formData.append("company_area", values.company_area);
-        // formData.append("division_name", values.division_name);
-        formData.append("company_area", JSON.stringify(areaOptions))
-        formData.append("division_name", JSON.stringify(divisionOptions))
+        formData.append("company_area", values.company_area);
+        formData.append("division_name", values.division_name);
+        // formData.append("company_area", JSON.stringify(areaOptions))
+        // formData.append("division_name", JSON.stringify(divisionOptions))
         formData.append("station_type", values.station_type);
         formData.append("is_active", true);
         formData.append("date_of_joining", formattedDate);
