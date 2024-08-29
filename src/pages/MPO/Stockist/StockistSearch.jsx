@@ -24,9 +24,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
-
 import { useForm1 } from '../../../reusable/components/forms/useForm';
 
 import {
@@ -55,7 +55,7 @@ const TABLE_HEAD = [
 ];
 
 const StockistSearch = () => {
-    const { company_id, user_role, company_area_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Get Company Area
     const Company_Areas = useGetAllCompanyAreasQuery(company_id);
@@ -70,7 +70,7 @@ const StockistSearch = () => {
         return [];
     }, [Company_Areas]);
 
-    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: user_role === "admin" ? companyArea : company_area_id });
+    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: parseInt(company_id), company_area: user_role === "admin" ? companyArea : company_user_id });
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -90,7 +90,7 @@ const StockistSearch = () => {
     //! Options
     const handleCompanyNameChange = (event, value) => {
         setCompanyArea(value?.id || '');
-        setCompanyId(parseInt(company_id));
+        setCompanyId(company_id);
     };
 
     //!Pagination logic
@@ -101,15 +101,19 @@ const StockistSearch = () => {
         setPage(thisArray[3]);
     }
 
-    // ! Get all users wala
-    const { data: AllStockistsData } = useGetAllStockistsQuery(page);
-
-    const [searchResults, setSearchResults] = useState({ search: "" });
-    const [searchStockist, results] = useSearchStockistsMutation();
-    const searchData = results.data;
+    // ! Search Logic
+    const { data: AllStockistsData } = useGetAllStockistsQuery({
+        id: parseInt(company_id),
+        page: page,
+        company_area: user_role === 'admin' ? "" : company_user_id
+    });
 
     const [SearchData, setSearchData] = useState([]);
     const [SearchDataCondition, setSearchDataCondition] = useState(false);
+
+    const [searchStockist, results] = useSearchStockistsMutation();
+    const searchData = results.data;
+
 
     const [SearchChemist] = useSearchStockistsMutation();
 
@@ -146,15 +150,6 @@ const StockistSearch = () => {
             searchStockist(values);
         }
     }, [values, searchStockist]);
-
-    //! onSearch
-    const FilteredData = { company_area: companyArea, company_name: companyId };
-
-    useEffect(() => {
-        if (companyId || companyArea) {
-            searchStockist(FilteredData);
-        }
-    }, [companyId, companyArea]);
 
     // !Delete stockists
     const [deleteStockist] = useDeleteStockistsByIdMutation();
@@ -305,7 +300,7 @@ const StockistSearch = () => {
                                                         StockistData !== undefined ?
                                                             <>
                                                                 {
-                                                                    StockistData.count === 0 ?
+                                                                    StockistData?.count === 0 ?
                                                                         <TableRow>
                                                                             <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
                                                                                 <Paper
@@ -325,7 +320,7 @@ const StockistSearch = () => {
                                                                         </TableRow> :
                                                                         <>
                                                                             {
-                                                                                StockistData.results.map((stockistsearch, index) => (
+                                                                                StockistData?.results.map((stockistsearch, index) => (
                                                                                     <TableRow hover tabIndex={-1} key={stockistsearch.id}>
                                                                                         <TableCell>{index + 1}</TableCell>
                                                                                         <TableCell component="th" scope="row" align="left">

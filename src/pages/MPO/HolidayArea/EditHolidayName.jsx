@@ -85,7 +85,6 @@ const EditHolidayName = ({ idharu, onClose }) => {
         formData.append('id', idharu)
         try {
             const response = await updateHolidayName(formData).unwrap();
-            console.log(response)
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Holiday Name' });
                 setTimeout(() => {
@@ -100,7 +99,6 @@ const EditHolidayName = ({ idharu, onClose }) => {
             }
         }
         catch (error) {
-            console.log(error)
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });

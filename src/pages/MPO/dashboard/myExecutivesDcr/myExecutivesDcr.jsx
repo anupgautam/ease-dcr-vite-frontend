@@ -74,7 +74,6 @@ const MyExecutivesDcr = () => {
         }
         return [];
     }, [myHigherData])
-    console.log(myHigherData)
 
     const [selectedOption, setSelectedOption] = useState(() => {
         // Check if myHigherData is not empty and contains at least one element

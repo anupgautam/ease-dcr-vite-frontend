@@ -185,7 +185,7 @@ const ChemistSearch = () => {
     }, [results]);
 
     //! onSearch
-    const FilteredData = { mpo_area: mpoArea, mpo_name: mpoName, companyId: companyId }
+    const FilteredData = { mpo_area: mpoArea, mpo_name: mpoName, company_id: companyId }
 
     useEffect(() => {
         if (companyId || mpoArea || mpoName) {

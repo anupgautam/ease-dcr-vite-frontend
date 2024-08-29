@@ -1,3 +1,4 @@
+import { debounce } from 'lodash';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 //! @mui
 import {
@@ -23,6 +24,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+
 import DefaultList from './DefaultList';
 import 'react-datepicker/dist/react-datepicker.css';
 import "nepali-datepicker-reactjs/dist/index.css"
@@ -52,7 +54,7 @@ const TABLE_HEAD = [
 ];
 
 const FilterMPOAreas = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -137,10 +139,20 @@ const FilterMPOAreas = () => {
     //! Options
     const [companyId, setCompanyId] = useState();
     const [selectedOption, setSelectedOption] = useState('');
-    const handleOptionChange = (event, value) => {
+
+    const handleOptionChange = useCallback((event, value) => {
         setCompanyId(company_id);
-        setSelectedOption(value?.id);
-    };
+        setSelectedOption(value?.id || "");
+    }, [])
+
+    //!Pagination logic
+    const [page, setPage] = useState(1)
+
+    const handleChangePage = useCallback((e) => {
+        const data = e.target.ariaLabel
+        let thisArray = data.split(" ")
+        setPage(thisArray[3]);
+    }, [])
 
     //! Search results
     const [searchMPOArea, results] = useSearchMPOAreaMutation()
@@ -155,7 +167,7 @@ const FilterMPOAreas = () => {
     const [dateData, setDateData] = useState()
 
     //! onSearch
-    const FilteredData = { selectedOption: selectedOption, companyId: companyId, companyArea: CompanyAreaId }
+    const FilteredData = { selectedOption: selectedOption, companyId: company_id, companyArea: CompanyAreaId }
 
     useEffect(() => {
         if (companyId || selectedOption || CompanyAreaId) {
@@ -183,14 +195,7 @@ const FilterMPOAreas = () => {
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
-    //!Pagination logic
-    const [page, setPage] = useState(1)
-
-    const handleChangePage = useCallback((e) => {
-        const data = e.target.ariaLabel
-        let thisArray = data.split(" ")
-        setPage(thisArray[3]);
-    }, [])
+    // const debouncedSearch = debounce(onSearch, 300);
 
     return (
         <>

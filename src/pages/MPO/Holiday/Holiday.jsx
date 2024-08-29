@@ -144,7 +144,6 @@ const Holiday = () => {
     if (error) {
         return <div>Error: {error.message}</div>;
     }
-    console.log(holidayDates)
 
     const getHolidayEvents = () => {
         return holidayDates.map((date) => ({
@@ -160,8 +159,6 @@ const Holiday = () => {
     const handleChange = (date) => {
 
     }
-
-    console.log(holidayEvents)
 
     return (
         <>

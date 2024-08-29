@@ -290,7 +290,6 @@ const AddDCRforChemist = () => {
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
     const navigate = useNavigate();
 
-    console.log("AllMutipleData", AllMutipleData);
 
     const handlePostDcr = () => {
         setLoading(true)

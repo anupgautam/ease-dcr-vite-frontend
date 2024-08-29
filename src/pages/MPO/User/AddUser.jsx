@@ -244,7 +244,6 @@ const AddUser = () => {
         setIsDrawerOpen(false);
     }, [createUsers, values]);
 
-    console.log(values)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     return (

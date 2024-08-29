@@ -24,16 +24,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from 'react-redux';
 
-
-const TABLE_HEAD = [
-    { id: 'name', label: 'Name', alignRight: false },
-    { id: 'company', label: 'Company', alignRight: false },
-    { id: 'role', label: 'Role', alignRight: false },
-    { id: 'isVerified', label: 'Verified', alignRight: false },
-    { id: 'status', label: 'Status', alignRight: false },
-    { id: '' },
-];
-
 const DefaultList = () => {
     const { company_id, user_role, company_division_name } = useSelector((state) => state.cookie);
 
@@ -77,10 +67,10 @@ const DefaultList = () => {
         setPage(thisArray[3]);
     }, [])
 
-    // ! Get all users wala
+    // ! Get all products wala
     const { data } = useGetAllProductsQuery({ id: company_id, page: page, division_name: user_role === 'admin' ? "" : company_division_name });
 
-    // !Delete chemists
+    // !Delete product
     const [deleteProduct] = useDeleteProductsByIdMutation()
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 

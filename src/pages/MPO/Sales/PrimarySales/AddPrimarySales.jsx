@@ -105,7 +105,7 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     //!Modal wala ko click event
-    const onAddChemists = useCallback(async (e) => {
+    const onAddPrimarySales = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
         const formData = new FormData();
@@ -141,7 +141,7 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
         }
 
         setIsDrawerOpen(false)
-    }, [onAddChemists, values]);
+    }, [onAddPrimarySales, values]);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -327,7 +327,7 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
-                            onClick={(e) => onAddChemists(e)}
+                            onClick={(e) => onAddPrimarySales(e)}
                             text="Submit"
                         />
                         <Button

@@ -18,7 +18,6 @@ const DCRChemistDetail = () => {
     const selectedUser = searchParams.get('id');
 
     const { data, isLoading } = useGetChemistAllDCRByIdQuery(selectedUser);
-    console.log(data)
     return (
         <Container>
             <Card sx={{ padding: 2, marginTop: 3 }}>

@@ -18,7 +18,6 @@ const DCRStockistDetail = () => {
     const selectedUser = searchParams.get('id');
 
     const { data, isLoading } = useGetStockistAllDCRByIdQuery(selectedUser);
-    console.log(data)
     return (
         <Container>
             <Card sx={{ padding: 2, marginTop: 3 }}>
