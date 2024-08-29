@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Card,
     Badge,
@@ -37,7 +37,7 @@ import {
     useSearchCollectionsMutation,
     useDeleteCollectionsByIdMutation
 } from '../../../api/MPOSlices/CollectionsApiSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: 'Chemist Name', alignRight: false },
@@ -49,7 +49,7 @@ const TABLE_HEAD = [
 
 const CollectionsSearch = () => {
 
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

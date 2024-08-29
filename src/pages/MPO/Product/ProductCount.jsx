@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useContext } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Typography } from '@mui/material';
 import { useGetAllProductsQuery } from '@/api/MPOSlices/ProductSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const ProductCount = () => {
-    const { company_id, user_role, company_division_name } = useContext(CookieContext)
+    const { company_id, user_role, company_division_name } = useSelector((state) => state.cookie);
 
     const [page, setPage] = useState(1)
 

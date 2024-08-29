@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import {
     Box,
     Typography, Button, Grid
@@ -17,10 +17,10 @@ import {
     useGetCompanyRolesByIdQuery,
     useUpdateCompanyRolesMutation
 } from '@/api/MPOSlices/companyRolesSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditCompanyRoles = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Getting CompanyRoles by ID
     const CompanyRoles = useGetCompanyRolesByIdQuery(idharu);

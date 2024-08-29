@@ -1,13 +1,13 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { Link as ScrollLink, Events, scrollSpy } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
 import logo from "/assets/ease.svg";
 import "./Scrollnav.css";
 import { navItems } from "./Elements";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const Scrollnav = () => {
-  const { company_id, company_user_id, user_role } = useContext(CookieContext)
+  const { company_id, company_user_id, user_role } = useSelector((state) => state.cookie);
 
   const login = user_role;
   const [isVisible, setIsVisible] = useState(false);

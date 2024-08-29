@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useContext } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Typography } from '@mui/material';
 import { useGetAllcompanyUserRolesQuery } from '@/api/CompanySlices/companyUserRoleSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const UserCount = () => {
 
-    const { company_id } = useContext(CookieContext)
+    const { company_id } = useSelector((state) => state.cookie);
     const [page, setPage] = useState(1)
     const handleChangePage = useCallback((e) => {
         const data = e.target.ariaLabel

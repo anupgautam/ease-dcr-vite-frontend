@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 //! @mui
 import {
     Card,
@@ -46,7 +46,7 @@ import EditTravelAllowances from './EditTravelAllowances';
 import ExcelCSVTravelAllowances from './ExcelCSVTravelAllowances';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'date', label: 'Date', alignRight: false },
@@ -60,7 +60,7 @@ const TABLE_HEAD = [
 ];
 
 const FilterTravelAllowances = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

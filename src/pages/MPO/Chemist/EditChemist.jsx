@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import {
     Box,
     Grid,
@@ -22,11 +22,11 @@ import {
 } from "@/api/MPOSlices/ChemistSlice";
 
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditChemist = ({ idharu, onClose }) => {
 
-    const { company_id, access, refresh } = useContext(CookieContext)
+    const { company_id, access, refresh } = useSelector((state) => state.cookie);
 
     //! Getting chemist by ID
     const Chemist = useGetChemistsByIdQuery(idharu);

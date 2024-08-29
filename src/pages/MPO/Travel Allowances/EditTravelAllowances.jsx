@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import {
     Box, Grid,
     Typography, Button, CircularProgress
@@ -9,7 +9,7 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import 'react-datepicker/dist/react-datepicker.css';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 //! Reusable Component
 import { useForm, Form } from '../../../reusable/forms/useForm'
@@ -23,7 +23,7 @@ import {
 import { useSelector } from 'react-redux';
 
 const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const userList = useSelector(state => state?.tourPlan?.dataList);
 

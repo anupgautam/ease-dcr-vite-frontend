@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -24,7 +24,7 @@ import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import EditTourPlan from './EditTourPlan';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import {
     useGetTourPlansQuery,
@@ -41,7 +41,7 @@ const TABLE_HEAD = [
 
 
 const DefaultList = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Get Tour Plan
     const { data, refetch } = useGetTourPlansQuery({

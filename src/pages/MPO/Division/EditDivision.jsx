@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import {
     Box,
     Grid,
@@ -18,10 +18,10 @@ import {
     useGetCompanyDivisionsByIdQuery,
     useUpdateCompanyDivisionsMutation
 } from '@/api/DivisionSilces/companyDivisionSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditDivision = ({ idharu, onClose }) => {
-    const { company_id, refresh, access } = useContext(CookieContext)
+    const { company_id, refresh, access } = useSelector((state) => state.cookie);
 
     //! Getting company division by ID
     const CompanyDivisions = useGetCompanyDivisionsByIdQuery(idharu);

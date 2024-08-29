@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React, { useMemo, useContext } from "react";
+import React, { useMemo } from "react";
 import ReusableFormsSelect from "@/reusable/components/forms/controls/ReusableFormSelect";
 import {
   useGetStockistAllDCRByIdQuery,
@@ -8,10 +8,10 @@ import {
 } from "@/api/DCRs Api Slice/stockistDCR/stockistDCRAllSlice";
 import { useTransition } from 'react-transition-state';
 import { useGetAllRewardsByCompanyIdQuery } from "@/api/DCRs Api Slice/rewardsAPISlice";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditDCRStockistRewards = ({ id, context, editApi }) => {
-  const { company_id, user_role, company_user_id } = useContext(CookieContext)
+  const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const companyRewards = useSelector(state => state.dcrData.rewards);

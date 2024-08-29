@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Card,
   Badge,
@@ -40,7 +40,7 @@ import { useGetUsersByCompanyRoleIdQuery } from "@/api/MPOSlices/UserSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
 import { useUpdateUsersMutation } from "@/api/DemoUserSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 import { useLoginUserByAdminMutation } from "../../../api/MPOSlices/UserSlice";
 import { useDispatch } from "react-redux";
 import { encryptData } from "./excryption";
@@ -59,7 +59,7 @@ const TABLE_HEAD = [
 ];
 
 const UserSearch = () => {
-  const { company_id, access, refresh } = useContext(CookieContext)
+  const { company_id, access, refresh } = useSelector((state) => state.cookie);
 
   const companykoID = company_id
   //! For drawer

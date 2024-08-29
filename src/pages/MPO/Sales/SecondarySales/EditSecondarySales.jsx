@@ -22,11 +22,11 @@ import {
 import {
     useGetAllProductsOptionsQuery
 } from '@/api/MPOSlices/productApiSlice'
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditSecondarySales = ({ idharu, onClose, selectedOption, monthData, selectedYear }) => {
-    const { company_id, refresh, access } = useContext(CookieContext)
+    const { company_id, refresh, access } = useSelector((state) => state.cookie);
 
     //! Get doctor categories
     const Products = useGetAllProductsOptionsQuery(company_id)

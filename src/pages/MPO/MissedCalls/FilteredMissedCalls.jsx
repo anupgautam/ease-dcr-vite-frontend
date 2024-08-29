@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 //! @mui
 import {
     Card,
@@ -25,7 +25,7 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import { useGetUsersByCompanyRoleIdQuery } from '@/api/MPOSlices/UserSlice';
 import { useGetMissedDataByMpoQuery } from '@/api/MPOSlices/MissedCallsApiSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
@@ -40,7 +40,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredMissedCalls = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
 

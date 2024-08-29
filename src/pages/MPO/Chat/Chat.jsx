@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState, useContext } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { WEBSOCKET_BASE_URL } from '../../../baseURL'
 import connectWebSocket from "../../../reusable/utils/multipleWSConnection";
 import { useDispatch } from "react-redux";
@@ -10,7 +10,7 @@ import { Box } from "@mui/system";
 import { Card, Grid, Typography } from "@mui/material";
 import { BsFillChatDotsFill } from "react-icons/bs";
 import ChatContainer from "./chatMessageList";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const ChatApp = () => {
@@ -26,7 +26,7 @@ const ChatApp = () => {
 
 const Chat = () => {
 
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
 

@@ -1,14 +1,14 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import {
     Container,
     Grid, Box, Typography
 } from '@mui/material';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 import FilteredDoctorEvent from './FilteredDoctorEvent';
 import AddDoctorEvents from './addDoctorEvents';
 
 const ListofDoctorEvent = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     return (
         <>

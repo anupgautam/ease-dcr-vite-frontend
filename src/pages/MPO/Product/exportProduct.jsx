@@ -1,13 +1,13 @@
 import { Close } from "@mui/icons-material";
 import { Autocomplete, Box, Button, Drawer, IconButton, Stack, TextField, Typography } from "@mui/material";
-import React, { useState,useContext } from "react";
+import React, { useState } from "react";
 import { useGetFilteredDivisionsQuery } from "@/api/DivisionSilces/companyDivisionSlice";
 import { useGetProductsByDivisionWithoutPaginationQuery } from "@/api/MPOSlices/ProductSlice";
 import ExportToExcel from "@/reusable/utils/exportSheet";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const ExportProduct = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [mpoName, setMPOName] = useState('');
     const companyArea = [];

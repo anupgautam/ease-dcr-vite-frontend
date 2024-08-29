@@ -1,5 +1,5 @@
 import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Table, TableBody, TableCell, TableContainer, TableRow, Typography, Autocomplete, TextField, CircularProgress } from "@mui/material";
-import React, { useEffect, useState, useMemo, useContext } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
 import { useGetShiftsQuery } from "@/api/DCRs Api Slice/TourPlanApiSlice";
@@ -21,7 +21,7 @@ import { UserListHead } from "@/sections/@dashboard/user";
 
 import { useGetChemistAllDCRByIdQuery } from "@/api/DCRs Api Slice/chemistDCR/ChemistDCRAllSlice";
 import ChemistOrderProduct from "./orderProduct/chemistOrderProduct";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: ' Name', alignRight: false },
@@ -36,7 +36,7 @@ const TABLE_HEAD = [
 
 //! Add DCR For Chemist Component
 const AddDCRforChemist = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const location = useLocation();
     const id = new URLSearchParams(window.location.search).get('id');

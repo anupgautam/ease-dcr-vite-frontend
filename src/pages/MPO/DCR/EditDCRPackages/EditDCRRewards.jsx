@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React, { useState, useMemo, useContext } from "react";
+import React, { useState, useMemo } from "react";
 import { useTransition } from 'react-transition-state';
 import { FaPlus } from "react-icons/fa";
 import RoundButton from "@/reusable/components/button/roundbutton";
@@ -10,11 +10,11 @@ import {
   useGetRewardsByIdQuery,
   usePostRewardForDcrMutation
 } from "@/api/DCRs Api Slice/rewardsAPISlice";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditDCRRewards = ({ id, context, editApi }) => {
-  const { company_id, user_role, company_user_id } = useContext(CookieContext)
+  const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const companyRewards = useSelector(state => state.dcrData.rewards);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -37,7 +37,7 @@ import { addSelectedUser } from '@/reducers/dcrSelectData';
 import EditChemistDCR from '../EditDCRs/EditChemistDCR';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import moment from 'moment';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -49,7 +49,7 @@ const TABLE_HEAD = [
 ];
 
 const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
 

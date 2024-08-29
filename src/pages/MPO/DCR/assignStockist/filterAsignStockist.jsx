@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 //! @mui
 import {
     Card,
@@ -33,7 +33,7 @@ import {
     useGetAllDoctorsWithoutPaginateQuery,
     usePostAllMPONamesNoPageMutation,
 } from '../../../../api/MPOSlices/DoctorSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import {
     useGetUsersMPOWalaQuery
@@ -50,7 +50,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredAsignStockist = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
 
     //! For drawer 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import {
     Box,
     Typography, Button, Grid, CircularProgress
@@ -19,13 +19,13 @@ import {
     useGetDoctorsSpecialiationByIdQuery,
     useUpdateDoctorsMutation,
 } from "@/api/MPOSlices/DoctorSlice";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 
 const EditDoctor = ({ id, onClose, divisionId }) => {
 
-    const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, refresh, access } = useSelector((state) => state.cookie);
 
     //! Getting doctor by ID
     const Doctor = useGetDoctorsByIdQuery(id);

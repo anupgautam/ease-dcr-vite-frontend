@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
+import React  from 'react';
 import { Container, Grid, Box, Stack, useMediaQuery, useTheme } from '@mui/material';
 import UserCount from './UserCount';
 import UserSearch from './UserSearch';
 import AddUser from './AddUser';
 import { useGetAllDefaultUsersQuery } from '@/api/CompanySlices/companyUserRoleSlice';
 import ExportToExcel from '@/reusable/utils/exportSheet';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const ListofUser = () => {
-    const { company_id } = useContext(CookieContext)
+    const { company_id } = useSelector((state) => state.cookie);
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const { data } = useGetAllDefaultUsersQuery({ company_name: company_id });

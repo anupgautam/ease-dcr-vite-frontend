@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -41,7 +41,7 @@ import EditProduct from './EditProduct';
 import SearchIcon from '@mui/icons-material/Search';
 import Test from './DefaultList';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'product_name', label: 'Product Name', alignRight: false },
@@ -52,7 +52,7 @@ const TABLE_HEAD = [
 ];
 
 const ProductSearch = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Company Division
     const Division = useGetFilteredDivisionsQuery(company_id);

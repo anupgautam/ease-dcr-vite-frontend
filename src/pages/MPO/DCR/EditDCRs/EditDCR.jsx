@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import {
     Box, Grid,
     Typography, CircularProgress
@@ -26,11 +26,11 @@ import { useSelector } from 'react-redux';
 import { useGetShiftWiseDoctorDCRByIdQuery, useUpdateShiftWiseDoctorDCRMutation } from '@/api/DCRs Api Slice/doctorDCR/shiftWiseDoctorDCRSlice';
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
 import { useGetAllCompanyAreasQuery } from '../../../../api/CompanySlices/companyAreaSlice'
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditDCR = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
     const [noLoop, setNoLoop] = useState(true);

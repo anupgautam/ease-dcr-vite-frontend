@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import {
     Box,
     Typography,
@@ -22,10 +22,10 @@ import {
     useGetAllCompanyAreasQuery,
 } from '@/api/CompanySlices/companyAreaSlice';
 import { useCreateHolidayNamesMutation } from '@/api/HolidaySlices/holidaySlices';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const AddHolidayName = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Create Holiday Name
     const [createHolidayName] = useCreateHolidayNamesMutation()

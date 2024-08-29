@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import {
     Box, Grid, Typography, Button, Autocomplete, TextField, CircularProgress
 } from '@mui/material'
@@ -24,13 +24,13 @@ import {
 import { useSelector } from 'react-redux';
 import DateToString from '@/reusable/forms/utils/dateToString';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import moment from 'moment';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 
 const EditTourPlan = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const now = new Date();
     const [dateData, setDateData] = useState();

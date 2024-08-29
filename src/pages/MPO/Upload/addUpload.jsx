@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
     Box,
     Typography,
@@ -17,10 +17,10 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 import { usePostUploadDataMutation } from '@/api/Uploads/uploadApiSlice';
 import BlobToFile from '@/reusable/utils/blobToFile';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const AddUpload = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [File, setFile] = useState([]);
 

@@ -25,11 +25,11 @@ import { useGetAllCompanyProductsWithoutPaginationQuery } from '@/api/productSli
 import { useGetAllRewardsQuery } from '@/api/DCRs Api Slice/rewardsAPISlice';
 import { useGetAllCompanyRolesQuery } from '@/api/MPOSlices/companyRolesSlice';
 import { GetNameListFromOptions } from '@/reusable/components/forms/utils/getNameListFromOptions';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditDCR = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [noLoop, setNoLoop] = useState(true);
     const [doctors, setDoctors] = useState([]);

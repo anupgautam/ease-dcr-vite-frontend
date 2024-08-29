@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import {
     Box,
     Typography, Button, Grid, CircularProgress
@@ -17,10 +17,10 @@ import {
     useGetRewardsByIdQuery,
     useUpdateRewardsMutation
 } from '@/api/MPOSlices/rewardsApiSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditRewards = ({ idharu, onClose }) => {
-    const { company_id, refresh, access } = useContext(CookieContext)
+    const { company_id, refresh, access } = useSelector((state) => state.cookie);
 
     //! Getting Rewards by ID
     const Rewards = useGetRewardsByIdQuery(idharu);

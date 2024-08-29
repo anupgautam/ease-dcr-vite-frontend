@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useCallback, useMemo, useContext } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { useGetStockistsWithoutPaginationQuery } from '@/api/MPOSlices/stockistApiSlice';
 import { Box, Grid, FormControl, Autocomplete, TextField } from '@mui/material';
 import {
   useGetStockistOrderedProductsByChemistIdMutation
 } from '@/api/OrderedProductslices/stockistOrderedProductSlice';
 import DefaultStockistOrderedProduct from './DefaultStockistOrderedProduct';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const OrderedProductStockist = ({ index, value, other }) => {
-  const { company_id, user_role, company_user_id } = useContext(CookieContext)
+  const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
   const [selectedStockist, setSelectedStockist] = useState(null);
   const [orderedData, setOrderedData] = useState([]);
   const stockists = useGetStockistsWithoutPaginationQuery(company_id)

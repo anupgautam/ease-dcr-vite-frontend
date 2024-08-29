@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Grid,
     Box,
@@ -20,11 +20,11 @@ import {
     useGetTourPlanValidityByIdQuery,
     useUpdateTourPlanValidityMutation
 } from '@/api/MPOSlices/TourPlanValidityApiSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const DCRValidDate = () => {
-    const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, refresh, access } = useSelector((state) => state.cookie);
 
     const companyId = company_id;
     const DCR = useGetTourPlanValidityByIdQuery(companyId);

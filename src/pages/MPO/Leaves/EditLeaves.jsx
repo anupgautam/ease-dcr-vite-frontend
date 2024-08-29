@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Box,
     Typography, Button, Grid
@@ -19,11 +19,11 @@ import {
 } from "../../../api/Leaves/LeavesApiSlice";
 
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditLeaves = ({ id, onClose, divisionId }) => {
-    const { company_id, user_role, company_user_id, access, refresh } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, access, refresh } = useSelector((state) => state.cookie);
 
     //! Getting doctor by ID
     const Leaves = useGetLeavesByIdQuery(id);

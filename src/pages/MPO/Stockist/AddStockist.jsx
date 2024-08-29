@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import {
     Box,
     Typography,
@@ -21,10 +21,10 @@ import {
 } from '@/api/MPOSlices/StockistSlice';
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import { Link } from 'react-router-dom';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const AddStockist = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

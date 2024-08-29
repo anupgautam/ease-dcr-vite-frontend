@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useMemo, useContext } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { Typography } from '@mui/material';
 import { useGetHolidayAreasQuery } from '@/api/HolidaySlices/holidaySlices';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const HolidayAreaCount = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [page, setPage] = useState(1)
 

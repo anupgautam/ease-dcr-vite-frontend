@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -32,7 +32,7 @@ import {
 } from '../../../../api/MPOSlices/DoctorSlice'
 import EditDoctorSpecialization from './EditDoctorSpecialization';
 import ExportToExcel from '@/reusable/utils/exportSheet';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -42,7 +42,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultSpecialization = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

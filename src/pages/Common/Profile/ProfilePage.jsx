@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import {
     Grid, Box
 } from '@mui/material';
@@ -9,11 +9,11 @@ import { returnValidation } from '../../../validation';
 import BlobToFile from '../../../reusable/forms/utils/blobToFile';
 import { useGetProfileQuery, useUpdateProfilesMutation } from "../../../api/MPOSlices/ProfileApiSlice"
 import { LoadingButton } from '@mui/lab';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const ProfilePage = () => {
-    const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, refresh, access } = useSelector((state) => state.cookie);
 
     //! Get profile display
     const { data } = useGetProfileQuery();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
     Card,
     MenuItem,
@@ -36,7 +36,7 @@ import MyExecutiveChemistDcr from './myExecutiveChemistDcr';
 import MyExecutiveStockistDcr from './myExecutiveStockistDcr';
 import { useGetUsersByIdQuery } from '@/api/DemoUserSlice';
 import MyHoDcr from './myHoDcr';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
@@ -48,7 +48,7 @@ const TABLE_HEAD = [
 ];
 
 const MyExecutivesDcr = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Box,
     Grid,
@@ -18,11 +18,11 @@ import {
     useGetCollectionsByIdQuery,
     useUpdateCollectionsMutation,
 } from "@/api/MPOSlices/CollectionsApiSlice";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditCollections = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, refresh, access } = useSelector((state) => state.cookie);
 
     //! Getting chemist by ID
     const Chemist = useGetCollectionsByIdQuery(idharu);

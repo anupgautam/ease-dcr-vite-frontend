@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -33,7 +33,7 @@ import {
 
 import EditHoDCR from '../EditDCRs/EditHoDCR';
 import moment from 'moment';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -46,7 +46,7 @@ const TABLE_HEAD = [
 
 const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
 
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

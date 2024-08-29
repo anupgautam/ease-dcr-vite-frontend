@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import {
     Box,
     Typography,
@@ -21,11 +21,11 @@ import { useGetAllProductsOptionsWithDivisionQuery } from '@/api/MPOSlices/produ
 import { useGetUsersByIdQuery } from '@/api/DemoUserSlice';
 import { useAddChemistOrderedProductMutation } from '@/api/DCRs Api Slice/chemistDCR/chemistOrderedProductInformation';
 import { useAddStockistOrderedProductMutation } from '@/api/DCRs Api Slice/stockistDCR/stockistOrderedProductSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const StockistOrderedProduct = ({ id }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const { data: mpoArea } = useGetUsersByIdQuery(company_user_id);
     const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: mpoArea?.division_name?.id })

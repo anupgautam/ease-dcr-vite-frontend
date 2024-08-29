@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
     Card,
     Badge,
@@ -23,7 +23,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import DefaultDoctorEvent from './DefaultDoctorEvents';
 import 'react-datepicker/dist/react-datepicker.css';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -51,7 +51,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredDoctorEvent = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

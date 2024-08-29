@@ -23,11 +23,11 @@ import {
     useUpdateApplicationsMutation,
 } from '@/api/ApplicationSlices/ApplicationSlices'
 import { useSelector } from 'react-redux';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditApplication = ({ mpoId, idharu, onClose }) => {
 
-    const { company_id, user_role, company_user_id, company_user_role_id, User_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, company_user_role_id, User_id } = useSelector((state) => state.cookie);
 
     const userList = useSelector(state => state?.tourPlan?.dataList);
 

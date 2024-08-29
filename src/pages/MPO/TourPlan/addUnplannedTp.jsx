@@ -1,6 +1,6 @@
 import { Close } from "@mui/icons-material";
 import { Box, Button, Drawer, Grid, IconButton, Stack, Typography, CircularProgress } from "@mui/material";
-import React, { useState, useEffect, useMemo, useCallback, useContext } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Iconify from "@/components/iconify/Iconify";
 import {
     NepaliDateConverter,
@@ -13,10 +13,10 @@ import { useAddHigherTourPlanMutation, useAddTourplanMutation } from "@/api/MPOS
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import moment from "moment";
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from "@/api/MPOSlices/UserSlice";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const AddUnplannedTp = () => {
-    const { company_id, user_role, company_user_id, role } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, role } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

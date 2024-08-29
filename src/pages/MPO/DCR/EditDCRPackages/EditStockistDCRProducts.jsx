@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import RoundButton from "@/reusable/components/button/roundbutton";
 import { FaPlus } from "react-icons/fa";
-import React, { useState, useCallback, useMemo, useContext } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { useTransition } from 'react-transition-state';
 import {
     useGetStockistOrderedProductByDCRIdQuery,
@@ -11,10 +11,10 @@ import {
 } from "@/api/DCRs Api Slice/stockistDCR/stockistOrderedProductSlice";
 import Controls from "@/reusable/components/forms/controls/Controls";
 import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditStockistDCRProducts = ({ id, context, editApi, division }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
     const [postData, setPostData] = useState({});

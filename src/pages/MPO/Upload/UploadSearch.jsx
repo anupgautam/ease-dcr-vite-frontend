@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
     TextField,
     InputAdornment,
@@ -20,10 +20,10 @@ import {
 } from '../../../api/MPOSlices/UserSlice';
 import DefaultList from './DefaultList'
 import { SearchUploadList } from '../../../sections/@dashboard/uploads';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const UploadSearch = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //!Pagination logic
     const [page, setPage] = useState(1)

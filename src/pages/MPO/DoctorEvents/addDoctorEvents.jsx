@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useContext } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import {
     Box,
     Typography,
@@ -24,11 +24,11 @@ import {
 } from "react-nepali-date-picker-lite";
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const AddDoctorEvents = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     let today;
     // const today = NepaliDateConverter.getNepaliDate();

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
     Badge,
     Button,
@@ -25,7 +25,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Link } from 'react-router-dom';
 import { useUnlockUsersMutation } from '../../../api/MPOSlices/UserSlice'
-import { CookieContext } from '../../../App';
 
 const TABLE_HEAD = [
     { id: 'name', label: 'Name', alignRight: false },
@@ -38,7 +37,7 @@ const TABLE_HEAD = [
 
 const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
 
-    const { company_id } = useContext(CookieContext);
+    const { company_id } = useSelector((state) => state.cookie);;
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

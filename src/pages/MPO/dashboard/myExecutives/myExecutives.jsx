@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Card,
     Table,
@@ -24,7 +24,7 @@ import {
     useSearchCompanyUserRolesMutation
 } from '@/api/CompanySlices/companyUserRoleSlice';
 import { useGetCompanyRolesByCompanyQuery, useGetLowerExecutivebyMyIdMutation } from '@/api/CompanySlices/companyRolesSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -37,7 +37,7 @@ const TABLE_HEAD = [
 
 const MyExecutives = () => {
 
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

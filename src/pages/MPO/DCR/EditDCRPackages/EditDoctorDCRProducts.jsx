@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React, { useState, useMemo, useContext } from "react";
+import React, { useState, useMemo } from "react";
 import {
   useGetPromotedProductByDcrIdQuery
 } from "../../../../api/DCRs Api Slice/doctorDCR/DoctorDCRAllSlice";
@@ -9,11 +9,11 @@ import { FaPlus } from "react-icons/fa";
 import { useGetAllProductsOptionsWithDivisionQuery, usePostProductPromotionsMutation } from "@/api/MPOSlices/productApiSlice";
 import { useGetProductForDcrByIdQuery } from "@/api/MPOSlices/ProductSlice";
 import Controls from "@/reusable/forms/controls/Controls";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
-  const { company_id, user_role, company_user_id } = useContext(CookieContext)
+  const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const companyProducts = useSelector(state => state.dcrData.company_products);

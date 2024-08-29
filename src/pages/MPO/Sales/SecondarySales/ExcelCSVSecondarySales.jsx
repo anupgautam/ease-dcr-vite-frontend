@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import {
     Box,
     Typography,
@@ -23,10 +23,10 @@ import {
     useSearchSecondarySalesCSVMutation
 } from '../../../../api/MPOSlices/SecondarySalesApiSlice'
 import ExportToExcel from "@/reusable/utils/exportSheet";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const ExcelCSVSecondarySales = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Month Format 
     // const [startMonth, setStartMonth] = useState();

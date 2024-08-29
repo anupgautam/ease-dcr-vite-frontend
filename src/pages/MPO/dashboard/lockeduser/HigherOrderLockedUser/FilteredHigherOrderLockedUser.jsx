@@ -1,5 +1,5 @@
 import { sentenceCase } from 'change-case';
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 //! @mui
 import {
     Card,
@@ -45,7 +45,7 @@ import {
     useSearchLockedUsersMPOMutation,
     useSearchLockedUsersHigherOrderMutation
 } from '@/api/MPOSlices/TourPlanSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -58,7 +58,7 @@ const TABLE_HEAD = [
 
 const FilteredLockedUsers = () => {
 
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

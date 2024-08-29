@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import Controls from '@/reusable/components/forms/controls/Controls';
 import { Grid, Typography, FormControl, Autocomplete, TextField, Box, Stack } from '@mui/material';
 import moment from 'moment';
@@ -9,7 +9,7 @@ import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useNavigate } from 'react-router-dom';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const localizer = momentLocalizer(moment);
 
@@ -26,7 +26,7 @@ const eventStyleGetter = (event, start, end, isSelected) => {
 };
 
 const Holiday = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [DefaultData, setDetaultData] = useState();
 

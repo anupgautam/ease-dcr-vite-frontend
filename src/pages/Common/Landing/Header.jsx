@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import "../../../styles/bootstrap.min.css"
 import "../../../styles/lineicons.css"
@@ -6,12 +6,12 @@ import "../../../styles/animate.css"
 import "../../../styles/ud-styles.css"
 import "../../../styles/ud-styles.css.map"
 import { Grid } from '@mui/material';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 // import "../../../styles/boxicons.css"
 
 const Header = () => {
-    const { company_id, user_role, company_user_id, user_role } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, user_role } = useSelector((state) => state.cookie);
 
     const [Show, setShow] = useState(false);
 

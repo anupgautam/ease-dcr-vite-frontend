@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
     Card,
     Container,
@@ -8,10 +8,11 @@ import {
 } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { useGetDoctorDcrByIdQuery } from '../../../api/DCRs Api Slice/doctorDCR/DoctorDCRAllSlice';
-import { CookieContext } from '@/App';
+import { useSelector } from 'react-redux';
+;
 
 const DCRDetail = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext);
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);;
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const selectedUser = searchParams.get('id');

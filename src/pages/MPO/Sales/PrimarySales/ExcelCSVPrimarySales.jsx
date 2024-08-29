@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
     Box,
     Typography,
@@ -22,11 +22,11 @@ import ExportToExcel from "@/reusable/utils/exportSheet";
 import {
     useGetTourPlansWithoutPaginateQuery
 } from '../../../../api/MPOSlices/TourPlanSlice'
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const ExcelCSVPrimarySales = ({ selectedOption }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Month Format 
     // const [startMonth, setStartMonth] = useState();

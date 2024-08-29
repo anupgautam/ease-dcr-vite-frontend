@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import {
     Box,
     Typography,
@@ -28,13 +28,13 @@ import {
 import {
     NepaliDateConverter
 } from "react-nepali-date-picker-lite";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 
 const AddUser = () => {
 
-    const { company_id } = useContext(CookieContext)
+    const { company_id } = useSelector((state) => state.cookie);
 
     //! Get user roles
     const { data, isSuccess, } = useGetUsersRoleQuery(company_id);

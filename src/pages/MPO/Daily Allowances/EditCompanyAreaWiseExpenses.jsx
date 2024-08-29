@@ -24,11 +24,11 @@ import {
 } from '@/api/ExpensesSlices/expensesTypeSlices';
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice'
 import { useSelector } from 'react-redux';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditCompanyAreaWiseExpenses = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const userList = useSelector(state => state?.tourPlan?.dataList);
 

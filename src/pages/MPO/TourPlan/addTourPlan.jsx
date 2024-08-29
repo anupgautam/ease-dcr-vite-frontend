@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useContext } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import {
     Box,
     Typography,
@@ -30,14 +30,14 @@ import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from '@/api/MPOSlices/tourPlan&Dcr';
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '@/api/MPOSlices/UserSlice';
 import moment from 'moment';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 import {
     useDeleteTourPlansByIdMutation,
 } from '@/api/MPOSlices/TourPlanSlice';
 
 
 const AddTourPlan = () => {
-    const { company_id, user_role, company_user_id, role } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, role } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

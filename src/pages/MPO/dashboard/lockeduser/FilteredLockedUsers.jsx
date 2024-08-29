@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 //! @mui
 import {
     Card,
@@ -26,7 +26,7 @@ import {
     useSearchLockedUsersMPOMutation,
 } from '@/api/MPOSlices/TourPlanSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -38,7 +38,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredLockedUsers = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);

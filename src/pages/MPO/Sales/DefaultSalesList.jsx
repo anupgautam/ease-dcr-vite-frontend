@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 // @mui
 import {
     Card,
@@ -63,7 +63,7 @@ import {
 import {
     AppNewsUpdate,
 } from '../../../sections/@dashboard/app';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -73,7 +73,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultSalesList = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useContext } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import {
   MenuItem,
   Box,
@@ -12,10 +12,10 @@ import ApexChart from '@/reusable/components/charts/apexChart';
 import { useGetTargetsByUserMutation } from '@/api/ExpensesSlices/targetSlices';
 import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRolesSlice';
 import { useGetAllCompanyUserRoleByRoleQuery } from '@/api/CompanySlices/companyUserRoleSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 export default function TargetChart(props) {
-  const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
+  const { company_id, user_role, company_user_id, refresh, access } = useSelector((state) => state.cookie);
 
   const { children, value, index, ...other } = props;
   const [selectedRole, setSelectedRole] = useState(null);

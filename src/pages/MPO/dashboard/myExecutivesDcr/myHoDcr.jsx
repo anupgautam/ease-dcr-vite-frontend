@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     Card,
     Table,
@@ -24,7 +24,7 @@ import {
     useDeleteHODCRsByIdMutation,
 } from '@/api/HighOrderSlices/hoDCRSlice';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -36,7 +36,7 @@ const TABLE_HEAD = [
 ];
 
 const MyHoDcr = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [selectedId, setSelectedId] = useState(null);

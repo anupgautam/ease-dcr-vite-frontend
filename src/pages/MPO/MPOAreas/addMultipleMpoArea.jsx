@@ -1,5 +1,5 @@
 import { Box, Card, Grid, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
-import React, { useEffect, useState, useCallback, useMemo, useContext } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
@@ -8,7 +8,7 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { useGetMpoAreaQuery, usePostAreaofMPOMutation } from "@/api/MPOSlices/TourPlanSlice";
 import { Circles } from 'react-loader-spinner';
 import { useGetAllCompanyAreasQuery } from "@/api/CompanySlices/companyAreaSlice";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'area_name', label: 'Area Name', alignRight: false },
@@ -142,7 +142,7 @@ const AddMultipleMpoArea = () => {
 }
 
 const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
-    const { company_id, user_role, company_user_id, email } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, email } = useSelector((state) => state.cookie);
 
     const doctorcategories = [
         { id: "A", title: "A" },

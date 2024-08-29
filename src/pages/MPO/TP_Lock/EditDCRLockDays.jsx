@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo, useContext } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import {
     Box,
     Typography, Button, Grid, CircularProgress
@@ -20,10 +20,10 @@ import {
 import {
     useGetUsersRoleQuery,
 } from '@/api/MPOSlices/UserSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditTPLock = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Getting TPDays by ID
     const TPDays = useGetTPLockDaysByIdQuery(idharu);

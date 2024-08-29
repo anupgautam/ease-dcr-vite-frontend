@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 // @mui
 import {
     Container, Grid, Box
@@ -7,10 +7,10 @@ import {
 import FilteredDCR from './FilteredDCR';
 import ExcelCSVDCR from './ExcelCSVDCR';
 import AddDcrForHo from './addDcr';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const ListOfDCR = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     return (
         <Container>

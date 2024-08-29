@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import {
     Box,
     Grid,
@@ -22,11 +22,11 @@ import {
 import {
     useGetAllProductsOptionsQuery
 } from '@/api/MPOSlices/productApiSlice'
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditPrimarySales = ({ idharu, onClose, selectedOption, monthData, selectedYear }) => {
-    const { company_id, user_role, company_user_id, refresh, access } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, refresh, access } = useSelector((state) => state.cookie);
 
     //! Get doctor categories
     const Products = useGetAllProductsOptionsQuery(company_id)

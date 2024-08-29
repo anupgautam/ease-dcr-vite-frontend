@@ -30,7 +30,7 @@ import {
     useDeleteCompanyAreaWiseExpensesByIdMutation,
 } from '@/api/CompanySlices/companyAreaWiseExpenses';
 import EditCompanyAreaWiseExpenses from './EditCompanyAreaWiseExpenses';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -41,7 +41,7 @@ const TABLE_HEAD = [
 
 const DefaultCompanyAreaWiseExpense = () => {
 
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

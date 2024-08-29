@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo, useContext } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import {
     Box, Grid,
     Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel, CircularProgress
@@ -25,12 +25,12 @@ import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '../../../../api
 import moment from 'moment';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
-    const { company_id, user_role, company_user_id, role } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, role } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
     const [users, setUsers] = useState([]);
@@ -351,7 +351,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 };
 
 const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
-    const { company_id, user_role, company_user_id, role } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, role } = useSelector((state) => state.cookie);
 
     const [visitData, setVisitData] = useState([]);
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id });

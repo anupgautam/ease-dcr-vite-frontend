@@ -4,11 +4,11 @@ import Controls from "./controls/Controls";
 import { Form, useForm1 } from "./useForm";
 import { useNavigate } from "react-router-dom";
 import { OriginalForm, SelectForm } from "./originalForm";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const AddFormSkeleton = ({ initialData, AddAPI, isNavigation, navigation, navigationId }) => {
-    const { company_id, user_role, company_user_id, access } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, access } = useSelector((state) => state.cookie);
 
     const [keyData, setKeyData] = useState({});
     const navigate = useNavigate();

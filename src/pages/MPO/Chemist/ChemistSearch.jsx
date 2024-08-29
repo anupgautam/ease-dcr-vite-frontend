@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -41,7 +41,7 @@ import {
     useGetAllMPOAreasNoPageQuery, usePostAllMPONamesNoPageMutation
 } from '../../../api/MPOSlices/DoctorSlice'
 import Scrollbar from '@/components/scrollbar/Scrollbar';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -54,7 +54,7 @@ const TABLE_HEAD = [
 ];
 
 const ChemistSearch = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! MPO Data
     const [MpoData] = usePostAllMPONamesNoPageMutation()

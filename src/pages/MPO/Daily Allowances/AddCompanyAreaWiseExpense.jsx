@@ -23,11 +23,11 @@ import {
     useGetAllExpensesTypeQuery
 } from '@/api/ExpensesSlices/expensesTypeSlices';
 import { useGetAllCompanyRolesQuery } from '@/api/CompanySlices/companyRolesSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const AddCompanyAreaWiseExpense = () => {
 
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Create Travel Allowances
     const [createCompanyAreaWiseExpenses] = useCreateCompanyAreaWiseExpensesMutation()

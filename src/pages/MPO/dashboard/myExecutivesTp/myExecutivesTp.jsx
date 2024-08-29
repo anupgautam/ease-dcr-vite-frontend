@@ -61,7 +61,7 @@ import { useGetUsersByIdQuery } from '@/api/DemoUserSlice';
 import { useGetHOTourPlansByUserIdQuery } from '@/api/HighOrderSlices/hoTourPlanSlice';
 import moment from 'moment';
 import { useGetcompanyUserRolesByIdQuery } from '@/api/CompanySlices/companyUserRoleSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -81,7 +81,7 @@ const TABLE_HEAD1 = [
 ];
 
 const MyExecutiveTp = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
 
