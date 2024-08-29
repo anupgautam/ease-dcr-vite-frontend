@@ -4,6 +4,7 @@ import { Link as ScrollLink, Events, scrollSpy } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
 import "./Navbar.css";
 import Cookies from 'js-cookie'
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const { user_role } = useSelector((state) => state.cookie);
