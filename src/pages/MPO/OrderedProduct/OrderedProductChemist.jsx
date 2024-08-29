@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useGetChemistsWithoutPaginationQuery } from '@/api/MPOSlices/ChemistSlice'
 import { Box, Grid, FormControl, Autocomplete, TextField } from '@mui/material';
 import {
   useGetChemistOrderedProductsByChemistIdMutation
 } from '@/api/OrderedProductslices/chemistOrderedProductSlice';
 import DefaultChemistOrderedProduct from './DefaultChemistOrderedProduct';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const OrderedProductChemist = ({ index, value, other }) => {
-  const { company_id, user_role, company_user_id } = useContext(CookieContext)
+  const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
   const [selectedChemist, setSelectedChemist] = useState(null);
   const [orderedData, setOrderedData] = useState([]);
   const chemists = useGetChemistsWithoutPaginationQuery(company_id);

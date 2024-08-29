@@ -27,7 +27,7 @@ import { addSelectedUser } from '@/reducers/dcrSelectData';
 import { useDispatch } from 'react-redux';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import moment from 'moment';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 
@@ -42,7 +42,7 @@ const TABLE_HEAD = [
 
 const MyExecutiveDoctorDcr = () => {
 
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
     //! For drawer 

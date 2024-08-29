@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 //! @mui
 import {
     Card,
@@ -38,7 +38,7 @@ import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice
 
 import DefaultCompanyAreaWiseExpense from './DefaultCompanyAreaWiseExpense';
 import EditCompanyAreaWiseExpenses from './EditCompanyAreaWiseExpenses';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -49,7 +49,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredCompanyAreaWiseExpense = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
 
     //! For drawer 

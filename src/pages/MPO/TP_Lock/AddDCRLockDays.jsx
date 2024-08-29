@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
     Box,
     Typography,
@@ -22,11 +22,11 @@ import {
 import {
     useGetUsersRoleQuery,
 } from '@/api/MPOSlices/UserSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const AddTPLock = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Get user roles
     const { data, isSuccess, } = useGetUsersRoleQuery(company_id);

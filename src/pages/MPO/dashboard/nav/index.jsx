@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Drawer, Typography } from '@mui/material';
@@ -9,7 +9,7 @@ import NavSection from '@/components/nav-section';
 import navConfig from './config';
 import MpoNavConfig from './mpoConfig';
 import OtherRoleConfig from './otherRoleConfig';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const NAV_WIDTH = 270;
@@ -28,7 +28,7 @@ Nav.propTypes = {
 };
 
 export default function Nav({ openNav, onCloseNav }) {
-  const { company_id, user_role, company_user_id } = useContext(CookieContext)
+  const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
   const { pathname } = useLocation();
 

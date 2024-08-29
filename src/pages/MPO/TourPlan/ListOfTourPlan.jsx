@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import {
     Stack,
     Grid,
@@ -13,10 +13,10 @@ import FilteredTourPlan from './FilteredTourPlan';
 import ExcelCSVTourPlan from './ExcelCSVTourPlan';
 import AddTourPlan from './addTourPlan';
 import AddUnplannedTp from './addUnplannedTp';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const ListOfTourPlan = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));

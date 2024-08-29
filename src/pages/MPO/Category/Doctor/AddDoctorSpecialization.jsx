@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
     Box,
     Typography,
@@ -19,11 +19,11 @@ import { returnValidation } from '../../../../validation';
 import {
     useCreateDoctorsSpecializationMutation
 } from '@/api/MPOSlices/DoctorSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const AddDoctorSpecialization = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Create Chemist
     const [createDoctorCategory] = useCreateDoctorsSpecializationMutation()

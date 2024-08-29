@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useGetAllUsersQuery, useGetAllUsersWithoutPaginationQuery } from "../api/MPOSlices/UserSlice";
 import { useGetGroupWsConnectionMutation } from "../api/newChatSlices/groupSlice";
 import { Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EventUserList = ({ setGroupName, setUserId }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const userList = useGetAllUsersWithoutPaginationQuery(company_id);
     const [getUserWSConnection] = useGetGroupWsConnectionMutation();

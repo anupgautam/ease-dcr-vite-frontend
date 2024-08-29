@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Card,
     Table,
@@ -34,7 +34,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRolesSlice';
 import { useGetUsersByCompanyRoleIdQuery } from '@/api/MPOSlices/UserSlice';
 import { Link } from 'react-router-dom';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'user_name', label: 'User Name', alignRight: false },
@@ -45,7 +45,7 @@ const TABLE_HEAD = [
 ];
 
 const AllUserTp = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     // ! Get all users wala
     // const { data } = useGetAllcompanyUserRolesQuery({ id: company_id, page: page });

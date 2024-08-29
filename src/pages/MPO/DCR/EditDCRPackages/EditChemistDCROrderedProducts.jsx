@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React, { useState, useCallback, useMemo, useContext } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import ReusableFormsSelect from "@/reusable/components/forms/controls/ReusableFormSelect";
 import {
     useGetChemistAllDCRByIdQuery,
@@ -7,17 +7,16 @@ import {
     useDeleteChemistsAllDCRByIdMutation
 } from "@/api/DCRs Api Slice/chemistDCR/ChemistDCRAllSlice";
 import { useTransition } from 'react-transition-state';
-import { useSelector } from "react-redux";
 import EditChemistOrderedProduct from "../EditDCRs/EditChemistOrderedProduct";
 import {
     Drawer,
 } from '@mui/material';
 import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
 import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditChemistDCROrderedProducts = ({ id, context, editApi }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
     const [updateClick, setUpdateClick] = useState(false);

@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -43,7 +43,7 @@ import EditStockist from './EditStockist';
 import SearchIcon from '@mui/icons-material/Search';
 import Test from './DefaultList';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -55,7 +55,7 @@ const TABLE_HEAD = [
 ];
 
 const StockistSearch = () => {
-    const { company_id, user_role, company_area_id } = useContext(CookieContext)
+    const { company_id, user_role, company_area_id } = useSelector((state) => state.cookie);
 
     //! Get Company Area
     const Company_Areas = useGetAllCompanyAreasQuery(company_id);

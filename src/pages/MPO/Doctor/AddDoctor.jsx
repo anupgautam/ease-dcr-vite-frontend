@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import {
     Box,
     Typography,
@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import Close from '@mui/icons-material/Close';
 import Iconify from '../../../components/iconify';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 import { useForm } from '../../../reusable/forms/useForm';
 import Controls from '@/reusable/forms/controls/Controls';
 import { returnValidation } from '../../../validation';
@@ -25,7 +25,7 @@ import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { Link } from 'react-router-dom';
 
 const AddDoctor = () => {
-    const { company_id, company_user_id, user_role } = useContext(CookieContext)
+    const { company_id, company_user_id, user_role } = useSelector((state) => state.cookie);
     const [MutipleDoctor, setAddMutipleDoctor] = useState(false);
     const doctorRef = useRef(null);
 

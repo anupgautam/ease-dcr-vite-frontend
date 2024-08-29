@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -23,7 +23,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import EditDivision from './EditDivision';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -32,7 +32,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

@@ -1,5 +1,5 @@
 import { debounce, parseInt } from 'lodash';
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -40,7 +40,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Test from './DefaultList';
 import EditDoctor from './EditDoctor';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 import { decryptData } from '../User/excryption';
 import { useLocation } from 'react-router-dom';
 
@@ -56,7 +56,7 @@ const TABLE_HEAD = [
 ];
 
 const DoctorSearch = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
     //! Get MPO Names
     const [MpoData] = usePostAllMPONamesNoPageMutation();
     const localData = JSON.parse(localStorage.getItem('user_login'));

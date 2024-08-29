@@ -1,15 +1,15 @@
 import { Close } from "@mui/icons-material";
 import { Box, Button, Drawer, Grid, IconButton, Stack, Typography } from "@mui/material";
-import React, { useEffect, useState, useMemo, useContext } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { usePostAllMPONamesNoPageMutation, useTransferMpoAreaMutation } from "@/api/MPOSlices/DoctorSlice";
 import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
 import Iconify from "@/components/iconify/Iconify";
 import Controls from "@/reusable/forms/controls/Controls";
 import { useForm } from "@/reusable/forms/useForm";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TransferMpoArea = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

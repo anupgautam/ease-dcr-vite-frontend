@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
 import Iconify from '../../../components/iconify/Iconify';
 import PropTypes from 'prop-types';
@@ -29,11 +29,11 @@ import { fToNow } from '@/utils/formatTime';
 
 //! notification slices
 import { useGetNotificationListByIdQuery, usePatchNotificationListByIdMutation } from "../../../api/MPOSlices/notificationSlices";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 export default function NotificationsPopover() {
-    const { User_id, company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { User_id, company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [notifications, setNotifications] = useState();
 

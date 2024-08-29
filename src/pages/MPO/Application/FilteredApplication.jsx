@@ -1,5 +1,5 @@
 import { sentenceCase } from 'change-case';
-import React, { useMemo, useState, useEffect, useCallback, useContext } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 //! @mui
 import {
     Card,
@@ -44,7 +44,7 @@ import {
     useGetAllcompanyUserRolesWithoutPaginationQuery,
 } from '@/api/CompanySlices/companyUserRoleSlice';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
@@ -59,7 +59,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredApplication = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
 

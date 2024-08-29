@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import {
     Box, Grid,
     Typography, CircularProgress
@@ -32,11 +32,10 @@ import {
 } from '@/api/DCRs Api Slice/chemistDCR/shiftWiseChemistDCRSlice';
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { useGetAllVisitedMpoWiseChemistQuery } from '@/api/MPOSlices/doctorApiSlice';
-import { CookieContext } from '@/App'
 
 
 const EditChemistDCR = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [noLoop, setNoLoop] = useState(true);
     const [initialShift, setInitialShift] = useState("");

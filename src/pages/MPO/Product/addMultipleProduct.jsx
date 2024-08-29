@@ -1,5 +1,5 @@
 import { Box, Button, Card, Grid, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
@@ -11,7 +11,7 @@ import { useCreateStockistsMutation } from "@/api/MPOSlices/stockistApiSlice";
 import { useGetAllCompanyAreasQuery } from "@/api/CompanySlices/companyAreaSlice";
 import { useCreateProductsMutation, useGetCompDivisionQuery } from "@/api/MPOSlices/productApiSlice";
 import { useForm } from "@/reusable/forms/useForm";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'product_name', label: 'Product Name', alignRight: false },
@@ -143,7 +143,7 @@ const AddMultipleProduct = () => {
 }
 
 const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const prod_category = [
         { id: "tab", title: "Tablet" },

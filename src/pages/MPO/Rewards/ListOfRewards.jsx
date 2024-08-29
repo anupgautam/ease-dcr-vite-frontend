@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import {
     Container,
     Grid, Box,
@@ -13,10 +13,10 @@ import {
     useGetAllRewardsQuery
 } from '../../../api/MPOSlices/rewardsApiSlice'
 import ExportToExcel from '@/reusable/utils/exportSheet';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const ListOfRewards = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));

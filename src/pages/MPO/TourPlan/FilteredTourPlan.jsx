@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
     Card,
     Badge,
@@ -54,7 +54,7 @@ import Scrollbar from '@/components/scrollbar/Scrollbar';
 import moment from 'moment';
 import ApprovedTP from '../dashboard/myExecutivesTp/approveTp';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'mpo_name', label: 'Name', alignRight: false },
@@ -66,7 +66,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredTourPlan = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const localData = JSON.parse(localStorage.getItem('user_login'));
     useEffect(() => {

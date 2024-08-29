@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 //! @mui
 import {
     Card,
@@ -43,7 +43,7 @@ import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import EditMpoArea from './editMpoArea';
 import Iconify from '@/components/iconify/Iconify';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'area_name"', label: 'Tour Plan Date', alignRight: false },
@@ -52,7 +52,7 @@ const TABLE_HEAD = [
 ];
 
 const FilterMPOAreas = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import {
     Box, Grid,
     Typography, Button, InputLabel, CircularProgress
@@ -19,10 +19,10 @@ import {
     useUpdateApplicationsMutation,
 } from '@/api/ApplicationSlices/ApplicationSlices'
 import { NepaliDatePicker } from "nepali-datepicker-react";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditApplication = ({ mpoId, idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Getting Application by ID
     const Application = useGetApplicationsByIdQuery(idharu);

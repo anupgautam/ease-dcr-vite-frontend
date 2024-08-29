@@ -1,13 +1,13 @@
 import { Close } from "@mui/icons-material";
 import { Autocomplete, Box, Button, Drawer, IconButton, Stack, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState, useMemo, useContext } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
 import { useGetAllVisitedMpoWiseChemistQuery } from "@/api/MPOSlices/doctorApiSlice";
 import ExportToExcel from "@/reusable/utils/exportSheet";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const ExportChemist = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [MpoData] = usePostAllMPONamesNoPageMutation();
     const [mpoName, setMPOName] = useState('');

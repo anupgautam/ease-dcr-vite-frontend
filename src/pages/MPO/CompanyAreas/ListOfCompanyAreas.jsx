@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import {
     Stack,
     Container,
@@ -7,7 +7,7 @@ import {
     useMediaQuery,
     useTheme
 } from '@mui/material';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 import CompanyAreasCount from './CompanyAreasCount';
 import AddCompanyAreas from './AddCompanyAreas';
 import DefaultList from './DefaultList'
@@ -16,7 +16,7 @@ import ExportToExcel from '@/reusable/utils/exportSheet';
 
 
 const ListOfCompanyAreas = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));

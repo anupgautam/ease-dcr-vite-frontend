@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import {
     Box, Grid,
     Typography, CircularProgress
@@ -18,7 +18,6 @@ import {
 } from '@/api/DCRs Api Slice/stockistDCR/stockistDCRAllSlice';
 import editWithoutImage from '@/reusable/components/forms/utils/editUtils/editWithoutImage';
 import useDebounce from '@/reusable/components/forms/utils/debounce';
-import { useSelector } from 'react-redux';
 import {
     useUpdateShiftWiseStockistDCRMutation,
     useGetShiftWiseStockistDCRByDCRIdQuery
@@ -30,11 +29,11 @@ import EditStockistDCRProducts from '../EditDCRPackages/EditStockistDCRProducts'
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import { useGetAllStockistsWithoutPaginationQuery } from '@/api/MPOSlices/StockistSlice';
 import { useGetUsersByIdQuery } from '@/api/MPOSlices/UserSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditStockistDCR = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
 
     const [noLoop, setNoLoop] = useState(true);

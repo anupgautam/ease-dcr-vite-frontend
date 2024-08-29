@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Button, Card, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableRow, TextField, IconButton, Badge } from "@mui/material";
 import moment from "moment";
 import { BSDate } from "nepali-datepicker-react";
-import React, { useEffect, useState, useCallback, useContext } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useGetcompanyUserRolesByIdQuery } from "@/api/CompanySlices/companyUserRoleSlice";
 import { useGetUsersByCompanyRoleIdQuery } from "@/api/MPOSlices/UserSlice";
@@ -10,7 +10,7 @@ import Scrollbar from "@/components/scrollbar/Scrollbar";
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import { UserListHead } from "@/sections/@dashboard/user";
 import Iconify from '@/components/iconify/Iconify';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'user_name', label: 'User Name', alignRight: false },
@@ -36,7 +36,7 @@ const TABLE_HEAD1 = [
 
 
 const DcrListData = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);

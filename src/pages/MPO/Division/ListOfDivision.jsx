@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import {
     Container,
     Grid,
@@ -12,12 +12,12 @@ import DivisionCount from './DivisionCount';
 import AddDivision from './AddDivision';
 import DefaultList from './DefaultList'
 import { useGetAllCompanyDivisionsQuery } from '@/api/DivisionSilces/companyDivisionSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import ExportToExcel from '@/reusable/utils/exportSheet';
 
 const ListOfDivision = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));

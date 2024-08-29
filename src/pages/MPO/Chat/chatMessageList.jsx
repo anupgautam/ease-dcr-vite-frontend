@@ -1,10 +1,10 @@
 import { Typography } from "@mui/material";
-import React, { useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef } from "react";
 
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 export default function ChatContainer({ messages }) {
-    const { company_id, user_role, company_user_id,user } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id,user } = useSelector((state) => state.cookie);
 
     const scrollRef = useRef();
     useEffect(() => {

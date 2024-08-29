@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -21,7 +21,7 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import {
     useGetAllRewardsQuery,
@@ -35,7 +35,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

@@ -1,12 +1,12 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { Typography } from '@mui/material';
 import { useGetAllStockistsQuery } from '@/api/MPOSlices/StockistSlice';
 import { useGetcompanyUserRolesByIdQuery } from '@/api/CompanySlices/companyUserRoleSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const StockistCount = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [page, setPage] = useState(1)
 

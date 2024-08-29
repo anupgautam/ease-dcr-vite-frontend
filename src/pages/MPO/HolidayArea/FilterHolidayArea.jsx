@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import React, { useState, useMemo, useCallback, useContext } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -35,7 +35,7 @@ import { useGetHolidayAreasQuery, useSearchHolidayAreasMutation } from '@/api/Ho
 import SearchIcon from '@mui/icons-material/Search';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import EditHolidayArea from './EditHolidayArea';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'holiday_type', label: 'Holiday Type', alignRight: false },
@@ -44,7 +44,7 @@ const TABLE_HEAD = [
 ];
 
 const FilterHolidayArea = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Company Area
     const Areas = useGetHolidayAreasQuery(company_id);

@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback,useContext } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Close } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Drawer, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
 import { BSDate } from "nepali-datepicker-react";
 import { useBulkUpdateTourplanByHoMutation, useBulkUpdateTourplanByMpoMutation } from "@/api/MPOSlices/TourPlanSlice";
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const ApprovedTP = ({ mpoName, role }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
 

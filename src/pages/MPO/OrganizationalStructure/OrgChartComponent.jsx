@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tree, TreeNode } from 'react-organizational-chart';
 import { useGetUsersByHigherLevelUserQuery } from '@/api/MPOSlices/UserSlice';
 import styled from 'styled-components';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const StyledNode = styled.div`
@@ -16,7 +16,7 @@ const StyledNode = styled.div`
 `;
 
 export const OrgChartComponent = () => {
-  const { company_id, user_role, company_user_id } = useContext(CookieContext)
+  const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
   const data = useGetUsersByHigherLevelUserQuery(company_id);
   const [allData, setAllData] = useState();

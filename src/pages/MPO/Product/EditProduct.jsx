@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import {
     Box,
     Typography, Button, Grid, CircularProgress
@@ -19,11 +19,11 @@ import {
     useUpdateProductsMutation,
     useGetCompanyDivisionByCompanyIdQuery
 } from "@/api/MPOSlices/ProductSlice";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditProduct = ({ idharu, onClose, mpoGet }) => {
 
-    const { company_id, user_role, company_user_id, access, refresh } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, access, refresh } = useSelector((state) => state.cookie);
 
     //!  Getting Users by ID
     const Product = useGetProductsByIdQuery(idharu);

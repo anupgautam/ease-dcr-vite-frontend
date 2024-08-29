@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -23,7 +23,7 @@ import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { useDeleteStockistsAssignByIdMutation, useGetAllAssignStockistsQuery } from '@/api/MPOSlices/StockistSlice';
@@ -37,7 +37,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultAsignStockist = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

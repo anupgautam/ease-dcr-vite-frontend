@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -36,7 +36,7 @@ import { useDispatch } from 'react-redux';
 import { addSelectedUser } from '@/reducers/dcrSelectData';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import moment from 'moment';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const TABLE_HEAD = [
@@ -50,7 +50,7 @@ const TABLE_HEAD = [
 ];
 
 const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch()
 

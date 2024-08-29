@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import {
     Stack,
     Container,
@@ -12,10 +12,10 @@ import ProductCount from './ProductCount';
 import ProductSearch from './ProductSearch';
 import AddProduct from './AddProduct';
 import ExportProduct from './exportProduct';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const ListofProduct = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));

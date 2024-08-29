@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Box,
     Typography,
@@ -29,11 +29,11 @@ import NepaliDatePicker, {
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import { useGetAllStockistsQuery } from '@/api/MPOSlices/stockistApiSlice';
 import { useCreateAssignStockistsMutation } from '@/api/MPOSlices/StockistSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const AddAsignStockist = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const today = NepaliDateConverter.getNepaliDate();
     const [selectedDates, setSelectedDates] = useState(today);

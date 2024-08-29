@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
     Box,
     Card,
@@ -26,7 +26,8 @@ import { useGetUsersByCompanyRoleIdQuery } from "../../api/MPOSlices/UserSlice";
 import { usePostingAllUserAttendanceMutation } from "../../api/CompanySlices/companyUserSlice";
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import ExportToExcel from '@/reusable/utils/exportSheet';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
+
 
 
 const bsMonthDays = {
@@ -75,7 +76,7 @@ function getAllDaysInMonth(year, month) {
 }
 
 const ListofAttendance = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Export To excel wala
     const headers = [

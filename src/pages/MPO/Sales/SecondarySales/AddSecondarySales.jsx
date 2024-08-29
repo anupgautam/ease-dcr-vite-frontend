@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import {
     Box,
     Typography,
@@ -14,7 +14,7 @@ import Iconify from '../../../../components/iconify';
 import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from '../../../../reusable/components/forms/controls/Controls';
 import { returnValidation } from '../../../../validation';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import {
     useCreateSecondarySalesMutation
@@ -25,7 +25,7 @@ import {
 } from '@/api/MPOSlices/productApiSlice'
 
 const AddSecondarySales = ({ selectedOption, monthData, selectedYear }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Get doctor categories
     const Products = useGetAllProductsOptionsQuery(company_id)

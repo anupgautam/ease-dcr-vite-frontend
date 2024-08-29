@@ -1,13 +1,11 @@
 import { Typography } from "@mui/material";
-import React, {
-    useContext
-} from "react";
+import React from "react";
 import { chatReverse } from "./chatReverse";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 export default function ChatContainer({ messages, scrollRef }) {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const data = [...new Set(chatReverse(messages).map(JSON.stringify))].map(JSON.parse);
     const id = company_id;

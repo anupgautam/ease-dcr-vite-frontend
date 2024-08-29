@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import {
     Box,
     Typography, Button, CircularProgress, Grid
@@ -18,10 +18,10 @@ import {
     useUpdateStockistsMutation
 } from "@/api/MPOSlices/StockistSlice";
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const EditStockist = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
 

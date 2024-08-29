@@ -1,12 +1,12 @@
-import React, { useState, useCallback, useContext } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Typography } from '@mui/material';
 import {
     useGetTPlockDaysQuery
 } from '../../../api/MPOSlices/TourPlanSlice'
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const DCRLockCount = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [page, setPage] = useState(1)
 

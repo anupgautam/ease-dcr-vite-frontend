@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 // @mui
 import { styled } from '@mui/material/styles';
 import { Container, Typography, Stack, Box, Grid } from '@mui/material';
@@ -14,7 +14,7 @@ import { returnValidation } from '../../validation';
 import OtpInput from 'react-otp-input';
 import '../../styles/otpstyle.css'
 import { useOtpVerificationMutation } from '../../api/MPOSlices/AccountApiSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 //! reset mutation hook
 
@@ -47,7 +47,7 @@ const StyledContent = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function OTP() {
-    const { company_id, user_role, company_user_id, OTPgmail } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id, OTPgmail } = useSelector((state) => state.cookie);
 
     const [otpVerify] = useOtpVerificationMutation();
     const navigate = useNavigate();

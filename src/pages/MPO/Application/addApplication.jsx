@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
     Box,
     Typography,
@@ -18,13 +18,13 @@ import { returnValidation } from '../../../validation';
 import {
     NepaliDateConverter
 } from "react-nepali-date-picker-lite";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useCreateApplicationsMutation } from '../../../api/ApplicationSlices/ApplicationSlices';
 
 const AddApplication = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Format Date
     const today = NepaliDateConverter.getNepaliDate();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Card,
     Badge,
@@ -24,7 +24,7 @@ import { UserListHead } from '../../../sections/@dashboard/user';
 // mock
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import {
     useGetAllDoctorEventsQuery,
@@ -41,7 +41,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultDoctorEvents = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

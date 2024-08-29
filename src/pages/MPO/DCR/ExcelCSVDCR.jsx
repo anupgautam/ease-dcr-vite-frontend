@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useContext } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import {
     Box,
     Typography,
@@ -23,11 +23,11 @@ import {
 
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const ExcelCSVDCR = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Get users wala
     const User = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: company_id })

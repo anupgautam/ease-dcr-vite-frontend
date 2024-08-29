@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     Typography,
     IconButton,
@@ -21,10 +21,10 @@ import {
     useGetAllChemistsQuery,
     useDeleteChemistsByIdMutation
 } from "../../../api/MPOSlices/ChemistSlice";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const DefaultList = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);

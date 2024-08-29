@@ -1,12 +1,13 @@
 import { Box, Card, FormControl, Grid, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 
 import { BSDate } from "nepali-datepicker-react";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetAllUserAttendanceQuery, usePostingAllUserAttendanceMutation } from "../../api/CompanySlices/companyUserSlice";
 import { useGetUsersByCompanyRoleIdQuery } from "../../api/MPOSlices/UserSlice";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
 import ExportToExcel from "../../reusable/utils/exportSheet";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
+
 
 
 const bsMonthDays = {
@@ -57,7 +58,7 @@ function getAllDaysInMonth(year, month) {
 
 
 const ListofAttendance = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
     const year = now._date.year;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Box, Grid,
     Typography
@@ -18,12 +18,11 @@ import {
 } from '@/api/HighOrderSlices/hoDCRSlice';
 import { useSelector } from 'react-redux';
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '@/api/MPOSlices/UserSlice';
-import { CookieContext } from '@/App'
 
 
 const EditHoDCR = ({ idharu, onClose }) => {
 
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [noLoop, setNoLoop] = useState(true);
     const [lowerLevels, setLowerLevels] = useState([]);

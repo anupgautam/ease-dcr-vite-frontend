@@ -1,4 +1,4 @@
-import React, { useState, useCallback,useContext } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
     useGetTargetsQuery,
     useDeleteTargetsByIdMutation,
@@ -22,10 +22,10 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import EditTarget from './EditTarget';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const DefaultTarget = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const { data } = useGetTargetsQuery(company_id);
     const [deleteTarget] = useDeleteTargetsByIdMutation();

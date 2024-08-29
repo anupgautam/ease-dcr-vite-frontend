@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo,useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
     Card,
     Badge,
@@ -42,9 +42,8 @@ import ExcelCSVSecondarySales from './ExcelCSVSecondarySales';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
-import { useSelector } from "react-redux";
 import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'product_name', label: 'Product Name', alignRight: false },
@@ -64,7 +63,7 @@ const TABLE_HEAD = [
 ];
 
 const SecondarySalesSearch = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
     Box,
     Typography,
@@ -19,10 +19,10 @@ import { returnValidation } from '../../../validation';
 import {
     useCreateCompanyAreasMutation
 } from '@/api/CompanySlices/companyAreaSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const AddCompanyAreas = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! react-google-map-picker 
     const DefaultLocation = { lat: 10, lng: 106 };

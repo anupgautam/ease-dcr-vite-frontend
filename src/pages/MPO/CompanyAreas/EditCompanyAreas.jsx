@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import {
     Box,
     Grid,
@@ -17,11 +17,11 @@ import { returnValidation } from '../../../validation';
 import {
     useGetCompanyAreasByIdQuery, useUpdateCompanyAreasMutation
 } from '../../../api/CompanySlices/companyAreaSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const EditCompanyAreas = ({ idharu, onClose }) => {
-    const { company_id, refresh, access } = useContext(CookieContext)
+    const { company_id, refresh, access } = useSelector((state) => state.cookie);
 
     //! Getting chemist by ID
     const CompanyAreas = useGetCompanyAreasByIdQuery(idharu);

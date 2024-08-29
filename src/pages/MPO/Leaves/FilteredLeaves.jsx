@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 //! @mui
 import {
     Card,
@@ -31,7 +31,7 @@ import {
     useSearchLeaveMutation
 } from '../../../api/Leaves/LeavesApiSlice'
 import EditLeaves from './EditLeaves'
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
@@ -44,7 +44,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredLeaves = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

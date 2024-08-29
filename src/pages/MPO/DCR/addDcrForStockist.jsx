@@ -1,5 +1,5 @@
 import { Box, Button, Card, Checkbox, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Typography, Autocomplete, TextField, CircularProgress } from "@mui/material";
-import React, { useEffect, useState, useMemo, useCallback, useContext } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
 import { useGetShiftsQuery } from "@/api/DCRs Api Slice/TourPlanApiSlice";
@@ -17,10 +17,10 @@ import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSli
 import Controls from "@/reusable/forms/controls/Controls";
 import { useForm } from "@/reusable/forms/useForm";
 import StockistOrderedProduct from "./orderProduct/stockistOrderProduct";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 const AddDCRForStockist = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('id');

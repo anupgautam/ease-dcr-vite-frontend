@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import {
     Box,
     Typography,
@@ -20,11 +20,11 @@ import {
     useCreateCompanyRolesMutation,
     useGetAllRolesQuery
 } from '@/api/MPOSlices/companyRolesSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 
 const AddCompanyRoles = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Create Chemist
     const [createCompanyRoles] = useCreateCompanyRolesMutation()

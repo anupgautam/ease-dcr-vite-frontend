@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
     Card,
     Badge,
@@ -24,7 +24,7 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 import EditHOTourPlan from './EditHigherOrderTourPlan';
 import {
@@ -42,7 +42,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultHOTourPlan = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer
     const [isEdited, setEdited] = useState(false);

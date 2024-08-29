@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import {
     Box,
     Typography, Button, Grid, CircularProgress
@@ -27,10 +27,10 @@ import {
 } from '@/api/CompanySlices/companyAreaSlice'
 import { useUpdateUsersMutation } from '@/api/MPOSlices/UserSlice'
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 const EditUser = ({ idharu, onClose }) => {
 
-    const { company_id, refresh, access } = useContext(CookieContext)
+    const { company_id, refresh, access } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
 

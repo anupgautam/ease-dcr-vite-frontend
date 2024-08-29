@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useContext } from 'react'
+import React, { useState, useMemo } from 'react'
 import {
     Box,
     Typography,
@@ -31,7 +31,7 @@ import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import ExportToExcel from '@/reusable/utils/exportSheet';
 import { useGetHOTourPlansByUserIdQuery } from '@/api/HighOrderSlices/hoTourPlanSlice';
-import { CookieContext } from '@/App'
+import { useSelector } from 'react-redux';
 
 function useAreaData(areaId) {
     const { data } = useGetAreaMPOByIdQuery(areaId).unwrap();
@@ -44,7 +44,7 @@ function useVisitedWithData(visitedWithId) {
 }
 
 const ExcelCSVTourPlan = () => {
-    const { company_id, user_role, company_user_id } = useContext(CookieContext)
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Get Company Roles wala
     const Role = useGetCompanyRolesByCompanyQuery(company_id)

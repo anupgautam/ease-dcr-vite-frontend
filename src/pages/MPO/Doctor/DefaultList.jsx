@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import {
     Badge,
     Button,
@@ -23,6 +22,8 @@ import {
     useGetAllDoctorsQuery,
     useDeleteDoctorsByIdMutation
 } from "../../../api/MPOSlices/DoctorSlice";
+import { useSelector } from 'react-redux';
+
 import { decryptData } from '../User/excryption';
 import { useLocation } from 'react-router-dom';
 
@@ -45,8 +46,8 @@ const DefaultList = () => {
         setOpenDialogue(false);
     }, []);
 
-    // const localData = localStorage.getItem('user_login');
-    // console.log('localData', localData)
+    const localData = localStorage.getItem('user_login');
+    console.log('localData', localData)
 
     const [page, setPage] = useState(1);
 

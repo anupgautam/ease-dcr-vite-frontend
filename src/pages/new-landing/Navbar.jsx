@@ -1,16 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 import logo from "/assets/ease.svg";
 import { Link as ScrollLink, Events, scrollSpy } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
 import "./Navbar.css";
 import Cookies from 'js-cookie'
-import { CookieContext } from "../../App";
 
 const Navbar = () => {
-  const { user_role } = useContext(CookieContext)
+  const { user_role } = useSelector((state) => state.cookie);
 
   const login = user_role;
-  console.log('login', login);
   const navItems = [
     {
       id: 0,
