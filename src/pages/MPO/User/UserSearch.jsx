@@ -199,10 +199,11 @@ const UserSearch = () => {
 
 
   const UserLogin = (id) => {
-    AdminUserLogin({ user_id: id })
+    AdminUserLogin({ user_id: id.user_name.id })
       .then((res) => {
         if (res.data) {
           localStorage.setItem('user_login', JSON.stringify(res.data));
+          localStorage.setItem('email', id.user_name.email)
           if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
             setErrorMessage({ show: true, message: 'Admin Cannot be logged in.' });
           } else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
@@ -424,7 +425,7 @@ const UserSearch = () => {
                                 <TableCell align="left">
                                   {/* //!User Login */}
                                   {usersearch?.user_name?.is_admin === false ? <>
-                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => UserLogin(usersearch.user_name.id)}>
+                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => UserLogin(usersearch)}>
                                       <Badge>
                                         <Iconify icon="ic:sharp-login" />
                                       </Badge>

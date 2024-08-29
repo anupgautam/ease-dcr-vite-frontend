@@ -78,7 +78,7 @@ const FilteredTourPlan = () => {
             sessionStorage.setItem('company_division_name', localData.company_division_name);
             sessionStorage.setItem('refresh', localData.token.refresh);
             sessionStorage.setItem('access', localData.token.access);
-            sessionStorage.setItem('email', localData.email);
+            sessionStorage.setItem('email', localStorage.getItem('email'));
             sessionStorage.setItem('is_highest_priority', localData.is_highest_priority)
             if (localData.role === "ASM") {
                 sessionStorage.setItem('user_role', 'other-roles')
@@ -87,6 +87,7 @@ const FilteredTourPlan = () => {
                 sessionStorage.setItem('role', 'other')
             }
             localStorage.removeItem('user_login');
+            localStorage.removeItem('email');
         }
     }, [localData])
 
