@@ -1,4 +1,4 @@
-import { debounce, parseInt } from 'lodash';
+import { debounce } from 'lodash';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     Card,
@@ -57,6 +57,7 @@ const TABLE_HEAD = [
 
 const DoctorSearch = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+
     //! Get MPO Names
     const [MpoData] = usePostAllMPONamesNoPageMutation();
     const localData = JSON.parse(localStorage.getItem('user_login'));
@@ -160,12 +161,6 @@ const DoctorSearch = () => {
     const onSearch = (e) => {
         const searchQuery = e.target.value;
 
-        // if (!mpoName) {
-        //     setSearchDataCondition(false);
-        //     setSearchData([]);
-        //     return;
-        // }
-
         if (searchQuery === '') {
             setSearchDataCondition(false);
             setSearchData([]);
@@ -191,9 +186,6 @@ const DoctorSearch = () => {
         values,
         handleSearchClick,
     } = useForm1(initialFValues, true);
-
-    //! onSearch
-    const FilteredData = { mpo_area: mpoArea, mpo_name: mpoName, companyId: companyId, }
 
 
     // !Delete doctors

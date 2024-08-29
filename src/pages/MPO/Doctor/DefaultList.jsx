@@ -29,6 +29,7 @@ import { useLocation } from 'react-router-dom';
 
 const DefaultList = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
@@ -47,7 +48,6 @@ const DefaultList = () => {
     }, []);
 
     const localData = localStorage.getItem('user_login');
-    console.log('localData', localData)
 
     const [page, setPage] = useState(1);
 

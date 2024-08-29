@@ -27,7 +27,7 @@ import { useSelector } from 'react-redux';
 import {
     useAreaMPOQuery,
     useDeleteareaMPOMutation
-} from '@/api/MPOSlices/TourPlanSlice.js';
+} from '@/api/MPOSlices/TourPlanSlice';
 import EditMpoArea from './editMpoArea';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 

@@ -35,9 +35,10 @@ import {
     useSearchSecondarySalesMutation,
     useDeleteSecondarySalesByIdMutation
 } from '../../../../api/MPOSlices/SecondarySalesApiSlice';
-import {
-    useGetAllStockistsWithoutPaginationQuery,
-} from "../../../../api/MPOSlices/StockistSlice";
+// import {
+//     useGetAllStockistsWithoutPaginationQuery,
+// } from "../../../../api/MPOSlices/StockistSlice";
+import { useGetStockistsWithoutPaginationQuery } from '@/api/MPOSlices/stockistApiSlice';
 import ExcelCSVSecondarySales from './ExcelCSVSecondarySales';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
@@ -95,7 +96,8 @@ const SecondarySalesSearch = () => {
     const mpo_id = useSelector(state => state.dcrData.selected_user);
 
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id);
-    const { Stockist } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id })
+    // const { Stockist } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id })
+    const { Stockist } = useGetStockistsWithoutPaginationQuery(company_id)
 
     const rolesOptions = useMemo(() => {
         if (Stockist !== undefined) {
@@ -137,20 +139,6 @@ const SecondarySalesSearch = () => {
 
     const monthData = getNepaliMonthName(now._date.month);
     const yearData = now._date.year;
-
-
-    //! Month Format 
-    // const [startMonth, setStartMonth] = useState();
-    // const [selectedMonth, setMonthData] = useState();
-
-    // const handleMonthChange = (date) => {
-    //     setStartMonth(date)
-    //     if (date) {
-    //         const MonthData = date.toLocaleString('default', { month: "short" }).toLowerCase();
-    //         setMonthData(MonthData)
-    //     }
-    // }
-
 
     //! Months
     const months = [

@@ -100,7 +100,7 @@ const AllUserDcr = () => {
     // !on search
     const onSearch = (e) => {
         const searchQuery = e.target.value;
-        const company_id = company_id;
+        // const company_id = company_id;
         setSearchResults({ search: searchQuery, company_id })
         searchUser(searchResults);
 

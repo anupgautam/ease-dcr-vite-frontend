@@ -119,7 +119,7 @@ const ApprovedTP = ({ mpoName, role }) => {
     return (
         <>
             <LoadingButton onClick={() => setIsDrawerOpen(true)} className="loginbutton" fullWidth size="large" type="submit" variant="contained"  >
-                Approved Tour Plan
+                Approve All
             </LoadingButton>
             <Drawer
                 anchor="right"
@@ -151,7 +151,7 @@ const ApprovedTP = ({ mpoName, role }) => {
                                 <Close />
                             </IconButton>
                             <Typography variant="h6">
-                                Approved Tour Plan
+                                Approve All
                             </Typography>
                         </Box>
                         <Box style={{ marginTop: '40px' }}>

@@ -183,11 +183,11 @@ const UserSearch = () => {
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleClickOpen = useCallback((userId) => {
-    setOpenDialogues((prev) => ({ ...prev, [userId]: true }));
+    setOpenDialogue((prev) => ({ ...prev, [userId]: true }));
   }, []);
 
   const handleClose = useCallback((userId) => {
-    setOpenDialogues((prev) => ({ ...prev, [userId]: false }));
+    setOpenDialogue((prev) => ({ ...prev, [userId]: false }));
   }, []);
 
   const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' })

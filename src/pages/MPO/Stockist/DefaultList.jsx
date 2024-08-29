@@ -24,7 +24,7 @@ import Iconify from '@/components/iconify/Iconify';
 import { useSelector } from 'react-redux';
 
 const DefaultList = () => {
-    const { company_id, user_role, company_area_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
@@ -49,9 +49,9 @@ const DefaultList = () => {
     }, [])
 
     const { data } = useGetAllStockistsQuery({
-        id: company_id,
+        id: parseInt(company_id),
         page: page,
-        company_area: user_role === 'admin' ? "" : company_area_id
+        company_area: user_role === 'admin' ? "" : company_user_id
     });
 
     const [deleteStockist] = useDeleteStockistsByIdMutation();

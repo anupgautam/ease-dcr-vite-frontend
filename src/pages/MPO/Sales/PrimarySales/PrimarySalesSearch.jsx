@@ -35,9 +35,10 @@ import {
     useSearchPrimarySalesMutation,
     useDeletePrimarySalesByIdMutation
 } from '../../../../api/MPOSlices/PrimarySalesApiSlice';
-import {
-    useGetAllStockistsWithoutPaginationQuery,
-} from "../../../../api/MPOSlices/StockistSlice";
+// import {
+//     useGetAllStockistsWithoutPaginationQuery,
+// } from "../../../../api/MPOSlices/StockistSlice";
+import { useGetStockistsWithoutPaginationQuery } from '@/api/MPOSlices/stockistApiSlice';
 import { useGetUsersByCompanyUserByIdQuery } from "@/api/MPOSlices/UserSlice";
 import ExcelCSVPrimarySales from './ExcelCSVPrimarySales';
 import { BSDate } from 'nepali-datepicker-react';
@@ -98,7 +99,7 @@ const PrimarySalesSearch = () => {
 
     const companyUserArea = useGetUsersByCompanyUserByIdQuery(company_user_id);
 
-    const Stockist = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: companyUserArea?.data?.company_area?.company_area });
+    const Stockist = useGetStockistsWithoutPaginationQuery(company_id);
 
     const rolesOptions = useMemo(() => {
         if (Stockist?.data) {
@@ -139,19 +140,6 @@ const PrimarySalesSearch = () => {
 
     const monthData = getNepaliMonthName(now._date.month);
     const yearData = now._date.year;
-
-
-    //! Month Format 
-    // const [startMonth, setStartMonth] = useState();
-    // const [selectedMonth, setMonthData] = useState();
-
-    // const handleMonthChange = (date) => {
-    //     setStartMonth(date)
-    //     if (date) {
-    //         const MonthData = date.toLocaleString('default', { month: "short" }).toLowerCase();
-    //         setMonthData(MonthData)
-    //     }
-    // }
 
     //! Months
     const months = [

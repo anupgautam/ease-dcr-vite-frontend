@@ -52,15 +52,13 @@ const TABLE_HEAD = [
 ];
 
 const ProductSearch = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_division_name } = useSelector((state) => state.cookie);
 
     //! Company Division
     const Division = useGetFilteredDivisionsQuery(company_id);
 
-
     const [companyDivision, setCompanyDivision] = useState('')
     const [companyId, setCompanyId] = useState();
-
 
     const companydivisions = useMemo(() => {
         if (Division?.data) {
@@ -102,11 +100,9 @@ const ProductSearch = () => {
     }, [])
 
     // ! Get all users wala
-    const { data } = useGetAllProductsQuery(page);
+    const { data } = useGetAllProductsQuery({ id: company_id, page: page, division_name: user_role === 'admin' ? "" : company_division_name });
 
-    const [searchResults, setSearchResults] = useState({ search: "" });
-    const [searchProduct, results] = useSearchProductsMutation()
-    const searchData = results.data;
+    // const [searchProduct, results] = useSearchProductsMutation()
 
     const [SearchData, setSearchData] = useState([]);
     const [SearchDataCondition, setSearchDataCondition] = useState(false);
@@ -140,21 +136,21 @@ const ProductSearch = () => {
         handleSearchClick,
     } = useForm1(initialFValues, true);
 
-    useEffect(() => {
-        if (values.search.trim()) {
-            searchProduct(values)
-        }
-    }, [values, searchProduct])
+    // useEffect(() => {
+    //     if (values.search.trim()) {
+    //         searchProduct(values)
+    //     }
+    // }, [values, searchProduct])
 
     //! onSearch
-    const FilteredData = { company_division: companyDivision, companyId: companyId, }
+    // const FilteredData = { company_division: companyDivision, companyId: companyId, }
 
-    useEffect(() => {
-        if (companyId || companyDivision) {
+    // useEffect(() => {
+    //     if (companyId || companyDivision) {
 
-            searchProduct(FilteredData)
-        }
-    }, [companyId, companyDivision])
+    //         searchProduct(FilteredData)
+    //     }
+    // }, [companyId, companyDivision])
 
     // !Delete products
     const [deleteProduct] = useDeleteProductsByIdMutation()
@@ -171,8 +167,6 @@ const ProductSearch = () => {
     const handleClose = useCallback(() => {
         setOpenDialogue(false)
     }, [])
-
-
 
     const debouncedSearch = debounce(onSearch, 300);
 
