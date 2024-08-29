@@ -2,11 +2,13 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { apiSlice } from "./api/apiSlice";
 import { chatSlice } from "./reducer/chatReducer";
 import { DCRSelectDataSlice } from "./reducers/dcrSelectData";
+import { cookieSlice } from "./reducers/cookieReducer";
 
 const rootReducer = combineReducers({
     [apiSlice.reducerPath]: apiSlice.reducer,
     chat: chatSlice.reducer,
-    dcrData: DCRSelectDataSlice.reducer
+    dcrData: DCRSelectDataSlice.reducer,
+    cookie: cookieSlice.reducer
     // Add more reducers as needed
 });
 
