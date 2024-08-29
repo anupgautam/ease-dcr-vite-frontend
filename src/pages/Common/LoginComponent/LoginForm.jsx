@@ -123,6 +123,9 @@ const LoginFormInputs = () => {
                     } else if (res.error) {
                         if (res.error?.originalStatus === 500) {
                             setErrorMessage({ show: true, message: 'Server Error. Please try again later.' });
+                        }
+                        else if (res.error?.originalStatus === 401) {
+                            setErrorMessage({ show: true, message: 'Unauthorized' });
                         } else {
                             setErrorMessage({ show: true, message: 'Login Failed' });
                         }

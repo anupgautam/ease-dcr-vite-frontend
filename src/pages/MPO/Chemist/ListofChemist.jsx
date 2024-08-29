@@ -19,7 +19,6 @@ const ListofChemist = () => {
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    console.log('user_role', user_role);
 
     return (
         <>
@@ -44,7 +43,7 @@ const ListofChemist = () => {
                                     <ExportChemist />
                                 }
                                 {
-                                    user_role === "admin" || user_role === "MPO" &&
+                                    (user_role === "admin" || user_role === "MPO") &&
                                     <AddChemist />
                                 }
                             </Stack>

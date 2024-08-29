@@ -85,18 +85,36 @@ const AddUser = () => {
     //! Executive level
     const [executiveLevels, setExecutiveLevels] = useState([]);
     const [getExecLevel] = useGetAllExecutiveLevelsMutation();
-    const companyId = company_id;
+    // const companyId = company_id;
+
+    // useEffect(() => {
+    //     const exce = [];
+    //     getExecLevel(company_id).then((res) => {
+    //         // 
+    //         res?.data?.map((key) => {
+    //             exce.push({ id: key?.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name })
+    //         })
+    //     })
+    //     setExecutiveLevels(exce);
+    // }, [company_id])
 
     useEffect(() => {
-        const exce = [];
-        getExecLevel(companyId).then((res) => {
-            // 
-            res?.data?.map((key) => {
-                exce.push({ id: key?.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name })
-            })
-        })
-        setExecutiveLevels(exce);
-    }, [companyId])
+        const fetchExecutiveLevels = async () => {
+            try {
+                const response = await getExecLevel(company_id).unwrap();
+                const fetchedLevels = response?.map((key) => ({
+                    id: key?.id,
+                    title: `${key?.user_name?.first_name || ''} ${key?.user_name?.middle_name || ''} ${key?.user_name?.last_name || ''}`,
+                }));
+                setExecutiveLevels(fetchedLevels || []);
+            } catch (error) {
+            }
+        };
+
+        if (company_id) {
+            fetchExecutiveLevels();
+        }
+    }, [company_id, getExecLevel]);
 
 
     //! Format Date

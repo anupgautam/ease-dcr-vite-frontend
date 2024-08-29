@@ -52,7 +52,7 @@ const AddMultipleProduct = () => {
                         navigate('/dashboard/admin/listofproduct')
                     }, 3000);
                 } else {
-                    setErrorMessage({ show: true, message: response.error.data[0] });
+                    setErrorMessage({ show: true, message: response?.error?.data?.error });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
                     }, 3000);
@@ -154,7 +154,22 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         { id: "drop", title: "Drops" },
         { id: "inhaler", title: "Inhalers" },
         { id: "implant", title: "Implants" },
-        { id: "buccal", title: "Buccal" }
+        { id: "buccal", title: "Buccal" },
+        { id: "ointment", title: "Ointment" },
+        { id: "powder", title: "Powder" },
+        { id: "syrup", title: "Syrup" },
+        { id: "cream", title: "Cream" },
+        { id: "gel", title: "Gel" },
+        { id: "patch", title: "Transdermal Patch" },
+        { id: "granules", title: "Granules" },
+        { id: "lozenge", title: "Lozenge" },
+        { id: "spray", title: "Spray" },
+        { id: "injectable", title: "Injectable" },
+        { id: "foam", title: "Foam" },
+        { id: "tube", title: "Tube" },
+        { id: "strip", title: "Strip" },
+        { id: "sachet", title: "Sachet" },
+        { id: "1X6", title: "1X6" },
     ];
 
     const [File, setFile] = useState([]);
