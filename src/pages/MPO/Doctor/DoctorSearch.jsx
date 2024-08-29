@@ -69,10 +69,11 @@ const DoctorSearch = () => {
             sessionStorage.setItem('company_division_name', localData.company_division_name);
             sessionStorage.setItem('refresh', localData.token.refresh);
             sessionStorage.setItem('access', localData.token.access);
-            sessionStorage.setItem('email', localData.email);
+            sessionStorage.setItem('email', localStorage.getItem('email'));
             sessionStorage.setItem('is_highest_priority', localData.is_highest_priority)
             sessionStorage.setItem('user_role', 'MPO')
             localStorage.removeItem('user_login');
+            localStorage.removeItem('email');
         }
     }, [localData])
 
