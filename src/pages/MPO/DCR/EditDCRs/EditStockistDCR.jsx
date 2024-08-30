@@ -67,7 +67,9 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     const DCRAll = useGetStockistAllDCRByIdQuery(idharu);
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id);
 
-    const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id })
+    const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id }, {
+        skip: mpoArea,
+    })
 
     const stockists = useMemo(() => {
         if (StockistData !== undefined) {

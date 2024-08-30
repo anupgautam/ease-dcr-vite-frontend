@@ -168,23 +168,23 @@ export default function Router() {
         },
         {
           path: 'admin/all/user/dcrdoctordetail',
-          element: <Authentication component={DCRDetail} allowRoles={['admin']} />,
+          element: <Authentication component={DCRDetail} allowRoles={['admin', 'MPO', 'other-roles']} />,
         },
         {
           path: 'admin/all/user/dcrchemistdetail',
-          element: <Authentication component={DCRChemistDetail} allowRoles={['admin']} />,
+          element: <Authentication component={DCRChemistDetail} allowRoles={['admin', 'MPO', 'other-roles']} />,
         },
         {
           path: 'admin/all/user/dcrstockistdetail',
-          element: <Authentication component={DCRStockistDetail} allowRoles={['admin']} />,
+          element: <Authentication component={DCRStockistDetail} allowRoles={['admin', 'MPO', 'other-roles']} />,
         },
         {
           path: 'admin/all/user/dcrhodetail',
-          element: <Authentication component={DCRHODetail} allowRoles={['admin']} />,
+          element: <Authentication component={DCRHODetail} allowRoles={['admin', 'MPO', 'other-roles']} />,
         },
         {
           path: 'admin/all/user/dcr',
-          element: <Authentication component={AllUserDcr} allowRoles={['admin']} />,
+          element: <Authentication component={AllUserDcr} allowRoles={['admin', 'MPO', 'other-roles']} />,
         },
         {
           path: 'admin/user/wise/dcr',

@@ -12,22 +12,18 @@ import PrimarySalesSearch from './PrimarySalesSearch';
 import AddPrimarySales from './AddPrimarySales';
 
 const ListOfPrimarySales = () => {
+
     return (
         <>
-            {/* <Container>
+            <Container>
                 <Box style={{ marginBottom: '30px' }}>
                     <Grid container>
                         <Grid item xs={10}>
                             <PrimarySalesCount />
                         </Grid>
-                        <Grid item xs={2}>
-                            <Box style={{ float: "right" }}>
-                                <AddPrimarySales />
-                            </Box>
-                        </Grid>
                     </Grid>
                 </Box>
-            </Container> */}
+            </Container>
             <PrimarySalesSearch />
         </>
     )

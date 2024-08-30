@@ -22,7 +22,6 @@ import { useForm } from "@/reusable/forms/useForm";
 import { UserListHead } from "@/sections/@dashboard/user";
 import { useSelector } from 'react-redux';
 
-
 const TABLE_HEAD = [
     { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
     { id: 'visited_with', label: 'Visited With', alignRight: false },
@@ -47,30 +46,12 @@ const AddDcrForDoctor = () => {
     const [AllMutipleData, setAllMutipleData] = useState([]);
 
     const [PromotedProduct, setPromotedProduct] = useState([]);
-
-    // const handleProductChange = (event) => {
-    //     const {
-    //         target: { value },
-    //     } = event;
-    //     setPromotedProduct(
-    //         typeof value === 'string' ? value.split(',') : value,
-    //     );
-    // }
-
     const handleProductChange = (event, value) => {
         const mpotparea = value.map(option => option.id)
         setPromotedProduct(mpotparea)
     }
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
-
-    // const handleRolesChange = (event) => {
-    //     const {
-    //         target: { value },
-    //     } = event;
-    //     setCompanyRoles(value);
-    // }
-
     //! Autocomplete
 
     const handleRolesChange = (event, value) => {
@@ -107,17 +88,6 @@ const AddDcrForDoctor = () => {
         }
     }
 
-    // const handleDoctorChange = (event) => {
-    //     const {
-    //         target: { value },
-    //     } = event;
-
-    //     setCompanyDoctor(value);
-
-    //     const removedDoctorIds = CompanyDoctor.filter(doctorId => !value.includes(doctorId));
-    //     setDoctorData(prevData => prevData.filter(item => !removedDoctorIds.includes(item.doctor_id)));
-    // }
-
     //! AutoComplete
 
     const handleDoctorChange = (event, value) => {
@@ -129,13 +99,6 @@ const AddDcrForDoctor = () => {
     }
 
     const [RewardOptions, setRewardsOptions] = useState([]);
-
-    // const handleRewardsChange = (event) => {
-    //     const {
-    //         target: { value },
-    //     } = event;
-    //     setRewardsOptions(value);
-    // }
 
     const handleRewardsChange = (event, value) => {
         const mpotparea = value.map(option => option.id)
@@ -341,22 +304,11 @@ const AddDcrForDoctor = () => {
                                 .then(res => {
                                     if (res.data) {
                                         if (LastData === true) {
-                                            // updateTourplan({
-                                            //     id: values.tour_id,
-                                            //     value: { is_dcr_added: true, is_doctor_dcr_added: true },
-                                            // })
-                                            // .then(res => {
-                                            //     if (res.data) {
                                             setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
                                             setTimeout(() => {
                                                 setSuccessMessage({ show: false, message: '' });
                                                 navigate('/dashboard/admin/dcr');
                                             }, 2000);
-                                            //     }
-                                            // })
-                                            // .catch(err => {
-                                            //     
-                                            // });
                                         } else {
                                             setSuccessMessage({ show: true, message: 'DCR Added Successfully Added.' });
                                             setTimeout(() => {
@@ -417,7 +369,6 @@ const AddDcrForDoctor = () => {
                                                                                     <Grid item xs={3.5}>
                                                                                         <Box style={{ padding: '5px', textAlign: 'center', border: '1.2px solid #2d8960', borderRadius: "5px", marginTop: '11px', marginBottom: "11px" }}>
                                                                                             <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{key.tour_plan.tour_plan.select_the_date_id.slice(8)}</Typography>
-                                                                                            {/* <Typography style={{ fontSize: '13px', color: "black", marginTop: "-5px" }}>{key.tour_plan.tour_plan.select_the_month.slice(0, 3)}</Typography> */}
                                                                                         </Box>
                                                                                     </Grid>
                                                                                     <Grid item xs={8.5}>
@@ -448,8 +399,6 @@ const AddDcrForDoctor = () => {
                                             label="Select the Date*"
                                             value={values.date}
                                             onChange={handleInputChange}
-                                            // error={errors.select_the_date}
-                                            // className={"drawer-first-name-input"}
                                             disable={true}
                                         />
                                     </Box>
@@ -474,29 +423,6 @@ const AddDcrForDoctor = () => {
                                         />
                                     </Box>
                                     <Box marginBottom={2}>
-                                        {/* <FormControl sx={{ m: 1, width: 300 }}>
-                                            <InputLabel>{"Select the Doctor*"}</InputLabel>
-                                            <Select
-                                                multiple
-                                                name="visited_with"
-                                                value={CompanyDoctor}
-                                                onChange={handleDoctorChange}
-                                                label="Select the Doctor*"
-                                                // MenuProps={MenuProps}
-                                                sx={{ width: '100%' }}
-                                                style={{
-                                                    borderBlockColor: "white",
-                                                    width: "100%",
-                                                    textAlign: 'start'
-                                                }}
-                                            >
-                                                {doctorOptions.map((item) => (
-                                                    <MenuItem key={item.id} value={item.id}>
-                                                        {item.title}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl> */}
                                         {/* //! Autocomplete */}
                                         <Autocomplete
                                             multiple
@@ -580,6 +506,8 @@ const AddDcrForDoctor = () => {
 }
 
 const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+
     const Doctor = useGetDoctorsByIdQuery(data.doctor_id);
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
@@ -604,23 +532,11 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
 
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
-
-    // const handleRolesChange = (event) => {
-    //     const {
-    //         target: { value },
-    //     } = event;
-    //     setCompanyRoles(value);
-    // }
-
     const handleRolesChange = (event, value) => {
         const mpotparea = value.map(option => option.id)
         setCompanyRoles(mpotparea)
     }
-
-
-    const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
-        company_id
-    );
+    const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(company_id);
 
     const productOptions = useMemo(() => {
         if (companyProduct !== undefined) {
@@ -637,15 +553,6 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
     }, [companyProduct])
 
     const [PromotedProduct, setPromotedProduct] = useState([]);
-
-    // const handleProductChange = useCallback((event) => {
-    //     const {
-    //         target: { value },
-    //     } = event;
-    //     setPromotedProduct(
-    //         typeof value === 'string' ? value.split(',') : value,
-    //     );
-    // }, [])
 
     const handleProductChange = (event, value) => {
         const mpotparea = value.map(option => option.id)
@@ -665,18 +572,10 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
 
     const [RewardOptions, setRewardsOptions] = useState([]);
 
-    // const handleRewardsChange = (event) => {
-    //     const {
-    //         target: { value },
-    //     } = event;
-    //     setRewardsOptions(value);
-    // }
-
     const handleRewardsChange = (event, value) => {
         const mpotparea = value.map(option => option.id)
         setRewardsOptions(mpotparea)
     }
-
 
     const [Formdata, setFormData] = useState({
         expenses_name: "",
@@ -720,29 +619,6 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
             <TableCell style={{ width: "50px" }}>{sn + 1}</TableCell>
             <TableCell style={{ width: "200px" }}>{Doctor?.data?.doctor_name.doctor_name}</TableCell>
             <TableCell align="left" style={{ width: "300px" }}>
-                {/* <FormControl sx={{ m: 1, width: 300 }}>
-                    <InputLabel>{"Select the Visited With*"}</InputLabel>
-                    <Select
-                        multiple
-                        name="visited_with"
-                        value={CompanyRoles}
-                        onChange={handleRolesChange}
-                        label="Select the Visited With*"
-                        sx={{ width: '100%' }}
-                        style={{
-                            borderBlockColor: "white",
-                            width: "100%",
-                            textAlign: 'start'
-                        }}
-                    >
-                        {executiveOptions.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>
-                                {item.title}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl> */}
-
                 {/* //! Autocomplete */}
                 <Autocomplete
                     multiple
@@ -760,31 +636,6 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                 />
             </TableCell>
             <TableCell align="left" style={{ width: "300px" }}>
-                {/* <FormControl sx={{ m: 1, width: 300 }}>
-                    <InputLabel>{"Select the Promoted Product*"}</InputLabel>
-                    <Select
-                        labelId="demo-multiple-chip-label"
-                        id="demo-multiple-chip"
-                        multiple
-                        value={PromotedProduct}
-                        onChange={handleProductChange}
-                        input={<OutlinedInput id="select-multiple-chip" label="Select the Promoted Product*" />}
-                        // MenuProps={MenuProps}
-                        sx={{ width: '100%' }}
-                        style={{
-                            borderBlockColor: "white",
-                            width: "100%",
-                            textAlign: 'start'
-                        }}
-                    >
-                        {productOptions.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>
-                                {item.title}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl> */}
-
                 {/* //! Autocomplete */}
                 <Autocomplete
                     multiple
@@ -802,30 +653,6 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                 />
             </TableCell>
             <TableCell align="left" style={{ width: "300px" }}>
-                {/* <FormControl sx={{ m: 1, width: 300 }}>
-                    <InputLabel>{"Select the Rewards*"}</InputLabel>
-                    <Select
-                        labelId="demo-multiple-name-label"
-                        id="demo-multiple-name"
-                        multiple
-                        value={RewardOptions}
-                        onChange={handleRewardsChange}
-                        input={<OutlinedInput label="Select the Rewards*" />}
-                        // MenuProps={MenuProps}
-                        sx={{ width: '100%' }}
-                        style={{
-                            borderBlockColor: "white",
-                            width: "100%",
-                            textAlign: 'start'
-                        }}
-                    >
-                        {rewardsOptions.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>
-                                {item.title}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl> */}
                 <Autocomplete
                     multiple
                     options={rewardsOptions}
@@ -847,8 +674,6 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                     label="Expenses Name"
                     value={Formdata.expenses_name || ""}
                     onChange={handleInputChange}
-                    // error={errors.select_the_date}
-                    // className={"drawer-first-name-input"}
                     disable={false}
                 />
             </TableCell>
@@ -858,8 +683,6 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                     label="Expenses"
                     value={Formdata.expenses || ""}
                     onChange={handleInputChange}
-                    // error={errors.select_the_date}
-                    // className={"drawer-first-name-input"}
                     disable={false}
                 />
             </TableCell>
@@ -869,14 +692,11 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                     label="Expenses Reasoning*"
                     value={Formdata.expenses_reasoning || ""}
                     onChange={handleInputChange}
-                    // error={errors.select_the_date}
-                    // className={"drawer-first-name-input"}
                     disable={false}
                 />
             </TableCell>
         </>
     )
 }
-
 
 export default React.memo(AddDcrForDoctor);

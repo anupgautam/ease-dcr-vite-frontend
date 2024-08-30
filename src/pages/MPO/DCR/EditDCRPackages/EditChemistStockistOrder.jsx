@@ -17,7 +17,9 @@ const EditChemistStockistOrder = ({ id, context, editApi, companyArea }) => {
   // const companyStockists = useSelector(state => state.dcrData.visited_stockist);
   const mpo_id = useSelector(state => state.dcrData.selected_user);
   const { data: mpoArea } = useGetUsersByIdQuery(mpo_id);
-  const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id })
+  const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id }, {
+    skip: mpoArea,
+  })
 
   const companyStockists = useMemo(() => {
     if (StockistData !== undefined) {

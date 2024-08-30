@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
     Typography,
     IconButton,
@@ -20,6 +20,7 @@ import {
     useGetAllStockistsQuery,
     useDeleteStockistsByIdMutation
 } from "../../../api/MPOSlices/StockistSlice";
+import { useGetcompanyUserRolesByIdQuery } from '@/api/CompanySlices/companyUserRoleSlice';
 import Iconify from '@/components/iconify/Iconify';
 import { useSelector } from 'react-redux';
 
@@ -48,11 +49,20 @@ const DefaultList = () => {
         setPage(newPage);
     }, [])
 
-    const { data } = useGetAllStockistsQuery({
-        id: parseInt(company_id),
-        page: page,
-        company_area: user_role === 'admin' ? "" : company_user_id
-    });
+    // !  Get all the stockist
+    const { data: CompanyAreaId } = useGetcompanyUserRolesByIdQuery(company_user_id);
+
+    const { data } = useGetAllStockistsQuery(
+        {
+            id: company_id,
+            page: page,
+            company_area: user_role === 'admin' ? "" : CompanyAreaId?.company_area?.id
+        },
+        {
+            skip: !CompanyAreaId // Skip the query until CompanyAreaId is available
+        }
+    );
+
 
     const [deleteStockist] = useDeleteStockistsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7];

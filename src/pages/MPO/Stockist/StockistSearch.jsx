@@ -102,11 +102,11 @@ const StockistSearch = () => {
     }
 
     // ! Search Logic
-    const { data: AllStockistsData } = useGetAllStockistsQuery({
-        id: parseInt(company_id),
-        page: page,
-        company_area: user_role === 'admin' ? "" : company_user_id
-    });
+    // const { data: AllStockistsData } = useGetAllStockistsQuery({
+    //     id: parseInt(company_id),
+    //     page: page,
+    //     company_area: user_role === 'admin' ? "" : company_user_id
+    // });
 
     const [SearchData, setSearchData] = useState([]);
     const [SearchDataCondition, setSearchDataCondition] = useState(false);

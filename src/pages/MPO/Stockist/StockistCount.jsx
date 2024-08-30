@@ -18,7 +18,10 @@ const StockistCount = () => {
 
     // !  Get all the stockist
     const { data: CompanyAreaId } = useGetcompanyUserRolesByIdQuery(company_user_id);
-    const { data } = useGetAllStockistsQuery({ id: company_id, page: page, company_area: user_role === 'admin' ? "" : CompanyAreaId?.company_area?.id });
+
+    const { data } = useGetAllStockistsQuery({ id: company_id, page: page, company_area: user_role === 'admin' ? "" : CompanyAreaId?.company_area?.id }, {
+        skip: !CompanyAreaId // Skip the query until CompanyAreaId is available
+    });
     return (
         <>
             {

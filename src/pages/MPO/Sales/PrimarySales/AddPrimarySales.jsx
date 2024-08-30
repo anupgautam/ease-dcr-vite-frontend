@@ -141,7 +141,7 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
         }
 
         setIsDrawerOpen(false)
-    }, [onAddPrimarySales, values]);
+    }, [createPrimarySales, values]);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

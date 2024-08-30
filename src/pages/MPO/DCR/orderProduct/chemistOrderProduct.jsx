@@ -14,7 +14,7 @@ import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
-
+import { useSelector } from 'react-redux';
 import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { useGetChemistOrderProductDataQuery } from '@/api/DCRs Api Slice/chemistDCR/chemistOrderedProductInformation';
@@ -27,6 +27,8 @@ import { useGetStockistsByCompanyAreaQuery } from '@/api/MPOSlices/StockistSlice
 
 
 const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) => {
+    const { company_id, user_role, company_user_id, company_area_id } = useSelector((state) => state.cookie);
+
     const [updateDcr] = useUpdateDcrForChemistValuesMutation();
 
     const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_id)

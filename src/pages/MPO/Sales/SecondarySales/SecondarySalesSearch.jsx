@@ -19,7 +19,7 @@ import {
     Select,
     Autocomplete,
     InputLabel,
-    FormControl
+    FormControl, Stack
 } from '@mui/material';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -97,10 +97,10 @@ const SecondarySalesSearch = () => {
 
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id);
     // const { Stockist } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id })
-    const { Stockist } = useGetStockistsWithoutPaginationQuery(company_id)
+    const Stockist = useGetStockistsWithoutPaginationQuery(company_id);
 
     const rolesOptions = useMemo(() => {
-        if (Stockist !== undefined) {
+        if (Stockist?.data) {
             return Stockist?.data?.map((key) => ({
                 id: key.id,
                 title: key.stockist_name.stockist_name
@@ -221,26 +221,29 @@ const SecondarySalesSearch = () => {
     return (
         <>
             <Container>
-                <Box style={{ marginBottom: '30px' }}>
-                    <Grid container>
-                        <Grid item xs={10}>
-                            <SecondarySalesCount />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Box style={{ float: "right" }}>
-                                <ExcelCSVSecondarySales />
-                            </Box>
-                        </Grid>
-
-                        {(selectedOption && selectedMonth && selectedYear) ?
-                            <>
-                                <Grid item xs={2}>
-                                    <Box style={{ float: "right" }}>
-                                        <AddSecondarySales selectedOption={selectedOption} selectedMonth={selectedMonth} selectedYear={selectedYear} />
+                <Box style={{ marginBottom: '20px' }}>
+                    <Grid container spacing={2} justifyContent="flex-end">
+                        <Grid item xs={12} md={12}>
+                            <Stack
+                                direction="row"
+                                spacing={2}
+                                alignItems="center"
+                                justifyContent="flex-end"
+                            >
+                                <Box>
+                                    <ExcelCSVSecondarySales selectedOption={selectedOption} />
+                                </Box>
+                                {selectedOption && selectedMonth && selectedYear && (
+                                    <Box>
+                                        <AddSecondarySales
+                                            selectedOption={selectedOption}
+                                            selectedMonth={selectedMonth}
+                                            selectedYear={selectedYear}
+                                        />
                                     </Box>
-                                </Grid>
-                            </> : <></>
-                        }
+                                )}
+                            </Stack>
+                        </Grid>
                     </Grid>
                 </Box>
 
