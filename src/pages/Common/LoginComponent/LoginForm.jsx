@@ -81,7 +81,6 @@ const LoginFormInputs = () => {
                     const res = await login({ email, password });
 
                     if (res.data) {
-                        console.log(res?.data)
                         Cookies.set('User_id', res.data.user_id);
                         Cookies.set('company_id', res.data.company_id);
                         Cookies.set('company_user_id', res.data.company_user_id);
@@ -92,7 +91,7 @@ const LoginFormInputs = () => {
                         Cookies.set('access', res.data.token.access);
                         Cookies.set('email', email);
                         Cookies.set('is_highest_priority', res.data.is_highest_priority);
-                        dispatch(setUserRole({role:res.data.role}))
+                        dispatch(setUserRole({ role: res.data.role }))
                         setSuccessMessage({ show: true, message: 'Successfully Logged In' });
                         setLoading(true);
                         setTimeout(() => {

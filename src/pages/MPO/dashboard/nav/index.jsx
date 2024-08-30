@@ -67,6 +67,7 @@ export default function Nav({ openNav, onCloseNav }) {
       otherRoles: sessionStorage.getItem('other-roles') ? sessionStorage.getItem('other-roles') : Cookies.get('other-roles'),
       OTPgmail: sessionStorage.getItem('OTPgmail') ? sessionStorage.getItem('OTPgmail') : Cookies.get('OTPgmail'),
       otp: sessionStorage.getItem('otp') ? sessionStorage.getItem('otp') : Cookies.get('otp'),
+      company_area_id: sessionStorage.getItem('company_area_id') ? sessionStorage.getItem('company_area_id') : Cookies.get('company_area_id')
     }
     setCookieData(data);
   }, [roles]);

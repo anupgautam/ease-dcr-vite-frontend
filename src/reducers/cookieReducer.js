@@ -17,6 +17,7 @@ const initialState = {
     OTPgmail: '',
     otp: '',
     roles: "",
+    company_area_id: "",
 };
 
 export const cookieSlice = createSlice({
