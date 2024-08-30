@@ -6,15 +6,14 @@ import {
     Grid,
     Box
 } from '@mui/material';
-
-
+import SecondarySalesCount from './SecondarySalesCount'
 import SecondarySalesSearch from './SecondarySalesSearch';
 
 
 const ListOfSecondarySales = () => {
     return (
         <>
-            {/* <Container>
+            <Container>
                 <Box style={{ marginBottom: '30px' }}>
                     <Grid container>
                         <Grid item xs={10}>
@@ -22,8 +21,7 @@ const ListOfSecondarySales = () => {
                         </Grid>
                     </Grid>
                 </Box>
-                <SecondarySalesSearch />
-            </Container> */}
+            </Container>
             <SecondarySalesSearch />
         </>
     )

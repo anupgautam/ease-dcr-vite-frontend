@@ -19,25 +19,22 @@ import {
     Select,
     Autocomplete,
     InputLabel,
-    FormControl
+    FormControl,
+    Stack,
+    useTheme
 } from '@mui/material';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
 import EditPrimarySales from './EditPrimarySales'
 import AddPrimarySales from './AddPrimarySales';
-import PrimarySalesCount from './PrimarySalesCount';
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
 import {
     useSearchPrimarySalesMutation,
     useDeletePrimarySalesByIdMutation
 } from '../../../../api/MPOSlices/PrimarySalesApiSlice';
-// import {
-//     useGetAllStockistsWithoutPaginationQuery,
-// } from "../../../../api/MPOSlices/StockistSlice";
 import { useGetStockistsWithoutPaginationQuery } from '@/api/MPOSlices/stockistApiSlice';
 import { useGetUsersByCompanyUserByIdQuery } from "@/api/MPOSlices/UserSlice";
 import ExcelCSVPrimarySales from './ExcelCSVPrimarySales';
@@ -69,6 +66,8 @@ const TABLE_HEAD = [
 const PrimarySalesSearch = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -206,8 +205,6 @@ const PrimarySalesSearch = () => {
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
-    const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     const handleClickOpen = useCallback(() => {
         setOpenDialogue(true)
@@ -220,26 +217,29 @@ const PrimarySalesSearch = () => {
     return (
         <>
             <Container>
-                <Box style={{ marginBottom: '30px' }}>
-                    <Grid container>
-                        <Grid item xs={10}>
-                            <PrimarySalesCount />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Box style={{ float: "right" }}>
-                                <ExcelCSVPrimarySales selectedOption={selectedOption} />
-                            </Box>
-                        </Grid>
-
-                        {(selectedOption && selectedMonth && selectedYear) ?
-                            <>
-                                <Grid item xs={2}>
+                <Box style={{ marginBottom: '20px' }}>
+                    <Grid container spacing={2} justifyContent="flex-end">
+                        <Grid item xs={12} md={12}>
+                            <Stack
+                                direction="row"
+                                spacing={2}
+                                alignItems="center"
+                                justifyContent="flex-end"
+                            >
+                                <Box>
+                                    <ExcelCSVPrimarySales selectedOption={selectedOption} />
+                                </Box>
+                                {selectedOption && selectedMonth && selectedYear && (
                                     <Box>
-                                        <AddPrimarySales selectedOption={selectedOption} selectedMonth={selectedMonth} selectedYear={selectedYear} />
+                                        <AddPrimarySales
+                                            selectedOption={selectedOption}
+                                            selectedMonth={selectedMonth}
+                                            selectedYear={selectedYear}
+                                        />
                                     </Box>
-                                </Grid>
-                            </> : <></>
-                        }
+                                )}
+                            </Stack>
+                        </Grid>
                     </Grid>
                 </Box>
 
