@@ -32,7 +32,6 @@ export default function App() {
     otp: sessionStorage.getItem('otp') ? sessionStorage.getItem('otp') : Cookies.get('otp'),
   });
 const roles=useSelector(state=>state.cookie?.roles);
-console.log(roles,"rolesrolesrolesrolesroles")
 
   useEffect(() => {
       const data = {
@@ -56,7 +55,6 @@ console.log(roles,"rolesrolesrolesrolesroles")
   }, [roles]);
 
   const dispatch = useDispatch();
-  console.log(cookieData,"cookieDatacookieData")
   useEffect(() => {
     if (cookieData) {
       dispatch(setCookie(cookieData));
