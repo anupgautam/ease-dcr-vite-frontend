@@ -287,6 +287,9 @@ const AddDcrForDoctor = () => {
                     sendingData['visited_area'] = sendingData['visited_area'];
                     sendingData['shift'] = allData.shift;
                     sendingData['visited_doctor'] = sendingData['visited_doctor'];
+                    sendingData['expenses'] = sendingData?.Formdata?.expenses;
+                    sendingData['expenses_name'] = sendingData?.Formdata?.expenses_name;
+                    sendingData['expenses_reasoning'] = sendingData?.Formdata?.expenses_reasoning;
                 } else {
                     sendingData['visited_area'] = null;
                     sendingData['visited_doctor'] = null;

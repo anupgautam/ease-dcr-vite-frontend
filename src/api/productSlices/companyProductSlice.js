@@ -28,6 +28,13 @@ export const companyProductSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ['CompanyProducts']
         }),
+        getAllCompanyProductsWithoutPaginationById: builder.query({
+            query: (page) => ({
+                url: `/product/company-product-without-pagination/${page}/`,
+                method: 'GET'
+            }),
+            providesTags: ['CompanyProducts']
+        }),
         //! GET users by id
         getCompanyProductsById: builder.query(
             {
@@ -93,7 +100,8 @@ export const {
     useGetAllCompanyProductsWithoutPaginationQuery,
     useDeleteCompanyProductByIdMutation,
     useCreateCompanyProductsMutation,
-    useUpdateCompanyProductsMutation
+    useUpdateCompanyProductsMutation,
+    useGetAllCompanyProductsWithoutPaginationByIdQuery,
 } = companyProductSlice;
 
 
