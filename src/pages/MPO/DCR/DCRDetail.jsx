@@ -9,22 +9,22 @@ import {
 import { useLocation } from 'react-router-dom';
 import { useGetDoctorAllDCRByIdQuery, useGetDoctorDcrByIdQuery } from '../../../api/DCRs Api Slice/doctorDCR/DoctorDCRAllSlice';
 import { useSelector } from 'react-redux';
+
 import { useGetAllCompanyProductsWithoutPaginationByIdQuery } from '../../../api/productSlices/companyProductSlice';
-import { useGetRewardsByDcrIdQuery } from '../../../api/DCRs Api Slice/rewardsAPISlice';
-import { useGetRewardsByIdQuery } from '../../../api/MPOSlices/rewardsApiSlice';
-import { useGetVisitedWithByDcrIdQuery } from '../../../api/MPOSlices/companyRolesSlice';
 import { useGetcompanyUserRolesByIdQuery } from '../../../api/CompanySlices/companyUserRoleSlice';
+import { useGetRewardsByIdQuery } from '../../../api/MPOSlices/rewardsApiSlice';
+
+import { useGetRewardsByDcrIdQuery } from '../../../api/DCRs Api Slice/rewardsAPISlice';
+import { useGetVisitedWithByDcrIdQuery } from '../../../api/MPOSlices/companyRolesSlice';
 ;
 
 const DCRDetail = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);;
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const selectedUser = searchParams.get('id');
 
     const { data, isLoading } = useGetDoctorDcrByIdQuery(selectedUser);
-
-    console.log('data', data);
+    console.log(data)
     return (
         <Container>
             <>

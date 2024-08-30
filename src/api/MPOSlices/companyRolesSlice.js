@@ -30,6 +30,29 @@ export const CompanyRolesApiSlice = apiSlice.injectEndpoints({
             providesTags: ['CompanyRoles']
         }),
 
+        getChemistVisitedWithByDcrId: builder.query({
+            query: (page) => ({
+                url: `dcr/dcr-for-chemist-company-roles-map/?dcr_id=${page}`,
+                method: 'GET'
+            }),
+            providesTags: ['CompanyRoles']
+        }),
+
+        getStockistVisitedWithByDcrId: builder.query({
+            query: (page) => ({
+                url: `dcr/dcr-for-stockist-company-roles-map/?dcr_id=${page}`,
+                method: 'GET'
+            }),
+            providesTags: ['CompanyRoles']
+        }),
+        getHigherOrderVisitedWithByDcrId: builder.query({
+            query: (page) => ({
+                url: `dcr/dcr-for-ho-company-roles-map/?dcr_id=${page}`,
+                method: 'GET'
+            }),
+            providesTags: ['CompanyRoles']
+        }),
+
         //! GET all the users
         getAllRoles: builder.query({
             query: (id) => ({
@@ -118,7 +141,11 @@ export const
         useCreateCompanyRolesMutation,
         useUpdateCompanyRolesMutation,
         useGetCompanyRolesByCompanyQuery,
+
         useGetVisitedWithByDcrIdQuery,
+        useGetChemistVisitedWithByDcrIdQuery,
+        useGetStockistVisitedWithByDcrIdQuery,
+        useGetHigherOrderVisitedWithByDcrIdQuery,
     } = CompanyRolesApiSlice
 
 //! returns the query result object

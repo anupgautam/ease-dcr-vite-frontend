@@ -20,7 +20,7 @@ import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import 'react-datepicker/dist/react-datepicker.css';
-
+import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
@@ -46,6 +46,8 @@ const TABLE_HEAD = [
     { id: 'date', label: 'Date', alignRight: false },
     { id: 'visited_area', label: 'Visited Area', alignRight: false },
     { id: 'chemist_name', label: 'Chemist Name', alignRight: false },
+    { id: '', label: '', alignRight: false },
+
 ];
 
 const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
@@ -202,15 +204,16 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
                                                                     </Typography>
                                                                     {/* </Stack> */}
                                                                 </TableCell>
-                                                                <Link to={`/dashboard/admin/all/user/dcrchemistdetail?id=${tourplan.dcr.dcr.id}`}>
-                                                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }}>
-                                                                        <Badge>
-                                                                            <Iconify icon="mdi:eye" sx={{ color: 'primary.main' }} />
-                                                                        </Badge>
-                                                                    </IconButton>
-                                                                </Link>
-                                                                {/* //! Edit  */}
                                                                 <TableCell align="left">
+
+                                                                    <Link to={`/dashboard/admin/all/user/dcrchemistdetail?id=${tourplan.id}`}>
+                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }}>
+                                                                            <Badge>
+                                                                                <Iconify icon="mdi:eye" sx={{ color: 'primary.main' }} />
+                                                                            </Badge>
+                                                                        </IconButton>
+                                                                    </Link>
+                                                                    {/* //! Edit  */}
                                                                     {
                                                                         user_role === 'admin' &&
                                                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.dcr.dcr.id, tourplan.mpo_name.id)} >

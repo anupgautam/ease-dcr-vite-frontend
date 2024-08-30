@@ -547,10 +547,11 @@ const AddTourPlan = () => {
 }
 
 const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
+    const { company_id, user_role, company_user_id, role } = useSelector((state) => state.cookie);
+
     const [visitData, setVisitData] = useState([]);
 
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id });
-
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
             return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))
