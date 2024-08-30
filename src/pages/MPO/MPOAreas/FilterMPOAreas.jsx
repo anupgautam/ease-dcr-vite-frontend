@@ -55,7 +55,6 @@ const TABLE_HEAD = [
 
 const FilterMPOAreas = () => {
     const { company_id, user_role } = useSelector((state) => state.cookie);
-
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
