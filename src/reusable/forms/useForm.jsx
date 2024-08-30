@@ -44,7 +44,7 @@ export function useForm(initialFValues, validateOnChange = false, validate, edit
         const { name, value } = e.target;
         setValues({
             ...values,
-            [name]: value
+            [name]: value || ''
         });
         // if (validateOnChange)
         //     validate({ [name]: value });

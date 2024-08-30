@@ -251,7 +251,6 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
         //! Search MPO Areas
         searchMPOArea: builder.mutation({
             query: (FilteredData) => {
-                console.log(selectedOption)
                 const { selectedOption, companyId, companyArea } = FilteredData;
                 return {
                     url: `mpo/company-mpo-area/?company_name=${companyId}&mpo_name=${selectedOption}&company_area=${companyArea}`,

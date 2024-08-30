@@ -21,7 +21,7 @@ export const HODCRSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ['HODCR']
         }),
-        
+
 
         //! Get all HODCRs By id
         getHODCRsById: builder.query({
@@ -32,6 +32,15 @@ export const HODCRSlice = apiSlice.injectEndpoints({
             providesTags: ['HODCR']
         }),
 
+        //! Get Higher Order DCR by Id query
+        getHODCRHaruById: builder.query({
+            query: (id) => ({
+                url: `other-roles/higher-order-dcr/${id}`,
+                method: 'GET'
+            }),
+            providesTags:['HODCR']
+        }),
+        
         //! Delete HODCRs by id
         deleteHODCRsById: builder.mutation({
             query: (id) => {
@@ -60,14 +69,14 @@ export const HODCRSlice = apiSlice.injectEndpoints({
                     // }
                 }
             },
-            invalidatesTags: ['HODCR','PostTourplan']
+            invalidatesTags: ['HODCR', 'PostTourplan']
         }),
 
         //! Search MPO filter wala
         searchHODCR: builder.query({
             query: (FilteredData) => {
                 // 
-                const { user_id, month, date,company_name } = FilteredData;
+                const { user_id, month, date, company_name } = FilteredData;
                 return {
                     url: `other-roles/higher-order-dcr-with-pagination/?user_id=${user_id}&month=${month}&date=${date}&company_id=${company_name}`,
                     method: 'GET',
@@ -112,6 +121,7 @@ export const HODCRSlice = apiSlice.injectEndpoints({
 export const {
     useGetHODCRsByIdQuery,
     useGetHODCRsQuery,
+    useGetHODCRHaruByIdQuery,
     useCreateHODCRsMutation,
     useUpdateHODCRsMutation,
     useDeleteHODCRsByIdMutation,

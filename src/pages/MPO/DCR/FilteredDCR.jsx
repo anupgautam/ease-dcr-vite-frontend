@@ -63,8 +63,6 @@ const FilteredDCR = () => {
         }
     }, [roleList])
 
-
-
     useEffect(() => {
         let dataList1 = []
         if (userList?.data) {
@@ -77,16 +75,10 @@ const FilteredDCR = () => {
 
     }, [userList])
 
-
-
-
     const now = new BSDate().now();
 
     const monthData = getNepaliMonthName(now._date.month);
     const yearData = now._date.year;
-
-
-
 
     const [selectedYear, setSelectedYear] = useState(yearData);
     const yearList = ['2075', '2076', '2077', '2078', '2079', '2080', '2081', '2082', '2083', '2084', '2085', '2086', '2087', '2088', '2089', '2090']

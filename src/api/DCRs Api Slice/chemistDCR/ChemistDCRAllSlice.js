@@ -28,6 +28,15 @@ export const ChemistDCRAllSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ['ChemistAllDCR']
         }),
+
+        getChemistDcrById: builder.query({
+            query: (id) => ({
+                url: `dcr/mpo-shift-wise-dcr-for-chemist/${id}/`,
+                method: 'GET'
+            }),
+            providesTags: ["ChemistAllDCR"]
+        }),
+
         getChemistAllDCRByIdForMpoId: builder.query({
             query: (id) => ({
                 url: `dcr/mpo-shift-wise-dcr-for-chemist/?dcr__dcr__id=${id}`,
@@ -100,6 +109,7 @@ export const ChemistDCRAllSlice = apiSlice.injectEndpoints({
 export const {
     useGetChemistAllDCRByIdQuery,
     useGetAllChemistsAllDCRQuery,
+    useGetChemistDcrByIdQuery,
     useUpdateChemistsAllDCRMutation,
     useDeleteChemistsAllDCRByIdMutation,
     useAddChemistsAllDCRMutation,

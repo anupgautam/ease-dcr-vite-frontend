@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import {
     Box,
     Typography,
@@ -45,6 +45,19 @@ const AddDoctorEvents = () => {
 
     const [createDoctors] = useCreateDoctorsEventsMutation()
 
+    const initialFValues = {
+
+    }
+
+    const {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChange,
+        resetForm,
+    } = useForm(initialFValues, true)
+
     //! Validation wala  
     const validate = (fieldValues = values) => {
         // 
@@ -63,19 +76,6 @@ const AddDoctorEvents = () => {
             return Object.values(temp).every(x => x == "")
     }
 
-    const initialFValues = {
-
-    }
-
-    const {
-        values,
-        setValues,
-        errors,
-        setErrors,
-        handleInputChange,
-        resetForm,
-    } = useForm(initialFValues, true)
-
     useEffect(() => {
         validate();
     }, [values.event_title, values.doctor_id, selectedDates])
@@ -85,7 +85,7 @@ const AddDoctorEvents = () => {
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     //!Modal wala ko click event
-    const onAddEvents = async (e) => {
+    const onAddEvents = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
         const formData = new FormData();
@@ -117,7 +117,7 @@ const AddDoctorEvents = () => {
             setLoading(false)
         }
         setIsDrawerOpen(false)
-    };
+    }, [createDoctors, values]);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -169,6 +169,8 @@ const AddDoctorEvents = () => {
                                     value={values.name}
                                     onChange={handleInputChange}
                                     error={errors.event_title}
+                                    id="autoFocus"
+                                    autoFocus
                                 />
                             </Box>
                         </Grid>
@@ -185,11 +187,6 @@ const AddDoctorEvents = () => {
                     </Box>
                     <Box marginBottom={2}>
                         <label htmlFor="date" style={{ fontSize: '13px', color: "grey", fontWeight: '600', marginBottom: "10px" }}>Event Date*</label><br />
-                        {/* <NepaliDatePicker
-                            value={selectedDates}
-                            onSelect={setSelectedDates}
-                            renderInput={(props) => <input className='input-datepicker-fields1' value={selectedDates} type="text" {...props} />}
-                        /> */}
                         <NepaliDatePicker
                             value={selectedDates}
                             format="YYYY-MM-DD"

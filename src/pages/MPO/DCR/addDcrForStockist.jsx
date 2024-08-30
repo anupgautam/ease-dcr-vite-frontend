@@ -68,7 +68,7 @@ const AddDCRForStockist = () => {
 
     const doctors = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: companyUserArea?.data?.company_area?.id },
         {
-            skip: companyUserArea,
+            skip: !companyUserArea,
         }
     );
 

@@ -45,6 +45,34 @@ export const RewardsApiSlice = apiSlice.injectEndpoints({
                     }),
                 providesTags: ['Rewards']
             }),
+        getRewardsForChemistByDcrId: builder.query(
+            {
+                query: (id) => (
+                    {
+                        url: `/dcr/dcr-for-chemist-rewards-map/?dcr_id=${id}`,
+                        method: 'GET'
+                    }),
+                providesTags: ['Rewards']
+            }),
+        getRewardsForStockistByDcrId: builder.query(
+            {
+                query: (id) => (
+                    {
+                        url: `/dcr/dcr-for-stockist-rewards-map/?dcr_id=${id}`,
+                        method: 'GET'
+                    }),
+                providesTags: ['Rewards']
+            }),
+
+        getRewardsForHigherOrderByDcrId: builder.query(
+            {
+                query: (id) => (
+                    {
+                        url: `/dcr/dcr-for-ho-rewards-map/?dcr_id=${id}`,
+                        method: 'GET'
+                    }),
+                providesTags: ['Rewards']
+            }),
 
         //! DELETE users by id
         deleteRewardById: builder.mutation({
@@ -110,7 +138,11 @@ export const {
     useUpdateRewardsMutation,
     useGetRewardsByDcrIdQuery,
     usePostRewardForDcrMutation,
-    useGetAllRewardsByCompanyIdQuery
+
+    useGetAllRewardsByCompanyIdQuery,
+    useGetRewardsForChemistByDcrIdQuery,
+    useGetRewardsForStockistByDcrIdQuery,
+    useGetRewardsForHigherOrderByDcrIdQuery,
 } = RewardsApiSlice;
 
 //! returns the query result object

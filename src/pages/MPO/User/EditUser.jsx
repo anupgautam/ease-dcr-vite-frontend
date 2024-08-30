@@ -36,10 +36,11 @@ const EditUser = ({ idharu, onClose }) => {
 
     //! Getting User by ID
     const User = useGetcompanyUserRolesByIdQuery(idharu);
+    console.log(User?.data)
+
 
     //! Get user roles
     const data = useGetAllCompanyRolesQuery(company_id);
-
     const rolesharu = useMemo(() => {
         if (data?.data) {
             return data?.data.map(key => ({ id: key.id, title: key.role_name_value }))
@@ -49,7 +50,6 @@ const EditUser = ({ idharu, onClose }) => {
 
     //! Get Divisions
     const Divisions = useGetCompanyDivisionsByCompanyIdQuery(company_id);
-
     const divisions = useMemo(() => {
         if (Divisions?.data) {
             return Divisions.data.map(key => ({ id: key.id, title: key.division_name }))
@@ -57,34 +57,28 @@ const EditUser = ({ idharu, onClose }) => {
         return [];
     }, [Divisions])
 
-    const [higherUserOptions, setHigherUserOptions] = useState([]);
-    const [higherUserList] = useGetAllExecutiveLevelsMutation();
-
-    useEffect(() => {
-        if (User?.data) {
-            higherUserList(User?.data?.company_name?.company_id)
-                .then((res) => {
-                    const higherList = []
-                    res?.data?.forEach((key) => {
-                        higherList.push({
-                            id: key.id,
-                            title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
-                        })
-                    })
-                    setHigherUserOptions(higherList);
-                })
-        }
-
-    }, [User])
-
     //! Get company wise area
     const CompanyAreas = useGetAllCompanyAreasQuery(company_id)
-
     const companyAreas = useMemo(() => {
         if (CompanyAreas?.data) {
             return CompanyAreas.data.map(key => ({ id: key.id, title: key.company_area }))
         }
     }, [CompanyAreas])
+
+    const [higherUserOptions, setHigherUserOptions] = useState([]);
+    const [higherUserList] = useGetAllExecutiveLevelsMutation();
+
+    useEffect(() => {
+        if (User?.data?.company_name?.company_id) {
+            higherUserList(User?.data.company_name.company_id).unwrap().then(res => {
+                const higherList = res.map(key => ({
+                    id: key.id,
+                    title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`,
+                }));
+                setHigherUserOptions(higherList);
+            }).catch(() => setHigherUserOptions([]));
+        }
+    }, [User?.data?.company_name?.company_id, higherUserList])
 
     const [initialFValues, setInitialFValues] = useState({
         first_name: "",
@@ -139,7 +133,6 @@ const EditUser = ({ idharu, onClose }) => {
 
     }, [values, errors])
 
-    const [selectedDates, setSelectedDates] = useState('');
     const [dateData, setDateData] = useState();
 
     useEffect(() => {
