@@ -29,7 +29,9 @@ Nav.propTypes = {
 
 export default function Nav({ openNav, onCloseNav }) {
   const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
-
+  const roles = useSelector((state) => state.cookie?.roles);
+// console.log(user_role,"user_roleuser_roleuser_roleuser_role");
+// console.log(roles,"rolesrolesrolesrolesrolesrolesrolesrolesrolesrolesroles")
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');

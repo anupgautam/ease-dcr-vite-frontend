@@ -13,6 +13,7 @@ import { LoadingButton } from '@mui/lab';
 import Cookies from 'js-cookie';
 import '../../../styles/muiTextBox.css'
 import "../../../styles/styles.css";
+import { setCookie, setUserRole } from '../../../reducers/cookieReducer';
 
 const LoginFormInputs = () => {
 
@@ -89,9 +90,9 @@ const LoginFormInputs = () => {
                         Cookies.set('access', res.data.token.access);
                         Cookies.set('email', email);
                         Cookies.set('is_highest_priority', res.data.is_highest_priority);
+                        dispatch(setUserRole({role:res.data.role}))
                         setSuccessMessage({ show: true, message: 'Successfully Logged In' });
                         setLoading(true);
-
                         setTimeout(() => {
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                 Cookies.set('user_role', 'admin');
