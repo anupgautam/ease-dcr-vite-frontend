@@ -35,22 +35,11 @@ const AddDCRForStockist = () => {
             target: { value },
         } = event;
         setPromotedProduct(
-            // On autofill we get a stringified value.
             typeof value === 'string' ? value.split(',') : value,
         );
     }, [])
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
-
-    // const handleRolesChange = useCallback((event) => {
-    //     const {
-    //         target: { value },
-    //     } = event;
-    //     setCompanyRoles(
-    //         // On autofill we get a stringified value.
-    //         typeof value === 'string' ? value.split(',') : value,
-    //     );
-    // }, [])
 
     //! Autocomplete
 
@@ -61,21 +50,10 @@ const AddDCRForStockist = () => {
 
     const [RewardOptions, setRewardsOptions] = useState([]);
 
-    // const handleRewardsChange = useCallback((event) => {
-    //     const {
-    //         target: { value },
-    //     } = event;
-    //     setRewardsOptions(
-    //         typeof value === 'string' ? value.split(',') : value,
-    //     );
-    // }, [])
-
     const handleRewardsChange = (event, value) => {
         const mpotparea = value.map(option => option.id)
         setRewardsOptions(mpotparea)
     }
-
-
 
     const { data: ShiftData } = useGetShiftsQuery();
 
@@ -88,7 +66,11 @@ const AddDCRForStockist = () => {
 
     const companyUserArea = useGetUsersByCompanyUserByIdQuery(company_user_id);
 
-    const doctors = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: companyUserArea?.data?.company_area?.id });
+    const doctors = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: companyUserArea?.data?.company_area?.id },
+        {
+            skip: companyUserArea,
+        }
+    );
 
     const doctorOptions = useMemo(() => {
         if (doctors !== undefined) {

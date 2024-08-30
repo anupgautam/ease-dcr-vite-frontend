@@ -27,6 +27,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
 
         getMpoArea: builder.query({
             query: (id) => {
+                console.log(id)
                 return {
                     url: `mpo/company-mpo-area/?company_name=${id.company_name}&mpo_name=${id.mpo_name}`,
                     method: 'GET',
@@ -162,7 +163,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                     body: id
                 }
             },
-            invalidatesTags: ['TourPlan','Doctor']
+            invalidatesTags: ['TourPlan', 'Doctor']
         }),
 
         updateAreaofMPO: builder.mutation({
@@ -250,7 +251,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
         //! Search MPO Areas
         searchMPOArea: builder.mutation({
             query: (FilteredData) => {
-                // 
+                console.log(selectedOption)
                 const { selectedOption, companyId, companyArea } = FilteredData;
                 return {
                     url: `mpo/company-mpo-area/?company_name=${companyId}&mpo_name=${selectedOption}&company_area=${companyArea}`,

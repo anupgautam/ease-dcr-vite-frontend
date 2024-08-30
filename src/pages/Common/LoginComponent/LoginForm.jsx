@@ -81,9 +81,11 @@ const LoginFormInputs = () => {
                     const res = await login({ email, password });
 
                     if (res.data) {
+                        console.log(res?.data)
                         Cookies.set('User_id', res.data.user_id);
                         Cookies.set('company_id', res.data.company_id);
                         Cookies.set('company_user_id', res.data.company_user_id);
+                        Cookies.set('company_area_id', res.data.company_area_id);
                         Cookies.set('company_user_role_id', res.data.company_user_role_id);
                         Cookies.set('company_division_name', res.data.company_division_name);
                         Cookies.set('refresh', res.data.token.refresh);

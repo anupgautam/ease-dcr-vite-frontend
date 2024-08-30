@@ -80,7 +80,9 @@ const DefaultList = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useAreaMPOQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? "" : company_user_id });
+    const { data } = useAreaMPOQuery(
+        company_user_id ? { company_name: company_id, mpo_name: user_role === 'admin' ? "" : company_user_id } : { skip: true }
+    );
 
     //! Delete MPO Areas
     const [deleteAreas] = useDeleteareaMPOMutation()

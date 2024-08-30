@@ -16,7 +16,7 @@ const initialState = {
     otherRoles: '',
     OTPgmail: '',
     otp: '',
-    roles:"",
+    roles: "",
 };
 
 export const cookieSlice = createSlice({
@@ -27,11 +27,11 @@ export const cookieSlice = createSlice({
             return { ...state, ...action.payload };
         },
         setUserRole: (state, action) => {
-          state.roles=action.payload;
+            state.roles = action.payload;
         },
         clearCookie: () => initialState,
     },
 });
 
-export const { setCookie, clearCookie,setUserRole } = cookieSlice.actions;
+export const { setCookie, clearCookie, setUserRole } = cookieSlice.actions;
 export default cookieSlice.reducer;
