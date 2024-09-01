@@ -29,7 +29,9 @@ const AddTPLock = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Get user roles
-    const { data, isSuccess, } = useGetUsersRoleQuery(company_id);
+    const { data, isSuccess, } = useGetUsersRoleQuery(company_id, {
+        skip: !company_id
+    });
 
     const rolesharu = useMemo(() => {
         if (isSuccess) {

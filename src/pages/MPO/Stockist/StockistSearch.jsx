@@ -58,7 +58,9 @@ const StockistSearch = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Get Company Area
-    const Company_Areas = useGetAllCompanyAreasQuery(company_id);
+    const Company_Areas = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const [companyArea, setCompanyArea] = useState('');
     const [companyId, setCompanyId] = useState(company_id);

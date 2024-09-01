@@ -36,7 +36,6 @@ export const mpoTourPlanApiSlice = createApi({
                 newMpos.access = Cookies.get("access")
                 
                 return {
-                    // url: `mpo/company-mpo-tour-plan/`,
                     url: `tourplan/`,
                     method: 'POST',
                     body: newMpos,

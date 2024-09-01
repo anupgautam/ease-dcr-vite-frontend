@@ -76,13 +76,17 @@ const AllUserDcr = () => {
 
     // ! Get all users wala
     // const { data } = useGetAllcompanyUserRolesQuery({ id: company_id, page: page });
-    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    });
 
     const [roleSelect, setRoleSelect] = useState('');
     const [companyRoleList, setCompanyRoleList] = useState([]);
 
 
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: roleSelect === null ? undefined : roleSelect });
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: roleSelect === null ? "" : roleSelect }, {
+        skip: !company_id || !page
+    });
 
     useEffect(() => {
         let dataList = []

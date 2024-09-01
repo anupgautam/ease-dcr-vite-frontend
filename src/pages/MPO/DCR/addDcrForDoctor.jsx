@@ -209,7 +209,9 @@ const AddDcrForDoctor = () => {
             });
     }, [company_user_id]);
 
-    const rewards = useGetAllRewardsQuery(company_id);
+    const rewards = useGetAllRewardsQuery(company_id, {
+        skip: !company_id
+    });
 
     const rewardsOptions = useMemo(() => {
         if (rewards !== undefined) {
@@ -221,7 +223,9 @@ const AddDcrForDoctor = () => {
     }, [rewards])
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
-        company_id
+        company_id, {
+            skip: !company_id
+        }
     );
 
     const productOptions = useMemo(() => {
@@ -539,7 +543,9 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
         const mpotparea = value.map(option => option.id)
         setCompanyRoles(mpotparea)
     }
-    const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(company_id);
+    const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
+        skip: !company_id
+    });
 
     const productOptions = useMemo(() => {
         if (companyProduct !== undefined) {
@@ -562,7 +568,9 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
         setPromotedProduct(mpotparea)
     }
 
-    const rewards = useGetAllRewardsQuery(company_id);
+    const rewards = useGetAllRewardsQuery(company_id, {
+        skip: !company_id
+    });
 
     const rewardsOptions = useMemo(() => {
         if (rewards !== undefined) {

@@ -170,6 +170,8 @@ const ListofAttendance = () => {
     const userList = useGetUsersByCompanyRoleIdQuery({
         id: company_id,
         page: ""
+    }, {
+        skip: !company_id || !page
     });
 
     const companyUserList = useMemo(() => {

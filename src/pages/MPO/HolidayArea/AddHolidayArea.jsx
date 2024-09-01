@@ -31,7 +31,9 @@ const AddHolidayArea = () => {
     const [createHolidayArea] = useCreateHolidayAreasMutation()
 
     //! Company Area
-    const Areas = useGetAllCompanyAreasQuery(company_id);
+    const Areas = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const areas = useMemo(() => {
         if (Areas.data) {

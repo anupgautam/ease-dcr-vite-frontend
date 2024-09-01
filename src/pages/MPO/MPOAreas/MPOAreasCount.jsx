@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 
 const MPOAreasCount = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
-    console.log("Count", company_id, company_user_id)
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {

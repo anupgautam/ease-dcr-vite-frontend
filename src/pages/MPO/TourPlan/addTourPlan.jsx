@@ -50,7 +50,9 @@ const AddTourPlan = () => {
     }, [])
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_id }, {
+        skip: !company_id || !company_user_id
+    })
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
@@ -79,7 +81,9 @@ const AddTourPlan = () => {
         return []
     }, [ShiftData])
 
-    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_id })
+    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_id }, {
+        skip: !company_id || !company_user_id
+    })
 
     const executiveLevelOptions = useMemo(() => {
         if (mpoAccordingToExecutiveLevel !== undefined) {
@@ -275,6 +279,7 @@ const AddTourPlan = () => {
                     }
                 })
                 .catch(err => {
+                    console.log(err)
                     setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
@@ -297,7 +302,15 @@ const AddTourPlan = () => {
                         setTimeout(() => {
                             setSuccessMessage({ show: false, message: '' });
                         }, 3000);
-                    } else {
+                    }
+                    else if (res.error) {
+                        console.log(res.error)
+                        setErrorMessage({ show: true, message: res.error[0] });
+                        setTimeout(() => {
+                            setErrorMessage({ show: false, message: '' });
+                        }, 3000);
+                    }
+                    else {
                         setErrorMessage({ show: true, message: res.error.data[0] });
                         setTimeout(() => {
                             setErrorMessage({ show: false, message: '' });
@@ -551,7 +564,9 @@ const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
 
     const [visitData, setVisitData] = useState([]);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id }, {
+        skip: !company_id || !role
+    });
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
             return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))

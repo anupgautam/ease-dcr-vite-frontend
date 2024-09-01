@@ -33,7 +33,9 @@ const AddUnplannedTp = () => {
 
     const [selectedDates, setSelectedDates] = useState(today);
 
-    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_id })
+    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_id }, {
+        skip: !company_id || !company_user_id
+    })
 
     const executiveLevelOptions = useMemo(() => {
         if (mpoAccordingToExecutiveLevel !== undefined) {
@@ -46,7 +48,10 @@ const AddUnplannedTp = () => {
     }, [mpoAccordingToExecutiveLevel])
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_id }, {
+        skip: !company_id || !company_user_id
+    });
+
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
@@ -317,7 +322,9 @@ const AddUnplannedTp = () => {
 const MpoUserWiseArea = ({ id, setMpoAreaData }) => {
     const [visitData, setVisitData] = useState([]);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id }, {
+        skip: !company_id || !role
+    });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

@@ -85,7 +85,9 @@ const DefaultDoctorEvents = () => {
     }, [])
 
     // !Get Doctor Events
-    const { data } = useGetAllDoctorEventsQuery({ id: company_id, page: page, mpo_name: company_user_id });
+    const { data } = useGetAllDoctorEventsQuery({ id: company_id, page: page, mpo_name: company_user_id }, {
+        skip: !company_id || !page || !company_user_id
+    });
 
     // !Delete Doctor Events
     const [deleteDoctorEvents] = useDeleteDoctorsEventsByIdMutation();

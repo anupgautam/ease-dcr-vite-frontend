@@ -104,7 +104,9 @@ const EditChemistDCR = ({ idharu, onClose }) => {
 
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: mpo_id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: mpo_id }, {
+        skip: !company_id || !mpo_id
+    });
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {

@@ -108,7 +108,9 @@ const FilteredTourPlan = () => {
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
 
-    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    });
 
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');
@@ -116,7 +118,7 @@ const FilteredTourPlan = () => {
     useEffect(() => {
         let dataList = []
         if (roleList?.data) {
-            roleList.data.map((key) => {
+            roleList?.data?.map((key) => {
                 // dataList.push({ id: key.id, title: key.role_name_value })
                 dataList.push({ id: key.id, title: key.role_name.role_name })
             })
@@ -124,9 +126,19 @@ const FilteredTourPlan = () => {
         setCompanyRoleList(dataList);
     }, [roleList])
 
+    //! Pagnation
+    const [page, setPage] = useState(1);
+    const handleChangePage = useCallback((e) => {
+        const data = e.target.ariaLabel
+        let thisArray = data.split(" ")
+        setPage(thisArray[3]);
+    }, [])
+
 
     // const [companyUserList, setCompanyUserList] = useState([]);
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' });
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' }, {
+        skip: !company_id || !page
+    });
 
     const companyUserList = [];
 
@@ -176,7 +188,9 @@ const FilteredTourPlan = () => {
     }, []);
 
     //! Get User roles wala
-    const { data, isLoading, isSuccess, isError, error } = useGetUsersMPOWalaQuery()
+    const { data, isLoading, isSuccess, isError, error } = useGetUsersMPOWalaQuery(company_id, {
+        skip: !company_id
+    })
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
@@ -191,7 +205,6 @@ const FilteredTourPlan = () => {
 
     //! Options
 
-    const [page, setPage] = useState(1);
 
     const [selectedYear, setSelectedYear] = useState(yearData);
     const yearList = ['2075', '2076', '2077', '2078', '2079', '2080', '2081', '2082', '2083', '2084', '2085', '2086', '2087', '2088', '2089', '2090']
@@ -215,15 +228,27 @@ const FilteredTourPlan = () => {
     const handleNepaliMonthChange = (event) => {
         setSelectedMonth(event.target.value);
     };
-    const handleChangePage = useCallback((e) => {
-        const data = e.target.ariaLabel
-        let thisArray = data.split(" ")
-        setPage(thisArray[3]);
-    }, [])
+
 
     // const dateOnly = dateString.split('T')[0];
 
-    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: user_role === 'admin' ? id : company_user_id, page: page, role_data: user_role === 'admin' ? "" : '' })
+    // const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: user_role === 'admin' ? id : company_user_id, page: page, role_data: user_role === 'admin' ? "" : '' }, {
+    //     skip: !company_id || !selectedMonth || !user_role || !id || !company_user_id || !page || !user_role
+    // })
+
+    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery(
+        {
+            company_name: company_id,
+            date: selectedYear,
+            month: selectedMonth,
+            mpo_name: user_role === 'admin' ? id : company_user_id,
+            page: page,
+            role_data: user_role === 'admin' ? "" : '',
+        },
+        {
+            skip: !company_id || !selectedMonth || !id || !company_user_id || !page,
+        }
+    );
 
     //! Search results
 

@@ -50,7 +50,9 @@ const TransferMpoArea = () => {
     } = useForm(initialFValues, true)
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: values.transfer_from });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: values.transfer_from }, {
+        skip: !company_id || !values.transfer_from
+    });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

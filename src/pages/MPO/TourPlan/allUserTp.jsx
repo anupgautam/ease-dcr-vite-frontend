@@ -45,11 +45,13 @@ const TABLE_HEAD = [
 ];
 
 const AllUserTp = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id } = useSelector((state) => state.cookie);
 
     // ! Get all users wala
     // const { data } = useGetAllcompanyUserRolesQuery({ id: company_id, page: page });
-    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    });
 
     const [roleSelect, setRoleSelect] = useState('');
     const [companyRoleList, setCompanyRoleList] = useState([]);
@@ -62,15 +64,9 @@ const AllUserTp = () => {
         setRoleSelect('');
     };
 
-    // const handleRoleSelect = useCallback((e, value) => {
-    //     setRoleSelect(value.id === null ? "" : value.id);
-    // }, [])
-
-    // const handleClear = () => {
-    //     setRoleSelect('');
-    // };
-
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: roleSelect === null ? undefined : roleSelect });
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: roleSelect === null ? "" : roleSelect }, {
+        skip: !company_id || !roleSelect
+    });
 
     useEffect(() => {
         let dataList = []
@@ -113,7 +109,7 @@ const AllUserTp = () => {
     // !on search
     const onSearch = (e) => {
         const searchQuery = e.target.value;
-        const company_id = company_id;
+        // const company_id = company_id;
         setSearchResults({ search: searchQuery, company_id })
         searchUser(searchResults);
     }

@@ -35,8 +35,12 @@ const EditTourPlan = ({ idharu, onClose }) => {
     const [dateData, setDateData] = useState();
     const userList = useSelector(state => state?.tourPlan?.dataList);
 
-    const TourPlan = useGetTourPlansByIdQuery(idharu);
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: TourPlan?.data?.mpo_name?.id });
+    const TourPlan = useGetTourPlansByIdQuery(idharu, {
+        skip: !idharu
+    });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: TourPlan?.data?.mpo_name?.id }, {
+        skip: !company_id || !TourPlan?.data?.mpo_name?.id
+    });
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
@@ -221,7 +225,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                 label="Remarks"
                                 value={values.purpose_of_visit}
                                 onChange={handleInputChange}
-                                placeholderText="Remarks"
+                                placeholdertext="Remarks"
                             />
                         </Box>
                         <Grid container spacing={2}>
@@ -232,7 +236,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                         label="Hulting Station"
                                         value={values.hulting_station}
                                         onChange={handleInputChange}
-                                        placeholderText="Hulting Station"
+                                        placeholdertext="Hulting Station"
                                     />
                                 </Box>
                             </Grid>

@@ -100,7 +100,9 @@ const DoctorSearch = () => {
     }, [company_id])
 
     //! MPO Area
-    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: company_id, mpo_name: user_role === 'admin' ? mpoName : company_user_id })
+    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: company_id, mpo_name: user_role === 'admin' ? mpoName : company_user_id }, {
+        skip: !company_id || !user_role || !mpoName || !company_user_id
+    })
 
     const [mpoArea, setMPOArea] = useState('')
 

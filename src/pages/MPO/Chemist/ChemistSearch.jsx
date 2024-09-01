@@ -80,7 +80,9 @@ const ChemistSearch = () => {
     }, [company_id])
 
     //! MPO Area
-    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: company_id, mpo_name: mpoName })
+    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: company_id, mpo_name: mpoName }, {
+        skip: !company_id || !mpoName
+    })
 
     const [mpoArea, setMPOArea] = useState('')
 

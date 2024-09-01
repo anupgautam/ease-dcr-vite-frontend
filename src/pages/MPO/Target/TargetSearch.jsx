@@ -88,7 +88,9 @@ const TargetSearch = (props) => {
         setSelectedYear(event.target.value);
     }, [])
 
-    const { data: rolesData } = useGetCompanyRolesByCompanyQuery(company_id);
+    const { data: rolesData } = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    });
 
     const roles = useMemo(() => {
         if (rolesData !== undefined) {

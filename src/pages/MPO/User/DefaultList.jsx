@@ -84,7 +84,6 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
 
     // ! Get all users wala
     const { data, refetch } = useGetAllcompanyUserRolesQuery({ company_name: company_id, page: page, is_active: filterValue });
-
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
     const [unlockUser] = useUnlockUsersMutation()

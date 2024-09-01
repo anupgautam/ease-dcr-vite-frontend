@@ -96,9 +96,13 @@ const PrimarySalesSearch = () => {
 
     //! Get Stockist
 
-    const companyUserArea = useGetUsersByCompanyUserByIdQuery(company_user_id);
+    const companyUserArea = useGetUsersByCompanyUserByIdQuery(company_user_id, {
+        skip: !company_user_id
+    });
 
-    const Stockist = useGetStockistsWithoutPaginationQuery(company_id);
+    const Stockist = useGetStockistsWithoutPaginationQuery(company_id, {
+        skip: !company_id
+    });
 
     const rolesOptions = useMemo(() => {
         if (Stockist?.data) {
@@ -190,11 +194,13 @@ const PrimarySalesSearch = () => {
     }, []);
 
     //! onSearch
-    const FilteredData = { companyId: companyId, selectedOption: selectedOption, selectedMonth: selectedMonth, dateData: selectedYear }
+    const FilteredData = { companyId: company_id, selectedOption: selectedOption, selectedMonth: selectedMonth, dateData: selectedYear }
 
     useEffect(() => {
         if (selectedOption || selectedMonth || selectedYear) {
-            searchPrimarySales(FilteredData)
+            searchPrimarySales(FilteredData, {
+                skip: !company_id || !selectedOption || !selectedYear || !selectedMonth
+            })
                 .then((res) => {
                 })
         }

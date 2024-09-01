@@ -95,8 +95,12 @@ const MyExecutiveTp = () => {
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
 
-    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
-    const { data: myHigherData } = useGetUsersByHigherLevelUserQuery(company_user_id);
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    });
+    const { data: myHigherData } = useGetUsersByHigherLevelUserQuery(company_user_id, {
+        skip: !company_user_id
+    });
 
     const lowerList = useMemo(() => {
         if (myHigherData !== undefined) {
@@ -124,7 +128,9 @@ const MyExecutiveTp = () => {
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [companyUserList, setCompanyUserList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' });
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' }, {
+        skip: !company_id
+    });
 
     useEffect(() => {
         let dataList = []
@@ -235,7 +241,9 @@ const MyExecutiveTp = () => {
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
-    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedOption !== null ? selectedOption?.id : "", page: page, role_data: '' })
+    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedOption !== null ? selectedOption?.id : "", page: page, role_data: '' }, {
+        skip: !company_id || !selectedYear || !selectedMonth || !selectedOption || !role_data || !page
+    })
 
     const userData = useGetUsersByIdQuery(company_user_id);
 

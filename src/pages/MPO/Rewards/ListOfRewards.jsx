@@ -21,7 +21,9 @@ const ListOfRewards = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { data } = useGetAllRewardsQuery(company_id)
+    const { data } = useGetAllRewardsQuery(company_id, {
+        skip: !company_id
+    })
 
     const headers = [
         { label: 'S.No.', key: 'sno' },

@@ -15,7 +15,9 @@ const CompanyAreasCount = () => {
     }, [])
 
     // !  Get all the company areas
-    const { data } = useGetAllCompanyAreasQuery(company_id);
+    const { data } = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
     return (
         <>
             {

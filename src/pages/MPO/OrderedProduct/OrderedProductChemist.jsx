@@ -11,7 +11,9 @@ const OrderedProductChemist = ({ index, value, other }) => {
   const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
   const [selectedChemist, setSelectedChemist] = useState(null);
   const [orderedData, setOrderedData] = useState([]);
-  const chemists = useGetChemistsWithoutPaginationQuery(company_id);
+  const chemists = useGetChemistsWithoutPaginationQuery(company_id, {
+    skip: !company_id
+  });
   const [chemistList, setChemistList] = useState([]);
   const [chemistOrderedProductData] = useGetChemistOrderedProductsByChemistIdMutation();
 

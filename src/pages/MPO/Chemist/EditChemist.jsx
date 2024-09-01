@@ -51,7 +51,9 @@ const EditChemist = ({ idharu, onClose }) => {
 
     const AreaById = useGetChemistsAreaByIdQuery(idharu);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: Chemist?.data?.mpo_name });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: Chemist?.data?.mpo_name }, {
+        skip: !company_id || !Chemist?.data?.mpo_name
+    });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

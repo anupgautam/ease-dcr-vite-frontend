@@ -77,7 +77,9 @@ const FilteredCompanyAreaWiseExpense = () => {
     }, []);
 
     //! Get all company area 
-    const { data, isSuccess } = useGetAllCompanyAreasQuery(company_id);
+    const { data, isSuccess } = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const companyareas = useMemo(() => {
         if (isSuccess) {

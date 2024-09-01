@@ -48,6 +48,7 @@ const TABLE_HEAD = [
     { id: 'product_molecular_name', label: 'Molecular Name', alignRight: false },
     { id: 'product_price_per_strip_in_mrp', label: 'Product in MRP', alignRight: false },
     { id: 'product_price_per_stockist', label: 'Price per Stockist', alignRight: false },
+    { id: 'division_name', label: 'Division Name', alignRight: false },
     { id: '' },
 ];
 
@@ -256,6 +257,7 @@ const ProductSearch = () => {
                                                                     <TableCell align="left">{productsearch.product_name.product_molecular_name}</TableCell>
                                                                     <TableCell align="left">Rs. {productsearch.product_name.product_price_per_strip_in_mrp}</TableCell>
                                                                     <TableCell align="left">Rs. {productsearch.product_name.product_price_for_stockist}</TableCell>
+                                                                    <TableCell align="left"> {productsearch.division_name.division_name}</TableCell>
                                                                     <TableCell align="left">
                                                                         {/* //! Edit  */}
                                                                         {

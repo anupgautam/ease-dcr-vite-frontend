@@ -93,7 +93,9 @@ const AddChemist = () => {
         validate();
 
     }, [values.chemist_name, values.category_name, values.chemist_address, values.chemist_phone_number])
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? values.mpo_name : company_user_id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? values.mpo_name : company_user_id }, {
+        skip: !company_id || !user_role || !company_user_id
+    });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

@@ -8,7 +8,7 @@ import {
     Box,
     Grid,
     Autocomplete,
-    TextField
+    TextField, Stack
 } from '@mui/material';
 import 'react-datepicker/dist/react-datepicker.css';
 import ChemistDCR from './DCRLists/chemistDCR';
@@ -30,6 +30,7 @@ import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import ExportDCR from './ExportDCR';
 
 
 const FilteredDCR = () => {
@@ -44,10 +45,14 @@ const FilteredDCR = () => {
     const dispatch = useDispatch();
 
     const [selectedId, setSelectedId] = useState(null);
-    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    });
 
     const [companyUserList, setCompanyUserList] = useState([]);
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' })
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' }, {
+        skip: !company_id
+    })
     const [selectedDCRType, setSelectedDCRType] = useState("Doctor");
 
     const handleOptionDCRType = useCallback((e) => {
@@ -184,75 +189,63 @@ const FilteredDCR = () => {
                                 </FormControl>
                             </Grid>
                         }
-                        {/* {
-                            user_role === 'admin' &&
-                            <Grid item xs={2.5}>
-                                <FormControl>
-                                    <Autocomplete
-                                        options={companyUserList}
-                                        getOptionLabel={(option) => option.title}
-                                        onChange={handleOptionUserId}
-                                        renderInput={(params) => (
-                                            <TextField {...params} label="Users" />
-                                        )}
-                                        renderOption={(props, option) => (
-                                            <li {...props} key={option.id}>
-                                                {option.title}
-                                            </li>
-                                        )}
-                                    />
-                                </FormControl>
-                            </Grid>
-                        } */}
                         {role === "MPO" || user_role === "MPO" ?
                             <Grid item md={2}>
                                 {
                                     user_role === "MPO" &&
-                                    <FormControl>
-                                        <InputLabel id="mpo-select-label">DCR Type</InputLabel>
-                                        <Select
-                                            labelId="mpo-select-label"
-                                            id="mpo-select"
-                                            value={selectedDCRType}
-                                            onChange={handleOptionDCRType}
-                                            label="DCR Type"
-                                        >
-                                            <MenuItem value="">None</MenuItem>
-                                            <MenuItem key={"doctor"} value={"Doctor"}>
-                                                {"Doctor"}
-                                            </MenuItem>
-                                            <MenuItem key={"chemist"} value={"Chemist"}>
-                                                {"Chemist"}
-                                            </MenuItem>
-                                            <MenuItem key={"stockist"} value={"Stockist"}>
-                                                {"Stockist"}
-                                            </MenuItem>
-                                        </Select>
-                                    </FormControl>
+                                    <>
+                                        <FormControl>
+                                            <InputLabel id="mpo-select-label">DCR Type</InputLabel>
+                                            <Select
+                                                labelId="mpo-select-label"
+                                                id="mpo-select"
+                                                value={selectedDCRType}
+                                                onChange={handleOptionDCRType}
+                                                label="DCR Type"
+                                            >
+                                                <MenuItem value="">None</MenuItem>
+                                                <MenuItem key={"doctor"} value={"Doctor"}>
+                                                    {"Doctor"}
+                                                </MenuItem>
+                                                <MenuItem key={"chemist"} value={"Chemist"}>
+                                                    {"Chemist"}
+                                                </MenuItem>
+                                                <MenuItem key={"stockist"} value={"Stockist"}>
+                                                    {"Stockist"}
+                                                </MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                        <ExportDCR />
+                                    </>
                                 }
                                 {
                                     user_role === "admin" &&
-                                    <FormControl>
-                                        <InputLabel id="mpo-select-label">DCR Type</InputLabel>
-                                        <Select
-                                            labelId="mpo-select-label"
-                                            id="mpo-select"
-                                            value={selectedDCRType}
-                                            onChange={handleOptionDCRType}
-                                            label="DCR Type"
-                                        >
-                                            <MenuItem value="">None</MenuItem>
-                                            <MenuItem key={"doctor"} value={"Doctor"}>
-                                                {"Doctor"}
-                                            </MenuItem>
-                                            <MenuItem key={"chemist"} value={"Chemist"}>
-                                                {"Chemist"}
-                                            </MenuItem>
-                                            <MenuItem key={"stockist"} value={"Stockist"}>
-                                                {"Stockist"}
-                                            </MenuItem>
-                                        </Select>
-                                    </FormControl>
+                                    <>
+                                        <Stack direction="row" alignItems="center" spacing={2}>
+                                            <FormControl sx={{ minWidth: 200 }}>
+                                                <InputLabel id="mpo-select-label">DCR Type</InputLabel>
+                                                <Select
+                                                    labelId="mpo-select-label"
+                                                    id="mpo-select"
+                                                    value={selectedDCRType}
+                                                    onChange={handleOptionDCRType}
+                                                    label="DCR Type"
+                                                >
+                                                    <MenuItem value="">None</MenuItem>
+                                                    <MenuItem key={"doctor"} value={"Doctor"}>
+                                                        {"Doctor"}
+                                                    </MenuItem>
+                                                    <MenuItem key={"chemist"} value={"Chemist"}>
+                                                        {"Chemist"}
+                                                    </MenuItem>
+                                                    <MenuItem key={"stockist"} value={"Stockist"}>
+                                                        {"Stockist"}
+                                                    </MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                            <ExportDCR />
+                                        </Stack>
+                                    </>
                                 }
                             </Grid>
                             : <></>}
@@ -416,7 +409,7 @@ const FilteredDCR = () => {
 
                     </>}
 
-            </Card>
+            </Card >
         </>
     )
 }

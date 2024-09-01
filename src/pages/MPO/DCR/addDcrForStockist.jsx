@@ -64,11 +64,13 @@ const AddDCRForStockist = () => {
         return [];
     }, [ShiftData])
 
-    const companyUserArea = useGetUsersByCompanyUserByIdQuery(company_user_id);
+    const companyUserArea = useGetUsersByCompanyUserByIdQuery(company_user_id, {
+        skip: !company_user_id
+    });
 
-    const doctors = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: companyUserArea?.data?.company_area?.id },
+    const doctors = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: companyUserArea?.data?.company_area?.id ? companyUserArea?.data?.company_area?.id : "" },
         {
-            skip: !companyUserArea,
+            skip: !company_id || !companyUserArea?.data?.company_area?.id
         }
     );
 
@@ -167,7 +169,9 @@ const AddDCRForStockist = () => {
             });
     }, [company_user_id]);
 
-    const rewards = useGetAllRewardsQuery(company_id);
+    const rewards = useGetAllRewardsQuery(company_id, {
+        skip: !company_id
+    });
 
     const rewardsOptions = useMemo(() => {
         if (rewards !== undefined) {
@@ -179,7 +183,9 @@ const AddDCRForStockist = () => {
     }, [rewards])
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
-        company_id
+        company_id, {
+        skip: !company_id
+    }
     );
 
     const productOptions = useMemo(() => {

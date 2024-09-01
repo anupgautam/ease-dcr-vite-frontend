@@ -18,7 +18,9 @@ const StyledNode = styled.div`
 export const OrgChartComponent = () => {
   const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
-  const data = useGetUsersByHigherLevelUserQuery(company_id);
+  const data = useGetUsersByHigherLevelUserQuery(company_id, {
+    skip: !company_id
+  });
   const [allData, setAllData] = useState();
 
 
@@ -59,7 +61,9 @@ export const OrgChartComponent = () => {
 };
 
 const LowerLevel = ({ id }) => {
-  const { data } = useGetUsersByHigherLevelUserQuery(id);
+  const { data } = useGetUsersByHigherLevelUserQuery(id, {
+    skip: !id
+  });
 
   return (
     <>
@@ -85,7 +89,9 @@ const LowerLevel = ({ id }) => {
 }
 
 const LowerLevel1 = ({ id }) => {
-  const { data } = useGetUsersByHigherLevelUserQuery(id);
+  const { data } = useGetUsersByHigherLevelUserQuery(id, {
+    skip: !id
+  });
   return (
     <>
       {
@@ -110,7 +116,9 @@ const LowerLevel1 = ({ id }) => {
 }
 
 const LowerLevel2 = ({ id }) => {
-  const { data } = useGetUsersByHigherLevelUserQuery(id);
+  const { data } = useGetUsersByHigherLevelUserQuery(id, {
+    skip: !id
+  });
   return (
     <>
       {
@@ -135,7 +143,9 @@ const LowerLevel2 = ({ id }) => {
 }
 
 const LowerLevel3 = ({ id }) => {
-  const { data } = useGetUsersByHigherLevelUserQuery(id);
+  const { data } = useGetUsersByHigherLevelUserQuery(id, {
+    skip: !id
+  });
   return (
     <>
       {
@@ -160,7 +170,9 @@ const LowerLevel3 = ({ id }) => {
 }
 
 const LowerLevel4 = ({ id }) => {
-  const { data } = useGetUsersByHigherLevelUserQuery(id);
+  const { data } = useGetUsersByHigherLevelUserQuery(id, {
+    skip: !id
+  });
   return (
     <>
       {
@@ -185,7 +197,9 @@ const LowerLevel4 = ({ id }) => {
 }
 
 const LowerLevel5 = ({ id }) => {
-  const { data } = useGetUsersByHigherLevelUserQuery(id);
+  const { data } = useGetUsersByHigherLevelUserQuery(id, {
+    skip: !id
+  });
   return (
     <>
       {
@@ -210,7 +224,9 @@ const LowerLevel5 = ({ id }) => {
 }
 
 const LowerLevel6 = ({ id }) => {
-  const { data } = useGetUsersByHigherLevelUserQuery(id);
+  const { data } = useGetUsersByHigherLevelUserQuery(id, {
+    skip: !id
+  });
   return (
     <>
       {

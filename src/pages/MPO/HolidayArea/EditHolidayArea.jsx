@@ -27,7 +27,9 @@ const EditHolidayArea = ({ idharu, onClose }) => {
     //! Getting  by ID
     const HolidayArea = useGetHolidayNamesByIdQuery(idharu);
     //! Company Area
-    const Areas = useGetAllCompanyAreasQuery(company_id);
+    const Areas = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const areas = useMemo(() => {
         if (Areas.data) {

@@ -49,7 +49,9 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     const shiftWiseDCR = useGetShiftWiseStockistDCRByDCRIdQuery(idharu);
 
 
-    const MpoArea = useGetAllCompanyAreasQuery(company_id);
+    const MpoArea = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
@@ -65,10 +67,12 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     //! Getting TourPlan by ID
 
     const DCRAll = useGetStockistAllDCRByIdQuery(idharu);
-    const { data: mpoArea } = useGetUsersByIdQuery(mpo_id);
+    const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
+        skip: !mpo_id
+    });
 
-    const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id }, {
-        skip: mpoArea,
+    const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id ? mpoArea?.company_area?.id : "" }, {
+        skip: !company_id || !mpoArea?.company_area?.id,
     })
 
     const stockists = useMemo(() => {

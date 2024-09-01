@@ -37,7 +37,9 @@ const AddUser = () => {
     const { company_id } = useSelector((state) => state.cookie);
 
     //! Get user roles
-    const { data, isSuccess, } = useGetUsersRoleQuery(company_id);
+    const { data, isSuccess, } = useGetUsersRoleQuery(company_id, {
+        skip: !company_id
+    });
 
     const rolesharu = useMemo(() => {
         if (isSuccess) {
@@ -47,7 +49,9 @@ const AddUser = () => {
     }, [isSuccess, data]);
 
     //! Get company wise area
-    const CompanyAreas = useGetAllCompanyAreasQuery(company_id)
+    const CompanyAreas = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    })
 
     const companyAreas = useMemo(() => {
         if (CompanyAreas?.data) {

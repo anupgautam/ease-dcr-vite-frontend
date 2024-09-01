@@ -84,7 +84,9 @@ const DefaultHOTourPlan = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetHOTourPlansQuery({ page: page, company_name: company_id })
+    const { data } = useGetHOTourPlansQuery({ page: page, company_name: company_id }, {
+        skip: !page || !company_id
+    })
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteHOTourPlansByIdMutation()
