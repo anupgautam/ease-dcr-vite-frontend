@@ -15,7 +15,7 @@ import ExportChemist from './exportChemist';
 import { useSelector } from 'react-redux';
 
 const ListofChemist = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_user_role_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));

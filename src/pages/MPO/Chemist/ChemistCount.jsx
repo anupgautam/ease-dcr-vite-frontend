@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 
 const ChemistCount = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_user_role_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const [page, setPage] = useState(1)
 
@@ -16,7 +16,7 @@ const ChemistCount = () => {
     }, [])
 
     // !  Get all the chemists
-    const { data } = useGetAllChemistsQuery({ id: company_id, page: page, mpo_name: user_role === "admin" ? "" : company_user_id });
+    const { data } = useGetAllChemistsQuery({ id: company_user_role_id, page: page, mpo_name: user_role === "admin" ? "" : company_user_id });
     return (
         <>
             {

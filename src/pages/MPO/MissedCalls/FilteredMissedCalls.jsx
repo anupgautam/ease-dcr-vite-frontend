@@ -40,15 +40,15 @@ const TABLE_HEAD = [
 ];
 
 const FilteredMissedCalls = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_user_role_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
 
     const monthData = getNepaliMonthName(now._date.month);
     const yearData = now._date.year;
 
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: "" }, {
-        skip: !company_id || !page
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_user_role_id, page: "" }, {
+        skip: !company_user_role_id
     })
 
     const [companyRoleList, setCompanyRoleList] = useState([]);
@@ -109,7 +109,7 @@ const FilteredMissedCalls = () => {
         setRoleSelect(value?.id || "")
     }, [])
 
-    const { data: missedCalledData } = useGetMissedDataByMpoQuery({ company_name: company_id, month: selectedMonth, mpo_name: roleSelect, year: selectedYear })
+    const { data: missedCalledData } = useGetMissedDataByMpoQuery({ company_name: company_user_role_id, month: selectedMonth, mpo_name: roleSelect, year: selectedYear })
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 

@@ -25,13 +25,13 @@ import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 
 const EditDoctor = ({ id, onClose, divisionId }) => {
 
-    const { company_id, user_role, company_user_id, refresh, access } = useSelector((state) => state.cookie);
+    const { company_user_role_id, user_role, company_user_id, refresh, access } = useSelector((state) => state.cookie);
 
     //! Getting doctor by ID
     const Doctor = useGetDoctorsByIdQuery(id);
 
     //! Get doctor categories
-    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id)
+    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_user_role_id)
 
 
     const doctorspecializations = useMemo(() => {
@@ -42,8 +42,8 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
     }, [DoctorSpecialization])
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: Doctor?.data?.mpo_name }, {
-        skip: !company_id || !Doctor?.data?.mpo_name
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_user_role_id, mpo_name: Doctor?.data?.mpo_name }, {
+        skip: !company_user_role_id || !Doctor?.data?.mpo_name
     });
 
     const mpoAreaData = useMemo(() => {
@@ -161,7 +161,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
         formData.append("doctor_nmc_number", values.doctor_nmc_number);
         formData.append("doctor_qualification", values.doctor_qualification);
         formData.append("mpo_name", values.mpo_name);
-        formData.append("company_id", company_id);
+        formData.append("company_user_role_id", company_user_role_id);
         formData.append('id', Doctor.data.doctor_name.id);
         formData.append('refresh', refresh)
         formData.append('access', access);

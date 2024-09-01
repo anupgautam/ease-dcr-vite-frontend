@@ -143,7 +143,7 @@ const AddMultipleChemist = () => {
 }
 
 const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
-    const { company_id, user_role, company_user_id, email } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id, email } = useSelector((state) => state.cookie);
 
     const doctorcategories = [
         { id: "A", title: "A" },
@@ -185,7 +185,7 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
         chemist_contact_person: "",
         mpo_name: user_role === 'MPO' ? company_user_id : "",
         chemist_territory: "",
-        company_id: company_id,
+        company_user_role_id: company_user_role_id,
         is_investment: false,
     })
 

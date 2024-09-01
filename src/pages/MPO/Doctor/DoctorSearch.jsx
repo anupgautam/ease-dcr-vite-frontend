@@ -56,7 +56,7 @@ const TABLE_HEAD = [
 ];
 
 const DoctorSearch = () => {
-    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+    const { company_id, company_user_role_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Get MPO Names
     const [MpoData] = usePostAllMPONamesNoPageMutation();
@@ -64,9 +64,8 @@ const DoctorSearch = () => {
     useEffect(() => {
         if (localData) {
             sessionStorage.setItem('User_id', localData.user_id);
-            sessionStorage.setItem('company_id', localData.company_id);
-            sessionStorage.setItem('company_user_id', localData.company_user_id);
             sessionStorage.setItem('company_user_role_id', localData.company_user_role_id);
+            sessionStorage.setItem('company_user_id', localData.company_user_id);
             sessionStorage.setItem('company_division_name', localData.company_division_name);
             sessionStorage.setItem('refresh', localData.token.refresh);
             sessionStorage.setItem('access', localData.token.access);
