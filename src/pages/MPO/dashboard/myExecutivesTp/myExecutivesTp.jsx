@@ -245,7 +245,9 @@ const MyExecutiveTp = () => {
         skip: !company_id || !selectedYear || !selectedMonth || !selectedOption || !role_data || !page
     })
 
-    const userData = useGetUsersByIdQuery(company_user_id);
+    const userData = useGetUsersByIdQuery(company_user_id, {
+        skip: !company_user_id
+    });
 
     const hoTourPlan = useGetHOTourPlansByUserIdQuery({ user_id: selectedOption !== null ? selectedOption?.id : "", month: selectedMonth, date: selectedYear, page: page, company_name: company_id })
     return (

@@ -22,7 +22,9 @@ const EditChemistDCROrderedProducts = ({ id, context, editApi }) => {
     const [updateClick, setUpdateClick] = useState(false);
     const [productID, setProductID] = useState(null);
     const mpo_id = useSelector(state => state.dcrData.selected_user);
-    const { data: mpoArea } = useGetUsersByIdQuery(mpo_id);
+    const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
+        skip: !mpo_id
+    });
     const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: mpoArea?.division_name })
 
     const companyProducts = useMemo(() => {

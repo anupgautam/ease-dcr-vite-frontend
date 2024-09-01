@@ -92,15 +92,13 @@ const DefaultList = () => {
                 </> :
                     <>{data && data.results.map((product, index) => (
                         <TableRow hover tabIndex={-1} role="checkbox" key={product.id}>
-                            <TableCell style={{
+                            <TableCell sx={{
                                 position: 'sticky',
                                 left: 0,
-                                zIndex: 1,
                             }}>{index + 1}</TableCell>
-                            <TableCell component="th" scope="row" align="left" style={{
+                            <TableCell component="th" scope="row" align="left" sx={{
                                 position: 'sticky',
                                 left: 0,
-                                zIndex: 1,
                             }}>
                                 <Typography variant="subtitle2" noWrap>
                                     {product.product_name.product_name}

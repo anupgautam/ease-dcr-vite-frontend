@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useTransition } from 'react-transition-state';
-import {  usePostHigherLevelExecutiveGetDataMutation } from '@/api/CompanySlices/companyUserRoleSlice';
+import { usePostHigherLevelExecutiveGetDataMutation } from '@/api/CompanySlices/companyUserRoleSlice';
 import Controls from "@/reusable/forms/controls/Controls";
 import RoundButton from "@/reusable/components/button/roundbutton";
 import { FaPlus } from "react-icons/fa";
@@ -153,7 +153,9 @@ const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
 }
 
 const VisitedWithData = ({ id }) => {
-  const { data } = useGetUsersByIdQuery(id);
+  const { data } = useGetUsersByIdQuery(id, {
+    skip: !id
+  });
   return (
     <Box>
       <Typography className="add-product-design">{data?.user_name?.first_name + ' ' + data?.user_name?.last_name}</Typography>
