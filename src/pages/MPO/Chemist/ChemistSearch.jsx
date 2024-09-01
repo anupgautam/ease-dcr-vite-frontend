@@ -54,7 +54,7 @@ const TABLE_HEAD = [
 ];
 
 const ChemistSearch = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_user_role_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! MPO Data
     const [MpoData] = usePostAllMPONamesNoPageMutation()
@@ -69,19 +69,19 @@ const ChemistSearch = () => {
     }, [MpoList])
 
     useEffect(() => {
-        if (company_id) {
-            MpoData({ company_name: company_id })
+        if (company_user_role_id) {
+            MpoData({ company_name: company_user_role_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [company_id])
+    }, [company_user_role_id])
 
     //! MPO Area
-    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: company_id, mpo_name: mpoName }, {
-        skip: !company_id || !mpoName
+    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: company_user_role_id, mpo_name: mpoName }, {
+        skip: !company_user_role_id || !mpoName
     })
 
     const [mpoArea, setMPOArea] = useState('')
@@ -113,13 +113,13 @@ const ChemistSearch = () => {
     const [companyId, setCompanyId] = useState();
 
     const handleOptionChange = useCallback((event, value) => {
-        setCompanyId(parseInt(company_id));
+        setCompanyId(parseInt(company_user_role_id));
         setMPOArea(value?.id || "")
     }, [])
 
     const handleMPONameChange = useCallback((event, value) => {
         setMPOName(value?.id || "")
-        setCompanyId(parseInt(company_id));
+        setCompanyId(parseInt(company_user_role_id));
     }, [])
 
     //! Pagination Logic
@@ -132,7 +132,7 @@ const ChemistSearch = () => {
     }, [])
 
     //! Search Logic
-    const { data: chemistData } = useGetChemistsByMpoAreaAndIdQuery({ company_name: company_id, mpo_area: mpoArea, mpo_name: mpoName, page: page })
+    const { data: chemistData } = useGetChemistsByMpoAreaAndIdQuery({ company_name: company_user_role_id, mpo_area: mpoArea, mpo_name: mpoName, page: page })
 
     const [searchResults, setSearchResults] = useState({ search: "" });
     const [searchChemist, results] = useSearchChemistsMutation()
@@ -148,7 +148,7 @@ const ChemistSearch = () => {
             setSearchDataCondition(false);
             setSearchData([]);
         } else {
-            SearchChemist({ search: searchQuery, company_id: parseInt(company_id) })
+            SearchChemist({ search: searchQuery, company_user_role_id: parseInt(company_user_role_id) })
                 .then((res) => {
                     if (res.data) {
                         setSearchDataCondition(true);
@@ -187,7 +187,7 @@ const ChemistSearch = () => {
     }, [results]);
 
     //! onSearch
-    const FilteredData = { mpo_area: mpoArea, mpo_name: mpoName, company_id: companyId }
+    const FilteredData = { mpo_area: mpoArea, mpo_name: mpoName, company_user_role_id: companyId }
 
     useEffect(() => {
         if (companyId || mpoArea || mpoName) {

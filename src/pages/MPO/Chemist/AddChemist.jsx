@@ -24,7 +24,7 @@ import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { Link } from 'react-router-dom';
 
 const AddChemist = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_role_id, company_user_id } = useSelector((state) => state.cookie);
 
 
     const chemistcategories = [
@@ -120,7 +120,7 @@ const AddChemist = () => {
         formData.append("chemist_category", values.chemist_category);
         formData.append("chemist_contact_person", values.chemist_contact_person);
         formData.append("chemist_pan_number", values.chemist_pan_number);
-        formData.append('company_id', company_id);
+        formData.append('company_user_role_id', company_user_role_id);
         formData.append('mpo_name', user_role === 'admin' ? values.mpo_name : company_user_id);
         formData.append('is_investment', false)
         try {
@@ -204,7 +204,6 @@ const AddChemist = () => {
                                         value={values.no_of_chemist}
                                         onChange={handleInputChange}
                                         autoFocus
-
                                     />
                                 </Box>
                                 <Stack spacing={1} direction="row">

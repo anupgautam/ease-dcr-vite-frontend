@@ -28,8 +28,8 @@ import { decryptData } from '../User/excryption';
 import { useLocation } from 'react-router-dom';
 
 const DefaultList = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
-    
+    const { company_user_role_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
@@ -56,7 +56,7 @@ const DefaultList = () => {
     }, [])
 
     const { data } = useGetAllDoctorsQuery({
-        id: company_id,
+        id: company_user_role_id,
         page: page,
         mpo_name: user_role === 'admin' ? "" : company_user_id
     });
