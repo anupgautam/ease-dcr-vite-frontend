@@ -26,7 +26,7 @@ import { useSelector } from 'react-redux';
 
 const EditChemist = ({ idharu, onClose }) => {
 
-    const { company_id, access, refresh } = useSelector((state) => state.cookie);
+    const { company_user_role_id, access, refresh } = useSelector((state) => state.cookie);
 
     //! Getting chemist by ID
     const Chemist = useGetChemistsByIdQuery(idharu);
@@ -38,7 +38,7 @@ const EditChemist = ({ idharu, onClose }) => {
     ]
 
     //! Get chemist area
-    const ChemistArea = useGetChemistsAreaQuery(company_id)
+    const ChemistArea = useGetChemistsAreaQuery(company_user_role_id)
 
     const chemistareas = useMemo(() => {
         if (ChemistArea?.data) {
@@ -51,8 +51,8 @@ const EditChemist = ({ idharu, onClose }) => {
 
     const AreaById = useGetChemistsAreaByIdQuery(idharu);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: Chemist?.data?.mpo_name }, {
-        skip: !company_id || !Chemist?.data?.mpo_name
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_user_role_id, mpo_name: Chemist?.data?.mpo_name }, {
+        skip: !company_user_role_id || !Chemist?.data?.mpo_name
     });
 
     const mpoAreaData = useMemo(() => {
@@ -150,7 +150,7 @@ const EditChemist = ({ idharu, onClose }) => {
         formData.append("chemist_territory", values.chemist_territory);
         formData.append("chemist_contact_person", values.chemist_contact_person);
         formData.append("mpo_name", values.mpo_name);
-        formData.append("company_id", company_id);
+        formData.append("company_user_role_id", company_user_role_id);
         formData.append('id', Chemist?.data?.id);
         formData.append('refresh', refresh);
         formData.append('access', access);

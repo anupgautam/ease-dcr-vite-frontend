@@ -69,7 +69,7 @@ const AddDoctor = () => {
                 })
                 .catch((err) => { });
         }
-    }, []);
+    }, [company_id]);
 
     const [createDoctors] = useCreateDoctorsMutation();
 
@@ -123,12 +123,12 @@ const AddDoctor = () => {
     const MpoArea = useGetMpoAreaQuery({
         company_name: company_id,
         mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id,
-    }, 
-    // {
-    //     skip: !company_id || !user_role || !company_user_role_id || !values.mpo_name
-    // }
+    },
+        // {
+        //     skip: !company_id || !user_role || !company_user_role_id || !values.mpo_name
+        // }
     );
-
+    console.log(values.mpo_name)
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
             return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))

@@ -46,7 +46,7 @@ const DcrListData = () => {
     const [companyUserList, setCompanyUserList] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
     const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' }, {
-        skip: !company_id || !page
+        skip: !company_id
     })
 
     const singleUser = useGetcompanyUserRolesByIdQuery(id);
