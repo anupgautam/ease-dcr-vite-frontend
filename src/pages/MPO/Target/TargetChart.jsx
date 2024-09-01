@@ -43,7 +43,6 @@ export default function TargetChart(props) {
     { value: '2090', label: '2090' },
   ]
 
-  // const yearList = ['2075', '2076', '2077', '2078', '2079', '2080', '2081', '2082', '2083', '2084', '2085', '2086', '2087', '2088', '2089', '2090']
 
   const handleNepaliYearChange = useCallback((event) => {
     setSelectedYear(event.target.value);
