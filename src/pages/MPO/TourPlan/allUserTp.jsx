@@ -64,9 +64,11 @@ const AllUserTp = () => {
         setRoleSelect('');
     };
 
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: roleSelect === null ? "" : roleSelect }, {
-        skip: !company_id || !roleSelect
-    });
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: roleSelect === null ? "" : roleSelect }, 
+    // {
+    //     skip: !company_id || !roleSelect
+    // }
+    );
 
     useEffect(() => {
         let dataList = []

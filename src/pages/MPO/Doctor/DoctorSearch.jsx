@@ -56,7 +56,7 @@ const TABLE_HEAD = [
 ];
 
 const DoctorSearch = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     //! Get MPO Names
     const [MpoData] = usePostAllMPONamesNoPageMutation();
@@ -100,8 +100,8 @@ const DoctorSearch = () => {
     }, [company_id])
 
     //! MPO Area
-    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: company_id, mpo_name: user_role === 'admin' ? mpoName : company_user_id }, {
-        skip: !company_id || !user_role || !mpoName || !company_user_id
+    const MPO_Area = useGetAllMPOAreasNoPageQuery({ id: company_id, mpo_name: user_role === 'admin' ? mpoName : company_user_role_id }, {
+        skip: !company_id || !user_role || !mpoName || !company_user_role_id
     })
 
     const [mpoArea, setMPOArea] = useState('')

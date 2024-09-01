@@ -8,7 +8,7 @@ import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import { useSelector } from 'react-redux';
 
 const ApprovedTP = ({ mpoName, role }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
 
@@ -61,7 +61,7 @@ const ApprovedTP = ({ mpoName, role }) => {
             const data = {
                 month: selectedMonth,
                 year: selectedYear,
-                approved_by: company_user_id,
+                approved_by: company_user_role_id,
                 mpo_name: mpoName,
             };
             UpdateBulkTourPlan(data)
@@ -89,7 +89,7 @@ const ApprovedTP = ({ mpoName, role }) => {
             const data = {
                 month: selectedMonth,
                 year: selectedYear,
-                approved_by: company_user_id,
+                approved_by: company_user_role_id,
                 user_id: mpoName,
             };
             UpdateHoTp(data)

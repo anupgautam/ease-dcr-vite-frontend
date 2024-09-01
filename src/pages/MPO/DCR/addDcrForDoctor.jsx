@@ -33,17 +33,18 @@ const TABLE_HEAD = [
 ];
 
 const AddDcrForDoctor = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('id');
 
-    const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_id);
+    const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_role_id);
     const [updateDcr] = useUpdateDcrForDoctorValuesMutation();
     const [createMpoDcr] = useCreateMpoShiftWiseDcrForDoctorMutation();
     const [DcrForDoctor] = useCreateDcrWithNullValuesForDoctorMutation();
     const [updateTourplan] = useUpdateTourPlansMutation();
     const [AllMutipleData, setAllMutipleData] = useState([]);
+
 
     const [PromotedProduct, setPromotedProduct] = useState([]);
     const handleProductChange = (event, value) => {
@@ -177,7 +178,7 @@ const AddDcrForDoctor = () => {
         true
     )
 
-    const doctors = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_area: values.visited_area, mpo_name: company_user_id });
+    const doctors = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_area: values.visited_area, mpo_name: company_user_role_id });
 
     const doctorOptions = useMemo(() => {
         if (doctors !== undefined) {
@@ -224,8 +225,8 @@ const AddDcrForDoctor = () => {
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
         company_id, {
-            skip: !company_id
-        }
+        skip: !company_id
+    }
     );
 
     const productOptions = useMemo(() => {
@@ -253,6 +254,7 @@ const AddDcrForDoctor = () => {
         // if (AllMutipleData.length !== []) {
         if (AllMutipleData.length !== 0) {
             for (const allData of AllMutipleData) {
+                console.log('allData', allData);
                 let sendingData = { ...allData };
                 sendingData['id'] = allData.id;
                 if (sendingData['company_product']) {
@@ -300,7 +302,7 @@ const AddDcrForDoctor = () => {
                     sendingData['shift'] = null;
                 }
                 const mpoShiftData = {
-                    mpo_name: company_user_id,
+                    mpo_name: company_user_role_id,
                     shift: allData.shift,
                     dcr_id: allData.id,
                 };
@@ -513,13 +515,13 @@ const AddDcrForDoctor = () => {
 }
 
 const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const Doctor = useGetDoctorsByIdQuery(data.doctor_id);
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
     useEffect(() => {
-        executiveUsers({ id: company_user_id })
+        executiveUsers({ id: company_user_role_id })
             .then(res => {
                 if (res.data) {
                     const executive = [];
@@ -535,7 +537,7 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
             .catch(err => {
 
             });
-    }, [company_user_id]);
+    }, [company_user_role_id]);
 
 
     const [CompanyRoles, setCompanyRoles] = useState([]);

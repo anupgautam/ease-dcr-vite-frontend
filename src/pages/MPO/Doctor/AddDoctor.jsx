@@ -25,7 +25,7 @@ import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { Link } from 'react-router-dom';
 
 const AddDoctor = () => {
-    const { company_id, company_user_id, user_role } = useSelector((state) => state.cookie);
+    const { company_id, company_user_role_id, user_role } = useSelector((state) => state.cookie);
     const [MutipleDoctor, setAddMutipleDoctor] = useState(false);
     const doctorRef = useRef(null);
 
@@ -122,10 +122,12 @@ const AddDoctor = () => {
     //! Get MPO Area
     const MpoArea = useGetMpoAreaQuery({
         company_name: company_id,
-        mpo_name: user_role === 'admin' ? values.mpo_name : company_user_id,
-    }, {
-        skip: !company_id || !user_role || !company_user_id || !values.mpo_name
-    });
+        mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id,
+    }, 
+    // {
+    //     skip: !company_id || !user_role || !company_user_role_id || !values.mpo_name
+    // }
+    );
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
@@ -148,7 +150,7 @@ const AddDoctor = () => {
         formData.append('doctor_gender', values.doctor_gender);
         formData.append('doctor_territory', values.doctor_territory);
         formData.append('doctor_category', values.category_name);
-        formData.append('mpo_name', user_role === 'admin' ? values.mpo_name : company_user_id);
+        formData.append('mpo_name', user_role === 'admin' ? values.mpo_name : company_user_role_id);
         formData.append('doctor_qualification', values.doctor_qualification);
         formData.append('doctor_specialization', values.doctor_specialization);
         formData.append('company_id', company_id);
