@@ -59,7 +59,9 @@ const FilterMPOAreas = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     //! Company Roles list
-    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    });
 
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');
@@ -92,7 +94,9 @@ const FilterMPOAreas = () => {
     }, []);
 
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const companyAreaData = useMemo(() => {
         if (CompanyArea !== undefined) {

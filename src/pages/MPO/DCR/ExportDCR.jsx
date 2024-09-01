@@ -1,60 +1,78 @@
 import { Close } from "@mui/icons-material";
 import { Autocomplete, Box, Button, Drawer, IconButton, Stack, TextField, Typography } from "@mui/material";
-import React, { useState, useMemo, useCallback } from "react";
-import { useGetAllCompanyAreasWithoutPaginationQuery } from "@/api/CompanySlices/companyAreaSlice";
-import { useGetAllStockistsWithoutPaginationQuery } from "@/api/MPOSlices/StockistSlice";
+import React, { useEffect, useState, useMemo } from "react";
+import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
+import { useGetAllVisitedMpoWiseDoctorQuery } from "@/api/MPOSlices/doctorApiSlice";
 import ExportToExcel from "@/reusable/utils/exportSheet";
 import { useSelector } from 'react-redux';
 
-const ExportStockist = () => {
+const ExportDoctor = () => {
+
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
+    const [MpoData] = usePostAllMPONamesNoPageMutation();
     const [mpoName, setMPOName] = useState('');
+    const [MpoList, setMpoList] = useState([]);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const { data: companyAreaData } = useGetAllCompanyAreasWithoutPaginationQuery(company_id)
 
-    const companyArea = useMemo(() => {
-        if (companyAreaData) {
-            return companyAreaData.map(key => ({ id: key.id, title: key.company_area }))
+    const mpoNames = useMemo(() => {
+        if (MpoList) {
+            return MpoList.map(key => ({ id: key.id, title: key.user_name.first_name + ' ' + key.user_name.last_name }))
         }
         return [];
-    }, [companyAreaData])
+    }, [MpoList])
 
-    const { data } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoName?.id ? mpoName?.id : "" }, {
-        skip: !company_id || !mpoName?.id
-    });
+    const { data } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_name: mpoName.id === undefined ? "" : mpoName.id, mpo_area: "" });
 
     const headers = [
+
         { label: 'S.No.', key: 'sno' },
-        { label: 'Stockist Name', key: 'stockist_name' },
-        { label: 'Stockist Address', key: "stockist_address" },
-        { label: 'Contact Number', key: 'stockist_contact_number' },
-        { label: 'Stockist Category', key: 'stockist_category' },
-        { label: 'PAN/VAT Number', key: 'pan_vat_number' },
-        { label: 'Headquarter', key: "area" }
+        { label: 'Doctor Name', key: 'doctor_name' },
+        { label: 'Doctor Address', key: "doctor_address" },
+        { label: 'Doctor Gender', key: 'doctor_gender' },
+        { label: 'Doctor Phone Number', key: 'doctor_phone_number' },
+        { label: 'Doctor Category', key: 'doctor_category' },
+        { label: 'Doctor NMC Number', key: 'doctor_nmc_number' },
+        { label: 'Doctor Qualification', key: 'doctor_qualification' },
+        { label: 'User', key: "user" },
+        { label: 'Is Invested', key: "is_invested" }
     ];
 
     const templateData = data?.map((values, index) => ({
         sno: index + 1,
-        stockist_name: values?.stockist_name?.stockist_name,
-        stockist_address: values?.stockist_name?.stockist_address,
-        stockist_contact_number: values?.stockist_name?.stockist_contact_number,
-        stockist_category: values?.stockist_name?.stockist_category,
-        pan_vat_number: values?.stockist_name?.pan_vat_number,
-        area: mpoName.title,
+        doctor_name: values?.doctor_name?.doctor_name,
+        doctor_address: values?.doctor_name?.doctor_address,
+        doctor_gender: values?.doctor_name?.doctor_gender,
+        doctor_phone_number: values?.doctor_name?.doctor_phone_number,
+        doctor_category: values?.doctor_name?.doctor_category,
+        doctor_nmc_number: values?.doctor_name?.doctor_nmc_number,
+        doctor_qualification: values?.doctor_name?.doctor_qualification,
+        user: mpoName?.title,
+        is_invested: values?.doctor_name?.is_investment === true ? 'Is Invested' : 'Not Invested'
     }))
 
-    const handleMPONameChange = useCallback((event, value) => {
-        setMPOName(value)
-    }, []);
+    useEffect(() => {
+        if (company_id) {
+            MpoData({ company_name: company_id })
+                .then((res) => {
+                    setMpoList(res.data);
+                })
+                .catch((err) => {
+                })
+        }
+    }, [company_id])
 
+    const handleMPONameChange = (event, value) => {
+        setMPOName(value)
+        // setSelectedOption(value?.id);
+    };
     return (
         <Box>
             <Box style={{ float: "right" }}>
                 {data ?
                     <>
-                        <ExportToExcel headers={headers} fileName={`Stockists`} data={templateData} />
+                        <ExportToExcel headers={headers} fileName={`Doctors`} data={templateData} />
                     </> : <></>}
             </Box>
             <Drawer
@@ -87,11 +105,11 @@ const ExportStockist = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Export Chemist
+                            Export Doctor
                         </Typography>
                         <Box marginTop={3} marginBottom={3}>
                             <Autocomplete
-                                options={companyArea}
+                                options={mpoNames}
                                 getOptionLabel={(option) => option.title}
                                 onChange={handleMPONameChange}
                                 renderInput={(params) => (
@@ -105,12 +123,16 @@ const ExportStockist = () => {
                             />
                         </Box>
                         <Stack spacing={1} direction="row">
-
+                            {/* <Button
+                                variant="contained"
+                                className="summit-button"
+                            > */}
                             {
                                 data ?
-                                    <ExportToExcel headers={headers} fileName={`${mpoName ? mpoName.title + ' ' + 'Stockist List' : 'All Stockist'}`} data={templateData} />
+                                    <ExportToExcel headers={headers} fileName={`${mpoName ? mpoName.title + ' ' + 'Doctor List' : 'All Doctor'}`} data={templateData} />
                                     : <></>
                             }
+                            {/* </Button> */}
                             <Button
                                 variant="outlined"
                                 className="cancel-button"
@@ -126,4 +148,4 @@ const ExportStockist = () => {
     )
 }
 
-export default React.memo(ExportStockist);
+export default React.memo(ExportDoctor);

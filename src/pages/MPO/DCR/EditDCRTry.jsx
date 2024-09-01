@@ -53,7 +53,9 @@ const EditDCR = ({ idharu, onClose }) => {
         }
     }, [doctorData])
 
-    const areaData = useGetAllCompanyAreasQuery();
+    const areaData = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
     useEffect(() => {
         const intermediateAreas = []
         if (areaData.data) {
@@ -64,7 +66,9 @@ const EditDCR = ({ idharu, onClose }) => {
         }
     }, [areaData])
 
-    const productData = useGetAllCompanyProductsWithoutPaginationQuery(company_id);
+    const productData = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
+        skip: !company_id
+    });
     useEffect(() => {
         const intermediateProducts = [];
         const intermediateMultiProducts = [];
@@ -78,7 +82,9 @@ const EditDCR = ({ idharu, onClose }) => {
         }
     }, [productData])
 
-    const rewardData = useGetAllRewardsQuery(company_id);
+    const rewardData = useGetAllRewardsQuery(company_id, {
+        skip: !company_id
+    });
     useEffect(() => {
         const intermediateRewards = []
         const intermediateMultiRewards = []
@@ -92,7 +98,9 @@ const EditDCR = ({ idharu, onClose }) => {
         }
     }, [rewardData])
 
-    const rolesData = useGetAllCompanyRolesQuery(company_id);
+    const rolesData = useGetAllCompanyRolesQuery(company_id, {
+        skip: !company_id
+    });
     useEffect(() => {
         const intermediateRoles = [];
         const intermediateMultiRoles = [];

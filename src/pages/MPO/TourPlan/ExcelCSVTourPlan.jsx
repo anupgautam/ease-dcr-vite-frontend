@@ -34,20 +34,24 @@ import { useGetHOTourPlansByUserIdQuery } from '@/api/HighOrderSlices/hoTourPlan
 import { useSelector } from 'react-redux';
 
 function useAreaData(areaId) {
-    const { data } = useGetAreaMPOByIdQuery(areaId).unwrap();
-    return data;
+    const { data } = useGetAreaMPOByIdQuery(areaId, {
+        skip: !areaId
+    }).unwrap()
 }
 
 function useVisitedWithData(visitedWithId) {
-    const { data } = useGetcompanyUserRolesByIdQuery(visitedWithId).unwrap();
-    return data;
+    const { data } = useGetcompanyUserRolesByIdQuery(visitedWithId, {
+        skip: !visitedWithId
+    }).unwrap()
 }
 
 const ExcelCSVTourPlan = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role } = useSelector((state) => state.cookie);
 
     //! Get Company Roles wala
-    const Role = useGetCompanyRolesByCompanyQuery(company_id)
+    const Role = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    })
 
     const rolesOptions = useMemo(() => {
         if (Role?.data) {
@@ -65,7 +69,9 @@ const ExcelCSVTourPlan = () => {
     };
 
     //! Get users wala
-    const User = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: company_id })
+    const User = useGetAllcompanyUserRolesWithoutPaginationQuery({ id: company_id }, {
+        skip: !company_id
+    })
 
     const userOptions = useMemo(() => {
         if (User?.data) {
@@ -156,7 +162,9 @@ const ExcelCSVTourPlan = () => {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedUser?.id, page: 1, role_data: user_role === 'admin' ? "" : '' })
+    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedUser?.id, page: 1, role_data: user_role === 'admin' ? "" : '' }, {
+        skip: !company_id || !selectedMonth || !selectedYear || !user_role || !selectedUser?.id
+    })
 
     const templateData1 = TourPlanSearch?.results?.map((values, index) => ({
         sno: index + 1,
@@ -166,7 +174,7 @@ const ExcelCSVTourPlan = () => {
         hulting_station: values?.tour_plan?.tour_plan.hulting_station,
     }))
 
-    const hoTourPlan = useGetHOTourPlansByUserIdQuery({ user_id: selectedUser?.id, month: selectedMonth, date: selectedYear, page: 1, company_name: company_id });
+    // const hoTourPlan = useGetHOTourPlansByUserIdQuery({ user_id: selectedUser?.id, month: selectedMonth, date: selectedYear, page: 1, company_name: company_id });
     // const hoTourPlanData = hoTourPlan.data;
 
     // const [templateData, setTemplateData] = useState([]);
@@ -280,12 +288,12 @@ const ExcelCSVTourPlan = () => {
                     <Stack spacing={1} direction="row">
                         {TourPlanSearch &&
                             <>
-                                <Box marginTop={2}>
+                                {/* <Box marginTop={2}>
                                     <ExportToExcel
                                         headers={selectedUser?.role === "MPO" ? headers1 : headers}
                                         fileName={`${selectedUser?.role === "MPO" ? selectedUser.title + ' ' + 'Tour Plan' : 'All Tour Plan'}`}
                                         data={selectedUser?.role === "MPO" ? templateData1 : templateData} />
-                                </Box>
+                                </Box> */}
                             </>
                         }
                     </Stack>

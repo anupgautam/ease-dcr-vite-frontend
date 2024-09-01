@@ -64,7 +64,9 @@ const MyExecutives = () => {
 
     // ! Get all users wala
     // const { data } = useGetAllcompanyUserRolesQuery({ id: company_id, page: page });
-    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    });
 
     const [roleSelect, setRoleSelect] = useState('');
     const [companyRoleList, setCompanyRoleList] = useState([]);

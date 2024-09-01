@@ -45,7 +45,9 @@ const AddCompanyAreaWiseExpense = () => {
     }, [ExpensesType])
 
     //! Get all company area 
-    const CompanyRole = useGetAllCompanyRolesQuery(company_id);
+    const CompanyRole = useGetAllCompanyRolesQuery(company_id, {
+        skip: !company_id
+    });
 
     const companyroles = useMemo(() => {
         if (CompanyRole?.data) {

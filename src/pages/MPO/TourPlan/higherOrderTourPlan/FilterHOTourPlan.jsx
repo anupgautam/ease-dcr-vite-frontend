@@ -80,7 +80,16 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
 
     //! Search results
 
-    const hoTourPlan = useGetHOTourPlansByUserIdQuery({ user_id: user_role !== "admin" ? company_user_id : selectedUser, month: selectedMonth, date: selectedDate, page: page, company_name: company_id });
+    const hoTourPlan = useGetHOTourPlansByUserIdQuery(
+        {
+            user_id: user_role !== "admin" ? company_user_id : selectedUser,
+            month: selectedMonth,
+            date: selectedDate,
+            page: page,
+            company_name: company_id
+        }, {
+        skip: !selectedMonth || !selectedDate || !page || !company_id || !selectedUser
+    });
 
     const [deleteTourPlan] = useDeleteHOTourPlansByIdMutation()
 
@@ -283,7 +292,9 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
 
 
 const HigherAreaData = ({ id }) => {
-    const { data } = useGetAreaMPOByIdQuery(id);
+    const { data } = useGetAreaMPOByIdQuery(id, {
+        skip: !id
+    });
     return (
         <>
             <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }}>{data?.area_name},</Typography>
@@ -292,7 +303,9 @@ const HigherAreaData = ({ id }) => {
 }
 
 const HigherVisitedWith = ({ id }) => {
-    const { data } = useGetcompanyUserRolesByIdQuery(id);
+    const { data } = useGetcompanyUserRolesByIdQuery(id, {
+        skip: !id
+    });
     return (
         <>
             <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }}>{data?.user_name?.first_name + " " + data?.user_name?.middle_name + " " + data?.user_name?.last_name},</Typography>

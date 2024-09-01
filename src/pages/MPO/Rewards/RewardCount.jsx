@@ -17,7 +17,9 @@ const RewardCount = () => {
         setPage(thisArray[3]);
     }, [])
 
-    const { data } = useGetAllRewardsQuery(company_id);
+    const { data } = useGetAllRewardsQuery(company_id, {
+        skip: !company_id
+    });
     return (
         <>
             {

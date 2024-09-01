@@ -251,7 +251,7 @@ const AddDcrForHo = () => {
                             <Box style={{ marginBottom: "20px" }}>
                                 <>
                                     {
-                                        higherOrderTourplans.length !== 0 ?
+                                        higherOrderTourplans?.length !== 0 ?
                                             <Box style={{ marginBottom: '20px' }}>
 
                                                 <Box style={{ width: "100%", overflowX: "auto", whiteSpace: 'nowrap', cursor: "pointer" }}>

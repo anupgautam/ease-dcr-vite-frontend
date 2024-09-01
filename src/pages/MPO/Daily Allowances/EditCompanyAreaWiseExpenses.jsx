@@ -47,7 +47,9 @@ const EditCompanyAreaWiseExpenses = ({ idharu, onClose }) => {
     }, [ExpensesType])
 
     //! Get all company area 
-    const CompanyArea = useGetAllCompanyAreasQuery();
+    const CompanyArea = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const companyareas = useMemo(() => {
         if (CompanyArea?.data) {

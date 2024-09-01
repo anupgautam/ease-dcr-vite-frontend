@@ -67,7 +67,9 @@ const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
     const FilteredData = { user_id: user_role === 'admin' ? selectedUser : company_user_id, month: selectedMonth, date: selectedDate, company_name: company_id }
 
     //! Search Results 
-    const results = useSearchHODCRQuery(FilteredData);
+    const results = useSearchHODCRQuery(FilteredData, {
+        skip: !user_role || !company_id || !selectedDate || !selectedMonth || !company_user_id || !selectedUser
+    });
 
     //!States
     const [fetchedResults, setFetchedResults] = useState(null);

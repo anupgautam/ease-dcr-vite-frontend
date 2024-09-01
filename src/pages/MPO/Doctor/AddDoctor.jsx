@@ -123,6 +123,8 @@ const AddDoctor = () => {
     const MpoArea = useGetMpoAreaQuery({
         company_name: company_id,
         mpo_name: user_role === 'admin' ? values.mpo_name : company_user_id,
+    }, {
+        skip: !company_id || !user_role || !company_user_id || !values.mpo_name
     });
 
     const mpoAreaData = useMemo(() => {
@@ -131,7 +133,6 @@ const AddDoctor = () => {
         }
         return [];
     }, [MpoArea])
-
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
@@ -329,18 +330,20 @@ const AddDoctor = () => {
                                         />
                                     </Box>
                                 </Grid>
-                                {/* <Grid item xs={12}>
-                                    <Box marginBottom={2}>
-                                        <Controls.Select
-                                            name="mpo_name"
-                                            label="MPO Name*"
-                                            value={values.name}
-                                            onChange={handleInputChange}
-                                            options={mpoNames}
-                                            error={errors.mpo_name}
-                                        />
-                                    </Box>
-                                </Grid> */}
+                                {user_role === "admin" &&
+                                    <Grid item xs={12}>
+                                        <Box marginBottom={2}>
+                                            <Controls.Select
+                                                name="mpo_name"
+                                                label="MPO Name*"
+                                                value={values.name}
+                                                onChange={handleInputChange}
+                                                options={mpoNames}
+                                                error={errors.mpo_name}
+                                            />
+                                        </Box>
+                                    </Grid>
+                                }
                                 <Grid item xs={12}>
                                     <Box marginBottom={2}>
                                         <Controls.Select

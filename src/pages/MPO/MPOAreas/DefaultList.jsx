@@ -40,7 +40,6 @@ const TABLE_HEAD = [
 
 const DefaultList = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
-    console.log("Default", company_id, company_user_id)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

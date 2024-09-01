@@ -23,7 +23,9 @@ import { useSelector } from 'react-redux';
 const EditStockist = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const companyAreaData = useMemo(() => {
         if (CompanyArea) {

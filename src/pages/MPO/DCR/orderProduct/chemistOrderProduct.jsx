@@ -31,7 +31,9 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
 
     const [updateDcr] = useUpdateDcrForChemistValuesMutation();
 
-    const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_id)
+    const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
+        skip: !company_id
+    })
 
     useEffect(() => {
         if (allData?.Formdata?.ordered_products?.length !== 0) {

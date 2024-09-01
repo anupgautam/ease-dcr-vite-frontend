@@ -41,10 +41,11 @@ export const DoctorSlice = apiSlice.injectEndpoints({
 
         //! Get MPO areas without pagination
         getAllMPOAreasNoPage: builder.query({
-            query: (page) => ({
+            query: (page) => {
+                return {
                 url: `mpo/company-mpo-area/?company_name=${page.id}&mpo_name=${page.mpo_name}`,
                 method: 'GET'
-            }),
+            }},
             providesTags: (result, error, arg) =>
                 [
                     'Doctor'

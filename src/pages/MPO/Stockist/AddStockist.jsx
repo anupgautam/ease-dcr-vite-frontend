@@ -50,7 +50,9 @@ const AddStockist = () => {
 
     const [createStockists] = useCreateStockistsMutation();
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const companyAreaData = useMemo(() => {
         if (CompanyArea) {

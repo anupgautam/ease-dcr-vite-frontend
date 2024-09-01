@@ -87,14 +87,16 @@ const UserSearch = () => {
   }, []);
 
   // ! Get all users wala
-  const roleList = useGetCompanyRolesByCompanyQuery(company_id);
+  const roleList = useGetCompanyRolesByCompanyQuery(company_id, {
+    skip: !company_id
+  });
 
   const [roleSelect, setRoleSelect] = useState("");
   const [companyRoleList, setCompanyRoleList] = useState([]);
 
   const userList = useGetUsersByCompanyRoleIdQuery({
     id: company_id,
-    page: roleSelect === null ? undefined : roleSelect,
+    page: roleSelect === null ? "" : roleSelect,
   });
 
   useEffect(() => {
@@ -172,7 +174,7 @@ const UserSearch = () => {
     formData.append("date_of_joining", user.user_name.date_of_joining);
     UserStatus(formData).then((res) => {
       if (res.data) {
-        window.location.reload();
+        console.log(res.data)
       }
     });
   };

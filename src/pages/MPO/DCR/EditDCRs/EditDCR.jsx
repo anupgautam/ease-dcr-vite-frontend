@@ -107,7 +107,9 @@ const EditDCR = ({ idharu, onClose }) => {
         return [];
     }, [doctorsdata])
 
-    const MpoArea = useGetAllCompanyAreasQuery(company_id);
+    const MpoArea = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {

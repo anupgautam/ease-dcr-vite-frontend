@@ -192,11 +192,13 @@ const SecondarySalesSearch = () => {
     }, []);
 
     //! onSearch
-    const FilteredData = { companyId: companyId, selectedOption: selectedOption, selectedMonth: selectedMonth, dateData: selectedYear }
+    const FilteredData = { companyId: company_id, selectedOption: selectedOption, selectedMonth: selectedMonth, dateData: selectedYear }
 
     useEffect(() => {
         if (selectedOption || selectedMonth || selectedYear) {
-            searchSecondarySales(FilteredData)
+            searchSecondarySales(FilteredData, {
+                skip: !selectedOption || !company_id || !selectedYear || !selectedMonth
+            })
                 .then((res) => {
                 })
         }

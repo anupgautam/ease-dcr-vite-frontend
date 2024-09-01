@@ -62,7 +62,9 @@ const FilteredLeaves = () => {
     }, [])
 
     //! Get User roles wala
-    const { data, isLoading, isSuccess, isError, error } = useGetCompanyRolesByCompanyQuery(company_id)
+    const { data, isLoading, isSuccess, isError, error } = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    })
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {

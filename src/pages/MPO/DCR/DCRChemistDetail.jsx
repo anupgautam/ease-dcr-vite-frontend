@@ -24,7 +24,6 @@ const DCRChemistDetail = () => {
     const selectedUser = searchParams.get('id');
 
     const { data, isLoading } = useGetChemistDcrByIdQuery(selectedUser);
-    console.log(data)
     return (
         <Container>
             <>
@@ -113,7 +112,6 @@ const DCRChemistDetail = () => {
 
 const PromotedProduct = ({ id }) => {
     const { data } = useGetChemistAllDCRByIdQuery(id)
-    console.log(data)
 
     // return (
     //     <>

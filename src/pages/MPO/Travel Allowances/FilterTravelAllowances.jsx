@@ -80,7 +80,9 @@ const FilterTravelAllowances = () => {
     }, []);
 
     //! Get company roles
-    const { data, isLoading, isSuccess, isError, error } = useGetCompanyRolesByCompanyQuery(company_id)
+    const { data, isLoading, isSuccess, isError, error } = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    })
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {

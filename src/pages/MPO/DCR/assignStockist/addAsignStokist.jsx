@@ -39,7 +39,9 @@ const AddAsignStockist = () => {
     const [selectedDates, setSelectedDates] = useState(today);
 
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const companyAreaData = [];
     if (CompanyArea !== undefined) {

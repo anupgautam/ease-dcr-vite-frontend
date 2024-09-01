@@ -78,7 +78,9 @@ const DefaultList = () => {
     }, [])
 
     //! Get Categories
-    const { data } = useGetAllCompanyRolesQuery(company_id);
+    const { data } = useGetAllCompanyRolesQuery(company_id, {
+        skip: !company_id
+    });
 
     // !Delete TourPlan
     const [deleteCompanyRoles] = useDeleteCompanyRolesByIdMutation();

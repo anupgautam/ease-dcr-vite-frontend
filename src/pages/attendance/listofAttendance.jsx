@@ -114,7 +114,9 @@ const ListofAttendance = () => {
     };
 
     const allDaysInMonth = getAllDaysInMonth(selectedYear, selectedMonth);
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' });
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' }, {
+        skip: !company_id || !page
+    });
 
     const companyUserList = [];
 

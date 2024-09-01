@@ -51,9 +51,13 @@ export default function TargetChart(props) {
 
   const [chartData, setChartData] = useState(null);
 
-  const companyUser = useGetAllCompanyUserRoleByRoleQuery(selectedRole);
+  const companyUser = useGetAllCompanyUserRoleByRoleQuery(selectedRole, {
+    skip: !selectedRole
+  });
 
-  const { data: rolesData } = useGetCompanyRolesByCompanyQuery(company_id);
+  const { data: rolesData } = useGetCompanyRolesByCompanyQuery(company_id, {
+    skip: !company_id
+  });
 
   const roles = useMemo(() => {
     if (rolesData !== undefined) {

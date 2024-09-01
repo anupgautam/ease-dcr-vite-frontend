@@ -47,7 +47,9 @@ const FilteredMissedCalls = () => {
     const monthData = getNepaliMonthName(now._date.month);
     const yearData = now._date.year;
 
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: "" })
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: "" }, {
+        skip: !company_id || !page
+    })
 
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');

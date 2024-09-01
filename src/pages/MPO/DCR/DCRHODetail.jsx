@@ -23,7 +23,6 @@ const DCRHODetail = () => {
     const selectedUser = searchParams.get('id');
 
     const { data, isLoading } = useGetHODCRHaruByIdQuery(selectedUser);
-    console.log(data)
     return (
         <Container>
             <>
@@ -112,7 +111,6 @@ const DCRHODetail = () => {
 
 const PromotedProduct = ({ id }) => {
     const { data } = useGetHODCRsByIdQuery(id)
-    console.log(data)
 
     // return (
     //     <>

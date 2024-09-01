@@ -16,7 +16,7 @@ import AddUnplannedTp from './addUnplannedTp';
 import { useSelector } from 'react-redux';
 
 const ListOfTourPlan = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { user_role } = useSelector((state) => state.cookie);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));

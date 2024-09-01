@@ -37,9 +37,13 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     const [dateData, setDateData] = useState();
 
     //! Getting TourPlan by ID
-    const TourPlan = useGetHOTourPlansByIdQuery(idharu);
+    const TourPlan = useGetHOTourPlansByIdQuery(idharu, {
+        skip: !idharu
+    });
 
-    const userLists = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: TourPlan?.data?.user_id?.id })
+    const userLists = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: TourPlan?.data?.user_id?.id }, {
+        skip: !company_id || !TourPlan?.data?.user_id?.id
+    })
 
     useEffect(() => {
         const user = []
@@ -354,7 +358,9 @@ const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
     const { company_id, user_role, company_user_id, role } = useSelector((state) => state.cookie);
 
     const [visitData, setVisitData] = useState([]);
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id }, {
+        skip: !company_id || !role
+    });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

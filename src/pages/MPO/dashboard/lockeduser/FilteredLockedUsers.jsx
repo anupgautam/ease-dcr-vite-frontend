@@ -49,7 +49,9 @@ const FilteredLockedUsers = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     //! Company Roles list
-    const roleList = useGetCompanyRolesByCompanyQuery(company_id);
+    const roleList = useGetCompanyRolesByCompanyQuery(company_id, {
+        skip: !company_id
+    });
 
     const [companyRoleList, setCompanyRoleList] = useState([]);
     const [roleSelect, setRoleSelect] = useState('');

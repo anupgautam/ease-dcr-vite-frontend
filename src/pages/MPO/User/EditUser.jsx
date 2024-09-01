@@ -36,11 +36,12 @@ const EditUser = ({ idharu, onClose }) => {
 
     //! Getting User by ID
     const User = useGetcompanyUserRolesByIdQuery(idharu);
-    console.log(User?.data)
 
 
     //! Get user roles
-    const data = useGetAllCompanyRolesQuery(company_id);
+    const data = useGetAllCompanyRolesQuery(company_id, {
+        skip: !company_id
+    });
     const rolesharu = useMemo(() => {
         if (data?.data) {
             return data?.data.map(key => ({ id: key.id, title: key.role_name_value }))
@@ -58,7 +59,9 @@ const EditUser = ({ idharu, onClose }) => {
     }, [Divisions])
 
     //! Get company wise area
-    const CompanyAreas = useGetAllCompanyAreasQuery(company_id)
+    const CompanyAreas = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    })
     const companyAreas = useMemo(() => {
         if (CompanyAreas?.data) {
             return CompanyAreas.data.map(key => ({ id: key.id, title: key.company_area }))

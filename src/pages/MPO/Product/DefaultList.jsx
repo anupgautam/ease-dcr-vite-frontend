@@ -86,13 +86,22 @@ const DefaultList = () => {
                                 <TableCell><Skeleton /></TableCell>
                                 <TableCell><Skeleton /></TableCell>
                                 <TableCell><Skeleton /></TableCell>
+                                <TableCell><Skeleton /></TableCell>
                             </TableRow>
                         ))}
                 </> :
                     <>{data && data.results.map((product, index) => (
                         <TableRow hover tabIndex={-1} role="checkbox" key={product.id}>
-                            <TableCell>{index + 1}</TableCell>
-                            <TableCell component="th" scope="row" align="left">
+                            <TableCell style={{
+                                position: 'sticky',
+                                left: 0,
+                                zIndex: 1,
+                            }}>{index + 1}</TableCell>
+                            <TableCell component="th" scope="row" align="left" style={{
+                                position: 'sticky',
+                                left: 0,
+                                zIndex: 1,
+                            }}>
                                 <Typography variant="subtitle2" noWrap>
                                     {product.product_name.product_name}
                                 </Typography>
@@ -101,6 +110,8 @@ const DefaultList = () => {
                             <TableCell align="left">{product.product_name.product_molecular_name}</TableCell>
                             <TableCell align="left">Rs. {product.product_name.product_price_per_strip_in_mrp}</TableCell>
                             <TableCell align="left">Rs. {product.product_name.product_price_for_stockist
+                            }</TableCell>
+                            <TableCell align="left">{product.division_name.division_name
                             }</TableCell>
                             <TableCell align="left">
                                 {/* //!Edit */}

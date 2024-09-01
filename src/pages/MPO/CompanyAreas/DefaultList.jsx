@@ -68,7 +68,9 @@ const DefaultList = () => {
     }, [])
 
     //! Get Company Area
-    const { data } = useGetAllCompanyAreasQuery(company_id);
+    const { data } = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     // !Delete companyareaists
     const [deleteCompanyArea] = useDeleteCompanyAreaByIdMutation()

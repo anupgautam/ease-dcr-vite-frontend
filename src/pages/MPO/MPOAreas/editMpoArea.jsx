@@ -43,7 +43,9 @@ const EditMpoArea = ({ idharu, onClose }) => {
     const [higherUserOptions, setHigherUserOptions] = useState([]);
 
     //! Get user roles
-    const data = useGetAllCompanyRolesQuery(company_id);
+    const data = useGetAllCompanyRolesQuery(company_id, {
+        skip: !company_id
+    });
 
     const rolesharu = useMemo(() => {
         if (data) {
@@ -87,7 +89,9 @@ const EditMpoArea = ({ idharu, onClose }) => {
     }, [User])
 
     //! Get company wise area
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const companyAreaData = useMemo(() => {
         if (CompanyArea?.data) {

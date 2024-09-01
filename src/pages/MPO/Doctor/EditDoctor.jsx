@@ -42,7 +42,9 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
     }, [DoctorSpecialization])
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: Doctor?.data?.mpo_name });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: Doctor?.data?.mpo_name }, {
+        skip: !company_id || !Doctor?.data?.mpo_name
+    });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

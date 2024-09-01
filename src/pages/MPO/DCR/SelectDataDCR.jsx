@@ -21,9 +21,11 @@ import {
     addChemist
 } from '@/reducers/dcrSelectData';
 
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 const SelectDataDCR = () => {
+    const { company_id, company_area_id } = useSelector((state) => state.cookie);;
+
     const dispatch = useDispatch();
     const doctorData = useGetAllVisitedDoctorsOptionsQuery();
     useEffect(() => {
@@ -36,7 +38,9 @@ const SelectDataDCR = () => {
         }
     }, [doctorData])
 
-    const areaData = useGetAllCompanyAreasQuery();
+    const areaData = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
     useEffect(() => {
         const intermediateAreas = []
         if (areaData.data) {
@@ -47,7 +51,9 @@ const SelectDataDCR = () => {
         }
     }, [areaData])
 
-    const productData = useGetAllCompanyProductsWithoutPaginationQuery();
+    const productData = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
+        skip: !company_id
+    });
     useEffect(() => {
         const intermediateProducts = [];
         const intermediateMultiProducts = [];
@@ -60,7 +66,9 @@ const SelectDataDCR = () => {
         }
     }, [productData])
 
-    const rewardData = useGetAllRewardsQuery();
+    const rewardData = useGetAllRewardsQuery(company_id, {
+        skip: !company_id
+    });
     useEffect(() => {
         const intermediateRewards = []
         const intermediateMultiRewards = []
@@ -73,7 +81,9 @@ const SelectDataDCR = () => {
         }
     }, [rewardData])
 
-    const rolesData = useGetAllCompanyRolesQuery();
+    const rolesData = useGetAllCompanyRolesQuery(company_id, {
+        skip: !company_id
+    });
     useEffect(() => {
         const intermediateRoles = [];
         const intermediateMultiRoles = [];
@@ -97,7 +107,10 @@ const SelectDataDCR = () => {
         }
     }, [shiftData])
 
-    const stockistData = useGetAllStockistsWithoutPaginationQuery();
+    const stockistData = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: company_area_id ? company_area_id : "" }, {
+        skip: !company_id || !company_area_id
+    });
+
     useEffect(() => {
         const stockist = [];
         if (stockistData.data) {
@@ -109,8 +122,10 @@ const SelectDataDCR = () => {
         }
     }, [stockistData])
 
-    const chemistData = useGetChemistsWithoutPaginationQuery();
-    
+    const chemistData = useGetChemistsWithoutPaginationQuery(company_id, {
+        skip: !company_id
+    });
+
     useEffect(() => {
         const chemist = [];
         if (chemistData.data) {

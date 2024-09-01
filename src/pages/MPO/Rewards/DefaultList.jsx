@@ -77,7 +77,9 @@ const DefaultList = () => {
     }, [])
 
     //! Get Categories
-    const { data, refetch } = useGetAllRewardsQuery(company_id);
+    const { data, refetch } = useGetAllRewardsQuery(company_id, {
+        skip: !company_id
+    });
 
     // !Delete TourPlan
     const [deleteRewards] = useDeleteRewardsByIdMutation();

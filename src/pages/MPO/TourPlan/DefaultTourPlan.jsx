@@ -47,9 +47,11 @@ const DefaultList = () => {
     const { data, refetch } = useGetTourPlansQuery({
         id: company_id,
         page: page
+    }, {
+        skip: !company_id
     });
 
-
+console.log(data)
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

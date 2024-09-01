@@ -34,7 +34,9 @@ const AddMpoArea = () => {
         { id: "NONE WORKING", title: "NONE WORKING" },
     ]
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id);
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id, {
+        skip: !company_id
+    });
 
     const companyAreaData = useMemo(() => {
         if (CompanyArea) {
@@ -104,7 +106,9 @@ const AddMpoArea = () => {
 
     }, [values.area_name, values.mpo_name, values.station_type])
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: values.mpo_name });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: values.mpo_name }, {
+        skip: !company_id || !values.mpo_name
+    });
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

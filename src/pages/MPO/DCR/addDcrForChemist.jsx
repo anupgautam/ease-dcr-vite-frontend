@@ -217,7 +217,9 @@ const AddDCRforChemist = () => {
             });
     }, [company_user_id]);
 
-    const rewards = useGetAllRewardsQuery(company_id);
+    const rewards = useGetAllRewardsQuery(company_id, {
+        skip: !company_id
+    });
 
     const rewardsOptions = useMemo(() => {
         if (rewards !== undefined) {
@@ -229,7 +231,9 @@ const AddDCRforChemist = () => {
     }, [rewards])
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
-        company_id
+        company_id, {
+            skip: !company_id
+        }
     );
 
     const productOptions = useMemo(() => {
@@ -559,7 +563,9 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
     }
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
-        company_id
+        company_id, {
+            skip: !company_id
+        }
     );
 
     const productOptions = useMemo(() => {
@@ -583,7 +589,9 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
         setPromotedProduct(mpotparea)
     }
 
-    const rewards = useGetAllRewardsQuery(company_id);
+    const rewards = useGetAllRewardsQuery(company_id, {
+        skip: !company_id
+    });
 
     const rewardsOptions = useMemo(() => {
         if (rewards !== undefined) {
