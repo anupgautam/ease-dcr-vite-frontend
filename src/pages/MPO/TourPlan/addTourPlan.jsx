@@ -37,7 +37,7 @@ import {
 
 
 const AddTourPlan = () => {
-    const { company_id, user_role, company_user_id, role } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id,company_user_role_id, role } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -50,8 +50,8 @@ const AddTourPlan = () => {
     }, [])
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_id }, {
-        skip: !company_id || !company_user_id
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_role_id }, {
+        skip: !company_id || !company_user_role_id
     })
 
     const mpoAreaData = useMemo(() => {
@@ -81,8 +81,8 @@ const AddTourPlan = () => {
         return []
     }, [ShiftData])
 
-    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_id }, {
-        skip: !company_id || !company_user_id
+    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_role_id }, {
+        skip: !company_id || !company_user_role_id
     })
 
     const executiveLevelOptions = useMemo(() => {
@@ -145,7 +145,7 @@ const AddTourPlan = () => {
 
         let new_data = [...TourPlanTodos, newTodo].map((tour) => ({
             company_name: company_id,
-            mpo_name: company_user_id,
+            mpo_name: company_user_role_id,
             mpo_area: newData,
             tour_plan: {
                 shift: { shift: 1 },
@@ -210,7 +210,7 @@ const AddTourPlan = () => {
         shift: "",
         visit_data: MpoAreaData,
         hulting_station: "",
-        user_id: company_user_id,
+        user_id: company_user_role_id,
     }
 
     const {
@@ -242,7 +242,7 @@ const AddTourPlan = () => {
         if (user_role === "MPO") {
             let new_data = TourPlanTodos.map((tour) => ({
                 company_name: company_id,
-                mpo_name: company_user_id,
+                mpo_name: company_user_role_id,
                 mpo_area: newData,
                 tour_plan: {
                     shift: { shift: 1 },
@@ -560,7 +560,7 @@ const AddTourPlan = () => {
 }
 
 const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
-    const { company_id, user_role, company_user_id, role } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id,role } = useSelector((state) => state.cookie);
 
     const [visitData, setVisitData] = useState([]);
 

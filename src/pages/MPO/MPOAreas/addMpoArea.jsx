@@ -25,7 +25,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const AddMpoArea = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id,company_user_role_id } = useSelector((state) => state.cookie);
 
     const mpoStation = [
         { id: "HOME STATION", title: "HOME STATION" },
@@ -127,7 +127,7 @@ const AddMpoArea = () => {
         setLoading(true)
         const formData = new FormData();
         formData.append("area_name", values.area_name);
-        formData.append("mpo_name", user_role === 'admin' ? values.mpo_name : company_user_id);
+        formData.append("mpo_name", user_role === 'admin' ? values.mpo_name : company_user_role_id);
         formData.append("station_type", values.station_type);
         formData.append('company_area', values.company_area);
         formData.append('company_name', company_id)

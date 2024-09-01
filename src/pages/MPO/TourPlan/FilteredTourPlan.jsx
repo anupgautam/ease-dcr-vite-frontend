@@ -66,7 +66,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredTourPlan = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const localData = JSON.parse(localStorage.getItem('user_login'));
     useEffect(() => {
@@ -241,14 +241,16 @@ const FilteredTourPlan = () => {
             company_name: company_id,
             date: selectedYear,
             month: selectedMonth,
-            mpo_name: user_role === 'admin' ? id : company_user_id,
+            mpo_name: user_role === 'admin' ? id : company_user_role_id,
             page: page,
             role_data: user_role === 'admin' ? "" : '',
         },
-        {
-            skip: !company_id || !selectedMonth || !id || !company_user_id || !page,
-        }
+        // {
+        //     skip: !company_id || !selectedMonth || !id || !company_user_role_id || !page,
+        // }
     );
+
+    console.log('company_user_role_id', company_user_role_id);
 
     //! Search results
 
