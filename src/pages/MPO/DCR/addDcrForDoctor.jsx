@@ -126,7 +126,7 @@ const AddDcrForDoctor = () => {
         expenses: '',
         expenses_name: '',
         expenses_reasoning: '',
-        visited_with: [],
+        company_roles: [],
     })
 
 
@@ -154,7 +154,7 @@ const AddDcrForDoctor = () => {
                 tour_id: NewTourPlanData?.id,
                 id: id,
                 shift: "",
-                visited_with: dcrForDoctor?.data?.visited_with,
+                company_roles: dcrForDoctor?.data?.visited_with,
                 date: NewTourPlanData?.tour_plan?.tour_plan?.select_the_date_id,
                 visited_area: "",
                 visited_doctor: dcrForDoctor?.data?.visited_doctor,
@@ -277,7 +277,7 @@ const AddDcrForDoctor = () => {
                     sendingData['rewards'] = [];
                 }
                 if (sendingData['company_roles']) {
-                    let companyRoles = allData.visited_with;
+                    let companyRoles = allData.company_roles;
                     sendingData['company_roles'] = [];
                     companyRoles.map(key => {
                         sendingData['company_roles'].push({ id: key });
@@ -615,7 +615,7 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                 visited_doctor: data.doctor_id,
                 Formdata,
                 rewards: RewardOptions,
-                visited_with: CompanyRoles,
+                company_roles: CompanyRoles,
                 company_product: PromotedProduct,
                 context: {
                     request: 'PATCH',

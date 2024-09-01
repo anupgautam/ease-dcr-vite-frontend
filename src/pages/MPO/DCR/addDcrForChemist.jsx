@@ -159,7 +159,7 @@ const AddDCRforChemist = () => {
                 tour_id: NewTourPlanData?.id,
                 id: id,
                 shift: "",
-                visited_with: dcrForChemist?.data?.visited_with,
+                company_roles: dcrForChemist?.data?.visited_with,
                 date: NewTourPlanData?.tour_plan?.tour_plan?.select_the_date_id,
                 visited_area: "",
                 visited_doctor: dcrForChemist?.data?.visited_doctor,
@@ -232,8 +232,8 @@ const AddDCRforChemist = () => {
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
         company_id, {
-            skip: !company_id
-        }
+        skip: !company_id
+    }
     );
 
     const productOptions = useMemo(() => {
@@ -564,8 +564,8 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
         company_id, {
-            skip: !company_id
-        }
+        skip: !company_id
+    }
     );
 
     const productOptions = useMemo(() => {
@@ -635,7 +635,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
                 visited_chemist: data.chemist_id,
                 Formdata,
                 rewards: RewardOptions,
-                visited_with: CompanyRoles,
+                company_roles: CompanyRoles,
                 company_product: PromotedProduct,
                 context: {
                     request: 'PATCH',
