@@ -171,7 +171,7 @@ const ListofAttendance = () => {
         id: company_id,
         page: ""
     }, {
-        skip: !company_id || !page
+        skip: !company_id
     });
 
     const companyUserList = useMemo(() => {

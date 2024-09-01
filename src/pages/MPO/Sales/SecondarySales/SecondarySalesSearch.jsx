@@ -95,7 +95,9 @@ const SecondarySalesSearch = () => {
     //! Get Stockist
     const mpo_id = useSelector(state => state.dcrData.selected_user);
 
-    const { data: mpoArea } = useGetUsersByIdQuery(mpo_id);
+    const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
+        skip: !mpo_id
+    });
     // const { Stockist } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id })
     const Stockist = useGetStockistsWithoutPaginationQuery(company_id);
 

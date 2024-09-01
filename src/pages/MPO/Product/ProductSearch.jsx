@@ -216,7 +216,7 @@ const ProductSearch = () => {
                     }
                 </Box>
                 <Scrollbar>
-                    <TableContainer sx={{ minWidth: 800 }}>
+                    <TableContainer sx={{ minWidth: 800, overflow: 'auto' }}>
                         <Table>
                             <UserListHead
                                 headLabel={TABLE_HEAD}
@@ -248,8 +248,18 @@ const ProductSearch = () => {
                                                         {
                                                             SearchData.map((productsearch, index) => (
                                                                 <TableRow hover tabIndex={-1} key={productsearch.id}>
-                                                                    <TableCell>{index + 1}</TableCell>
-                                                                    <TableCell component="th" scope="row" align="left" >
+                                                                    <TableCell sx={{
+                                                                        position: 'sticky',
+                                                                        left: 0,
+                                                                        zIndex: 2,
+                                                                        background: '#fff',
+                                                                    }}>{index + 1}</TableCell>
+                                                                    <TableCell sx={{
+                                                                        position: 'sticky',
+                                                                        left: 0,
+                                                                        zIndex: 2,
+                                                                        background: '#fff',
+                                                                    }} component="th" scope="row" align="left" >
                                                                         <Typography variant="subtitle2" noWrap>
                                                                             {productsearch.product_name.product_name}
                                                                         </Typography>
@@ -336,8 +346,14 @@ const ProductSearch = () => {
                                                                             {
                                                                                 productDivision.results.map((productsearch, index) => (
                                                                                     <TableRow hover tabIndex={-1} key={productsearch.id}>
-                                                                                        <TableCell>{index + 1}</TableCell>
-                                                                                        <TableCell component="th" scope="row" align="left" >
+                                                                                        <TableCell sx={{
+                                                                                            position: 'sticky',
+                                                                                            left: 0,
+                                                                                        }}>{index + 1}</TableCell>
+                                                                                        <TableCell sx={{
+                                                                                            position: 'sticky',
+                                                                                            left: 0,
+                                                                                        }} component="th" scope="row" align="left" >
                                                                                             <Typography variant="subtitle2" noWrap>
                                                                                                 {productsearch.product_name.product_name}
                                                                                             </Typography>

@@ -56,7 +56,9 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
     }, [productData])
 
 
-    const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: company_area_id })
+    const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: company_area_id }, {
+        skip: !company_id || !company_area_id
+    })
 
 
     const chemistList = useMemo(() => {

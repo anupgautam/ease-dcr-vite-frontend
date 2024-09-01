@@ -72,7 +72,9 @@ const StockistSearch = () => {
         return [];
     }, [Company_Areas]);
 
-    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: parseInt(company_id), company_area: user_role === "admin" ? companyArea : company_user_id });
+    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: parseInt(company_id), company_area: user_role === "admin" ? companyArea : company_user_id }, {
+        skip: !company_id || !user_role || !company_user_id
+    });
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

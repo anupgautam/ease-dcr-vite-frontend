@@ -359,7 +359,7 @@ const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
 
     const [visitData, setVisitData] = useState([]);
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id }, {
-        skip: !company_id || !role
+        skip: !company_id || !role || !id
     });
 
     const mpoAreaData = useMemo(() => {

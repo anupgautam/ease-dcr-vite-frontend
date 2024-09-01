@@ -206,7 +206,7 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
     const mpoAreaData = [];
 
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? Formdata.mpo_name : company_user_id }, {
-        skip: !company_id || !user_role || !company_user_id
+        skip: !company_id || !user_role || !company_user_id || !Formdata.mpo_name
     });
 
     if (MpoArea?.data) {
