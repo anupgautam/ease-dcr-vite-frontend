@@ -78,8 +78,6 @@ const StockistSearch = () => {
         // }
     );
 
-    console.log("StockistData", StockistData);
-
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

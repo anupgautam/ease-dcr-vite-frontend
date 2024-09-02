@@ -279,7 +279,6 @@ const AddTourPlan = () => {
                     }
                 })
                 .catch(err => {
-                    console.log(err)
                     setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
@@ -304,7 +303,6 @@ const AddTourPlan = () => {
                         }, 3000);
                     }
                     else if (res.error) {
-                        console.log(res.error)
                         setErrorMessage({ show: true, message: res.error[0] });
                         setTimeout(() => {
                             setErrorMessage({ show: false, message: '' });

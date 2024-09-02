@@ -174,7 +174,6 @@ const UserSearch = () => {
     formData.append("date_of_joining", user.user_name.date_of_joining);
     UserStatus(formData).then((res) => {
       if (res.data) {
-        console.log(res.data)
       }
     });
   };

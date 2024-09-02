@@ -31,7 +31,6 @@ const EditTarget = ({ idharu, onClose }) => {
     // const [upperUser, setUpperUser] = useState([]);
 
     const { data: rolesData } = useGetExecutiveLevelUsersQuery(company_user_id);
-    console.log('rolesData', rolesData);
 
     const upperUser = useMemo(() => {
         if (rolesData !== undefined) {
@@ -73,8 +72,6 @@ const EditTarget = ({ idharu, onClose }) => {
         sales: ""
     })
 
-    console.log("initialFValues", initialFValues);
-    console.log('Target', Target);
 
     useEffect(() => {
         if (Target.data) {

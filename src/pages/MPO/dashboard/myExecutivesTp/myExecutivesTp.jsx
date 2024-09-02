@@ -81,7 +81,7 @@ const TABLE_HEAD1 = [
 ];
 
 const MyExecutiveTp = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
 
@@ -98,8 +98,8 @@ const MyExecutiveTp = () => {
     const roleList = useGetCompanyRolesByCompanyQuery(company_id, {
         skip: !company_id
     });
-    const { data: myHigherData } = useGetUsersByHigherLevelUserQuery(company_user_id, {
-        skip: !company_user_id
+    const { data: myHigherData } = useGetUsersByHigherLevelUserQuery(company_user_role_id, {
+        skip: !company_user_role_id
     });
 
     const lowerList = useMemo(() => {
@@ -242,7 +242,7 @@ const MyExecutiveTp = () => {
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedOption !== null ? selectedOption?.id : "", page: page, role_data: '' }, {
-        skip: !company_id || !selectedYear || !selectedMonth || !selectedOption || !role_data || !page
+        skip: !company_id || !selectedYear || !selectedMonth || !selectedOption || !page
     })
 
     const userData = useGetUsersByIdQuery(company_user_id, {
