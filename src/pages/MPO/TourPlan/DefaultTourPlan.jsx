@@ -50,7 +50,6 @@ const DefaultList = () => {
         skip: !company_id
     });
 
-console.log(data)
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

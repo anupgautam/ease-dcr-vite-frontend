@@ -37,7 +37,7 @@ const TABLE_HEAD = [
 
 const MyExecutives = () => {
 
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -89,8 +89,8 @@ const MyExecutives = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        if (company_user_id) {
-            LowerLevel({ id: company_user_id })
+        if (company_user_role_id) {
+            LowerLevel({ id: company_user_role_id })
                 .then((res) => {
                     if (res.data) {
                         setData(res.data)
@@ -99,7 +99,7 @@ const MyExecutives = () => {
                 .catch((err) => {
                 })
         }
-    }, [company_user_id])
+    }, [company_user_role_id])
 
     // !on search
     const onSearch = (e) => {

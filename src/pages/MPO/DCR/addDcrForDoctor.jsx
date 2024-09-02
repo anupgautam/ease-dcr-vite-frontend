@@ -254,7 +254,6 @@ const AddDcrForDoctor = () => {
         // if (AllMutipleData.length !== []) {
         if (AllMutipleData.length !== 0) {
             for (const allData of AllMutipleData) {
-                console.log('allData', allData);
                 let sendingData = { ...allData };
                 sendingData['id'] = allData.id;
                 if (sendingData['company_product']) {

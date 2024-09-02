@@ -25,7 +25,7 @@ import Iconify from '@/components/iconify/Iconify';
 import { useSelector } from 'react-redux';
 
 const DefaultList = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
@@ -50,7 +50,7 @@ const DefaultList = () => {
     }, [])
 
     // !  Get all the stockist
-    const { data: CompanyAreaId } = useGetcompanyUserRolesByIdQuery(company_user_id);
+    const { data: CompanyAreaId } = useGetcompanyUserRolesByIdQuery(company_user_role_id);
 
     const { data } = useGetAllStockistsQuery(
         {
