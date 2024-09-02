@@ -249,7 +249,7 @@ const AddUser = () => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
             } else {
-                setErrorMessage({ show: true, message: response?.error?.data[0] });
+                setErrorMessage({ show: true, message: response?.error?.data[0] || response?.error?.data?.user_name?.email[0] });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
                 }, 3000);
