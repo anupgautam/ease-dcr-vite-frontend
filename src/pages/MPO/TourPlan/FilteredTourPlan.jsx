@@ -108,8 +108,8 @@ const FilteredTourPlan = () => {
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
 
-    const roleList = useGetCompanyRolesByCompanyQuery(company_id, {
-        skip: !company_id
+    const roleList = useGetCompanyRolesByCompanyQuery(company_user_role_id, {
+        skip: !company_user_role_id
     });
 
     const [companyRoleList, setCompanyRoleList] = useState([]);
@@ -136,8 +136,8 @@ const FilteredTourPlan = () => {
 
 
     // const [companyUserList, setCompanyUserList] = useState([]);
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' }, {
-        skip: !company_id || !page
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_user_role_id, page: '' }, {
+        skip: !company_user_role_id || !page
     });
 
     const companyUserList = [];
@@ -188,8 +188,8 @@ const FilteredTourPlan = () => {
     }, []);
 
     //! Get User roles wala
-    const { data, isLoading, isSuccess, isError, error } = useGetUsersMPOWalaQuery(company_id, {
-        skip: !company_id
+    const { data, isLoading, isSuccess, isError, error } = useGetUsersMPOWalaQuery(company_user_role_id, {
+        skip: !company_user_role_id
     })
 
     const rolesOptions = useMemo(() => {

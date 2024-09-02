@@ -93,8 +93,12 @@ const AddChemist = () => {
         validate();
 
     }, [values.chemist_name, values.category_name, values.chemist_address, values.chemist_phone_number])
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? values?.mpo_name : company_user_id }, {
-        skip: !company_id || !user_role || !company_user_id || !values?.mpo_name
+
+    const MpoArea = useGetMpoAreaQuery({
+        company_name: company_id,
+        mpo_name: user_role === 'admin' ? values?.mpo_name : company_user_role_id
+    }, {
+        skip: !company_id || !user_role || !company_user_role_id || !values?.mpo_name
     });
 
     const mpoAreaData = useMemo(() => {
@@ -120,8 +124,8 @@ const AddChemist = () => {
         formData.append("chemist_category", values.chemist_category);
         formData.append("chemist_contact_person", values.chemist_contact_person);
         formData.append("chemist_pan_number", values.chemist_pan_number);
-        formData.append('company_user_role_id', company_user_role_id);
-        formData.append('mpo_name', user_role === 'admin' ? values.mpo_name : company_user_id);
+        formData.append('company_id', company_id);
+        formData.append('mpo_name', user_role === 'admin' ? values.mpo_name : company_user_role_id);
         formData.append('is_investment', false)
         try {
             const response = await createChemists(formData)

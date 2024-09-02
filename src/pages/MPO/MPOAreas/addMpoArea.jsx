@@ -25,7 +25,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const AddMpoArea = () => {
-    const { company_id, user_role, company_user_id,company_user_role_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const mpoStation = [
         { id: "HOME STATION", title: "HOME STATION" },

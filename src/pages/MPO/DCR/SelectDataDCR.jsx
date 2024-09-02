@@ -24,7 +24,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 
 const SelectDataDCR = () => {
-    const { company_id, company_area_id } = useSelector((state) => state.cookie);;
+    const { company_id, company_area_id, company_user_role_id } = useSelector((state) => state.cookie);;
 
     const dispatch = useDispatch();
     const doctorData = useGetAllVisitedDoctorsOptionsQuery();

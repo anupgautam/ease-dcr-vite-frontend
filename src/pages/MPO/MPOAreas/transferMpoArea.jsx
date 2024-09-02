@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { Box, Button, Drawer, Grid, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Button, Drawer, Grid, IconButton, Stack, Typography, CircularProgress } from "@mui/material";
 import React, { useEffect, useState, useMemo } from "react";
 import { usePostAllMPONamesNoPageMutation, useTransferMpoAreaMutation } from "@/api/MPOSlices/DoctorSlice";
 import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
@@ -62,11 +62,13 @@ const TransferMpoArea = () => {
     }, [])
 
     const [MpoTransferArea] = useTransferMpoAreaMutation();
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     const transferArea = (e) => {
         e.preventDefault();
+        setLoading(true)
         const data = {
             "transfer_to_mpo": values.transfer_to,
             "transfer_from_mpo": values.transfer_from,
@@ -91,6 +93,9 @@ const TransferMpoArea = () => {
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
                 }, 3000);
+            })
+            .finally(err => {
+                setLoading(true)
             })
     }
 
@@ -183,6 +188,11 @@ const TransferMpoArea = () => {
                     </Stack>
                 </Box>
             </Drawer>
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                    <CircularProgress />
+                </Grid>
+            )}
             {
                 ErrorMessage.show === true ? (
                     <Grid>

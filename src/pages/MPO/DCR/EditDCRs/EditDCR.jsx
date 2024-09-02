@@ -29,7 +29,7 @@ import { useGetAllCompanyAreasQuery } from '../../../../api/CompanySlices/compan
 
 
 const EditDCR = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
     const [noLoop, setNoLoop] = useState(true);
@@ -98,7 +98,7 @@ const EditDCR = ({ idharu, onClose }) => {
         true
     )
 
-    const { data: doctorsdata } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_name: values.mpo_name, mpo_area: values.visited_area })
+    const { data: doctorsdata } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_user_role_id, mpo_name: values.mpo_name, mpo_area: values.visited_area })
 
     const doctors = useMemo(() => {
         if (doctorsdata !== undefined) {
@@ -107,8 +107,8 @@ const EditDCR = ({ idharu, onClose }) => {
         return [];
     }, [doctorsdata])
 
-    const MpoArea = useGetAllCompanyAreasQuery(company_id, {
-        skip: !company_id
+    const MpoArea = useGetAllCompanyAreasQuery(company_user_role_id, {
+        skip: !company_user_role_id
     });
 
     const areas = useMemo(() => {

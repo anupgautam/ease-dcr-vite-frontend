@@ -71,7 +71,7 @@ const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
         setIsDrawerOpen(false);
     }, []);
 
-    const FilteredData = { company_name: company_id, user_id: user_role === "admin" ? selectedUser : company_user_id, month: selectedMonth, date: selectedDate }
+    const FilteredData = { company_name: company_id, user_id: user_role === "admin" ? selectedUser : company_user_role_id, month: selectedMonth, date: selectedDate }
 
     //! Search Results 
     const results = useSearchStockistsDCRQuery(FilteredData);

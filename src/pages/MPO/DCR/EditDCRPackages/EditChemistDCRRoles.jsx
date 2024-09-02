@@ -12,6 +12,8 @@ import { usePostHigherLevelExecutiveGetDataMutation } from '@/api/CompanySlices/
 
 
 const EditChemistDCRRoles = ({ id, context, editApi, mpoId }) => {
+  const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   const mpo_id = useSelector(state => state.dcrData.selected_user);
   const [companyRoles, setCompanyRoles] = useState([]);

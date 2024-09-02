@@ -33,7 +33,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                     method: 'GET',
                 };
             },
-            providesTags: ['Tourplan'],
+            providesTags: ['Tourplan','Doctor'],
             invalidatesTags: ['Tourplan']
         }),
 

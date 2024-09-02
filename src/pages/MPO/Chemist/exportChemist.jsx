@@ -7,7 +7,7 @@ import ExportToExcel from "@/reusable/utils/exportSheet";
 import { useSelector } from 'react-redux';
 
 const ExportChemist = () => {
-    const { company_user_role_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_user_role_id, user_role, company_user_id, company_id } = useSelector((state) => state.cookie);
 
     const [MpoData] = usePostAllMPONamesNoPageMutation();
     const [mpoName, setMPOName] = useState('');
@@ -49,15 +49,15 @@ const ExportChemist = () => {
     }))
 
     useEffect(() => {
-        if (company_user_role_id) {
-            MpoData({ company_name: company_user_role_id })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [company_user_role_id])
+    }, [company_id])
 
     const handleMPONameChange = (event, value) => {
         setMPOName(value)

@@ -13,12 +13,14 @@ import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
 import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
 
 const EditChemistDCRProducts = ({ id, context, editApi }) => {
+  const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   const mpo_id = useSelector(state => state.dcrData.selected_user);
   const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
     skip: !mpo_id
   });
-  const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: mpoArea?.division_name })
+  const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_user_role_id, division_name: mpoArea?.division_name })
 
   const companyProducts = useMemo(() => {
     if (productData !== undefined) {

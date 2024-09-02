@@ -29,7 +29,7 @@ import {
     useDeleteHODCRsByIdMutation,
 } from '@/api/HighOrderSlices/hoDCRSlice';
 import { addSelectedUser } from '@/reducers/dcrSelectData';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import moment from 'moment';
 
@@ -43,6 +43,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultHODCR = () => {
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
     //! For drawer 
@@ -85,7 +86,7 @@ const DefaultHODCR = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetHODCRsQuery({ page: page, id: company_id });
+    const { data } = useGetHODCRsQuery({ page: page, id: company_user_role_id });
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteHODCRsByIdMutation();

@@ -33,9 +33,9 @@ export const DoctorSlice = apiSlice.injectEndpoints({
                     method: 'POST',
                     body: page
                 }),
-            providesTags: (result, error, arg) =>
+            InvalidatesTags: (result, error, arg) =>
                 [
-                    'Doctor'
+                    'Doctor', 'Chemist'
                 ]
         }),
 

@@ -52,7 +52,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_role_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -82,13 +82,13 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
 
     const hoTourPlan = useGetHOTourPlansByUserIdQuery(
         {
-            user_id: user_role !== "admin" ? company_user_id : selectedUser,
+            user_id: user_role !== "admin" ? company_user_role_id : selectedUser,
             month: selectedMonth,
             date: selectedDate,
             page: page,
             company_name: company_id
         }, {
-        skip: !selectedMonth || !selectedDate || !page || !company_id || !selectedUser
+        skip: !selectedMonth || !selectedDate || !page || !company_id || !selectedUser||!company_user_role_id
     });
 
     const [deleteTourPlan] = useDeleteHOTourPlansByIdMutation()

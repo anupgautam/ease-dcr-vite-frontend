@@ -36,13 +36,13 @@ const TABLE_HEAD = [
 
 //! Add DCR For Chemist Component
 const AddDCRforChemist = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const location = useLocation();
     const id = new URLSearchParams(window.location.search).get('id');
     // 
 
-    const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_id);
+    const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_role_id);
     const [updateDcr] = useUpdateDcrForChemistValuesMutation();
     const [createMpoDcr] = useCreateMpoShiftWiseDcrForChemistMutation();
     const [DcrForChemist] = useCreateDcrForChemistWithNullValuesMutation();
@@ -185,7 +185,7 @@ const AddDCRforChemist = () => {
     )
 
 
-    const chemists = useGetAllVisitedMpoWiseChemistQuery({ company_name: company_id, mpo_area: values.visited_area, mpo_name: company_user_id });
+    const chemists = useGetAllVisitedMpoWiseChemistQuery({ company_name: company_id, mpo_area: values.visited_area, mpo_name: company_user_role_id });
 
     const chemistOptions = useMemo(() => {
         if (chemists !== undefined) {
@@ -199,7 +199,7 @@ const AddDCRforChemist = () => {
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
     useEffect(() => {
-        executiveUsers({ id: company_user_id })
+        executiveUsers({ id: company_user_role_id })
             .then(res => {
                 if (res.data) {
                     const executive = [];
@@ -316,7 +316,7 @@ const AddDCRforChemist = () => {
                     sendingData['shift'] = null;
                 }
                 const mpoShiftData = {
-                    mpo_name: company_user_id,
+                    mpo_name: company_user_role_id,
                     shift: allData.shift,
                     dcr_id: allData.id,
                 };

@@ -14,12 +14,12 @@ import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/produ
 import { useSelector } from 'react-redux';
 
 const EditStockistDCRProducts = ({ id, context, editApi, division }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
     const [postData, setPostData] = useState({});
     // const companyProducts = useSelector(state => state.dcrData.company_products);
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division })
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_user_role_id, division_name: division })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {

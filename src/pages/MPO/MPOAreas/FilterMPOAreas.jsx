@@ -175,7 +175,9 @@ const FilterMPOAreas = () => {
     useEffect(() => {
         if (companyId || selectedOption || CompanyAreaId) {
 
-            searchMPOArea(FilteredData)
+            searchMPOArea(FilteredData, {
+                skip: !companyId || !selectedOption || !CompanyAreaId
+            })
         }
     }, [companyId, selectedOption, CompanyAreaId])
 

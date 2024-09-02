@@ -39,7 +39,6 @@ const TABLE_HEAD = [
     { id: '' },
 ];
 
-
 const DefaultList = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 

@@ -35,7 +35,7 @@ import { useGetAllVisitedMpoWiseChemistQuery } from '@/api/MPOSlices/doctorApiSl
 
 
 const EditChemistDCR = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const [noLoop, setNoLoop] = useState(true);
     const [initialShift, setInitialShift] = useState("");
@@ -104,8 +104,8 @@ const EditChemistDCR = ({ idharu, onClose }) => {
 
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: mpo_id }, {
-        skip: !company_id || !mpo_id
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_user_role_id, mpo_name: mpo_id }, {
+        skip: !company_user_role_id || !mpo_id
     });
 
     const areas = useMemo(() => {
@@ -115,7 +115,7 @@ const EditChemistDCR = ({ idharu, onClose }) => {
         return [];
     }, [MpoArea])
 
-    const { data: chemistData } = useGetAllVisitedMpoWiseChemistQuery({ company_name: company_id, mpo_name: mpo_id, mpo_area: values.visited_area })
+    const { data: chemistData } = useGetAllVisitedMpoWiseChemistQuery({ company_name: company_user_role_id, mpo_name: mpo_id, mpo_area: values.visited_area })
 
     const chemists = useMemo(() => {
         if (chemistData !== undefined) {

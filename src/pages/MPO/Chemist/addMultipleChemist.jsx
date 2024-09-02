@@ -183,9 +183,9 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
         chemist_category: "",
         chemist_pan_number: "",
         chemist_contact_person: "",
-        mpo_name: user_role === 'MPO' ? company_user_id : "",
+        mpo_name: user_role === 'MPO' ? company_user_role_id : "",
         chemist_territory: "",
-        company_user_role_id: company_user_role_id,
+        company_id: company_id,
         is_investment: false,
     })
 
@@ -205,8 +205,8 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
 
     const mpoAreaData = [];
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? Formdata.mpo_name : company_user_id }, {
-        skip: !company_id || !user_role || !company_user_id || !Formdata.mpo_name
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? Formdata.mpo_name : company_user_role_id }, {
+        skip: !company_id || !user_role || !company_user_role_id || !Formdata.mpo_name
     });
 
     if (MpoArea?.data) {

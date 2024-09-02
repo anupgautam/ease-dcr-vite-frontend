@@ -39,8 +39,8 @@ const AddAsignStockist = () => {
     const [selectedDates, setSelectedDates] = useState(today);
 
 
-    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id, {
-        skip: !company_id
+    const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_user_role_id, {
+        skip: !company_user_role_id
     });
 
     const companyAreaData = [];
@@ -97,7 +97,7 @@ const AddAsignStockist = () => {
         validate();
     }, [values.mpo_name, RewardOptions])
 
-    const { data } = useGetAllStockistsQuery({ id: company_id, page: 1, company_area: values.company_area });
+    const { data } = useGetAllStockistsQuery({ id: company_user_role_id, page: 1, company_area: values.company_area });
 
     const stockistData = useMemo(() => {
         if (data !== undefined) {
