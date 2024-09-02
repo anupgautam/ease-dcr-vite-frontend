@@ -15,7 +15,7 @@ import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { usePostAllMPONamesNoPageMutation } from '@/api/MPOSlices/DoctorSlice';
 import { useGetShiftsQuery } from '@/api/DCRs Api Slice/TourPlanApiSlice';
-import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '@/api/MPOSlices/UserSlice';
+import { useGetUsersByCompanyRoleIdExecutativeLevelQuery,usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
 import {
     useAddHigherOrderDcrMutation,
     useCreateDcrForChemistWithNullValuesMutation,
@@ -47,7 +47,7 @@ const AddDcrForHo = () => {
         return [];
     }, [ShiftData])
 
-    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_role_id })
+    const mpoAccordingToExecutiveLevel = usePostUserIdToGetLowerLevelExecutiveMutation( company_user_role_id )
 
     const executiveLevelOptions = useMemo(() => {
         if (mpoAccordingToExecutiveLevel) {

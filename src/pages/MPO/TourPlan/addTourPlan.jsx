@@ -28,7 +28,8 @@ import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from '@/api/MPOSlices/tourPlan&Dcr';
-import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '@/api/MPOSlices/UserSlice';
+import {  usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
+
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import {
@@ -37,7 +38,7 @@ import {
 
 
 const AddTourPlan = () => {
-    const { company_id, user_role, company_user_id,company_user_role_id, role } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id, role } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -81,8 +82,8 @@ const AddTourPlan = () => {
         return []
     }, [ShiftData])
 
-    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_role_id }, {
-        skip: !company_id || !company_user_role_id
+    const mpoAccordingToExecutiveLevel = usePostUserIdToGetLowerLevelExecutiveMutation(company_user_role_id, {
+        skip:!company_user_role_id
     })
 
     const executiveLevelOptions = useMemo(() => {
@@ -94,6 +95,7 @@ const AddTourPlan = () => {
         return [];
     }, [mpoAccordingToExecutiveLevel])
 
+    console.log(mpoAccordingToExecutiveLevel)
 
     const today = NepaliDateConverter.getNepaliDate();
 
@@ -558,7 +560,7 @@ const AddTourPlan = () => {
 }
 
 const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
-    const { company_id, user_role, company_user_id, company_user_role_id,role } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id, role } = useSelector((state) => state.cookie);
 
     const [visitData, setVisitData] = useState([]);
 

@@ -15,8 +15,7 @@ const NewLogin = () => {
             <h1 className=" font-bold text-xl lg:text-3xl">Ease SFA</h1>
             <p className="mt-1.5">
               {" "}
-              Cupidatat nisi officia nostrud nostrud veniam proident sit anim
-              minim officia. Pariatur fugiat et voluptate ea.
+              Prescribe Success. Empower Your Medical Sales Force.
             </p>
           </section>
         </div>
