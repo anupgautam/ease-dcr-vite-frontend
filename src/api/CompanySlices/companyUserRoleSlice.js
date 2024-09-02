@@ -24,6 +24,16 @@ export const CompanyUserRoleSlice = apiSlice.injectEndpoints({
                 ]
         }),
 
+        //! GET users by id
+        getCompanyUserById: builder.query(
+            {
+                query: (id) => (
+                    {
+                        url: `user/company-user-role-without-pagination/${id}/`,
+                        method: 'GET'
+                    }),
+                providesTags: ['User']
+            }),
         //! GET all the users
         getAllDefaultUsers: builder.query({
             query: (page) => ({
@@ -220,6 +230,7 @@ export const {
     usePostHigherLevelExecutiveGetDataMutation,
     useGetAllDefaultUsersQuery,
     useGetExecutiveLevelUsersQuery,
+    useGetCompanyUserByIdQuery
 } = CompanyUserRoleSlice
 
 //! returns the query result object

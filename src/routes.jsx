@@ -69,6 +69,7 @@ import DCRDetail from './pages/MPO/DCR/DCRDetail';
 import DCRChemistDetail from './pages/MPO/DCR/DCRChemistDetail';
 import DCRStockistDetail from './pages/MPO/DCR/DCRStockistDetail';
 import DCRHODetail from './pages/MPO/DCR/DCRHODetail';
+import AddMultipleUser from './pages/MPO/User/addMultipleUser';
 
 export default function Router() {
   const routes = useRoutes([
@@ -108,7 +109,10 @@ export default function Router() {
           path: 'admin/listofuser',
           element: <Authentication component={ListofUserController} allowRoles={['admin']} />,
         },
-
+        {
+          path: 'admin/add/multiple/user',
+          element: <Authentication component={AddMultipleUser} allowRoles={['admin']} />,
+        },
         // //!  Company
         {
           path: 'admin/listofdoctor',

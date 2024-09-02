@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import { Link } from 'react-router-dom';
 import {
     Box,
     Typography,
@@ -35,6 +36,8 @@ import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 const AddUser = () => {
 
     const { company_id } = useSelector((state) => state.cookie);
+
+    const [MultipleUser, setAddMultipleUser] = useState(false);
 
     //! Get user roles
     const { data, isSuccess, } = useGetUsersRoleQuery(company_id, {
@@ -157,7 +160,7 @@ const AddUser = () => {
     ]
 
 
-    //! Create Chemist
+    //! Create User
     const [createUsers] = useCreateUsersMutation()
 
     const initialFValues = {
@@ -268,6 +271,10 @@ const AddUser = () => {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+    const addMultipleUser = () => {
+        setAddMultipleUser(!MultipleUser);
+    };
+
     return (
         <>
             <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsDrawerOpen(true)} >
@@ -307,180 +314,217 @@ const AddUser = () => {
 
                     </Box>
 
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
+                    {MultipleUser === true ? (<>
+                        <Box marginBottom={2}>
+                            <Controls.Input
+                                id="autoFocus"
+                                name="no_of_users"
+                                label="Number of Users*"
+                                value={values.no_of_users}
+                                onChange={handleInputChange}
+                                autoFocus
+                            />
+                        </Box>
+                        <Stack spacing={1} direction="row">
+                            <Link to={`/dashboard/admin/add/multiple/user?number=${values.no_of_users}`}>
+                                <Button variant="contained" className="summit-button">
+                                    Submit{' '}
+                                </Button>
+                            </Link>
+                            <Button variant="outlined" className="cancel-button" onClick={() => setIsDrawerOpen(false)}>
+                                Cancel
+                            </Button>
+                        </Stack>
+                    </>
+                    ) : (
+                        <>
+                            <Box marginBottom={4}>
+                                <Button
+                                    variant="contained"
+                                    className="summit-button"
+                                    style={{ width: '100%', padding: '10px' }}
+                                    onClick={addMultipleUser}
+                                >
+                                    Add Multiple User
+                                </Button>
+                            </Box>
+                            <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                    <Box marginBottom={2}>
+                                        <Controls.Input
+                                            id="autoFocus"
+                                            autoFocus
+                                            name="first_name"
+                                            label="First name*"
+                                            value={values.name}
+                                            onChange={handleInputChange}
+                                            error={errors.first_name}
+                                        />
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Box marginBottom={2}>
+                                        <Controls.Input
+                                            name="middle_name"
+                                            label="Middle name"
+                                            value={values.name}
+                                            onChange={handleInputChange}
+                                            error={errors.middle_name}
+                                        />
+                                    </Box>
+                                </Grid>
+                            </Grid>
                             <Box marginBottom={2}>
                                 <Controls.Input
-                                    id="autoFocus"
-                                    autoFocus
-                                    name="first_name"
-                                    label="First name*"
+                                    name="last_name"
+                                    label="Last name*"
                                     value={values.name}
                                     onChange={handleInputChange}
-                                    error={errors.first_name}
+                                    error={errors.last_name}
                                 />
                             </Box>
-                        </Grid>
-                        <Grid item xs={6}>
                             <Box marginBottom={2}>
                                 <Controls.Input
-                                    name="middle_name"
-                                    label="Middle name*"
+                                    name="email"
+                                    label="Email*"
                                     value={values.name}
                                     onChange={handleInputChange}
-                                    error={errors.middle_name}
+                                    error={errors.email}
                                 />
                             </Box>
-                        </Grid>
-                    </Grid>
-                    <Box marginBottom={2}>
-                        <Controls.Input
-                            name="last_name"
-                            label="Last name*"
-                            value={values.name}
-                            onChange={handleInputChange}
-                            error={errors.last_name}
-                        />
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Input
-                            name="email"
-                            label="Email*"
-                            value={values.name}
-                            onChange={handleInputChange}
-                            error={errors.email}
-                        />
-                    </Box>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
                             <Box marginBottom={2}>
-                                <Controls.Input
-                                    name="address"
-                                    label="Address*"
-                                    value={values.name}
-                                    onChange={handleInputChange}
-                                    error={errors.address}
-                                />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box marginBottom={2}>
-                                <Controls.Input
-                                    name="phone_number"
-                                    label="Contact Number*"
-                                    value={values.name}
-                                    onChange={handleInputChange}
-                                    error={errors.phone_number}
-                                />
-                            </Box>
-                        </Grid>
-                    </Grid>
+                                <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Date of Joining*</label><br />
 
-                    <Box marginBottom={2}>
-                        <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Date of Joining*</label><br />
+                                <NepaliDatePicker
+                                    value={dateData}
+                                    format="YYYY-MM-DD"
+                                    onChange={(value) => setDateData(value)} />
+                            </Box>
+                            <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                    <Box marginBottom={2}>
+                                        <Controls.Input
+                                            name="address"
+                                            label="Address*"
+                                            value={values.name}
+                                            onChange={handleInputChange}
+                                            error={errors.address}
+                                        />
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Box marginBottom={2}>
+                                        <Controls.Input
+                                            name="phone_number"
+                                            label="Contact Number*"
+                                            value={values.name}
+                                            onChange={handleInputChange}
+                                            error={errors.phone_number}
+                                        />
+                                    </Box>
+                                </Grid>
+                            </Grid>
 
-                        <NepaliDatePicker
-                            value={dateData}
-                            format="YYYY-MM-DD"
-                            onChange={(value) => setDateData(value)} />
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Select
-                            name="role_name"
-                            label="Role Name*"
-                            className={"drawer-role-name-select"}
-                            value={values.name}
-                            onChange={handleInputChange}
-                            options={rolesharu}
-                            error={errors.role_name}
-                        />
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Select
-                            name="executive_level"
-                            label="Executive Level*"
-                            className={"drawer-role-name-select"}
-                            value={values.name}
-                            onChange={handleInputChange}
-                            options={executiveLevels}
-                            error={errors.executive_level}
-                        />
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Select
-                            name="division_name"
-                            label="Division*"
-                            className={"drawer-role-name-select"}
-                            value={values.name}
-                            onChange={handleInputChange}
-                            error={errors.division_name}
-                            options={divisionList}
-                        />
-                        {/* <Autocomplete
-                            multiple
-                            options={divisionList}
-                            getOptionLabel={(option) => option.title}
-                            onChange={handleMultipleDivision}
-                            renderInput={(params) => (
-                                <TextField {...params} label="Division*" />
-                            )}
-                            renderOption={(props, option) => (
-                                <li {...props} key={option.id}>
-                                    {option.title}
-                                </li>
-                            )}
-                        /> */}
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Select
-                            name="company_area"
-                            label="Company Wise Area*"
-                            className={"drawer-role-name-select"}
-                            value={values.name}
-                            onChange={handleInputChange}
-                            error={errors.company_area}
-                            options={companyAreas}
-                        />
-                        {/* <Autocomplete
-                            multiple
-                            options={companyAreas}
-                            getOptionLabel={(option) => option.title}
-                            onChange={handleMultipleCompanyAreas}
-                            renderInput={(params) => (
-                                <TextField {...params} label="Company Areas" />
-                            )}
-                            renderOption={(props, option) => (
-                                <li {...props} key={option.id}>
-                                    {option.title}
-                                </li>
-                            )}
-                        /> */}
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Input
-                            name="station_type"
-                            label="Station Type*"
-                            className={"drawer-role-name-select"}
-                            value={values.name}
-                            onChange={handleInputChange}
-                            error={errors.station_type}
-                        />
-                    </Box>
-                    <Stack spacing={1} direction="row">
-                        <Controls.SubmitButton
-                            variant="contained"
-                            className="submit-button"
-                            onClick={(e) => onAddUsers(e)}
-                            text="Submit"
-                        />
-                        <Button
-                            variant="outlined"
-                            className="cancel-button"
-                            onClick={() => setIsDrawerOpen(false)}
-                        >
-                            Cancel
-                        </Button>
-                    </Stack>
+
+                            <Box marginBottom={2}>
+                                <Controls.Select
+                                    name="role_name"
+                                    label="Role Name*"
+                                    className={"drawer-role-name-select"}
+                                    value={values.name}
+                                    onChange={handleInputChange}
+                                    options={rolesharu}
+                                    error={errors.role_name}
+                                />
+                            </Box>
+                            <Box marginBottom={2}>
+                                <Controls.Select
+                                    name="executive_level"
+                                    label="Executive Level*"
+                                    className={"drawer-role-name-select"}
+                                    value={values.name}
+                                    onChange={handleInputChange}
+                                    options={executiveLevels}
+                                    error={errors.executive_level}
+                                />
+                            </Box>
+                            <Box marginBottom={2}>
+                                <Controls.Select
+                                    name="division_name"
+                                    label="Division*"
+                                    className={"drawer-role-name-select"}
+                                    value={values.name}
+                                    onChange={handleInputChange}
+                                    error={errors.division_name}
+                                    options={divisionList}
+                                />
+                                {/* <Autocomplete
+                                    multiple
+                                    options={divisionList}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleMultipleDivision}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Division*" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                /> */}
+                            </Box>
+                            <Box marginBottom={2}>
+                                <Controls.Select
+                                    name="company_area"
+                                    label="Company Wise Area*"
+                                    className={"drawer-role-name-select"}
+                                    value={values.name}
+                                    onChange={handleInputChange}
+                                    error={errors.company_area}
+                                    options={companyAreas}
+                                />
+                                {/* <Autocomplete
+                                    multiple
+                                    options={companyAreas}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleMultipleCompanyAreas}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Company Areas" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                /> */}
+                            </Box>
+                            <Box marginBottom={2}>
+                                <Controls.Input
+                                    name="station_type"
+                                    label="Station Type*"
+                                    className={"drawer-role-name-select"}
+                                    value={values.name}
+                                    onChange={handleInputChange}
+                                    error={errors.station_type}
+                                />
+                            </Box>
+                            <Stack spacing={1} direction="row">
+                                <Controls.SubmitButton
+                                    variant="contained"
+                                    className="submit-button"
+                                    onClick={(e) => onAddUsers(e)}
+                                    text="Submit"
+                                />
+                                <Button
+                                    variant="outlined"
+                                    className="cancel-button"
+                                    onClick={() => setIsDrawerOpen(false)}
+                                >
+                                    Cancel
+                                </Button>
+                            </Stack>
+                        </>
+                    )}
                 </Box>
             </Drawer>
             {loading && (
