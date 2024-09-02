@@ -16,6 +16,7 @@ import { useGetRewardsByIdQuery } from '../../../api/MPOSlices/rewardsApiSlice';
 
 import { useGetRewardsByDcrIdQuery } from '../../../api/DCRs Api Slice/rewardsAPISlice';
 import { useGetVisitedWithByDcrIdQuery } from '../../../api/MPOSlices/companyRolesSlice';
+import { useGetUsersByCompanyUserByIdQuery } from '../../../api/MPOSlices/UserSlice';
 ;
 
 const DCRDetail = () => {
@@ -187,12 +188,13 @@ const VisitedWith = ({ id }) => {
 }
 
 const VisitedWithById = ({ id }) => {
-    const { data } = useGetcompanyUserRolesByIdQuery(id);
+    const { data } = useGetUsersByCompanyUserByIdQuery(id);
+    console.log('data', data);
     return (
         <>
             <Typography variant="body2" color="textSecondary">
-                Visited: {data.user_name.first_name + ' ' + data.user_name.middle_name + " " +
-                    data.user_name.last_name}
+                Visited: {data?.user_name?.first_name + ' ' + data?.user_name?.middle_name + " " +
+                    data?.user_name?.last_name}
             </Typography>
         </>
     )
