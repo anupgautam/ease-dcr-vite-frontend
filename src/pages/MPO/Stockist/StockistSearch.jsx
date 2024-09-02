@@ -55,7 +55,7 @@ const TABLE_HEAD = [
 ];
 
 const StockistSearch = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_area_id } = useSelector((state) => state.cookie);
 
     //! Get Company Area
     const Company_Areas = useGetAllCompanyAreasQuery(company_id, {
@@ -72,9 +72,13 @@ const StockistSearch = () => {
         return [];
     }, [Company_Areas]);
 
-    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: parseInt(company_id), company_area: user_role === "admin" ? companyArea : company_user_id }, {
-        skip: !company_id || !user_role || !company_user_id
-    });
+    const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: user_role === "admin" ? companyArea : company_area_id },
+        // {
+        //     skip: company_id || user_role
+        // }
+    );
+
+    console.log("StockistData", StockistData);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

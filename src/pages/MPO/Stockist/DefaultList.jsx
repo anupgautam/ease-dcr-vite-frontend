@@ -58,9 +58,9 @@ const DefaultList = () => {
             page: page,
             company_area: user_role === 'admin' ? "" : CompanyAreaId?.company_area?.id
         },
-        {
-            skip: !CompanyAreaId // Skip the query until CompanyAreaId is available
-        }
+        // {
+        //     skip: !CompanyAreaId // Skip the query until CompanyAreaId is available
+        // }
     );
 
 
