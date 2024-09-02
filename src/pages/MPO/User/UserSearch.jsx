@@ -585,36 +585,86 @@ const UserSearch = () => {
                                 )}
                               </TableCell>
                               <TableCell align="left">
-                                <Link
-                                  to={`/dashboard/admin/locked/user?id=${usersearch.id}&role=${usersearch?.role_name?.role_name?.role_name}`}
-                                >
-                                  <Button>Locked</Button>
-                                </Link>
+                                {usersearch.is_tp_locked === false ? (
+                                  <>
+                                    <IconButton
+                                      color={'primary'}
+                                      sx={{ width: 40, height: 40, mt: 0.75 }}
+                                      onClick={() => { setSelectedId(usersearch.id); handleClickOpen(usersearch.id); }}
+                                    >
+                                      <Badge>
+                                        <Iconify icon="dashicons:unlock" />
+                                      </Badge>
+                                    </IconButton>
+                                  </>
+                                ) : (
+                                  <>
+                                    <IconButton
+                                      color={'error'}
+                                      sx={{ width: 40, height: 40, mt: 0.75 }}
+                                      onClick={() => { setSelectedId(usersearch.id); handleClickOpen(usersearch.id); }}
+                                    >
+                                      <Badge>
+                                        <Iconify icon="material-symbols:lock" />
+                                      </Badge>
+                                    </IconButton>
+                                    <Dialog
+                                      fullScreen={fullScreen}
+                                      open={openDialogues[usersearch.id] || false}
+                                      onClose={() => handleClose(usersearch.id)}
+                                      aria-labelledby="responsive-dialog-title"
+                                    >
+                                      <DialogTitle id="responsive-dialog-title">
+                                        {"Do you want to unlock this usersearch?"}
+                                      </DialogTitle>
+                                      <DialogActions>
+                                        <Button
+                                          autoFocus
+                                          onClick={() => usersearchLocks({ usersearchId: usersearch.id, isTpLocked: usersearch.is_tp_locked })}
+                                        >
+                                          Yes
+                                        </Button>
+                                        <Button
+                                          onClick={() => handleClose(usersearch.id)}
+                                          autoFocus
+                                        >
+                                          No
+                                        </Button>
+                                      </DialogActions>
+                                    </Dialog>
+                                  </>
+                                )}
                               </TableCell>
-                              {/* //! Edit  */}
                               <TableCell align="left">
+                                {/* //!User Login */}
+                                {usersearch?.user_name?.is_admin === false ? <>
+                                  <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => UserLogin(usersearch)}>
+                                    <Badge>
+                                      <Iconify icon="ic:sharp-login" />
+                                    </Badge>
+                                  </IconButton>
+                                </> : <></>}
                                 <IconButton
                                   color={"primary"}
                                   sx={{ width: 40, height: 40, mt: 0.75 }}
-                                  onClick={(e) => onEdit(usersearch?.id)}
+                                  onClick={(e) => onEdit(usersearch.id)}
                                 >
                                   <Badge>
                                     <Iconify icon="eva:edit-fill" />
                                   </Badge>
                                 </IconButton>
-                                {/* //! Delete  */}
-                                <IconButton
-                                  color={"error"}
-                                  sx={{ width: 40, height: 40, mt: 0.75 }}
-                                  onClick={() => {
-                                    setSelectedId(usersearch?.id);
-                                    handleClickOpen();
-                                  }}
-                                >
-                                  <Badge>
-                                    <Iconify icon="eva:trash-2-outline" />
-                                  </Badge>
-                                </IconButton>
+                                {/* <IconButton
+                                    color={"error"}
+                                    sx={{ width: 40, height: 40, mt: 0.75 }}
+                                    onClick={() => {
+                                      setSelectedId(usersearch.id);
+                                      handleClickOpen();
+                                    }}
+                                  >
+                                    <Badge>
+                                      <Iconify icon="eva:trash-2-outline" />
+                                    </Badge>
+                                  </IconButton> */}
                               </TableCell>
                               <Dialog
                                 fullScreen={fullScreen}
@@ -657,9 +707,7 @@ const UserSearch = () => {
                                   onChange={handleChangePage}
                                 />
                               ) : (
-                                <Typography variant="body1">
-                                  In Search
-                                </Typography>
+                                <></>
                               )}
                             </Box>
                           </TableCell>

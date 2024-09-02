@@ -10,7 +10,7 @@ import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Icon } from '@iconify/react';
-import { useGetUsersByIdQuery } from '../../../../api/MPOSlices/UserSlice'
+import { useGetCompanyUserByIdQuery } from '../../../../api/CompanySlices/companyUserRoleSlice';
 import { useDispatch } from 'react-redux';
 import { clearCookie } from '../../../../reducers/cookieReducer';
 
@@ -97,7 +97,7 @@ export default function AccountPopover() {
   const handleCloseDialogue = () => {
     setOpenDialogue(false)
   }
-  const userName = useGetUsersByIdQuery(Cookies.get('company_user_role_id'), {
+  const userName = useGetCompanyUserByIdQuery(Cookies.get('company_user_role_id'), {
     skip: !Cookies.get('company_user_role_id')
   })
 
