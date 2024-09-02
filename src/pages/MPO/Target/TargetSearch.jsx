@@ -141,8 +141,8 @@ const TargetSearch = (props) => {
     // !on search
     const onSearch = (e) => {
         const searchQuery = e.target.value;
-        const company_id = company_id;
-        setSearchResults({ search: searchQuery, company_id })
+        const company = company_id;
+        setSearchResults({ search: searchQuery, company })
         searchTarget(searchResults);
         // 
     }
