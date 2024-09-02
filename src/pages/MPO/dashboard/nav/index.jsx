@@ -12,6 +12,7 @@ import OtherRoleConfig from './otherRoleConfig';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { setCookie } from '../../../../reducers/cookieReducer';
+import AsmConfig from './asmConfig';
 
 
 const NAV_WIDTH = 270;
@@ -108,6 +109,10 @@ export default function Nav({ openNav, onCloseNav }) {
       {
         user_role === "MPO" &&
         <NavSection data={MpoNavConfig} />
+      }
+      {
+        user_role === "ASM" &&
+        <NavSection data={AsmConfig} />
       }
       {
         user_role === "other-roles" &&

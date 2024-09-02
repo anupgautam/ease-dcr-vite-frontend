@@ -100,7 +100,7 @@ export default function Router() {
     },
     {
       path: '/dashboard',
-      element: <Authentication component={MPODashboardLayout} allowRoles={['admin', 'MPO', 'other-roles']} />,
+      element: <Authentication component={MPODashboardLayout} allowRoles={['admin', 'MPO', 'ASM', 'other-roles']} />,
       children: [
         {
           path: 'admin', element: <Authentication component={DashboardAppPage} allowRoles={['admin']} />
@@ -116,7 +116,7 @@ export default function Router() {
         // //!  Company
         {
           path: 'admin/listofdoctor',
-          element: <Authentication component={ListofDoctorController} allowRoles={['admin', 'MPO']} />,
+          element: <Authentication component={ListofDoctorController} allowRoles={['admin', 'MPO', 'ASM']} />,
         },
         {
           path: 'admin/add/mutiple/doctor',
@@ -124,7 +124,7 @@ export default function Router() {
         },
         {
           path: 'admin/listofchemist',
-          element: <Authentication component={ListofChemistController} allowRoles={['admin', 'MPO']} />,
+          element: <Authentication component={ListofChemistController} allowRoles={['admin', 'MPO', 'ASM']} />,
         },
         {
           path: 'admin/add/mutiple/chemist',
@@ -132,7 +132,7 @@ export default function Router() {
         },
         {
           path: 'admin/listofstockist',
-          element: <Authentication component={ListofStockistController} allowRoles={['admin', 'MPO']} />,
+          element: <Authentication component={ListofStockistController} allowRoles={['admin', 'MPO', 'ASM']} />,
         },
         {
           path: 'admin/add/mutiple/product',
@@ -148,23 +148,23 @@ export default function Router() {
         },
         {
           path: 'admin/my/executives',
-          element: <Authentication component={MyExecutives} allowRoles={['other-roles']} />,
+          element: <Authentication component={MyExecutives} allowRoles={['ASM','other-roles']} />,
         },
         {
           path: 'admin/my/executives/tp',
-          element: <Authentication component={MyExecutiveTp} allowRoles={['other-roles']} />,
+          element: <Authentication component={MyExecutiveTp} allowRoles={['ASM', 'other-roles']} />,
         },
         {
           path: 'admin/my/executives/dcr',
-          element: <Authentication component={MyExecutivesDcr} allowRoles={['other-roles']} />,
+          element: <Authentication component={MyExecutivesDcr} allowRoles={['ASM', 'other-roles']} />,
         },
         {
           path: 'admin/listofproduct',
-          element: <Authentication component={ListofProductController} allowRoles={['admin', 'MPO']} />,
+          element: <Authentication component={ListofProductController} allowRoles={['admin', 'MPO', 'ASM']} />,
         },
         {
           path: 'admin/tourplan',
-          element: <Authentication component={ListOfTourPlanController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+          element: <Authentication component={ListOfTourPlanController} allowRoles={['admin', 'MPO', 'ASM', 'other-roles']} />,
         },
         {
           path: 'admin/all/user/tourplan',
@@ -196,7 +196,7 @@ export default function Router() {
         },
         {
           path: 'admin/dcr',
-          element: <Authentication component={ListOfDCRController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+          element: <Authentication component={ListOfDCRController} allowRoles={['admin', 'MPO', , 'ASM', 'other-roles']} />,
         },
         {
           path: 'admin/missedcalls',
@@ -204,11 +204,11 @@ export default function Router() {
         },
         {
           path: 'admin/target',
-          element: <Authentication component={TargetController} allowRoles={['admin', 'other-roles']} />,
+          element: <Authentication component={TargetController} allowRoles={['admin', 'ASM','other-roles']} />,
         },
         {
           path: 'admin/application',
-          element: <Authentication component={ListofApplicationController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+          element: <Authentication component={ListofApplicationController} allowRoles={['admin', 'MPO', 'ASM','other-roles']} />,
         },
         {
           path: 'admin/upload',
@@ -216,7 +216,7 @@ export default function Router() {
         },
         {
           path: 'admin/mpoareas',
-          element: <Authentication component={ListOfMPOAreasController} allowRoles={['admin', 'MPO']} />,
+          element: <Authentication component={ListOfMPOAreasController} allowRoles={['admin', 'MPO','ASM']} />,
         },
 
         //! Sales

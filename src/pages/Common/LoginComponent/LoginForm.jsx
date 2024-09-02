@@ -99,12 +99,14 @@ const LoginFormInputs = () => {
                                 Cookies.set('user_role', 'admin');
                                 navigate('/dashboard/admin');
                                 dispatch(setCredentials({ ...res, email }));
-                            } else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
+                            }
+                            else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
                                 Cookies.set('user_role', 'MPO');
                                 navigate('/dashboard/admin/listofdoctor');
-                            } else if (res.data.role === 'ASM') {
-                                Cookies.set('user_role', 'other-roles');
-                                navigate('/dashboard/admin/tourplan');
+                            }
+                            else if (res.data.role === 'ASM' || res.data.role === 'ASM') {
+                                Cookies.set('user_role', 'ASM');
+                                navigate('/dashboard/admin/listofdoctor');
                             } else if (
                                 res.data.role === 'RSM'
                                 || res.data.role === 'SM'
