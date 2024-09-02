@@ -96,7 +96,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
             {
                 query: (id) => (
                     {
-                        url: `user/company-user-role-without-pagination/?company_name__company_id=${id.id}&executive_level=${id.page}&user_name__is_active=true`,
+                        // url: `user/company-user-role-without-pagination/?company_name__company_id=${id.id}&executive_level=${id.page}&user_name__is_active=true`,
+                        url: `user/get-all-lower-level-users-from-company-user-role-id/?company_name__company_id=${id.id}&executive_level=${id.page}&user_name__is_active=true`,
                         method: 'GET'
                     }),
                 providesTags: ['User']
@@ -132,7 +133,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
             },
             invalidatesTags: ['User']
         }),
-
+        //! Post to Get Lower Level Executive Level 
+        postUserIdToGetLowerLevelExecutive: builder.mutation({
+            query: (value) => {
+                return {
+                    url: 'user/get-all-lower-level-users-from-company-user-role-id/',
+                    method: 'POST',
+                    body: value,
+                }
+            },
+            invalidatesTags: ['User'],
+        }),
         //! POST users 
         createUsers: builder.mutation({
             query: (createUsers) => {
@@ -242,6 +253,7 @@ export const {
     useGetUsersByHigherLevelUserQuery,
     useGetUsersByCompanyUserByIdQuery,
     useLoginUserByAdminMutation,
+    usePostUserIdToGetLowerLevelExecutiveMutation,
 } = userApiSlice
 
 

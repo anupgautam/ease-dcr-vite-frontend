@@ -82,13 +82,13 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
 
     const hoTourPlan = useGetHOTourPlansByUserIdQuery(
         {
-            user_id: user_role !== "admin" ? company_user_role_id : selectedUser,
+            user_id: user_role !== "admin" ? company_user_id : selectedUser,
             month: selectedMonth,
             date: selectedDate,
             page: page,
             company_name: company_id
         }, {
-        skip: !selectedMonth || !selectedDate || !page || !company_id || !selectedUser||!company_user_role_id
+        skip: !selectedMonth || !selectedDate || !page || !company_id || !selectedUser || !company_user_id
     });
 
     const [deleteTourPlan] = useDeleteHOTourPlansByIdMutation()

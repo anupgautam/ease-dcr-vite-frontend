@@ -17,7 +17,7 @@ import {
     useUpdateHODCRsMutation,
 } from '@/api/HighOrderSlices/hoDCRSlice';
 import { useSelector } from 'react-redux';
-import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '@/api/MPOSlices/UserSlice';
+import { useGetUsersByCompanyRoleIdExecutativeLevelQuery,usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
 
 
 const EditHoDCR = ({ idharu, onClose }) => {
@@ -34,7 +34,7 @@ const EditHoDCR = ({ idharu, onClose }) => {
     //! Getting TourPlan by ID
     const DCRAll = useGetHODCRsByIdQuery(idharu);
 
-    const { data: userLists } = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_user_role_id, page: user_id })
+    const { data: userLists } = usePostUserIdToGetLowerLevelExecutiveMutation(company_user_role_id)
 
     useEffect(() => {
         const lower = [];

@@ -12,7 +12,7 @@ import { useForm } from '../../../reusable/forms/useForm'
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from "@/api/MPOSlices/tourPlan&Dcr";
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import moment from "moment";
-import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from "@/api/MPOSlices/UserSlice";
+import { useGetUsersByCompanyRoleIdExecutativeLevelQuery,usePostUserIdToGetLowerLevelExecutiveMutation } from "@/api/MPOSlices/UserSlice";
 import { useSelector } from 'react-redux';
 
 const AddUnplannedTp = () => {
@@ -33,8 +33,8 @@ const AddUnplannedTp = () => {
 
     const [selectedDates, setSelectedDates] = useState(today);
 
-    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_role_id }, {
-        skip: !company_id || !company_user_role_id
+    const mpoAccordingToExecutiveLevel = usePostUserIdToGetLowerLevelExecutiveMutation(company_user_role_id, {
+        skip:!company_user_role_id
     })
 
     const executiveLevelOptions = useMemo(() => {
