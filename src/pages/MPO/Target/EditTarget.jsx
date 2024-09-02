@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
     Box,
     Typography, Button, CircularProgress
@@ -18,25 +18,30 @@ import {
     useUpdateTargetsMutation
 } from '@/api/ExpensesSlices/targetSlices';
 import { useGetUpperCompanyRolesMutation } from '@/api/CompanySlices/companyUserRoleSlice';
+import { useGetExecutiveLevelUsersQuery } from '../../../api/CompanySlices/companyUserRoleSlice';
+import { useSelector } from 'react-redux';
+import { Grid } from 'react-loader-spinner';
 
 const EditTarget = ({ idharu, onClose }) => {
+    const { company_user_id } = useSelector((state) => state.cookie);
 
     //! Getting Stockist by ID
     const Target = useGetTargetsByIdQuery(idharu);
 
-    const [upperUser, setUpperUser] = useState([]);
+    // const [upperUser, setUpperUser] = useState([]);
 
-    const [upperCompany] = useGetUpperCompanyRolesMutation();
+    const { data: rolesData } = useGetExecutiveLevelUsersQuery(company_user_id);
+    console.log('rolesData', rolesData);
 
-    useEffect(() => {
-        const upper = [];
-        upperCompany(Target?.data?.target_to?.id).then((res) => {
-            res.data.forEach((key) => {
-                upper.push({ id: key.id, title: key.user_name.first_name + " " + key.user_name.last_name })
-            });
-            setUpperUser(upper);
-        })
-    }, [Target])
+    const upperUser = useMemo(() => {
+        if (rolesData !== undefined) {
+            return rolesData?.map((key) => ({
+                id: key.id,
+                title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
+            }))
+        }
+        return [];
+    }, [rolesData])
 
 
     //! Validation wala  
@@ -68,11 +73,14 @@ const EditTarget = ({ idharu, onClose }) => {
         sales: ""
     })
 
+    console.log("initialFValues", initialFValues);
+    console.log('Target', Target);
+
     useEffect(() => {
         if (Target.data) {
             setInitialFValues({
-                target_from: Target.data.target_from,
-                target_to: Target.data.target_to,
+                target_from: Target.data.target_from.id,
+                target_to: Target.data.target_to.id,
                 year: Target.data.year,
                 target_amount: Target.data.target_amount,
                 sales: Target.data.sales
@@ -184,7 +192,7 @@ const EditTarget = ({ idharu, onClose }) => {
                             <Controls.Select
                                 name="target_from"
                                 label="Target From*"
-                                value={values.target_from.id}
+                                value={values.target_from}
                                 onChange={handleInputChange}
                                 error={errors.target_from}
                                 options={upperUser}
