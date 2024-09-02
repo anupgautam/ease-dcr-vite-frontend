@@ -152,7 +152,7 @@ const DoctorSearch = () => {
     }, [])
 
     // ! Search Logic
-    const { data: DoctorData } = useGetAllDoctorByMpoAndMpoAreaQuery({ company_name: company_id, mpo_area: mpoArea, mpo_name: user_role === 'admin' ? mpoName : company_user_id, page: page })
+    const { data: DoctorData } = useGetAllDoctorByMpoAndMpoAreaQuery({ company_name: company_id, mpo_area: mpoArea, mpo_name: user_role === 'admin' ? mpoName : company_user_role_id, page: page })
 
     const [SearchData, setSearchData] = useState([]);
     const [SearchDataCondition, setSearchDataCondition] = useState(false);
@@ -309,6 +309,11 @@ const DoctorSearch = () => {
                                                                     <TableCell align="left">{doctorsearch?.doctor_name?.doctor_specialization?.category_name}</TableCell>
                                                                     <TableCell align="left">{doctorsearch?.doctor_name?.doctor_category}</TableCell>
                                                                     <TableCell align="left">
+                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(doctorsearch.id, doctorsearch.doctor_name.id)} >
+                                                                            <Badge>
+                                                                                <Iconify icon="eva:edit-fill" />
+                                                                            </Badge>
+                                                                        </IconButton>
                                                                         <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorsearch?.id); handleClickOpen() }}>
                                                                             <Badge>
                                                                                 <Iconify icon="eva:trash-2-outline" />

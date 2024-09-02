@@ -142,7 +142,7 @@ const AddMultipleMpoArea = () => {
 }
 
 const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
-    const { company_id, user_role, company_user_id, email } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_role_id, email } = useSelector((state) => state.cookie);
 
     const doctorcategories = [
         { id: "A", title: "A" },
@@ -191,7 +191,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
 
     const [Formdata, setFormData] = useState({
         area_name: "",
-        mpo_name: user_role === "admin" ? "" : company_user_id,
+        mpo_name: user_role === "admin" ? "" : company_user_role_id,
         station_type: "",
         company_area: "",
         company_name: company_id
@@ -213,8 +213,8 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         });
     };
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? Formdata.mpo_name : company_user_id }, {
-        skip: !company_id || !user_role || !company_user_id || !Formdata.mpo_name
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? Formdata.mpo_name : company_user_role_id }, {
+        skip: !company_id || !user_role || !company_user_role_id || !Formdata.mpo_name
     });
 
     const mpoAreaData = useMemo(() => {

@@ -14,11 +14,11 @@ import { useSelector } from 'react-redux';
 
 
 const EditDCRRewards = ({ id, context, editApi }) => {
-  const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+  const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const companyRewards = useSelector(state => state.dcrData.rewards);
-  const { data: rewardAllData } = useGetAllRewardsByCompanyIdQuery(company_id);
+  const { data: rewardAllData } = useGetAllRewardsByCompanyIdQuery(company_user_role_id);
   const { data: rewardDcr } = useGetRewardsByDcrIdQuery(id);
   const [DcrRewardPost] = usePostRewardForDcrMutation();
 

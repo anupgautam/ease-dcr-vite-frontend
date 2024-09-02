@@ -39,7 +39,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_role_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -81,9 +81,9 @@ const DefaultList = () => {
 
     // !Get Tour Plans
     const { data } = useAreaMPOQuery(
-        { company_name: company_id, mpo_name: user_role === 'admin' ? "" : company_user_id },
+        { company_name: company_id, mpo_name: user_role === 'admin' ? "" : company_user_role_id },
         {
-            skip: !company_id || !user_role || !company_user_id,
+            skip: !company_id || !user_role || !company_user_role_id,
         }
     );
 

@@ -45,7 +45,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultDoctorDCR = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
     //! For drawer 
@@ -88,7 +88,7 @@ const DefaultDoctorDCR = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetAllDataofDCRDoctorQuery({ page: page, id: company_id });
+    const { data } = useGetAllDataofDCRDoctorQuery({ page: page, id: company_user_role_id });
 
     const [deleteTourPlan] = useDeleteDoctorsDCRByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]

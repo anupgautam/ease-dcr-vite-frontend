@@ -16,7 +16,7 @@ import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/produ
 import { useSelector } from 'react-redux';
 
 const EditChemistDCROrderedProducts = ({ id, context, editApi }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
     const [updateClick, setUpdateClick] = useState(false);
@@ -25,7 +25,7 @@ const EditChemistDCROrderedProducts = ({ id, context, editApi }) => {
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
         skip: !mpo_id
     });
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: mpoArea?.division_name })
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_user_role_id, division_name: mpoArea?.division_name })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {

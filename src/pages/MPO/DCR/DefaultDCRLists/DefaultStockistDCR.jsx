@@ -44,7 +44,7 @@ const TABLE_HEAD = [
 
 const DefaultStockistDCR = () => {
 
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
     //! For drawer 
@@ -87,7 +87,7 @@ const DefaultStockistDCR = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetAllStockistsDCRQuery({ page: page, id: company_id });
+    const { data } = useGetAllStockistsDCRQuery({ page: page, id: company_user_role_id });
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteStockistsDCRByIdMutation();

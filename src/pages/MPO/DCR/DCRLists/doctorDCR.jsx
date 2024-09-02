@@ -50,7 +50,7 @@ const TABLE_HEAD = [
 
 const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
 
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
     //! For drawer 
@@ -76,7 +76,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
     // 
 
     //! onSearch
-    const FilteredData = { company_name: company_id, user_id: user_role === "admin" ? selectedUser : company_user_id, month: user_role === "admin" ? "" : selectedMonth, date: user_role === "admin" ? "" : selectedDate, fullDate: user_role === "admin" ? dateOnly : "" }
+    const FilteredData = { company_name: company_id, user_id: user_role === "admin" ? selectedUser : company_user_role_id, month: user_role === "admin" ? "" : selectedMonth, date: user_role === "admin" ? "" : selectedDate, fullDate: user_role === "admin" ? dateOnly : "" }
 
     //! Search Results 
     const results = useSearchDoctorsDCRQuery(FilteredData);

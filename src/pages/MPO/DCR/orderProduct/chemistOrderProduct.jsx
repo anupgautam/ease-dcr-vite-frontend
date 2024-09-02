@@ -27,12 +27,12 @@ import { useGetStockistsByCompanyAreaQuery } from '@/api/MPOSlices/StockistSlice
 
 
 const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) => {
-    const { company_id, user_role, company_user_id, company_area_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_area_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const [updateDcr] = useUpdateDcrForChemistValuesMutation();
 
-    const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
-        skip: !company_id
+    const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_user_role_id, {
+        skip: !company_user_role_id
     })
 
     useEffect(() => {
@@ -56,8 +56,8 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
     }, [productData])
 
 
-    const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: company_area_id }, {
-        skip: !company_id || !company_area_id
+    const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: company_user_role_id, company_area: company_area_id }, {
+        skip: !company_user_role_id || !company_area_id
     })
 
 

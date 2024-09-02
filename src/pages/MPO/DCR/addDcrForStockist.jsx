@@ -20,12 +20,12 @@ import StockistOrderedProduct from "./orderProduct/stockistOrderProduct";
 import { useSelector } from 'react-redux';
 
 const AddDCRForStockist = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('id');
 
-    const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_id);
+    const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_role_id);
 
 
     const [PromotedProduct, setPromotedProduct] = useState([]);
@@ -151,7 +151,7 @@ const AddDCRForStockist = () => {
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
     useEffect(() => {
-        executiveUsers({ id: company_user_id })
+        executiveUsers({ id: company_user_role_id })
             .then(res => {
                 if (res.data) {
                     const executive = [];
@@ -167,7 +167,7 @@ const AddDCRForStockist = () => {
             .catch(err => {
 
             });
-    }, [company_user_id]);
+    }, [company_user_role_id]);
 
     const rewards = useGetAllRewardsQuery(company_id, {
         skip: !company_id

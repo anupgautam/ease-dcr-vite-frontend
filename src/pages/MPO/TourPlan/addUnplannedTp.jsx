@@ -16,7 +16,7 @@ import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from "@/api/MPOSlices
 import { useSelector } from 'react-redux';
 
 const AddUnplannedTp = () => {
-    const { company_id, user_role, company_user_id, role } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_role_id, role } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -33,8 +33,8 @@ const AddUnplannedTp = () => {
 
     const [selectedDates, setSelectedDates] = useState(today);
 
-    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_id }, {
-        skip: !company_id || !company_user_id
+    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_role_id }, {
+        skip: !company_id || !company_user_role_id
     })
 
     const executiveLevelOptions = useMemo(() => {
@@ -48,8 +48,8 @@ const AddUnplannedTp = () => {
     }, [mpoAccordingToExecutiveLevel])
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_id }, {
-        skip: !company_id || !company_user_id
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_role_id }, {
+        skip: !company_id || !company_user_role_id
     });
 
 
@@ -84,7 +84,7 @@ const AddUnplannedTp = () => {
         if (user_role === 'MPO') {
             const data = [{
                 company_name: company_id,
-                mpo_name: company_user_id,
+                mpo_name: company_user_role_id,
                 mpo_area: [{ company_mpo_area_id: values.select_the_area }],
                 tour_plan: {
                     shift: { shift: 1 },
@@ -132,7 +132,7 @@ const AddUnplannedTp = () => {
         } else {
             const data = {
                 company_id: company_id,
-                user_id: company_user_id,
+                user_id: company_user_role_id,
                 dates: [selectedDates],
                 shift: 1,
                 visit_data: MpoAreaData,

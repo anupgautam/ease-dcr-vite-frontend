@@ -45,7 +45,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultChemistDCR = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
 
@@ -89,7 +89,7 @@ const DefaultChemistDCR = () => {
     }, [])
 
     // !Get Tour Plans
-    const { data } = useGetAllChemistsDCRQuery({ page: page, id: company_id });
+    const { data } = useGetAllChemistsDCRQuery({ page: page, id: company_user_role_id });
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteChemistsDCRByIdMutation();

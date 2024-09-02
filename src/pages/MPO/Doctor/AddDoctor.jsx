@@ -128,7 +128,6 @@ const AddDoctor = () => {
         //     skip: !company_id || !user_role || !company_user_role_id || !values.mpo_name
         // }
     );
-    console.log(values.mpo_name)
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
             return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))

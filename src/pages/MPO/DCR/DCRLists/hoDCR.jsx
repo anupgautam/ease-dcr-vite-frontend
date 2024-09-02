@@ -44,7 +44,7 @@ const TABLE_HEAD = [
     { id: '' },
 ];
 
-const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
+const HODCR = ({ selectedUser, selectedMonth, selectedDate, company_user_role_id }) => {
 
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
@@ -64,11 +64,11 @@ const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
         setIsDrawerOpen(false);
     }, []);
 
-    const FilteredData = { user_id: user_role === 'admin' ? selectedUser : company_user_id, month: selectedMonth, date: selectedDate, company_name: company_id }
+    const FilteredData = { user_id: user_role === 'admin' ? selectedUser : company_user_role_id, month: selectedMonth, date: selectedDate, company_name: company_id }
 
     //! Search Results 
     const results = useSearchHODCRQuery(FilteredData, {
-        skip: !user_role || !company_id || !selectedDate || !selectedMonth || !company_user_id || !selectedUser
+        skip: !user_role || !company_id || !selectedDate || !selectedMonth || !company_user_role_id || !selectedUser
     });
 
     //!States

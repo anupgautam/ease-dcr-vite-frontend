@@ -24,7 +24,7 @@ import {
 import { useSelector } from 'react-redux';
 
 const DefaultList = () => {
-    const { company_user_role_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_user_role_id, user_role, company_user_id, company_id } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
@@ -52,7 +52,7 @@ const DefaultList = () => {
 
     const { data } = useGetAllChemistsQuery({
         id: company_user_role_id,
-        mpo_name: user_role === 'admin' ? '' : company_user_id,
+        mpo_name: user_role === 'admin' ? '' : company_user_role_id,
         page: page
     });
 

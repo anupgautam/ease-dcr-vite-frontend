@@ -79,7 +79,7 @@ const DefaultAsignStockist = () => {
         setPage(thisArray[3]);
     }, [])
 
-    const { data } = useGetAllAssignStockistsQuery({ id: company_id, page: page, company_area: "", mpo_name: "" });
+    const { data } = useGetAllAssignStockistsQuery({ id: company_user_role_id, page: page, company_area: "", mpo_name: "" });
 
     const [deleteDoctorEvents] = useDeleteStockistsAssignByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]

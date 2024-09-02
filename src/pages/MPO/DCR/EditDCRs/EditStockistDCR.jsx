@@ -33,7 +33,7 @@ import { useSelector } from 'react-redux';
 
 
 const EditStockistDCR = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
 
     const [noLoop, setNoLoop] = useState(true);
@@ -71,8 +71,8 @@ const EditStockistDCR = ({ idharu, onClose }) => {
         skip: !mpo_id
     });
 
-    const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id ? mpoArea?.company_area?.id : "" }, {
-        skip: !company_id || !mpoArea?.company_area?.id,
+    const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_user_role_id, company_area: mpoArea?.company_area?.id ? mpoArea?.company_area?.id : "" }, {
+        skip: !company_user_role_id || !mpoArea?.company_area?.id,
     })
 
     const stockists = useMemo(() => {

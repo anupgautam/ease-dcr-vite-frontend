@@ -22,7 +22,7 @@ import { useGetUsersByCompanyRoleIdExecutativeLevelQuery } from '@/api/MPOSlices
 
 const EditHoDCR = ({ idharu, onClose }) => {
 
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const [noLoop, setNoLoop] = useState(true);
     const [lowerLevels, setLowerLevels] = useState([]);
@@ -34,7 +34,7 @@ const EditHoDCR = ({ idharu, onClose }) => {
     //! Getting TourPlan by ID
     const DCRAll = useGetHODCRsByIdQuery(idharu);
 
-    const { data: userLists } = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: user_id })
+    const { data: userLists } = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_user_role_id, page: user_id })
 
     useEffect(() => {
         const lower = [];

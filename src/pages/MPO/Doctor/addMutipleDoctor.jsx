@@ -151,7 +151,7 @@ const AddMutipleDoctor = () => {
 }
 
 const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
-    const { company_user_role_id, email, company_user_id, user_role, } = useSelector((state) => state.cookie);
+    const { company_user_role_id, email, company_user_id, user_role, company_id } = useSelector((state) => state.cookie);
 
     const doctorcategories = [
         { id: "A", title: "A" },
@@ -163,7 +163,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         { id: "Female", title: "Female" },
     ]
 
-    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_user_role_id)
+    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id)
 
     const doctorspecializations = useMemo(() => {
         if (DoctorSpecialization?.data) {
@@ -184,15 +184,15 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
     }, [MpoList])
 
     useEffect(() => {
-        if (company_user_role_id) {
-            MpoData({ company_name: company_user_role_id })
+        if (company_id) {
+            MpoData({ company_name: company_id })
                 .then((res) => {
                     setMpoList(res.data);
                 })
                 .catch((err) => {
                 })
         }
-    }, [company_user_role_id])
+    }, [company_id])
 
     const [Formdata, setFormData] = useState({
         doctor_name: "",
@@ -204,9 +204,9 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         doctor_qualification: "",
         doctor_specialization: "",
         is_investment: false,
-        mpo_name: user_role === 'MPO' ? company_user_id : "",
+        mpo_name: user_role === 'MPO' ? company_user_role_id : "",
         doctor_territory: "",
-        company_user_role_id: company_user_role_id
+        company_id: company_id
     })
 
 
@@ -227,8 +227,8 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
     };
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_user_role_id, mpo_name: user_role === 'admin' ? Formdata.mpo_name : company_user_id }, {
-        skip: !company_user_role_id || !user_role || !company_user_id || !Formdata.mpo_name
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? Formdata.mpo_name : company_user_role_id }, {
+        skip: !company_id || !user_role || !company_user_role_id || !Formdata.mpo_name
     });
 
     const mpoAreaData = useMemo(() => {

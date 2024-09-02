@@ -29,7 +29,7 @@ import { useSelector } from 'react-redux';
 
 
 const EditDCR = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const [noLoop, setNoLoop] = useState(true);
     const [doctors, setDoctors] = useState([]);

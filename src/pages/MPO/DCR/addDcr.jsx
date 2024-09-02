@@ -30,7 +30,7 @@ import { useSelector } from 'react-redux';
 
 const AddDcrForHo = () => {
 
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const chemistcategories = [
         { id: "A", title: "A" },
@@ -47,7 +47,7 @@ const AddDcrForHo = () => {
         return [];
     }, [ShiftData])
 
-    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_id })
+    const mpoAccordingToExecutiveLevel = useGetUsersByCompanyRoleIdExecutativeLevelQuery({ id: company_id, page: company_user_role_id })
 
     const executiveLevelOptions = useMemo(() => {
         if (mpoAccordingToExecutiveLevel) {
@@ -65,7 +65,7 @@ const AddDcrForHo = () => {
     const [GethingherOrder] = useGetHigherOrderTourPlanUsingIdMutation();
 
     useEffect(() => {
-        GethingherOrder({ user_id: company_user_id })
+        GethingherOrder({ user_id: company_user_role_id })
             .then((res) => {
                 setHigherOrderTourplans(res.data);
             })
