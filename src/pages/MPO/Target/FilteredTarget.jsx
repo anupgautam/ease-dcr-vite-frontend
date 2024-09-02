@@ -88,7 +88,7 @@ const FilteredTarget = ({ selectedYear, selectedRole }) => {
                             </TableRow>
                         ))}
                 </> :
-                    <>{data && data?.results?.map((target, index) => (
+                    <>{data && data?.map((target, index) => (
                         <TableRow hover tabIndex={-1} role="checkbox" key={target.id}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell component="th" scope="row" align="left">
@@ -141,28 +141,6 @@ const FilteredTarget = ({ selectedYear, selectedRole }) => {
                         </TableRow>
                     ))
                     }
-                        {/* //!pagination */}
-                        <TableRow>
-                            <TableCell colSpan={6}>
-                                <Box
-                                    justifyContent="center"
-                                    alignItems="center"
-                                    display="flex"
-                                    margin="8px 0px"
-                                >
-                                    {data && typeof data?.count === 'number'  ? (
-                                        <Pagination
-                                            count={parseInt(data?.count / 200) + 1}
-                                            onChange={handleChangePage}
-                                        />
-                                    ) : (
-                                        <Typography variant="body1">
-                                            In Search
-                                        </Typography>
-                                    )}
-                                </Box>
-                            </TableCell>
-                        </TableRow>
                     </>}
         </>
     )
