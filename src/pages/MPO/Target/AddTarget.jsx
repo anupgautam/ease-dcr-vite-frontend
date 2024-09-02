@@ -62,7 +62,7 @@ const AddTarget = () => {
         if (rolesData !== undefined) {
             return rolesData?.map((key) => ({
                 id: key.id,
-                title: key.executive_level.user_name.first_name + " " + key.executive_level.user_name.last_name
+                title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
             }))
         }
         return [];

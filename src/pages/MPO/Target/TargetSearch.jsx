@@ -196,6 +196,25 @@ const TargetSearch = (props) => {
                             <Box style={{ padding: "20px" }}>
                                 <Grid container spacing={0}>
                                     <Grid container spacing={2}>
+                                        <Grid item xs={2.5}>
+                                            <Grid container>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        label="Search Target"
+                                                        variant="outlined"
+                                                        onChange={(e) => onSearch(e)}
+                                                        InputProps={{
+                                                            startAdornment: (
+                                                                <InputAdornment position="start">
+                                                                    <SearchIcon />
+                                                                </InputAdornment>
+                                                            ),
+                                                        }}
+                                                        sx={{ m: 2 }}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
                                         <Grid item xs={2}>
                                             <FormControl fullWidth>
                                                 <InputLabel>Year</InputLabel>
@@ -212,7 +231,7 @@ const TargetSearch = (props) => {
                                                 </Select>
                                             </FormControl>
                                         </Grid>
-                                        <Grid item xs={2}>
+                                        {/* <Grid item xs={2}>
                                             <FormControl>
                                                 <InputLabel id="mpo-select-label">Role Name</InputLabel>
                                                 <Select
@@ -230,30 +249,10 @@ const TargetSearch = (props) => {
                                                     ))}
                                                 </Select>
                                             </FormControl>
-                                        </Grid>
+                                        </Grid> */}
                                         <Grid item xs={5}>
 
                                         </Grid>
-                                        <Grid item xs={3}>
-                                            <Grid container>
-                                                <Grid item xs={9}>
-                                                    <TextField
-                                                        label="Search Target"
-                                                        variant="outlined"
-                                                        onChange={(e) => onSearch(e)}
-                                                        InputProps={{
-                                                            startAdornment: (
-                                                                <InputAdornment position="start">
-                                                                    <SearchIcon />
-                                                                </InputAdornment>
-                                                            ),
-                                                        }}
-                                                        sx={{ m: 2 }}
-                                                    />
-                                                </Grid>
-                                            </Grid>
-                                        </Grid>
-
                                     </Grid>
                                 </Grid>
                             </Box>
@@ -268,7 +267,7 @@ const TargetSearch = (props) => {
                                                 <>
                                                     {selectedRole || selectedYear ?
                                                         <FilteredTarget
-                                                            selectedRole={selectedRole}
+                                                            selectedRole={''}
                                                             selectedYear={selectedYear} /> :
                                                         <DefaultTarget />}
                                                 </> : <>{
