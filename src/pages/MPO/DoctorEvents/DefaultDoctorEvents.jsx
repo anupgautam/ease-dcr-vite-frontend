@@ -41,7 +41,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultDoctorEvents = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -85,8 +85,8 @@ const DefaultDoctorEvents = () => {
     }, [])
 
     // !Get Doctor Events
-    const { data } = useGetAllDoctorEventsQuery({ id: company_id, page: page, mpo_name: company_user_id }, {
-        skip: !company_id || !page || !company_user_id
+    const { data } = useGetAllDoctorEventsQuery({ id: company_id, page: page, mpo_name: company_user_role_id }, {
+        skip: !company_id || !page || !company_user_role_id
     });
 
     // !Delete Doctor Events

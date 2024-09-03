@@ -99,6 +99,8 @@ const AddDoctor = () => {
         temp.category_name = returnValidation(['null'], values.category_name);
         temp.mpo_name = returnValidation(['null'], values.mpo_name);
         temp.doctor_specialization = returnValidation(['null'], values.doctor_specialization);
+        temp.doctor_birthday = returnValidation(['null'], values.doctor_birthday);
+        temp.doctor_anniversary = returnValidation(['null'], values.doctor_anniversary);
 
         setErrors({
             ...temp,

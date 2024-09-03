@@ -178,11 +178,11 @@ const DefaultHolidayArea = () => {
                                                 </TableCell>
                                                 <TableCell align="left">{companyroles.companyAreas}</TableCell>
                                                 <TableCell align="right">
-                                                    <IconButton color={'primary'} onClick={() => onEdit(companyroles.holidayId)}>
+                                                    {/* <IconButton color={'primary'} onClick={() => onEdit(companyroles.holidayId)}>
                                                         <Badge>
                                                             <Iconify icon="eva:edit-fill" />
                                                         </Badge>
-                                                    </IconButton>
+                                                    </IconButton> */}
                                                     <IconButton color={'error'} onClick={() => { setSelectedId(companyroles.holidayId); handleClickOpen(); }}>
                                                         <Badge>
                                                             <Iconify icon="eva:trash-2-outline" />

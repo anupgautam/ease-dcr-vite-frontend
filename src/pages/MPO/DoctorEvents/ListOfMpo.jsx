@@ -4,6 +4,7 @@ import {
     Grid, Typography
 } from '@mui/material';
 
+import FilteredDoctorEvent from './FilteredDoctorEvent';
 import DefaultMPONames from './DefaultMPONames';
 
 const ListofDoctorEvent = () => {
@@ -25,8 +26,8 @@ const ListofDoctorEvent = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-                {/* <FilteredDoctorEvent /> */}
-                <DefaultMPONames/>
+                <FilteredDoctorEvent />
+                {/* <DefaultMPONames/> */}
             </Container>
         </>
     )

@@ -114,6 +114,7 @@ const FilteredDoctorEvent = () => {
         })
     }
 
+    const defaultMPOName = mpoNames.length ? mpoNames[0] : null;
     const { data: DoctorEventData } = useGetFliterDoctorEventByMpoIdQuery({ mpo_name: mpoName, company_name: company_id })
 
     useEffect(() => {
@@ -219,155 +220,127 @@ const FilteredDoctorEvent = () => {
     }, [dateFormat]);
 
     return (
-        <>
-            <Card>
-                <Box style={{ padding: "20px" }}>
-                    <Grid container spacing={2}>
-                        {/* <Grid item xs={2}>
+        <Card>
+            <Box style={{ padding: "20px" }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={3}>
+                        {user_role === 'admin' && (
                             <Autocomplete
-                                options={rolesOptions}
+                                value={mpoNames.find(mpo => mpo.id === mpoName) || defaultMPOName}
+                                options={mpoNames}
                                 getOptionLabel={(option) => option.title}
-                                onChange={handleOptionChange}
+                                onChange={handleMPONameChange}
                                 renderInput={(params) => (
-                                    <TextField {...params} label="Users" />
+                                    <TextField {...params} label="MPO Names" />
                                 )}
                                 renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )} 
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
                             />
-                        </Grid> */}
-                        <Grid item xs={3}>
-                            {
-                                user_role === 'admin' &&
-                                <Autocomplete
-                                    options={mpoNames}
-                                    getOptionLabel={(option) => option.title}
-                                    onChange={handleMPONameChange}
-                                    renderInput={(params) => (
-                                        <TextField {...params} label="MPO Names" />
-                                    )}
-                                    renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
-                                />
-                            }
-                        </Grid>
-                        <Grid item xs={2}>
-                            {/* <DatePicker
-                                showIcon
-                                selected={startDate}
-                                onChange={handleDateChange}
-                                dateFormat="yyyy-MM-dd"
-                                placeholderText="Select the Date"
-                                className='my-datepicker'
-                                sx={{ zIndex: 3000000 }}
-                            /> */}
-                        </Grid>
+                        )}
                     </Grid>
-                </Box>
+                </Grid>
+            </Box>
 
+            {mpoName === "" || !mpoName ? (
 
-                {mpoName !== "" ?
-                    <>
-                        <Card>
-                            <Scrollbar>
-                                <TableContainer sx={{ minWidth: 800 }}>
-                                    <Table>
-                                        <UserListHead
-                                            headLabel={TABLE_HEAD}
-                                        />
-                                        <TableBody>
-                                            <>
-                                                {
-                                                    DoctorEventData === undefined ? <>
-                                                        {
-                                                            eightArrays.map((key) => (
-                                                                <TableRow id={key} >
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                </TableRow>
-                                                            ))}
-                                                    </> :
-                                                        <>
-                                                            {DoctorEventData.count == 0 ?
-                                                                <TableRow>
-                                                                    <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
-                                                                        <Paper
-                                                                            sx={{
-                                                                                textAlign: 'center',
-                                                                            }}
-                                                                        >
-                                                                            <Typography variant="h6" paragraph>
-                                                                                Not found
-                                                                            </Typography>
-                                                                            <Typography variant="body2">
-                                                                                <strong>Requested Data Not found</strong>.
-                                                                                <br /> Try checking for typos or using complete words.
-                                                                            </Typography>
-                                                                        </Paper>
-                                                                    </TableCell>
-                                                                </TableRow>
-                                                                :
-                                                                DoctorEventData.results.map((events, index) => (
-                                                                    <TableRow hover tabIndex={-1} role="checkbox" key={events.id}>
-                                                                        <TableCell>{index + 1}</TableCell>
-                                                                        <TableCell component="th" scope="row" align="left">
-                                                                            <Typography variant="subtitle2" noWrap>
-                                                                                {events.event_title}
-                                                                            </Typography>
-                                                                        </TableCell>
-                                                                        <TableCell align="left">{events.event_date}</TableCell>
-                                                                        <TableCell align="left">{events.doctor_id.doctor_name.doctor_name}</TableCell>
-                                                                        <TableCell align="left">{events.mpo_id.user_name.first_name + " " + events.mpo_id.user_name.last_name}</TableCell>
-                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(events.id); handleClickOpen() }}>
-                                                                            <Badge>
-                                                                                <Iconify icon="eva:trash-2-outline" />
-                                                                            </Badge>
-                                                                        </IconButton>
-                                                                        <Dialog
-                                                                            fullScreen={fullScreen}
-                                                                            open={openDialogue}
-                                                                            onClose={handleClose}
-                                                                            aria-labelledby="responsive-dialog-title"
-                                                                        >
-                                                                            <DialogTitle id="responsive-dialog-title">
-                                                                                {"Are you sure want to delete?"}
-                                                                            </DialogTitle>
-                                                                            <DialogActions>
-                                                                                <Button autoFocus onClick={() => { deleteDoctorEvent(selectedId); handleClose() }}>
-                                                                                    Yes
-                                                                                </Button>
-                                                                                <Button
-                                                                                    onClick={handleClose}
-                                                                                    autoFocus>
-                                                                                    No
-                                                                                </Button>
-                                                                            </DialogActions>
-                                                                        </Dialog>
-                                                                    </TableRow>
-                                                                ))
+                <DefaultDoctorEvent />
 
-                                                            }
-                                                        </>}
-                                            </>
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-
-                            </Scrollbar>
-                        </Card>
-                    </> : <DefaultDoctorEvent />}
-            </Card>
-        </>
+            ) : (
+                <Card>
+                    <Scrollbar>
+                        <TableContainer sx={{ minWidth: 800 }}>
+                            <Table>
+                                <UserListHead headLabel={TABLE_HEAD} />
+                                <TableBody>
+                                    {DoctorEventData === undefined ? (
+                                        eightArrays.map((key) => (
+                                            <TableRow key={key}>
+                                                <TableCell><Skeleton /></TableCell>
+                                                <TableCell><Skeleton /></TableCell>
+                                                <TableCell><Skeleton /></TableCell>
+                                                <TableCell><Skeleton /></TableCell>
+                                                <TableCell><Skeleton /></TableCell>
+                                                <TableCell><Skeleton /></TableCell>
+                                                <TableCell><Skeleton /></TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : DoctorEventData.count === 0 ? (
+                                        <TableRow>
+                                            <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
+                                                <Paper sx={{ textAlign: 'center' }}>
+                                                    <Typography variant="h6" paragraph>
+                                                        Not found
+                                                    </Typography>
+                                                    <Typography variant="body2">
+                                                        <strong>Requested Data Not found</strong>.
+                                                        <br /> Try checking for typos or using complete words.
+                                                    </Typography>
+                                                </Paper>
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
+                                        DoctorEventData.results.map((events, index) => (
+                                            <TableRow hover tabIndex={-1} role="checkbox" key={events.id}>
+                                                <TableCell>{index + 1}</TableCell>
+                                                <TableCell component="th" scope="row" align="left">
+                                                    <Typography variant="subtitle2" noWrap>
+                                                        {events.event_title}
+                                                    </Typography>
+                                                </TableCell>
+                                                <TableCell align="left">{events.event_date}</TableCell>
+                                                <TableCell align="left">{events.doctor_id.doctor_name.doctor_name}</TableCell>
+                                                <TableCell align="left">
+                                                    {`${events.mpo_id.user_name.first_name} ${events.mpo_id.user_name.last_name}`}
+                                                </TableCell>
+                                                <IconButton
+                                                    color="error"
+                                                    sx={{ width: 40, height: 40, mt: 0.75 }}
+                                                    onClick={() => {
+                                                        setSelectedId(events.id);
+                                                        handleClickOpen();
+                                                    }}
+                                                >
+                                                    <Badge>
+                                                        <Iconify icon="eva:trash-2-outline" />
+                                                    </Badge>
+                                                </IconButton>
+                                                <Dialog
+                                                    fullScreen={fullScreen}
+                                                    open={openDialogue}
+                                                    onClose={handleClose}
+                                                    aria-labelledby="responsive-dialog-title"
+                                                >
+                                                    <DialogTitle id="responsive-dialog-title">
+                                                        {"Are you sure you want to delete?"}
+                                                    </DialogTitle>
+                                                    <DialogActions>
+                                                        <Button
+                                                            autoFocus
+                                                            onClick={() => {
+                                                                deleteDoctorEvent(selectedId);
+                                                                handleClose();
+                                                            }}
+                                                        >
+                                                            Yes
+                                                        </Button>
+                                                        <Button onClick={handleClose} autoFocus>
+                                                            No
+                                                        </Button>
+                                                    </DialogActions>
+                                                </Dialog>
+                                            </TableRow>
+                                        ))
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Scrollbar>
+                </Card>
+            )}
+        </Card>
     )
 }
 
