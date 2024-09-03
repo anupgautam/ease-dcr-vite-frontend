@@ -1,9 +1,11 @@
+import ListofDoctorEvent from "./ListofDoctorEvent";
 import ListOfMpo from "./ListOfMpo";
 
 const ListOfMpoController = () => {
     return (
         <>
-            <ListOfMpo />
+            {/* <ListOfMpo /> */}
+            <ListofDoctorEvent />
         </>
     );
 }

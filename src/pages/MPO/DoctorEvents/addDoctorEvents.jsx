@@ -4,6 +4,8 @@ import {
     Typography,
     Button,
     Grid,
+    Autocomplete,
+    TextField,
     CircularProgress
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
@@ -17,6 +19,7 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 
 import {
+    usePostAllMPONamesNoPageMutation,
     useCreateDoctorsEventsMutation
 } from '../../../api/MPOSlices/DoctorSlice'
 import {
@@ -28,13 +31,52 @@ import { useSelector } from 'react-redux';
 
 
 const AddDoctorEvents = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
-    let today;
-    // const today = NepaliDateConverter.getNepaliDate();
+
+    const [MpoData] = usePostAllMPONamesNoPageMutation()
+
+    const [mpoName, setMPOName] = useState('');
+    const [MpoList, setMpoList] = useState([]);
+
+    const mpoNames = [];
+    if (MpoList.length !== 0) {
+        MpoList.map((key) => {
+            mpoNames.push({
+                id: key.id,
+                title: key.user_name.first_name + ' ' + key.user_name.last_name
+            })
+        })
+    }
+
+    useEffect(() => {
+        if (company_id) {
+            MpoData({ company_name: company_id }, {
+                skip: !company_id
+            })
+                .then((res) => {
+                    setMpoList(res.data);
+                })
+                .catch((err) => {
+                })
+        }
+    }, [company_id])
+
+    const [companyId, setCompanyId] = useState();
+
+    const handleMPONameChange = useCallback((event, value) => {
+        setMPOName(value?.id || "")
+        setCompanyId(company_id);
+    }, []);
+
+
+    //! Format Date
+    const today = NepaliDateConverter.getNepaliDate();
     const [selectedDates, setSelectedDates] = useState(today);
 
-    const DoctorData = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_name: company_user_id, mpo_area: "" })
+    const DoctorData = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_name: user_role === "admin" ? mpoName : company_user_role_id, mpo_area: "" }, {
+        skip: !company_id || !company_user_role_id
+    })
 
     const doctor = useMemo(() => {
         if (DoctorData?.data) {
@@ -92,8 +134,7 @@ const AddDoctorEvents = () => {
         formData.append("event_title", values.event_title);
         formData.append("doctor_id", values.doctor_id);
         formData.append("event_date", selectedDates);
-        formData.append("event_type", "");
-        formData.append("mpo_id", company_user_id);
+        formData.append("mpo_id", user_role === "admin" ? mpoName : company_user_role_id);
         formData.append('company_name', company_id)
         try {
             const response = await createDoctors(formData)
@@ -175,6 +216,23 @@ const AddDoctorEvents = () => {
                             </Box>
                         </Grid>
                     </Grid>
+                    {user_role === "admin" &&
+                        <Box marginBottom={1}>
+                            <Autocomplete
+                                options={mpoNames}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMPONameChange}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="MPO Names" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+                    }
                     <Box marginBottom={1}>
                         <Controls.Select
                             name="doctor_id"

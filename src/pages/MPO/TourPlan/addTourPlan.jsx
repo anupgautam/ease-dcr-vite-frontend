@@ -95,7 +95,6 @@ const AddTourPlan = () => {
         return [];
     }, [mpoAccordingToExecutiveLevel])
 
-    console.log(mpoAccordingToExecutiveLevel)
 
     const today = NepaliDateConverter.getNepaliDate();
 

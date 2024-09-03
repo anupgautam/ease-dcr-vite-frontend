@@ -24,12 +24,11 @@ const ListofDoctorEvent = () => {
                             <Grid item xs={2}>
                             </Grid>
                             <Grid item xs={10}>
-                                {
-                                    user_role === 'MPO' &&
-                                    <Box style={{ float: 'right', marginBottom: "20px" }}>
+                                {(user_role === 'MPO' || user_role === 'admin') && (
+                                    <Box style={{ float: 'right', marginBottom: '20px' }}>
                                         <AddDoctorEvents />
                                     </Box>
-                                }
+                                )}
                             </Grid>
                         </Grid>
                     </Grid>

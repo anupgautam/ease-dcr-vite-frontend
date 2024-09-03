@@ -137,7 +137,7 @@ export const doctorApiSlice = apiSlice.injectEndpoints({
                 }
             },
             invalidatesTags: ['Doctor']
-        }),
+    }),
 
         //! Update doctors data by id
         updateDoctors: builder.mutation({
