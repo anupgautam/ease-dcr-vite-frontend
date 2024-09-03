@@ -22,6 +22,7 @@ import { UserListHead } from "@/sections/@dashboard/user";
 import { useGetChemistAllDCRByIdQuery } from "@/api/DCRs Api Slice/chemistDCR/ChemistDCRAllSlice";
 import ChemistOrderProduct from "./orderProduct/chemistOrderProduct";
 import { useSelector } from 'react-redux';
+import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: ' Name', alignRight: false },

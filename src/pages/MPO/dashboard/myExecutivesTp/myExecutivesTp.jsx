@@ -23,6 +23,7 @@ import {
     Autocomplete,
     Pagination
 } from '@mui/material';
+import { useGetLowerExecutivebyMyIdMutation } from '@/api/CompanySlices/companyRolesSlice';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
@@ -102,23 +103,45 @@ const MyExecutiveTp = () => {
         skip: !company_user_role_id
     });
 
-    const lowerList = useMemo(() => {
-        if (myHigherData !== undefined) {
-            return myHigherData?.map((key, index) => ({
-                id: key.id,
-                title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name,
-                role: key.role_name.role_name.role_name
-            }));
-        }
-        return [];
-    }, [myHigherData])
+    const [LowerData] = useGetLowerExecutivebyMyIdMutation()
 
-    const [selectedOption, setSelectedOption] = useState(() => {
+    const [lowerList, setLowerList] = useState([]);
+
+
+    useEffect(() => {
+        LowerData({ id: company_user_role_id })
+            .then((res) => {
+                const data = res.data.map((key) => {
+                    return {
+                        id: key.id,
+                        title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name,
+                        role: key.role_name.role_name.role_name
+                    }
+                })
+                setLowerList(data);
+            })
+    }, [company_user_role_id])
+
+    // const lowerList = useMemo(() => {
+    //     if (myHigherData !== undefined) {
+    //         return myHigherData?.map((key, index) => ({
+    //             id: key.id,
+    //             title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name,
+    //             role: key.role_name.role_name.role_name
+    //         }));
+    //     }
+    //     return [];
+    // }, [myHigherData])
+
+    const [selectedOption, setSelectedOption] = useState(null);
+
+    useEffect(() => {
         if (lowerList && lowerList.length > 0) {
-            return lowerList[0];
+            setSelectedOption(lowerList[0]);
         }
-        return null;
-    });
+    }, [lowerList]);
+
+
 
 
     const handleOptionChange = useCallback((event, value) => {
@@ -241,13 +264,18 @@ const MyExecutiveTp = () => {
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
-    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedOption !== null ? selectedOption?.id : "", page: page, role_data: '' }, {
-        skip: !company_id || !selectedYear || !selectedMonth || !selectedOption || !page
-    })
+    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedOption !== null ? selectedOption?.id : "", page: page, role_data: '' },
+        //  {
+        //     skip: !company_id || !selectedYear || !selectedMonth || !selectedOption || !page
+        // }
+    )
 
-    const userData = useGetUsersByIdQuery(company_user_id, {
-        skip: !company_user_id
+
+    const userData = useGetUsersByIdQuery(company_user_role_id, {
+        skip: !company_user_role_id
     });
+
+
 
     const hoTourPlan = useGetHOTourPlansByUserIdQuery({ user_id: selectedOption !== null ? selectedOption?.id : "", month: selectedMonth, date: selectedYear, page: page, company_name: company_id })
     return (
@@ -374,96 +402,97 @@ const MyExecutiveTp = () => {
                                                                 })}
                                                         </> :
                                                             <>
-                                                                {TourPlanSearch && TourPlanSearch.count == 0 ?
-                                                                    <TableRow>
-                                                                        <TableCell align="center" colSpan={7.5} sx={{ py: 3 }}>
-                                                                            <Paper
-                                                                                sx={{
-                                                                                    textAlign: 'center',
-                                                                                }}
-                                                                            >
-                                                                                <Typography variant="h6" paragraph>
-                                                                                    Not found
-                                                                                </Typography>
-                                                                                <Typography variant="body2">
-                                                                                    {/* No results found for &nbsp; */}
-                                                                                    {/* <strong>&quot;{selectedOption}&quot;</strong>. */}
-                                                                                    <strong>Requested Data Not found</strong>.
-                                                                                    <br /> Try checking for typos or using complete words.
-                                                                                    <br />
-                                                                                    <br />
-                                                                                    <br />
-                                                                                    <br />
-                                                                                    <br />
-                                                                                </Typography>
-                                                                            </Paper>
-                                                                        </TableCell>
-                                                                    </TableRow>
-                                                                    :
-                                                                    TourPlanSearch.results.map((tourplan, index) => {
-                                                                        return (
-                                                                            <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}
-                                                                            >
-                                                                                <TableCell>{index + 1}</TableCell>
-                                                                                <TableCell component="th" scope="row" align="left">
-                                                                                    {/* <Stack direction="row" alignItems="center" spacing={2}> */}
-                                                                                    <Typography variant="subtitle2" noWrap>
-                                                                                        {tourplan?.mpo_name?.user_name?.first_name + " " + tourplan?.mpo_name?.user_name?.middle_name + " " + tourplan?.mpo_name?.user_name?.last_name}
-                                                                                    </Typography>
-                                                                                    {/* </Stack> */}
-                                                                                </TableCell>
-                                                                                {/* <TableCell align="left">{tourplan.mpo_name.user_name.email}</TableCell> */}
-                                                                                <TableCell align="left">
-                                                                                    {
-                                                                                        tourplan.mpo_area_read.map((key, index) => (
-                                                                                            <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }} key={index}>{key.company_mpo_area_id.area_name},</Typography>
-                                                                                        ))
-
-                                                                                    }
-                                                                                </TableCell>
-                                                                                {/* <TableCell align="left">{tourplan.tour_plan.tour_plan.select_the_month}</TableCell> */}
-                                                                                <TableCell align="left">{moment(tourplan.tour_plan.tour_plan.select_the_date_id).format('DD')}</TableCell>
-                                                                                <TableCell align="left">{tourplan.is_approved === true ? "Approved" : "Not Approved"}</TableCell>
-                                                                                {
-                                                                                    tourplan.is_approved === false &&
-                                                                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
-                                                                                        <Badge>
-                                                                                            <Iconify icon="eva:edit-fill" />
-                                                                                        </Badge>
-                                                                                    </IconButton>
-                                                                                }
-                                                                                {/* //! Delete  */}
-                                                                                {
-                                                                                    user_role === 'admin' &&
-                                                                                    <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
-                                                                                        <Badge>
-                                                                                            <Iconify icon="eva:trash-2-outline" />
-                                                                                        </Badge>
-                                                                                    </IconButton>
-                                                                                }
-                                                                                <Dialog
-                                                                                    fullScreen={fullScreen}
-                                                                                    open={openDialogue}
-                                                                                    onClose={handleClose}
-                                                                                    aria-labelledby="responsive-dialog-title"
+                                                                {
+                                                                    TourPlanSearch.results.length === 0 ?
+                                                                        <TableRow>
+                                                                            <TableCell align="center" colSpan={7.5} sx={{ py: 3 }}>
+                                                                                <Paper
+                                                                                    sx={{
+                                                                                        textAlign: 'center',
+                                                                                    }}
                                                                                 >
-                                                                                    <DialogTitle id="responsive-dialog-title">
-                                                                                        {"Are you sure want to delete?"}
-                                                                                    </DialogTitle>
-                                                                                    <DialogActions>
-                                                                                        <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
-                                                                                            Yes
-                                                                                        </Button>
-                                                                                        <Button
-                                                                                            onClick={handleClose}
-                                                                                            autoFocus>
-                                                                                            No
-                                                                                        </Button>
-                                                                                    </DialogActions>
-                                                                                </Dialog>
-                                                                            </TableRow>
-                                                                        )
-                                                                    })
+                                                                                    <Typography variant="h6" paragraph>
+                                                                                        Not found
+                                                                                    </Typography>
+                                                                                    <Typography variant="body2">
+                                                                                        {/* No results found for &nbsp; */}
+                                                                                        {/* <strong>&quot;{selectedOption}&quot;</strong>. */}
+                                                                                        <strong>Requested Data Not found</strong>.
+                                                                                        <br /> Try checking for typos or using complete words.
+                                                                                        <br />
+                                                                                        <br />
+                                                                                        <br />
+                                                                                        <br />
+                                                                                        <br />
+                                                                                    </Typography>
+                                                                                </Paper>
+                                                                            </TableCell>
+                                                                        </TableRow>
+                                                                        :
+                                                                        TourPlanSearch.results.map((tourplan, index) => {
+                                                                            return (
+                                                                                <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}
+                                                                                >
+                                                                                    <TableCell>{index + 1}</TableCell>
+                                                                                    <TableCell component="th" scope="row" align="left">
+                                                                                        {/* <Stack direction="row" alignItems="center" spacing={2}> */}
+                                                                                        <Typography variant="subtitle2" noWrap>
+                                                                                            {tourplan?.mpo_name?.user_name?.first_name + " " + tourplan?.mpo_name?.user_name?.middle_name + " " + tourplan?.mpo_name?.user_name?.last_name}
+                                                                                        </Typography>
+                                                                                        {/* </Stack> */}
+                                                                                    </TableCell>
+                                                                                    {/* <TableCell align="left">{tourplan.mpo_name.user_name.email}</TableCell> */}
+                                                                                    <TableCell align="left">
+                                                                                        {
+                                                                                            tourplan.mpo_area_read.map((key, index) => (
+                                                                                                <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }} key={index}>{key.company_mpo_area_id.area_name},</Typography>
+                                                                                            ))
+
+                                                                                        }
+                                                                                    </TableCell>
+                                                                                    {/* <TableCell align="left">{tourplan.tour_plan.tour_plan.select_the_month}</TableCell> */}
+                                                                                    <TableCell align="left">{moment(tourplan.tour_plan.tour_plan.select_the_date_id).format('DD')}</TableCell>
+                                                                                    <TableCell align="left">{tourplan.is_approved === true ? "Approved" : "Not Approved"}</TableCell>
+                                                                                    {
+                                                                                        tourplan.is_approved === false &&
+                                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
+                                                                                            <Badge>
+                                                                                                <Iconify icon="eva:edit-fill" />
+                                                                                            </Badge>
+                                                                                        </IconButton>
+                                                                                    }
+                                                                                    {/* //! Delete  */}
+                                                                                    {
+                                                                                        user_role === 'admin' &&
+                                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
+                                                                                            <Badge>
+                                                                                                <Iconify icon="eva:trash-2-outline" />
+                                                                                            </Badge>
+                                                                                        </IconButton>
+                                                                                    }
+                                                                                    <Dialog
+                                                                                        fullScreen={fullScreen}
+                                                                                        open={openDialogue}
+                                                                                        onClose={handleClose}
+                                                                                        aria-labelledby="responsive-dialog-title"
+                                                                                    >
+                                                                                        <DialogTitle id="responsive-dialog-title">
+                                                                                            {"Are you sure want to delete?"}
+                                                                                        </DialogTitle>
+                                                                                        <DialogActions>
+                                                                                            <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
+                                                                                                Yes
+                                                                                            </Button>
+                                                                                            <Button
+                                                                                                onClick={handleClose}
+                                                                                                autoFocus>
+                                                                                                No
+                                                                                            </Button>
+                                                                                        </DialogActions>
+                                                                                    </Dialog>
+                                                                                </TableRow>
+                                                                            )
+                                                                        })
 
                                                                 }
                                                             </>}
