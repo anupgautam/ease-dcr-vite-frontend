@@ -50,7 +50,9 @@ const EditUser = ({ idharu, onClose }) => {
     }, [data])
 
     //! Get Divisions
-    const Divisions = useGetCompanyDivisionsByCompanyIdQuery(company_id);
+    const Divisions = useGetCompanyDivisionsByCompanyIdQuery(company_id, {
+        skip: !company_id
+    });
     const divisions = useMemo(() => {
         if (Divisions?.data) {
             return Divisions.data.map(key => ({ id: key.id, title: key.division_name }))
@@ -73,7 +75,9 @@ const EditUser = ({ idharu, onClose }) => {
 
     useEffect(() => {
         if (User?.data?.company_name?.company_id) {
-            higherUserList(User?.data.company_name.company_id).unwrap().then(res => {
+            higherUserList(User?.data.company_name.company_id, {
+                skip: !User?.data?.company_name?.company_id
+            }).unwrap().then(res => {
                 const higherList = res.map(key => ({
                     id: key.id,
                     title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`,

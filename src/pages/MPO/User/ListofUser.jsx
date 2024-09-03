@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import { Container, Grid, Box, Stack, useMediaQuery, useTheme } from '@mui/material';
 import UserCount from './UserCount';
 import UserSearch from './UserSearch';
@@ -11,7 +11,9 @@ const ListofUser = () => {
     const { company_id } = useSelector((state) => state.cookie);
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const { data } = useGetAllDefaultUsersQuery({ company_name: company_id });
+    const { data } = useGetAllDefaultUsersQuery({ company_name: company_id }, {
+        skip: !company_id
+    });
 
     const headers = [
         { label: 'S.No.', key: 'sno' },

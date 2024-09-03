@@ -31,7 +31,9 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
     const Doctor = useGetDoctorsByIdQuery(id);
 
     //! Get doctor categories
-    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id)
+    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id, {
+        skip: !company_id
+    })
 
 
     const doctorspecializations = useMemo(() => {

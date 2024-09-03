@@ -38,7 +38,9 @@ const EditChemist = ({ idharu, onClose }) => {
     ]
 
     //! Get chemist area
-    const ChemistArea = useGetChemistsAreaQuery(company_id)
+    const ChemistArea = useGetChemistsAreaQuery(company_id, {
+        skip: !company_id
+    })
 
     const chemistareas = useMemo(() => {
         if (ChemistArea?.data) {

@@ -50,7 +50,9 @@ const DefaultList = () => {
     }, [])
 
     // !  Get all the stockist
-    const { data: CompanyAreaId } = useGetcompanyUserRolesByIdQuery(company_user_role_id);
+    const { data: CompanyAreaId } = useGetcompanyUserRolesByIdQuery(company_user_role_id, {
+        skip: !company_user_role_id
+    });
 
     const { data } = useGetAllStockistsQuery(
         {
@@ -58,9 +60,9 @@ const DefaultList = () => {
             page: page,
             company_area: user_role === 'admin' ? "" : CompanyAreaId?.company_area?.id
         },
-        // {
-        //     skip: !CompanyAreaId // Skip the query until CompanyAreaId is available
-        // }
+        {
+            skip: !company_id || !user_role
+        }
     );
 
 

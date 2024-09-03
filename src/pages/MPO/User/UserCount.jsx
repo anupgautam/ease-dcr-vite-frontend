@@ -13,7 +13,9 @@ const UserCount = () => {
         setPage(thisArray[3]);
     }, [])
 
-    const { data } = useGetAllcompanyUserRolesQuery({ company_name: company_id, page: page });
+    const { data } = useGetAllcompanyUserRolesQuery({ company_name: company_id, page: page }, {
+        skip: !company_id
+    });
     return (
         <>
             {

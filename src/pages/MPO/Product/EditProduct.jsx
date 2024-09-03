@@ -38,7 +38,9 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
     }, [Product.data])
 
     //! Get division 
-    const Division = useGetCompanyDivisionByCompanyIdQuery(company_id);
+    const Division = useGetCompanyDivisionByCompanyIdQuery(company_id, {
+        skip: !company_id
+    });
 
     const divisions = useMemo(() => {
         if (Division?.data) {
@@ -48,7 +50,9 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
     }, [Division])
 
     //! GET division by id
-    const DivisionById = useGetCompDivisionByIdQuery(divisionKoId)
+    const DivisionById = useGetCompDivisionByIdQuery(divisionKoId, {
+        skip: !divisionKoId
+    })
 
 
     const prod_category = [

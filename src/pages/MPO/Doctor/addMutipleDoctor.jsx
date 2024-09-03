@@ -163,7 +163,9 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         { id: "Female", title: "Female" },
     ]
 
-    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id)
+    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id, {
+        skip: !company_id
+    })
 
     const doctorspecializations = useMemo(() => {
         if (DoctorSpecialization?.data) {
@@ -185,7 +187,9 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
 
     useEffect(() => {
         if (company_id) {
-            MpoData({ company_name: company_id })
+            MpoData({ company_name: company_id }, {
+                skip: !company_id
+            })
                 .then((res) => {
                     setMpoList(res.data);
                 })

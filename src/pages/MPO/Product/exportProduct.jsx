@@ -14,7 +14,9 @@ const ExportProduct = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
 
-    const { data: companyAreaData } = useGetFilteredDivisionsQuery(company_id)
+    const { data: companyAreaData } = useGetFilteredDivisionsQuery(company_id, {
+        skip: !company_id
+    })
 
 
     if (companyAreaData) {
@@ -26,7 +28,9 @@ const ExportProduct = () => {
         })
     }
 
-    const { data } = useGetProductsByDivisionWithoutPaginationQuery({ company_name: company_id, division_name: mpoName.id === undefined ? "" : mpoName.id })
+    const { data } = useGetProductsByDivisionWithoutPaginationQuery({ company_name: company_id, division_name: mpoName.id === undefined ? "" : mpoName.id }, {
+        skip: !company_id || !mpoName?.id
+    })
 
 
 

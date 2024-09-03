@@ -42,7 +42,9 @@ const AddDoctor = () => {
     ];
 
     //! Get Doctor Specialization
-    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id);
+    const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id, {
+        skip: !company_id
+    });
 
     const doctorspecializations = useMemo(() => {
         if (DoctorSpecialization?.data) {
@@ -63,7 +65,9 @@ const AddDoctor = () => {
 
     useEffect(() => {
         if (company_id) {
-            MpoData({ company_name: company_id })
+            MpoData({ company_name: company_id }, {
+                skip: !company_id
+            })
                 .then((res) => {
                     setMpoList(res.data);
                 })
@@ -124,9 +128,9 @@ const AddDoctor = () => {
         company_name: company_id,
         mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id,
     },
-        // {
-        //     skip: !company_id || !user_role || !company_user_role_id || !values.mpo_name
-        // }
+        {
+            skip: !company_id || !user_role || !company_user_role_id || !values.mpo_name
+        }
     );
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {

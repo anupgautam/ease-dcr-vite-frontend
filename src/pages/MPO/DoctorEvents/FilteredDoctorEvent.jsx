@@ -118,7 +118,9 @@ const FilteredDoctorEvent = () => {
 
     useEffect(() => {
         if (company_id) {
-            MpoData({ company_name: company_id })
+            MpoData({ company_name: company_id }, {
+                skip: !company_id
+            })
                 .then((res) => {
                     setMpoList(res.data);
                 })

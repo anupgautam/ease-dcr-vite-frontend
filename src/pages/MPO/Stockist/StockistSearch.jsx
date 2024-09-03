@@ -73,9 +73,9 @@ const StockistSearch = () => {
     }, [Company_Areas]);
 
     const { data: StockistData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: user_role === "admin" ? companyArea : company_area_id },
-        // {
-        //     skip: company_id || user_role
-        // }
+        {
+            skip: company_id || user_role || !company_area_id
+        }
     );
 
     //! For drawer 
@@ -129,7 +129,9 @@ const StockistSearch = () => {
             setSearchDataCondition(false);
             setSearchData([]); // Clear the search data immediately
         } else {
-            SearchChemist({ search: searchQuery, company_id: parseInt(company_id) })
+            SearchChemist({ search: searchQuery, company_id: parseInt(company_id) }, {
+                skip: !company_id
+            })
                 .then((res) => {
                     if (res.data) {
                         setSearchDataCondition(true);

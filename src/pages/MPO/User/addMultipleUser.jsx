@@ -190,7 +190,9 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
     };
 
     //! Get division
-    const Divisions = useGetFilteredDivisionsQuery(company_id);
+    const Divisions = useGetFilteredDivisionsQuery(company_id, {
+        skip: !company_id
+    });
 
     const divisionList = useMemo(() => {
         if (Divisions?.data) {
@@ -214,7 +216,9 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
 
     useEffect(() => {
         const exce = [];
-        getExecLevel(company_id).then((res) => {
+        getExecLevel(company_id, {
+            skip: !company_id
+        }).then((res) => {
             // 
             res?.data?.map((key) => {
                 exce.push({ id: key?.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name })

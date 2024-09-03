@@ -12,7 +12,9 @@ const ExportStockist = () => {
     const [mpoName, setMPOName] = useState('');
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const { data: companyAreaData } = useGetAllCompanyAreasWithoutPaginationQuery(company_id)
+    const { data: companyAreaData } = useGetAllCompanyAreasWithoutPaginationQuery(company_id, {
+        skip: !company_id
+    })
 
     const companyArea = useMemo(() => {
         if (companyAreaData) {
