@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import {
     Box,
     Typography,
@@ -28,7 +28,7 @@ import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from '@/api/MPOSlices/tourPlan&Dcr';
-import {  usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
+import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
 
 import moment from 'moment';
 import { useSelector } from 'react-redux';
@@ -82,18 +82,21 @@ const AddTourPlan = () => {
         return []
     }, [ShiftData])
 
-    const mpoAccordingToExecutiveLevel = usePostUserIdToGetLowerLevelExecutiveMutation(company_user_role_id, {
-        skip:!company_user_role_id
-    })
+    const [LowerExecutive] = usePostUserIdToGetLowerLevelExecutiveMutation()
 
-    const executiveLevelOptions = useMemo(() => {
-        if (mpoAccordingToExecutiveLevel !== undefined) {
-            if (mpoAccordingToExecutiveLevel.status === 'fulfilled') {
-                return mpoAccordingToExecutiveLevel.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
-            }
+    const [executiveLevelOptions, setExecutiveLevelOptions] = useState([]);
+
+    useEffect(() => {
+        if (company_user_role_id) {
+            LowerExecutive({ id: company_user_role_id })
+                .then((res) => {
+                    if (res.data) {
+                        const data = res.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
+                        setExecutiveLevelOptions(data);
+                    }
+                })
         }
-        return [];
-    }, [mpoAccordingToExecutiveLevel])
+    }, [company_user_role_id])
 
 
     const today = NepaliDateConverter.getNepaliDate();
@@ -103,6 +106,7 @@ const AddTourPlan = () => {
     const [selectedDates, setSelectedDates] = useState(today);
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
+    console.log("CompanyRoles111", CompanyRoles);
 
     const handleRolesChange = (event) => {
         const {
