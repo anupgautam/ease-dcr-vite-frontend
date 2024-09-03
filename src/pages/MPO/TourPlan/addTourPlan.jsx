@@ -106,7 +106,6 @@ const AddTourPlan = () => {
     const [selectedDates, setSelectedDates] = useState(today);
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
-    console.log("CompanyRoles111", CompanyRoles);
 
     const handleRolesChange = (event) => {
         const {
@@ -128,6 +127,8 @@ const AddTourPlan = () => {
     }
 
     const [MpoAreaData, setMpoAreaData] = useState([]);
+    const [TpResponseData, setTpResponseData] = useState([]);
+    console.log('TpResponseData', TpResponseData);
 
     const addTodo = () => {
         setLoading(true);
@@ -175,6 +176,8 @@ const AddTourPlan = () => {
             .then(res => {
                 if (res.data) {
                     setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
+                    setTpResponseData(prevData => [...prevData, ...res.data]);
+                    setTourPlanTodos([]);
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
                     }, 3000);
@@ -372,12 +375,12 @@ const AddTourPlan = () => {
 
                     </Box>
                     {
-                        TourPlanTodos.length !== 0 ?
+                        TpResponseData.length !== 0 ?
                             <Box style={{ marginBottom: '20px' }}>
 
                                 <Box style={{ width: "100%", overflowX: "auto", whiteSpace: 'nowrap' }}>
                                     {
-                                        TourPlanTodos.map((key, index) => (
+                                        TpResponseData.map((key, index) => (
                                             <Box style={{ width: '178px', display: "inline-block", marginRight: "10px" }} key={index}>
                                                 <Box style={{ borderRadius: '5px', border: '1.2px solid #dbe0e4', padding: "5px", paddingTop: "10px", paddingLeft: "10px", paddingRight: '10px' }}>
                                                     <Grid container spacing={2}>
@@ -390,21 +393,21 @@ const AddTourPlan = () => {
                                                                 <Close color='red' />
                                                             </IconButton> */}
                                                             <Box style={{ padding: '5px', textAlign: 'center', border: '1.2px solid #2d8960', borderRadius: "5px" }}>
-                                                                <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{moment(key.selected_date).format('DD')}</Typography>
+                                                                <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{moment(key.tour_plan.tour_plan.select_the_date_id).format('DD')}</Typography>
                                                                 {/* <Typography style={{ fontSize: '13px', color: "black", marginTop: "-5px" }}>{getNepaliMonthName(moment(key.selected_date).month() + 1).substring(0, 3)}</Typography> */}
                                                             </Box>
                                                         </Grid>
                                                         <Grid item xs={7.7}>
                                                             <Box>
                                                                 <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
-                                                                    {getNepaliMonthName(moment(key.selected_date).month() + 1)}
+                                                                    {key.tour_plan.tour_plan.select_the_month}
                                                                 </span>
                                                                 {/* <Typography style={{ marginTop: '10px', color: 'black', width: "60px", overflow: 'hidden', fontSize: "12px", color: 'black', fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.select_the_area.title}</Typography> */}
-                                                                {TPAreaName.map((key, index) => (
+                                                                {/* {TPAreaName.map((key, index) => (
                                                                     <Typography key={index} variant="body2" style={{ fontSize: "12px", fontWeight: "600" }}>
                                                                         {key}
                                                                     </Typography>
-                                                                ))}
+                                                                ))} */}
                                                             </Box>
                                                         </Grid>
                                                     </Grid>
@@ -567,9 +570,11 @@ const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
 
     const [visitData, setVisitData] = useState([]);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id }, {
-        skip: !company_id || !role || !id
-    });
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: id },
+        //     {
+        //     skip: !company_id || !role || !id
+        // }
+    );
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
             return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))
