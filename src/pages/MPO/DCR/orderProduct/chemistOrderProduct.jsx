@@ -24,16 +24,20 @@ import {
     useUpdateDcrForChemistValuesMutation
 } from "@/api/MPOSlices/tourPlan&Dcr";
 import { useGetStockistsByCompanyAreaQuery } from '@/api/MPOSlices/StockistSlice';
+import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
 
 
 const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) => {
-    const { company_id, user_role, company_user_id, company_area_id, company_user_role_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_area_id, company_user_role_id, company_division_name } = useSelector((state) => state.cookie);
 
     const [updateDcr] = useUpdateDcrForChemistValuesMutation();
 
-    const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_user_role_id, {
-        skip: !company_user_role_id
-    })
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: company_division_name },
+        // {
+        //     skip: !company_user_role_id
+        // }
+    )
+
 
     useEffect(() => {
         if (allData?.Formdata?.ordered_products?.length !== 0) {
@@ -56,7 +60,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
     }, [productData])
 
 
-    const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: company_user_role_id, company_area: company_area_id }, {
+    const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: company_area_id }, {
         skip: !company_user_role_id || !company_area_id
     })
 
@@ -114,6 +118,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
 
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
+
 
     //!Modal wala ko click event
     const onAddOrderProduct = async (e) => {

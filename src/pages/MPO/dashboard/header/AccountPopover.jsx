@@ -10,8 +10,8 @@ import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Icon } from '@iconify/react';
-import { useGetCompanyUserByIdQuery } from '../../../../api/CompanySlices/companyUserRoleSlice';
-import { useDispatch } from 'react-redux';
+import { useGetCompanyUserByIdQuery, useGetcompanyUserRolesByIdQuery } from '../../../../api/CompanySlices/companyUserRoleSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearCookie } from '../../../../reducers/cookieReducer';
 
 const MENU_OPTIONS = [
@@ -30,6 +30,7 @@ const MENU_OPTIONS = [
 ];
 
 export default function AccountPopover() {
+  const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
   //! LogOut
   const navigate = useNavigate();
 
@@ -97,8 +98,8 @@ export default function AccountPopover() {
   const handleCloseDialogue = () => {
     setOpenDialogue(false)
   }
-  const userName = useGetCompanyUserByIdQuery(Cookies.get('company_user_role_id'), {
-    skip: !Cookies.get('company_user_role_id')
+  const userName = useGetcompanyUserRolesByIdQuery(company_user_role_id, {
+    skip: !company_user_role_id
   })
 
   return (
