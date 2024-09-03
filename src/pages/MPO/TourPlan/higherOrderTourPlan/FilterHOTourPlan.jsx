@@ -52,7 +52,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role }) => {
-    const { company_id, user_role, company_user_role_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_role_id, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
