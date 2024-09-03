@@ -15,7 +15,9 @@ const ProductCount = () => {
     }, [])
 
     // !  Get all the products
-    const { data } = useGetAllProductsQuery({ id: company_id, page: page, division_name: user_role === 'admin' ? "" : company_division_name });
+    const { data } = useGetAllProductsQuery({ id: company_id, page: page, division_name: user_role === 'admin' ? "" : company_division_name }, {
+        skip: !company_id || !user_role || !company_division_name
+    });
     return (
         <>
             {

@@ -56,7 +56,9 @@ const ProductSearch = () => {
     const { company_id, user_role, company_division_name } = useSelector((state) => state.cookie);
 
     //! Company Division
-    const Division = useGetFilteredDivisionsQuery(company_id);
+    const Division = useGetFilteredDivisionsQuery(company_id, {
+        skip: !company_id
+    });
 
     const [companyDivision, setCompanyDivision] = useState('')
     const [companyId, setCompanyId] = useState();
@@ -68,7 +70,9 @@ const ProductSearch = () => {
         return [];
     }, [Division])
 
-    const { data: productDivision } = useGetProductsByDivisionIdQuery({ company_name: company_id, division_name: companyDivision })
+    const { data: productDivision } = useGetProductsByDivisionIdQuery({ company_name: company_id, division_name: companyDivision }, {
+        skip: !company_id || !companyDivision
+    })
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -101,7 +105,9 @@ const ProductSearch = () => {
     }, [])
 
     // ! Get all users wala
-    const { data } = useGetAllProductsQuery({ id: company_id, page: page, division_name: user_role === 'admin' ? "" : company_division_name });
+    const { data } = useGetAllProductsQuery({ id: company_id, page: page, division_name: user_role === 'admin' ? "" : company_division_name }, {
+        skip: !company_id || !page || !user_role || !company_division_name
+    });
 
     // const [searchProduct, results] = useSearchProductsMutation()
 
@@ -116,7 +122,9 @@ const ProductSearch = () => {
             setSearchDataCondition(false);
             setSearchData([]);
         } else {
-            SearchChemist({ search: searchQuery, company_id: parseInt(company_id) })
+            SearchChemist({ search: searchQuery, company_id: parseInt(company_id) }, {
+                skip: !company_id
+            })
                 .then((res) => {
                     if (res.data) {
                         setSearchDataCondition(true);

@@ -23,7 +23,9 @@ const ExportDoctor = () => {
         return [];
     }, [MpoList])
 
-    const { data } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_user_role_id, mpo_name: mpoName.id === undefined ? "" : mpoName.id, mpo_area: "" });
+    const { data } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_user_role_id, mpo_name: mpoName.id === undefined ? "" : mpoName.id, mpo_area: "" }, {
+        skip: !company_user_role_id || !mpoName?.id
+    });
 
     const headers = [
 
@@ -54,7 +56,9 @@ const ExportDoctor = () => {
 
     useEffect(() => {
         if (company_id) {
-            MpoData({ company_name: company_id })
+            MpoData({ company_name: company_id }, {
+                skip: !company_id
+            })
                 .then((res) => {
                     setMpoList(res.data);
                 })

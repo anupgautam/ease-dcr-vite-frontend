@@ -89,7 +89,9 @@ const DoctorSearch = () => {
 
     useEffect(() => {
         if (company_id) {
-            MpoData({ company_name: company_id })
+            MpoData({ company_name: company_id }, {
+                skip: !company_id
+            })
                 .then((res) => {
                     setMpoList(res.data);
                 })
@@ -152,7 +154,9 @@ const DoctorSearch = () => {
     }, [])
 
     // ! Search Logic
-    const { data: DoctorData } = useGetAllDoctorByMpoAndMpoAreaQuery({ company_name: company_id, mpo_area: mpoArea, mpo_name: user_role === 'admin' ? mpoName : company_user_role_id, page: page })
+    const { data: DoctorData } = useGetAllDoctorByMpoAndMpoAreaQuery({ company_name: company_id, mpo_area: mpoArea, mpo_name: user_role === 'admin' ? mpoName : company_user_role_id, page: page }, {
+        skip: !company_id || !mpoArea || !user_role || !company_user_role_id || !page
+    })
 
     const [SearchData, setSearchData] = useState([]);
     const [SearchDataCondition, setSearchDataCondition] = useState(false);
@@ -166,7 +170,9 @@ const DoctorSearch = () => {
             setSearchDataCondition(false);
             setSearchData([]);
         } else {
-            SearchDoctor({ search: searchQuery, company_id: parseInt(company_id) })
+            SearchDoctor({ search: searchQuery, company_id: parseInt(company_id) }, {
+                skip: !company_id
+            })
                 .then((res) => {
                     setSearchDataCondition(true);
                     if (res.data) {

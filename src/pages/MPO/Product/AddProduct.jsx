@@ -73,7 +73,9 @@ const AddProduct = () => {
         resetForm,
     } = useForm(initialFValues, true, validate);
 
-    const Division = useGetCompDivisionQuery(company_id);
+    const Division = useGetCompDivisionQuery(company_id, {
+        skip: !company_id
+    });
 
     const divisions = useMemo(() => {
         if (Division?.data) {

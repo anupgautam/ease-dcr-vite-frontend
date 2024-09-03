@@ -54,6 +54,8 @@ const DefaultList = () => {
         id: company_user_role_id,
         mpo_name: user_role === 'admin' ? '' : company_user_role_id,
         page: page
+    }, {
+        skip: !company_user_role_id || !user_role
     });
 
     const [deleteChemist] = useDeleteChemistsByIdMutation();

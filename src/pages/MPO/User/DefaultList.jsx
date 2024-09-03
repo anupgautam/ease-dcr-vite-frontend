@@ -83,7 +83,10 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     // ! Get all users wala
-    const { data, refetch } = useGetAllcompanyUserRolesQuery({ company_name: company_id, page: page, is_active: filterValue });
+    const { data, refetch } = useGetAllcompanyUserRolesQuery({ company_name: company_id, page: page, is_active: filterValue }, {
+        skip: !company_id || !page
+    });
+
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
     const [unlockUser] = useUnlockUsersMutation()

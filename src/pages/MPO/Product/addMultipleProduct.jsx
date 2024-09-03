@@ -199,7 +199,9 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         })
     }
 
-    const Division = useGetCompDivisionQuery(company_id);
+    const Division = useGetCompDivisionQuery(company_id, {
+        skip: !company_id
+    });
 
 
     const divisions = [];
@@ -211,7 +213,9 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
 
     useEffect(() => {
         if (company_id) {
-            MpoData({ company_name: company_id })
+            MpoData({ company_name: company_id }, {
+                skip: !company_id
+            })
                 .then((res) => {
                     setMpoList(res.data);
                 })

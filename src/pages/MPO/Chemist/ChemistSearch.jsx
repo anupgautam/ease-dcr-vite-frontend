@@ -70,7 +70,9 @@ const ChemistSearch = () => {
 
     useEffect(() => {
         if (company_id) {
-            MpoData({ company_name: company_id })
+            MpoData({ company_name: company_id }, {
+                skip: !company_id
+            })
                 .then((res) => {
                     setMpoList(res.data);
                 })
@@ -132,7 +134,9 @@ const ChemistSearch = () => {
     }, [])
 
     //! Search Logic
-    const { data: chemistData } = useGetChemistsByMpoAreaAndIdQuery({ company_name: company_id, mpo_area: mpoArea, mpo_name: user_role === "admin" ? mpoName : company_user_role_id, page: page })
+    const { data: chemistData } = useGetChemistsByMpoAreaAndIdQuery({ company_name: company_id, mpo_area: mpoArea, mpo_name: user_role === "admin" ? mpoName : company_user_role_id, page: page }, {
+        skip: !company_id || !mpoArea || !user_role || !company_user_role_id || !page
+    })
 
     const [searchResults, setSearchResults] = useState({ search: "" });
     const [searchChemist, results] = useSearchChemistsMutation()
@@ -148,7 +152,9 @@ const ChemistSearch = () => {
             setSearchDataCondition(false);
             setSearchData([]);
         } else {
-            SearchChemist({ search: searchQuery, company_id: parseInt(company_id) })
+            SearchChemist({ search: searchQuery, company_id: parseInt(company_id) }, {
+                skip: !company_id
+            })
                 .then((res) => {
                     if (res.data) {
                         setSearchDataCondition(true);
@@ -192,7 +198,9 @@ const ChemistSearch = () => {
     useEffect(() => {
         if (companyId || mpoArea || mpoName) {
 
-            searchChemist(FilteredData)
+            searchChemist(FilteredData, {
+                skip: !mpoArea || !mpoName || !companyId
+            })
         }
     }, [companyId, mpoArea, mpoName])
 

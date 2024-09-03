@@ -14,7 +14,9 @@ const DoctorCount = () => {
         setPage(thisArray[3]);
     }, [])
 
-    const { data } = useGetAllDoctorsQuery({ id: company_user_role_id, page: page, mpo_name: user_role === 'admin' ? "" : company_user_role_id });
+    const { data } = useGetAllDoctorsQuery({ id: company_user_role_id, page: page, mpo_name: user_role === 'admin' ? "" : company_user_role_id }, {
+        skip: !company_user_role_id || !user_role
+    });
     return (
         <>
             {

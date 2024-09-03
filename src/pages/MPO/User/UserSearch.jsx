@@ -97,6 +97,8 @@ const UserSearch = () => {
   const userList = useGetUsersByCompanyRoleIdQuery({
     id: company_id,
     page: roleSelect === null ? "" : roleSelect,
+  }, {
+    skip: !company_id
   });
 
   useEffect(() => {
@@ -118,7 +120,9 @@ const UserSearch = () => {
     const company_id = companykoID;
     // const companyId = company_id
     setSearchResults({ search: searchQuery, company_id });
-    searchUser(searchResults);
+    searchUser(searchResults, {
+      skip: !company_id
+    });
     //
   };
 

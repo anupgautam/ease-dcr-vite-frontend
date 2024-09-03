@@ -344,7 +344,9 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
 
     useEffect(() => {
         if (userList) {
-            AttendanceData({ year: selectedYear, month: selectedMonth, user_id: userList })
+            AttendanceData({ year: selectedYear, month: selectedMonth, user_id: userList }, {
+                skip: !selectedYear || !selectedMonth || !userList
+            })
                 .then((res) => {
                     setAttendanceDateData(res?.data);
                     setAttendData(res?.data);
