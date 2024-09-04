@@ -25,7 +25,7 @@ import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { Link } from 'react-router-dom';
 
 const AddDoctor = () => {
-    const { company_id, company_user_role_id, user_role } = useSelector((state) => state.cookie);
+    const { company_id, company_user_role_id, user_role, company_user_id } = useSelector((state) => state.cookie);
     const [MutipleDoctor, setAddMutipleDoctor] = useState(false);
     const doctorRef = useRef(null);
 
@@ -126,17 +126,15 @@ const AddDoctor = () => {
     ]);
 
     //! Get MPO Area
-    const MpoArea = useGetMpoAreaQuery({
-        company_name: company_id,
-        mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id,
-    },
-        {
-            skip: !company_id || !user_role || !company_user_role_id || !values.mpo_name
-        }
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id }, 
+    {
+        skip: !company_id || !user_role || !company_user_role_id
+    }
     );
+
     const mpoAreaData = useMemo(() => {
-        if (MpoArea?.data) {
-            return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))
+        if (MpoArea) {
+            return MpoArea?.data?.map(key => ({ id: key.id, title: key.area_name }))
         }
         return [];
     }, [MpoArea])
