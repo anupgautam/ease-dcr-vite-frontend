@@ -50,7 +50,7 @@ const TABLE_HEAD = [
 ];
 
 const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch()
 

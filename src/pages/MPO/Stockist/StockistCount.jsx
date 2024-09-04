@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 
 const StockistCount = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_role_id } = useSelector((state) => state.cookie);
 
     const [page, setPage] = useState(1)
 
@@ -17,8 +17,8 @@ const StockistCount = () => {
     }
 
     // !  Get all the stockist
-    const { data: CompanyAreaId } = useGetcompanyUserRolesByIdQuery(company_user_id, {
-        skip: !company_user_id
+    const { data: CompanyAreaId } = useGetcompanyUserRolesByIdQuery(company_user_role_id, {
+        skip: !company_user_role_id
     });
 
     const { data } = useGetAllStockistsQuery({ id: company_id, page: page, company_area: user_role === 'admin' ? "" : CompanyAreaId?.company_area?.id }, {

@@ -131,12 +131,13 @@ const LoginFormInputs = () => {
                         else if (res.error?.originalStatus === 401) {
                             setErrorMessage({ show: true, message: 'Unauthorized' });
                         } else {
-                            setErrorMessage({ show: true, message: 'Login Failed' });
+                            setErrorMessage({ show: true, message: res?.error?.error });
                         }
                         setLoading(false);
                         setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     }
                 } catch (err) {
+                    console.log("Catch ma error", err)
                     setErrorMessage({ show: true, message: 'Login Failed' });
                     setLoading(false);
                     setTimeout(() => {
@@ -215,7 +216,6 @@ const LoginFormInputs = () => {
                                     ),
                                 }}
                                 style={{ cursor: 'pointer' }}
-                            // className="cursor-pointer"
                             />
                         </Box>
                     </Stack>
@@ -240,8 +240,6 @@ const LoginFormInputs = () => {
                     <LoadingButton className="loginbutton" fullWidth size="large" type="submit" variant="contained">
                         Login
                     </LoadingButton>
-                    {/* <p className=' text-center my-3 font-public_sans font-semibold text-gray-400'>—————— or ——————</p>
-                    <p className=' text-center my-3 font-public_sans font-semibold'>Are you new? <span className=' underline-offset-2 underline text-[#6364f2]'> Create an Account</span></p> */}
                     {ErrorMessage.show && (
                         <Grid>
                             <Box className="messageContainer errorMessage">

@@ -30,7 +30,10 @@ import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import ExportDCR from './ExportDCR';
+import ExportDoctorDCR from './ExportDoctorDCR';
+import ExportChemistDCR from './ExportChemistDCR';
+import ExportStockistDCR from './ExportStockistDCR';
+import ExportHODCR from './ExportHODCR';
 
 
 const FilteredDCR = () => {
@@ -194,34 +197,36 @@ const FilteredDCR = () => {
                                 {
                                     user_role === "MPO" &&
                                     <>
-                                        <FormControl>
-                                            <InputLabel id="mpo-select-label">DCR Type</InputLabel>
-                                            <Select
-                                                labelId="mpo-select-label"
-                                                id="mpo-select"
-                                                value={selectedDCRType}
-                                                onChange={handleOptionDCRType}
-                                                label="DCR Type"
-                                            >
-                                                <MenuItem value="">None</MenuItem>
-                                                <MenuItem key={"doctor"} value={"Doctor"}>
-                                                    {"Doctor"}
-                                                </MenuItem>
-                                                <MenuItem key={"chemist"} value={"Chemist"}>
-                                                    {"Chemist"}
-                                                </MenuItem>
-                                                <MenuItem key={"stockist"} value={"Stockist"}>
-                                                    {"Stockist"}
-                                                </MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                        <ExportDCR />
+                                        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
+                                            <FormControl>
+                                                <InputLabel id="mpo-select-label">DCR Type</InputLabel>
+                                                <Select
+                                                    labelId="mpo-select-label"
+                                                    id="mpo-select"
+                                                    value={selectedDCRType}
+                                                    onChange={handleOptionDCRType}
+                                                    label="DCR Type"
+                                                >
+                                                    <MenuItem value="">None</MenuItem>
+                                                    <MenuItem key={"doctor"} value={"Doctor"}>
+                                                        {"Doctor"}
+                                                    </MenuItem>
+                                                    <MenuItem key={"chemist"} value={"Chemist"}>
+                                                        {"Chemist"}
+                                                    </MenuItem>
+                                                    <MenuItem key={"stockist"} value={"Stockist"}>
+                                                        {"Stockist"}
+                                                    </MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                            {/* <ExportDoctorDCR /> */}
+                                        </Stack>
                                     </>
                                 }
                                 {
                                     user_role === "admin" &&
                                     <>
-                                        <Stack direction="row" alignItems="center" spacing={2}>
+                                        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
                                             <FormControl sx={{ minWidth: 200 }}>
                                                 <InputLabel id="mpo-select-label">DCR Type</InputLabel>
                                                 <Select
@@ -243,7 +248,53 @@ const FilteredDCR = () => {
                                                     </MenuItem>
                                                 </Select>
                                             </FormControl>
-                                            <ExportDCR />
+                                            {selectedDCRType === "Doctor" ?
+                                                <>
+                                                    {selectedYear && selectedMonth ?
+                                                        <ExportDoctorDCR
+                                                            selectedUser={selectedId ? selectedId?.id : id}
+                                                            selectedMonth={selectedMonth}
+                                                            selectedDate={dateData}
+                                                            dateOnly={dateOnly}
+                                                        />
+                                                        : <></>}
+                                                </> : <></>
+                                            }
+                                            {selectedDCRType === "Chemist" ?
+                                                <>
+                                                    {selectedYear && selectedMonth ?
+                                                        <ExportChemistDCR
+                                                            selectedUser={selectedId ? selectedId?.id : id}
+                                                            selectedMonth={selectedMonth}
+                                                            selectedDate={dateData}
+                                                            dateOnly={dateOnly}
+                                                        />
+                                                        : <></>}
+                                                </> : <></>
+                                            }
+                                            {selectedDCRType === "Stockist" ?
+                                                <>
+                                                    {selectedYear && selectedMonth ?
+                                                        <ExportStockistDCR
+                                                            selectedUser={selectedId ? selectedId : id}
+                                                            selectedMonth={selectedMonth}
+                                                            selectedDate={selectedYear}
+                                                            dateOnly={dateOnly}
+                                                        />
+                                                        : <></>}
+                                                </> : <></>
+                                            }
+                                            {selectedDCRType === "other-roles" ?
+                                                <>
+                                                    {selectedYear && selectedMonth ?
+                                                        <ExportHODCR
+                                                            selectedUser={selectedId ? selectedId?.id : id}
+                                                            selectedMonth={selectedMonth}
+                                                            selectedDate={selectedYear}
+                                                        />
+                                                        : <></>}
+                                                </> : <></>
+                                            }
                                         </Stack>
                                     </>
                                 }
@@ -409,7 +460,7 @@ const FilteredDCR = () => {
 
                     </>}
 
-            </Card >
+            </Card>
         </>
     )
 }
