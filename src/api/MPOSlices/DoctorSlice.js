@@ -68,7 +68,6 @@ export const DoctorSlice = apiSlice.injectEndpoints({
         //! GET all the doctor events
         getAllDoctorEvents: builder.query({
             query: (page) => {
-                console.log(page)
                 return {
                     url: `doctor/doctor-events/?doctor_id__company_name=${page.id}&page=${page.page}&mpo_id=${page.mpo_name}`,
                     method: 'GET'

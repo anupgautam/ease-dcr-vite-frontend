@@ -19,8 +19,6 @@ const ExportHODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
         skip: !user_role || !company_id || !selectedDate || !selectedMonth || !company_user_role_id || !selectedUser
     });
 
-    console.log("Export HO DCR", results)
-
     const headers = [
 
         { label: 'S.No.', key: 'sno' },

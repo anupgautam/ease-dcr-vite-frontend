@@ -137,7 +137,6 @@ const LoginFormInputs = () => {
                         setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     }
                 } catch (err) {
-                    console.log("Catch ma error", err)
                     setErrorMessage({ show: true, message: 'Login Failed' });
                     setLoading(false);
                     setTimeout(() => {

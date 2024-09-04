@@ -217,7 +217,6 @@ const AddDCRForStockist = () => {
     const handlePostDcr = () => {
         setLoading(true)
         let sendingData = { ...values };
-        console.log('values', values);
         if (id) {
             sendingData['id'] = id;
             if (sendingData['company_product']) {
