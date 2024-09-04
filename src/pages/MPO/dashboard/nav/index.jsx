@@ -12,7 +12,6 @@ import OtherRoleConfig from './otherRoleConfig';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { setCookie } from '../../../../reducers/cookieReducer';
-import AsmConfig from './asmConfig';
 
 
 const NAV_WIDTH = 270;
