@@ -7,7 +7,7 @@ import {
     Skeleton
 } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { useGetStockistAllDCRByIdQuery } from '../../../api/DCRs Api Slice/stockistDCR/stockistDCRAllSlice';
+import { useGetStockistDcrByIdQuery } from '../../../api/DCRs Api Slice/stockistDCR/stockistDCRAllSlice';
 import { useSelector } from 'react-redux';
 import { useGetAllCompanyProductsWithoutPaginationByIdQuery } from '../../../api/productSlices/companyProductSlice';
 import { useGetcompanyUserRolesByIdQuery } from '../../../api/CompanySlices/companyUserRoleSlice';
@@ -22,7 +22,9 @@ const DCRStockistDetail = () => {
     const searchParams = new URLSearchParams(location.search);
     const selectedUser = searchParams.get('id');
 
-    const { data, isLoading } = useGetStockistAllDCRByIdQuery(selectedUser);
+    const { data, isLoading } = useGetStockistDcrByIdQuery(selectedUser, {
+        skip: !selectedUser
+    });
     return (
         <Container>
             <>
@@ -51,57 +53,54 @@ const DCRStockistDetail = () => {
                         <Typography variant="h4" fontWeight="bold" gutterBottom>
                             {`${data?.mpo_name?.user_name?.first_name} ${data?.mpo_name?.user_name?.last_name}`}
                         </Typography>
-                        <Grid container spacing={2} style={{ marginTop: "15px" }}>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <Card variant="outlined" sx={{ padding: 2 }}>
-                                    <Typography variant="h6" style={{ marginBottom: '10px' }}>Dcr Detail</Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        Shift: {data?.dcr?.shift?.shift}
-                                    </Typography>
-                                    <Typography variant="body1" color="textSecondary">
-                                        Date: {data?.dcr?.dcr?.date}
-                                    </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        Visited Area: {data?.dcr?.dcr?.visited_area?.area_name}
-                                    </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        Visited Stockist: {data?.dcr?.dcr?.visited_stockist?.stockist_name?.stockist_name}
-                                    </Typography>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <Card variant="outlined" sx={{ padding: 2 }}>
-                                    <Typography variant="h6" style={{ marginBottom: '10px' }}>Expenses Detail</Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        Expense: {data?.dcr?.dcr?.expenses}
-                                    </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        Expense Name: {data?.dcr?.dcr?.expenses_name}
-                                    </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        Expense Reasoning: {data?.dcr?.dcr?.expenses_reasoning}
-                                    </Typography>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <Card variant="outlined" sx={{ padding: 2 }}>
-                                    <Typography variant="h6" style={{ marginBottom: "10px" }}>Promoted Product</Typography>
-                                    <PromotedProduct id={data?.dcr?.dcr?.id} />
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <Card variant="outlined" sx={{ padding: 2 }}>
-                                    <Typography variant="h6">Visited With</Typography>
-                                    <VisitedWith id={data?.dcr?.dcr?.id} />
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <Card variant="outlined" sx={{ padding: 2 }}>
-                                    <Typography variant="h6" style={{ marginBottom: "10px" }}>Rewards</Typography>
-                                    <RewardsRole id={data?.dcr?.dcr?.id} />
-                                </Card>
-                            </Grid>
-                        </Grid>
+
+                        <div className=" grid grid-cols-3 gap-2.5 ">
+                            <div className=" rounded-[1.1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg bg-white/80 backdrop-lg">
+                                <Typography variant="h6" style={{ marginBottom: '10px' }}>Dcr Detail</Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    Shift: {data?.dcr?.shift?.shift}
+                                </Typography>
+                                <Typography variant="body1" color="textSecondary">
+                                    Date: {data?.dcr?.dcr?.date}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    Visited Area: {data?.dcr?.dcr?.visited_area?.area_name}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    Visited Stockist: {data?.dcr?.dcr?.visited_stockist?.stockist_name?.stockist_name}
+                                </Typography>
+                            </div>
+
+                            <div className=" rounded-[1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg bg-white/80 backdrop-blur-lg ">
+                                <Typography variant="h6" style={{ marginBottom: '10px' }}>Expenses Detail</Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    Expense: {data?.dcr?.dcr?.expenses}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    Expense Name: {data?.dcr?.dcr?.expenses_name}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    Expense Reasoning: {data?.dcr?.dcr?.expenses_reasoning}
+                                </Typography>
+
+                            </div>
+
+                            <div className=" rounded-[1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg bg-white/80 backdrop-blur-lg ">
+                                <Typography variant="h6">Visited With</Typography>
+                                <VisitedWith id={data?.dcr?.dcr?.id} />
+                            </div>
+
+                            <div className="col-span-2 rounded-[1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg min-h-[23rem] bg-white/80 backdrop-blur-lg ">
+                                <Typography variant="h6" style={{ marginBottom: "10px" }}>Promoted Product</Typography>
+                                <PromotedProduct id={data?.dcr?.dcr?.id} />
+                            </div>
+
+
+                            <div className=" rounded-[1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg  bg-white/80 backdrop-blur-lg">
+                                <Typography variant="h6" style={{ marginBottom: "10px" }}>Rewards</Typography>
+                                <RewardsRole id={data?.dcr?.dcr?.id} />
+                            </div>
+                        </div>
                     </>
                 )}
             </>
@@ -110,7 +109,7 @@ const DCRStockistDetail = () => {
 };
 
 const PromotedProduct = ({ id }) => {
-    const { data } = useGetStockistAllDCRByIdQuery(id)
+    const { data } = useGetStockistDcrByIdQuery(id)
     return (
         <>
             {

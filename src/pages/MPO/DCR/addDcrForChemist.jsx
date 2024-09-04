@@ -323,7 +323,6 @@ const AddDCRforChemist = () => {
                 };
                 updateDcr({ id: allData.id, value: sendingData })
                     .then(res => {
-                        console.log('ress', res);
                         setLoading(false);
                         if (res.data) {
                             createMpoDcr(mpoShiftData)

@@ -29,6 +29,14 @@ export const StockistDCRAllSlice = apiSlice.injectEndpoints({
             providesTags: ['StockistAllDCR']
         }),
 
+        getStockistDcrById: builder.query({
+            query: (id) => ({
+                url: `dcr/mpo-shift-wise-dcr-for-stockist/${id}/`,
+                method: 'GET'
+            }),
+            providesTags: ['StockistAllDCR']
+        }),
+
         //! CREATE chemist DCR by id
         addStockistsAllDCR: builder.mutation({
             query: (addStockistsDCR) => {
@@ -48,7 +56,7 @@ export const StockistDCRAllSlice = apiSlice.injectEndpoints({
 
         //! DELETE chemist DCR by id
         deleteStockistsAllDCRById: builder.mutation({
-            query: ( id ) => ({
+            query: (id) => ({
                 url: `dcr/dcr-for-stockist-product-rewards-roles/${id['id']}/`,
                 method: 'DELETE',
                 body: id,
@@ -60,7 +68,7 @@ export const StockistDCRAllSlice = apiSlice.injectEndpoints({
         updateStockistsAllDCR: builder.mutation({
 
             query: (updateStockistsDCR) => {
-                
+
                 return {
                     url: `dcr/dcr-for-stockist-product-rewards-roles/${updateStockistsDCR['data']['id']}/`,
                     method: 'PATCH',
@@ -95,7 +103,8 @@ export const {
     useGetAllStockistsAllDCRQuery,
     useUpdateStockistsAllDCRMutation,
     useDeleteStockistsAllDCRByIdMutation,
-    useAddStockistsAllDCRMutation
+    useAddStockistsAllDCRMutation,
+    useGetStockistDcrByIdQuery,
 } = StockistDCRAllSlice
 
 //! returns the query result object

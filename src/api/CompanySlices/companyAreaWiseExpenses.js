@@ -120,7 +120,6 @@ export const CompanyAreaWiseExpenses = apiSlice.injectEndpoints({
                     obj[key] = value;
                     return obj;
                 }, {});
-                console.log(formDataObject)
                 return {
                     url: `expenses/expenses/${updateCompanyAreaWiseExpenses.get('id')}/`,
                     method: 'PUT',

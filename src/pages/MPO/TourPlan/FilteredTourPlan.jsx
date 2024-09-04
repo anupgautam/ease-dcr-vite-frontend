@@ -310,10 +310,6 @@ const FilteredTourPlan = () => {
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
-    console.log('role', role);
-    console.log('user_role', user_role);
-
-
     return (
         <>
             <SelectDataDCR />

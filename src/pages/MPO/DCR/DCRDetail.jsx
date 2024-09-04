@@ -93,6 +93,7 @@ const DCRDetail = () => {
                 </Typography>
                 <PromotedProduct id={data?.dcr?.dcr?.id} />
               </div>
+              
               <div className=" rounded-[1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg  bg-white/80 backdrop-blur-lg">
                 <Typography variant="h6" style={{ marginBottom: "10px" }}>
                   Rewards

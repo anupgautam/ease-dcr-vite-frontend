@@ -20,8 +20,6 @@ const ExportChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly 
     //! Search Results 
     const results = useSearchChemistsDCRQuery(FilteredData)
 
-    console.log("Export chemist DCR", results)
-
     const headers = [
 
         { label: 'S.No.', key: 'sno' },

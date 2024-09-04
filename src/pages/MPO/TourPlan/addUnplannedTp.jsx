@@ -38,8 +38,6 @@ const AddUnplannedTp = () => {
         skip: !company_user_role_id
     })
 
-    console.log('today', today);
-
     const executiveLevelOptions = useMemo(() => {
         if (mpoAccordingToExecutiveLevel !== undefined) {
             if (mpoAccordingToExecutiveLevel.status === 'fulfilled') {
