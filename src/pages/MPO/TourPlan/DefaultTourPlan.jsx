@@ -137,6 +137,8 @@ const DefaultList = () => {
                                                         </TableCell>
                                                         <TableCell align="left">{tourplan.tour_plan.tour_plan.select_the_area.area_name}</TableCell>
                                                         <TableCell align="left">{tourplan.tour_plan.tour_plan.select_the_date_id}</TableCell>
+                                                        <TableCell align="left">{tourplan.tour_plan.tour_plan.is_unplanned === true ? "Unplanned" : "Not Unplanned"}</TableCell>
+                                                        <TableCell align="left">{tourplan.approved_by.user_name.first_name + " " + tourplan.approved_by.user_name.middle_name + " " + tourplan.approved_by.user_name.last_name}</TableCell>
                                                         <TableCell align="left">
                                                             {/*//! Edit  */}
                                                             {
