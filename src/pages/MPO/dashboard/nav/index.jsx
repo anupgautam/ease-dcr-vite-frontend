@@ -101,7 +101,6 @@ export default function Nav({ openNav, onCloseNav }) {
         <img src="/assets/ease.png" height='180px' width='180px' alt="Ease SFA Logo" />
         {/* <Typography style={{ fontSize: "20px", color: "black", fontWeight: '700', letterSpacing: '.7px', marginTop: '7px' }}>Ease SFA</Typography> */}
       </Box>
-
       {
         user_role === "admin" &&
         <NavSection data={navConfig} />
@@ -109,10 +108,6 @@ export default function Nav({ openNav, onCloseNav }) {
       {
         user_role === "MPO" &&
         <NavSection data={MpoNavConfig} />
-      }
-      {
-        user_role === "ASM" &&
-        <NavSection data={AsmConfig} />
       }
       {
         user_role === "other-roles" &&

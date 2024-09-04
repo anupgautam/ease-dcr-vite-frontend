@@ -10,11 +10,6 @@ const navsettingsConfig = [
     icon: <Icon icon="bx:area" style={{ fontSize: '20px' }} />,
   },
   {
-    title: 'Allowances',
-    path: 'admin/travelallowances',
-    icon: <Icon icon="tabler:map-pin-dollar" style={{ fontSize: '20px' }} />,
-  },
-  {
     title: 'Doctor Specialization',
     path: 'admin/doctorspecialization',
     icon: <Icon icon="medical-icon:i-imaging-root-category" style={{ fontSize: '20px' }} />,

@@ -132,6 +132,18 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 providesTags: ['User']
             }),
 
+        // ! Get Executive Level
+        getAllExecutiveLevels: builder.mutation({
+            query: (id) => (
+                {
+                    url: `user/company-user-without-pagination/?company_name=${id}`,
+                    method: 'GET',
+                }),
+            invalidatesTags: ['User'],
+            providesTags: ['User'],
+
+        }),
+
         //! DELETE users by id
         deleteUsersById: builder.mutation({
             query: (id) => {
@@ -175,7 +187,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     body: unlockUsers,
                 }
             },
-            invalidatesTags: ['CompanyUserRoles']
+            invalidatesTags: ['CompanyUserRoles'],
+            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(userApiSlice.endpoints.getAllExecutiveLevels.initiate(arg.company_id));
+                } catch (error) {
+                    console.error("Error creating user:", error);
+                }
+            },
         }),
 
         //! Login User
@@ -265,6 +285,8 @@ export const {
     useLoginUserByAdminMutation,
     usePostUserIdToGetLowerLevelExecutiveMutation,
     useGetAllUsersWithoutPaginationByIdQuery,
+    useGetAllExecutiveLevelsMutation
+    // useGetAllExecutiveLevelsQuery,
 } = userApiSlice
 
 

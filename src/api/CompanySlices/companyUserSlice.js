@@ -145,7 +145,7 @@ export const CompanyUserSlice = apiSlice.injectEndpoints({
                     method: 'GET',
                 }),
             // invalidatesTags: ['CompanyUsers', 'CompanyUserRoles', 'User'],
-            providesTags: ['CompanyUsers', 'CompanyUserRoles', 'User'],
+            providesTags: ['CompanyUsers', 'CompanyUserRoles'],
 
         }),
         getAllUserAttendance: builder.query({
