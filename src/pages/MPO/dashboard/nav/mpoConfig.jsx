@@ -45,6 +45,11 @@ const MpoNavConfig = [
         icon: <Icon icon="ph:upload-bold" style={{ fontSize: '20px' }} />,
     },
     {
+        title: 'Target',
+        path: 'admin/target',
+        icon: <Icon icon="tabler:target-arrow" style={{ fontSize: '20px' }} />,
+    },
+    {
         title: 'Application',
         path: 'admin/application',
         icon: <Icon icon="mdi:application-edit-outline" style={{ fontSize: '20px' }} />,

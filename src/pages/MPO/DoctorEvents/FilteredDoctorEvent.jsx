@@ -224,22 +224,20 @@ const FilteredDoctorEvent = () => {
             <Box style={{ padding: "20px" }}>
                 <Grid container spacing={2}>
                     <Grid item xs={3}>
-                        {user_role === 'admin' && (
-                            <Autocomplete
-                                value={mpoNames.find(mpo => mpo.id === mpoName) || defaultMPOName}
-                                options={mpoNames}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleMPONameChange}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="MPO Names" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        )}
+                        <Autocomplete
+                            value={mpoNames.find(mpo => mpo.id === mpoName) || defaultMPOName}
+                            options={mpoNames}
+                            getOptionLabel={(option) => option.title}
+                            onChange={handleMPONameChange}
+                            renderInput={(params) => (
+                                <TextField {...params} label="MPO Names" />
+                            )}
+                            renderOption={(props, option) => (
+                                <li {...props} key={option.id}>
+                                    {option.title}
+                                </li>
+                            )}
+                        />
                     </Grid>
                 </Grid>
             </Box>

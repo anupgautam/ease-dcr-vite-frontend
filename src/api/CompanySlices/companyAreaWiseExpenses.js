@@ -47,7 +47,7 @@ export const CompanyAreaWiseExpenses = apiSlice.injectEndpoints({
         deleteCompanyAreaWiseExpensesById: builder.mutation({
             query: (id) => {
                 return {
-                    url: `expenses/company-area-wise-expenses/${id}/`,
+                    url: `expenses/expenses/${id}/`,
                     method: 'DELETE',
                     body: id
                 }
@@ -59,7 +59,7 @@ export const CompanyAreaWiseExpenses = apiSlice.injectEndpoints({
         deleteTravelAllowancesById: builder.mutation({
             query: (id) => {
                 return {
-                    url: `expenses/company-area-wise-expenses/${id}/`,
+                    url: `expenses/expenses/${id}/`,
                     method: 'DELETE',
                     body: id
                 }

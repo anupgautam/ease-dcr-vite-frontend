@@ -128,7 +128,7 @@ export default function Router() {
         },
         {
           path: 'admin/add/mutiple/chemist',
-          element: <Authentication component={AddMultipleChemist} allowRoles={['admin', 'MPO']} />,
+          element: <Authentication component={AddMultipleChemist} allowRoles={['admin', 'MPO', 'ASM']} />,
         },
         {
           path: 'admin/listofstockist',
@@ -204,7 +204,7 @@ export default function Router() {
         },
         {
           path: 'admin/target',
-          element: <Authentication component={TargetController} allowRoles={['admin', 'other-roles']} />,
+          element: <Authentication component={TargetController} allowRoles={['admin', 'MPO', 'other-roles']} />,
         },
         {
           path: 'admin/application',

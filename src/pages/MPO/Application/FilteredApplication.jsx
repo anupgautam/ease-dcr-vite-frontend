@@ -159,22 +159,19 @@ const FilteredApplication = () => {
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
-                            {
-                                user_role === "admin" &&
-                                <Autocomplete
-                                    options={rolesOptions}
-                                    getOptionLabel={(option) => option.title}
-                                    onChange={handleOptionChange}
-                                    renderInput={(params) => (
-                                        <TextField {...params} label="Users" />
-                                    )}
-                                    renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
-                                />
-                            }
+                            <Autocomplete
+                                options={rolesOptions}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleOptionChange}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Users" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
                         </Grid>
                         <Grid item xs={2.85}>
                             <NepaliDatePicker
