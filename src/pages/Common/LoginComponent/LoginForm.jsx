@@ -131,7 +131,7 @@ const LoginFormInputs = () => {
                         else if (res.error?.originalStatus === 401) {
                             setErrorMessage({ show: true, message: 'Unauthorized' });
                         } else {
-                            setErrorMessage({ show: true, message: res?.error?.error });
+                            setErrorMessage({ show: true, message: "Login Failed" });
                         }
                         setLoading(false);
                         setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);

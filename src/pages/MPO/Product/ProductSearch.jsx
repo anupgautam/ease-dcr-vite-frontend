@@ -183,45 +183,42 @@ const ProductSearch = () => {
         <>
             <Card>
                 <Box style={{ padding: "20px" }}>
-                    {
-                        user_role === 'admin' &&
-                        <Grid container spacing={2}>
-                            <Grid item xs={3}>
-                                <TextField
-                                    label="Search Product"
-                                    variant="outlined"
-                                    onChange={(e) => debouncedSearch(e)}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <SearchIcon />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    style={{ padding: '30px' }}
-                                    sx={{ m: 2 }}
-                                />
-                            </Grid>
-                            <Grid item xs={3}>
-                                <Autocomplete
-                                    options={companydivisions}
-                                    getOptionLabel={(option) => option.title}
-                                    onChange={handleDivisionChange}
-                                    renderInput={(params) => (
-                                        <TextField {...params} label="Company Divisions" />
-                                    )}
-                                    renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
-                                />
-                            </Grid>
-                            <Grid item xs={9}>
-
-                            </Grid>
+                    <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                            <TextField
+                                label="Search Product"
+                                variant="outlined"
+                                onChange={(e) => debouncedSearch(e)}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <SearchIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                style={{ padding: '30px' }}
+                                sx={{ m: 2 }}
+                            />
                         </Grid>
-                    }
+                        <Grid item xs={3}>
+                            <Autocomplete
+                                options={companydivisions}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleDivisionChange}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Company Divisions" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Grid>
+                        <Grid item xs={9}>
+
+                        </Grid>
+                    </Grid>
                 </Box>
                 <Scrollbar>
                     <TableContainer sx={{ minWidth: 800, overflow: 'auto' }}>

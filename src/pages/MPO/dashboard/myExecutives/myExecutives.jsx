@@ -148,10 +148,13 @@ const MyExecutives = () => {
 
     return (
         <>
+            <Box style={{ padding: "20px" }}>
+                <Typography style={{ fontSize: '18px', fontWeight: '600' }}>
+                    My Executives
+                </Typography>
+            </Box>
+            
             <Card>
-                <Box style={{ padding: "20px" }}>
-                </Box>
-
                 <Scrollbar>
                     <TableContainer sx={{ minWidth: 800 }}>
                         <Table>

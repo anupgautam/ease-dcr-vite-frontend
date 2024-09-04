@@ -226,32 +226,46 @@ const ChemistSearch = () => {
         <>
             <Card>
                 <Box style={{ padding: "20px" }}>
-                    {
-                        user_role === "admin" &&
-                        <Grid container spacing={2}>
-                            <Grid item xs={3}>
-                                <TextField
-                                    label="Search Chemist"
-                                    variant="outlined"
-                                    onChange={(e) => debouncedSearch(e)}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <SearchIcon />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    style={{ padding: '30px' }}
-                                    sx={{ m: 2 }}
-                                />
-                            </Grid>
+                    <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                            <TextField
+                                label="Search Chemist"
+                                variant="outlined"
+                                onChange={(e) => debouncedSearch(e)}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <SearchIcon />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                style={{ padding: '30px' }}
+                                sx={{ m: 2 }}
+                            />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Autocomplete
+                                options={mpoNames}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMPONameChange}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="MPO Name" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Grid>
+                        {mpoName &&
                             <Grid item xs={3}>
                                 <Autocomplete
-                                    options={mpoNames}
+                                    options={mpoAreas}
                                     getOptionLabel={(option) => option.title}
-                                    onChange={handleMPONameChange}
+                                    onChange={handleOptionChange}
                                     renderInput={(params) => (
-                                        <TextField {...params} label="MPO Name" />
+                                        <TextField {...params} label="MPO Area" />
                                     )}
                                     renderOption={(props, option) => (
                                         <li {...props} key={option.id}>
@@ -260,25 +274,8 @@ const ChemistSearch = () => {
                                     )}
                                 />
                             </Grid>
-                            {mpoName &&
-                                <Grid item xs={3}>
-                                    <Autocomplete
-                                        options={mpoAreas}
-                                        getOptionLabel={(option) => option.title}
-                                        onChange={handleOptionChange}
-                                        renderInput={(params) => (
-                                            <TextField {...params} label="MPO Area" />
-                                        )}
-                                        renderOption={(props, option) => (
-                                            <li {...props} key={option.id}>
-                                                {option.title}
-                                            </li>
-                                        )}
-                                    />
-                                </Grid>
-                            }
-                        </Grid>
-                    }
+                        }
+                    </Grid>
                 </Box>
 
                 <Scrollbar>
