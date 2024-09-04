@@ -44,9 +44,9 @@ const TABLE_HEAD = [
     { id: '' },
 ];
 
-const HODCR = ({ selectedUser, selectedMonth, selectedDate, company_user_role_id }) => {
+const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
 
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
