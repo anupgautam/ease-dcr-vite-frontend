@@ -32,7 +32,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                     method: 'GET',
                 };
             },
-            providesTags: ['Tourplan','Doctor'],
+            providesTags: ['Tourplan', 'Doctor'],
             invalidatesTags: ['Tourplan']
         }),
 
@@ -65,7 +65,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                     body: id
                 }
             },
-            invalidatesTags: ['TourPlan']
+            invalidatesTags: ['TourPlan', 'PostTourplan']
         }),
 
         //! GET all Doctors to visits
