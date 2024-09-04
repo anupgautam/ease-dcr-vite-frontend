@@ -211,6 +211,10 @@ export default function Router() {
           element: <Authentication component={ListofApplicationController} allowRoles={['admin', 'MPO', 'other-roles']} />,
         },
         {
+          path: 'admin/travelallowances',
+          element: <Authentication component={ListOfTravelAllowancesController} allowRoles={['MPO', 'other-roles']} />,
+        },
+        {
           path: 'admin/upload',
           element: <Authentication component={ListOfUploadController} allowRoles={['admin', 'MPO']} />,
         },
@@ -299,10 +303,6 @@ export default function Router() {
         {
           path: 'admin/profile',
           element: <Profile />,
-        },
-        {
-          path: 'admin/travelallowances',
-          element: <Authentication component={ListOfTravelAllowancesController} allowRoles={['MPO', 'other-roles']} />,
         },
       ],
     },
