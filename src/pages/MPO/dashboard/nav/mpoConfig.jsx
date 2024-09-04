@@ -54,6 +54,11 @@ const MpoNavConfig = [
         path: 'admin/doctorevent',
         icon: <Icon icon="simple-line-icons:event" style={{ fontSize: '20px' }} />,
     },
+    {
+        title: 'Allowances',
+        path: 'admin/travelallowances',
+        icon: <Icon icon="tabler:map-pin-dollar" style={{ fontSize: '20px' }} />,
+    },
 ];
 
 export default MpoNavConfig;

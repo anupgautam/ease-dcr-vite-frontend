@@ -71,7 +71,7 @@ export const CompanyAreaWiseExpenses = apiSlice.injectEndpoints({
         createCompanyAreaWiseExpenses: builder.mutation({
             query: (createCompanyAreaWiseExpenses) => {
                 return {
-                    url: "expenses/company-area-wise-expenses/",
+                    url: "expenses/expenses/",
                     method: 'POST',
                     body: createCompanyAreaWiseExpenses,
 
