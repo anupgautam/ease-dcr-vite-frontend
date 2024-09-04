@@ -94,19 +94,18 @@ const LoginFormInputs = () => {
                         dispatch(setUserRole({ role: res.data.role }))
                         setSuccessMessage({ show: true, message: 'Successfully Logged In' });
                         setLoading(true);
+
                         setTimeout(() => {
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                 Cookies.set('user_role', 'admin');
                                 navigate('/dashboard/admin');
                                 dispatch(setCredentials({ ...res, email }));
-                            }
-                            else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
+                            } else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
                                 Cookies.set('user_role', 'MPO');
                                 navigate('/dashboard/admin/listofdoctor');
-                            }
-                            else if (res.data.role === 'ASM' || res.data.role === 'ASM') {
-                                Cookies.set('user_role', 'ASM');
-                                navigate('/dashboard/admin/listofdoctor');
+                            } else if (res.data.role === 'ASM') {
+                                Cookies.set('user_role', 'other-roles');
+                                navigate('/dashboard/admin/tourplan');
                             } else if (
                                 res.data.role === 'RSM'
                                 || res.data.role === 'SM'
@@ -124,6 +123,7 @@ const LoginFormInputs = () => {
                             }
                             setLoading(false);
                         }, 1000);
+
                     } else if (res.error) {
                         if (res.error?.originalStatus === 500) {
                             setErrorMessage({ show: true, message: 'Server Error. Please try again later.' });
