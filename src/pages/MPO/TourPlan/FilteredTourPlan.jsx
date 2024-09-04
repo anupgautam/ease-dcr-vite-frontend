@@ -237,7 +237,7 @@ const FilteredTourPlan = () => {
     //     skip: !company_id || !selectedMonth || !user_role || !id || !company_user_id || !page || !user_role
     // })
 
-    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery(
+    const { data: TourPlanSearch } = user_role === "MPO" && useGetTourplanOfMpoByDateMonthQuery(
         {
             company_name: company_id,
             date: selectedYear,
@@ -309,6 +309,9 @@ const FilteredTourPlan = () => {
     }, [])
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+
+    console.log('role', role);
+    console.log('user_role', user_role);
 
 
     return (

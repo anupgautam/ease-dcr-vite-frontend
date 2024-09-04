@@ -96,6 +96,7 @@ const AddDCRForStockist = () => {
         expenses_reasoning: '',
         rewards: [],
         company_roles: [],
+        company_product: [],
     })
 
     const dcrForDoctor = useGetStockistAllDCRByIdQuery(id);
@@ -130,6 +131,7 @@ const AddDCRForStockist = () => {
                 expenses_reasoning: dcrForDoctor?.data?.expenses_reasoning,
                 rewards: RewardOptions,
                 company_roles: dcrForDoctor?.data?.company_roles,
+                company_product: dcrForDoctor?.data?.company_product,
             });
         }
     }, [dcrForDoctor?.data, NewTourPlanData, companyUserArea?.data]);
@@ -215,6 +217,7 @@ const AddDCRForStockist = () => {
     const handlePostDcr = () => {
         setLoading(true)
         let sendingData = { ...values };
+        console.log('values', values);
         if (id) {
             sendingData['id'] = id;
             if (sendingData['company_product']) {
@@ -271,7 +274,7 @@ const AddDCRForStockist = () => {
                                     if (LastData === true) {
                                         updateTourplan({
                                             id: values.tour_id,
-                                            value: { is_dcr_added: true },
+                                            value: { is_stockist_dcr_added: true },
                                         })
                                             .then(res => {
                                                 if (res.data) {

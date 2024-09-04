@@ -25,12 +25,12 @@ import { useSelector } from 'react-redux';
 
 
 const StockistOrderedProduct = ({ id }) => {
-    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id, company_division_name } = useSelector((state) => state.cookie);
 
     const { data: mpoArea } = useGetUsersByIdQuery(company_user_role_id, {
         skip: !company_user_role_id
     });
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_user_role_id, division_name: mpoArea?.division_name?.id })
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: company_division_name })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {
