@@ -33,6 +33,16 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     'User'
                 ]
         }),
+        getAllUsersWithoutPaginationById: builder.query({
+            query: (id) => ({
+                url: `user/company-user-without-pagination/${id}/`,
+                method: 'GET'
+            }),
+            providesTags: (result, error, arg) =>
+                [
+                    'User'
+                ]
+        }),
         //! GET all the users
         getUsersMPOWala: builder.query({
             query: (id) => ({
@@ -254,6 +264,7 @@ export const {
     useGetUsersByCompanyUserByIdQuery,
     useLoginUserByAdminMutation,
     usePostUserIdToGetLowerLevelExecutiveMutation,
+    useGetAllUsersWithoutPaginationByIdQuery,
 } = userApiSlice
 
 

@@ -62,6 +62,8 @@ const TABLE_HEAD = [
     { id: 'date', label: 'Date', alignRight: false },
     { id: 'is_approved', label: 'Approve TP', alignRight: false },
     { id: 'hulting_station', label: 'Hulting Station', alignRight: false },
+    { id: "unplanned_tp", label: "Unplanned Tourplan", alignRight: false },
+    { id: "approved_by", label: "Approved By", alignRight: false },
     { id: "" }
 ];
 
@@ -119,7 +121,6 @@ const FilteredTourPlan = () => {
         let dataList = []
         if (roleList?.data) {
             roleList?.data?.map((key) => {
-                // dataList.push({ id: key.id, title: key.role_name_value })
                 dataList.push({ id: key.id, title: key.role_name.role_name })
             })
         }
@@ -369,7 +370,7 @@ const FilteredTourPlan = () => {
                                     selectedMonth || selectedYear ?
                                         <Card>
                                             <Scrollbar>
-                                                <TableContainer sx={{ minWidth: 800 }}>
+                                                <TableContainer sx={{ minWidth: 1000 }}>
                                                     <Table>
                                                         <UserListHead
                                                             headLabel={TABLE_HEAD}
@@ -386,6 +387,8 @@ const FilteredTourPlan = () => {
                                                                                         <TableCell padding="checkbox" >
                                                                                             <Skeleton />
                                                                                         </TableCell>
+                                                                                        <TableCell><Skeleton /></TableCell>
+                                                                                        <TableCell><Skeleton /></TableCell>
                                                                                         <TableCell><Skeleton /></TableCell>
                                                                                         <TableCell><Skeleton /></TableCell>
                                                                                         <TableCell><Skeleton /></TableCell>
@@ -441,6 +444,8 @@ const FilteredTourPlan = () => {
                                                                                             <TableCell align="left">{moment(tourplan.tour_plan.tour_plan.select_the_date_id).format('DD')}</TableCell>
                                                                                             <TableCell align="left">{tourplan.is_approved === true ? "Approved" : "Not Approved"}</TableCell>
                                                                                             <TableCell align="left">{tourplan.tour_plan.tour_plan.hulting_station}</TableCell>
+                                                                                            <TableCell align="left">{tourplan.tour_plan.tour_plan.is_unplanned === true ? "Unplanned" : "Not Unplanned"}</TableCell>
+                                                                                            <TableCell align="left">{tourplan.approved_by.user_name.first_name + " " + tourplan.approved_by.user_name.middle_name + " " + tourplan.approved_by.user_name.last_name}</TableCell>
                                                                                             {/* //! Edit  */}
                                                                                             <TableCell align="left">
                                                                                                 {
