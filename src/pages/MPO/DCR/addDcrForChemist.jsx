@@ -259,7 +259,6 @@ const AddDCRforChemist = () => {
     const handlePostDcr = () => {
         setLoading(true)
 
-        // if (AllMutipleData.length !== []) {
         if (AllMutipleData.length !== 0) {
             for (const allData of AllMutipleData) {
                 let sendingData = { ...allData };
@@ -289,15 +288,16 @@ const AddDCRforChemist = () => {
                 } else {
                     sendingData['rewards'] = [];
                 }
-                if (sendingData['company_roles']) {
-                    let companyRoles = allData.visited_with;
-                    sendingData['company_roles'] = [];
-                    companyRoles.map(key => {
-                        sendingData['company_roles'].push({ id: key });
-                    });
-                } else {
-                    sendingData['company_roles'] = [];
-                }
+                // if (sendingData['company_roles']) {
+                //     let companyRoles = allData.visited_with;
+                //     sendingData['company_roles'] = [];
+                //     companyRoles.map(key => {
+                //         sendingData['company_roles'].push({ id: key });
+                //     });
+                // } else {
+                //     sendingData['company_roles'] = [];
+                // }
+                sendingData['company_roles'] = [];
                 if (
                     sendingData['visited_area'] ||
                     sendingData['shift'] ||
@@ -323,6 +323,8 @@ const AddDCRforChemist = () => {
                 };
                 updateDcr({ id: allData.id, value: sendingData })
                     .then(res => {
+                        console.log('ress', res);
+                        setLoading(false);
                         if (res.data) {
                             createMpoDcr(mpoShiftData)
                                 .then(res => {

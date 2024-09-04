@@ -41,6 +41,8 @@ const AddTourPlan = () => {
     const { company_id, user_role, company_user_id, company_user_role_id, role } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [TpResponseData, setTpResponseData] = useState([]);
+
 
     const toggleDrawer = useCallback(() => {
         setIsDrawerOpen(!isDrawerOpen);
@@ -48,6 +50,7 @@ const AddTourPlan = () => {
 
     const handleCloseDrawer = useCallback(() => {
         setIsDrawerOpen(false);
+        setTpResponseData([]);
     }, [])
 
 
@@ -61,16 +64,6 @@ const AddTourPlan = () => {
         }
         return [];
     }, [MpoArea])
-
-    // const mpoAreaData = useMemo(() => {
-    //     const noneOption = { id: '', title: 'None' };
-
-    //     if (MpoArea?.data) {
-    //         return [noneOption, ...MpoArea.data.map(key => ({ id: key.id, title: key.area_name }))];
-    //     }
-
-    //     return [noneOption];
-    // }, [MpoArea]);
 
 
     const { data: ShiftData } = useGetShiftsQuery();
@@ -127,8 +120,8 @@ const AddTourPlan = () => {
     }
 
     const [MpoAreaData, setMpoAreaData] = useState([]);
-    const [TpResponseData, setTpResponseData] = useState([]);
-    console.log('TpResponseData', TpResponseData);
+
+
 
     const addTodo = () => {
         setLoading(true);
@@ -176,8 +169,13 @@ const AddTourPlan = () => {
             .then(res => {
                 if (res.data) {
                     setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
-                    setTpResponseData(prevData => [...prevData, ...res.data]);
-                    setTourPlanTodos([]);
+                    const updatedData = res.data.map((item, index) => ({
+                        ...item,
+                        mpo_area_name: TPAreaName[index]
+                    }));
+
+                    setTpResponseData(prevData => [...prevData, ...updatedData]);
+
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
                     }, 3000);
@@ -199,13 +197,20 @@ const AddTourPlan = () => {
             });
     };
 
+
     const [deleteTourPlan] = useDeleteTourPlansByIdMutation()
 
     const deleteTourPlans = (dataToDelete) => {
-        setTourPlanTodos((prevTourPlans) =>
-            prevTourPlans.filter((tour) => tour.selected_date !== dataToDelete.selected_date)
-        );
-    }
+        deleteTourPlan(dataToDelete)
+            .then((res) => {
+                setTpResponseData((prevTourPlans) =>
+                    prevTourPlans.filter((tour) => tour.id !== dataToDelete)
+                );
+            })
+            .catch((error) => {
+                console.error("Failed to delete tour plan:", error);
+            });
+    };
 
     const handleFormChange = (fieldName, value) => {
         setFormValuesArray(prevState => ({
@@ -385,13 +390,13 @@ const AddTourPlan = () => {
                                                 <Box style={{ borderRadius: '5px', border: '1.2px solid #dbe0e4', padding: "5px", paddingTop: "10px", paddingLeft: "10px", paddingRight: '10px' }}>
                                                     <Grid container spacing={2}>
                                                         <Grid item xs={4.3}>
-                                                            {/* <IconButton
+                                                            <IconButton
                                                                 className="close-button"
-                                                                onClick={() => deleteTourPlans(key)}
+                                                                onClick={() => deleteTourPlans(key.id)}
                                                                 style={{ color: "red" }}
                                                             >
                                                                 <Close color='red' />
-                                                            </IconButton> */}
+                                                            </IconButton>
                                                             <Box style={{ padding: '5px', textAlign: 'center', border: '1.2px solid #2d8960', borderRadius: "5px" }}>
                                                                 <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{moment(key.tour_plan.tour_plan.select_the_date_id).format('DD')}</Typography>
                                                                 {/* <Typography style={{ fontSize: '13px', color: "black", marginTop: "-5px" }}>{getNepaliMonthName(moment(key.selected_date).month() + 1).substring(0, 3)}</Typography> */}
@@ -408,6 +413,9 @@ const AddTourPlan = () => {
                                                                         {key}
                                                                     </Typography>
                                                                 ))} */}
+                                                                <Typography key={index} variant="body2" style={{ fontSize: "12px", fontWeight: "600", marginTop: '4px' }}>
+                                                                    {key.mpo_area_name}
+                                                                </Typography>
                                                             </Box>
                                                         </Grid>
                                                     </Grid>
