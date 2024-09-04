@@ -35,26 +35,26 @@ const AddTravelAllowances = () => {
     const now = new BSDate().now();
     const [companyId, setCompanyId] = useState(parseInt(company_id));
 
-    const monthData = getNepaliMonthName(now._date.month);
+    const month = now._date.month;
     const yearData = now._date.year;
 
     //! Months
     const months = [
-        { value: Baisakh, label: 'Baisakh' },
-        { value: Jesth, label: 'Jesth' },
-        { value: Asadh, label: 'Asadh' },
-        { value: Shrawan, label: 'Shrawan' },
-        { value: Bhadra, label: 'Bhadra' },
-        { value: Ashwin, label: 'Ashwin' },
-        { value: Kartik, label: 'Kartik' },
-        { value: Mangsir, label: 'Mangsir' },
-        { value: Poush, label: 'Poush' },
-        { value: Magh, label: 'Magh' },
-        { value: Falgun, label: 'Falgun' },
-        { value: Chaitra, label: 'Chaitra' },
-    ]
+        { value: 1, label: "Baisakh" },
+        { value: 2, label: "Jestha" },
+        { value: 3, label: "Asadh" },
+        { value: 4, label: "Shrawan" },
+        { value: 5, label: "Bhadra" },
+        { value: 6, label: "Ashwin" },
+        { value: 7, label: "Kartik" },
+        { value: 8, label: "Mangsir" },
+        { value: 9, label: "Poush" },
+        { value: 10, label: "Magh" },
+        { value: 11, label: "Falgun" },
+        { value: 12, label: "Chaitra" }
+    ];
 
-    const [selectedMonth, setSelectedMonth] = useState(monthData)
+    const [selectedMonth, setSelectedMonth] = useState(month)
 
     const handleNepaliMonthChange = useCallback((event) => {
         setSelectedMonth(event.target.value);
@@ -140,8 +140,8 @@ const AddTravelAllowances = () => {
         formData.append("travel_allowance", values.travel_allowance);
         formData.append("daily_allowance", values.daily_allowance);
         formData.append("date", selectedDates);
-        formData.append("area_to", area_to);
-        formData.append("area_from", area_from);
+        formData.append("area_to", values.area_to);
+        formData.append("area_from", values.area_from);
         formData.append("month", selectedMonth);
         formData.append("year", selectedYear);
         formData.append("user_id", company_user_role_id);
@@ -171,7 +171,6 @@ const AddTravelAllowances = () => {
     }, [createTravelAllowances, values])
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    console.log(selectedYear, selectedMonth)
     return (
         <>
             <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsDrawerOpen(true)} >
@@ -182,18 +181,11 @@ const AddTravelAllowances = () => {
                 open={isDrawerOpen}
                 onClose={() => setIsDrawerOpen(false)}
                 padding="16px"
-                sx={{
-                    width: 400,
-                    flexShrink: 0,
-                    boxSizing: "border-box",
-                    '& .MuiDrawer-paper': {
-                        width: 400
-                    }
-                }}
             >
                 <Box style={{ padding: "20px" }}>
                     <Box
                         p={1}
+                        width="340px"
                         textAlign="center"
                         role="presentation"
                         className="drawer-box"
@@ -209,6 +201,33 @@ const AddTravelAllowances = () => {
                             Add Application
                         </Typography>
                     </Box>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <Box marginBottom={2}>
+                                <Controls.Input
+                                    id="auto-focus"
+                                    autoFocus
+                                    name="area_from"
+                                    label="From*"
+                                    value={values.name}
+                                    onChange={handleInputChange}
+                                    errors={errors.area_from}
+                                />
+
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box marginBottom={2}>
+                                <Controls.Input
+                                    name="area_to"
+                                    label="To*"
+                                    value={values.name}
+                                    onChange={handleInputChange}
+                                    errors={errors.area_to}
+                                />
+                            </Box>
+                        </Grid>
+                    </Grid>
                     <Box marginBottom={2}>
                         <Controls.Input
                             name="travel_allowance"
@@ -275,24 +294,7 @@ const AddTravelAllowances = () => {
                             </Select>
                         </FormControl>
                     </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Input
-                            name="area_to"
-                            label="Area To*"
-                            value={values.name}
-                            onChange={handleInputChange}
-                            errors={errors.leave_cause}
-                        />
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Input
-                            name="area_from"
-                            label="Area From*"
-                            value={values.name}
-                            onChange={handleInputChange}
-                            errors={errors.leave_cause}
-                        />
-                    </Box>
+
                     <Stack spacing={1} direction="row">
                         <Button
                             variant="contained"
@@ -310,26 +312,31 @@ const AddTravelAllowances = () => {
                         </Button>
                     </Stack>
                 </Box>
-            </Drawer>
+            </Drawer >
             {loading && (
                 <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
                     <CircularProgress />
                 </Grid>
-            )}
-            {ErrorMessage.show && (
-                <Grid>
-                    <Box className="messageContainer errorMessage">
-                        <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                    </Box>
-                </Grid>
-            )}
-            {SuccessMessage.show && (
-                <Grid>
-                    <Box className="messageContainer successMessage">
-                        <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                    </Box>
-                </Grid>
-            )}
+            )
+            }
+            {
+                ErrorMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer errorMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )
+            }
+            {
+                SuccessMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer successMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )
+            }
         </>
     )
 }

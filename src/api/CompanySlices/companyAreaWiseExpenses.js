@@ -120,8 +120,9 @@ export const CompanyAreaWiseExpenses = apiSlice.injectEndpoints({
                     obj[key] = value;
                     return obj;
                 }, {});
+                console.log(formDataObject)
                 return {
-                    url: `expenses/company-area-wise-expenses/${updateCompanyAreaWiseExpenses.get('id')}/`,
+                    url: `expenses/expenses/${updateCompanyAreaWiseExpenses.get('id')}/`,
                     method: 'PUT',
                     body: updateCompanyAreaWiseExpenses
                 }
@@ -151,9 +152,9 @@ export const CompanyAreaWiseExpenses = apiSlice.injectEndpoints({
         updateTravelAllowances: builder.mutation({
             query: (updateTravelAllowances) => {
                 return {
-                    url: `expenses/expenses/${updateTravelAllowances.id}/`,
-                    method: 'PATCH',
-                    body: updateTravelAllowances.data,
+                    url: `expenses/expenses/${updateTravelAllowances.get('id')}/`,
+                    method: 'PUT',
+                    body: updateTravelAllowances,
                 }
             },
             invalidatesTags: ['CompanyAreaWiseExpenses'],
@@ -167,12 +168,6 @@ export const CompanyAreaWiseExpenses = apiSlice.injectEndpoints({
                     await queryFulfilled
                 } catch {
                     patchResult.undo()
-
-                    /**
-                     * Alternatively, on failure you can invalidate the corresponding cache tags
-                     * to trigger a re-fetch:
-                     * dispatch(api.util.invalidateTags(['Post']))
-                     */
                 }
             },
         }),
