@@ -12,11 +12,13 @@ import { useForm } from '../../../reusable/forms/useForm'
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from "@/api/MPOSlices/tourPlan&Dcr";
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import moment from "moment";
-import { useGetUsersByCompanyRoleIdExecutativeLevelQuery,usePostUserIdToGetLowerLevelExecutiveMutation } from "@/api/MPOSlices/UserSlice";
+import { useGetUsersByCompanyRoleIdExecutativeLevelQuery, usePostUserIdToGetLowerLevelExecutiveMutation } from "@/api/MPOSlices/UserSlice";
 import { useSelector } from 'react-redux';
+
 
 const AddUnplannedTp = () => {
     const { company_id, user_role, company_user_role_id, role } = useSelector((state) => state.cookie);
+    const today = NepaliDateConverter.getNepaliDate();
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -28,14 +30,15 @@ const AddUnplannedTp = () => {
         setIsDrawerOpen(false);
     }, []);
 
-    let today;
     // const today = NepaliDateConverter.getNepaliDate();
 
     const [selectedDates, setSelectedDates] = useState(today);
 
     const mpoAccordingToExecutiveLevel = usePostUserIdToGetLowerLevelExecutiveMutation(company_user_role_id, {
-        skip:!company_user_role_id
+        skip: !company_user_role_id
     })
+
+    console.log('today', today);
 
     const executiveLevelOptions = useMemo(() => {
         if (mpoAccordingToExecutiveLevel !== undefined) {
@@ -81,90 +84,101 @@ const AddUnplannedTp = () => {
 
     const addTourPlan = () => {
         setLoading(true)
-        if (user_role === 'MPO') {
-            const data = [{
-                company_name: company_id,
-                mpo_name: company_user_role_id,
-                mpo_area: [{ company_mpo_area_id: values.select_the_area }],
-                tour_plan: {
-                    shift: { shift: 1 },
+        if (selectedDates === today) {
+            if (user_role === 'MPO') {
+                const data = [{
+                    company_name: company_id,
+                    mpo_name: company_user_role_id,
+                    mpo_area: [{ company_mpo_area_id: values.select_the_area }],
                     tour_plan: {
-                        select_the_month: getNepaliMonthName(moment(selectedDates).month() + 1),
-                        select_the_date_id: selectedDates,
-                        purpose_of_visit: values.purpose_of_visit,
-                        hulting_station: values.hulting_station,
-                        is_dcr_added: false,
-                        is_unplanned: true,
-                        is_admin_opened: false,
-                        is_doctor_dcr_added: false,
-                        is_chemist_dcr_added: false,
-                        is_stockist_dcr_added: false
-                    },
-                    approved_by: null,
+                        shift: { shift: 1 },
+                        tour_plan: {
+                            select_the_month: getNepaliMonthName(moment(selectedDates).month() + 1),
+                            select_the_date_id: selectedDates,
+                            purpose_of_visit: values.purpose_of_visit,
+                            hulting_station: values.hulting_station,
+                            is_dcr_added: false,
+                            is_unplanned: true,
+                            is_admin_opened: false,
+                            is_doctor_dcr_added: false,
+                            is_chemist_dcr_added: false,
+                            is_stockist_dcr_added: false
+                        },
+                        approved_by: null,
+                        is_approved: true,
+                    }
+                }
+                ]
+                AddTourPlan(data)
+                    .then(res => {
+                        if (res.data) {
+                            setIsDrawerOpen(false)
+                            setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
+                            setTimeout(() => {
+                                setSuccessMessage({ show: false, message: '' });
+                            }, 3000);
+                        } else {
+                            setErrorMessage({ show: true, message: response.error.data[0] });
+                            setTimeout(() => {
+                                setErrorMessage({ show: false, message: '' });
+                            }, 3000);
+                        }
+                    })
+                    .catch(err => {
+                        setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                        setTimeout(() => {
+                            setErrorMessage({ show: false, message: '' });
+                        }, 3000);
+                    })
+                    .finally(() => {
+                        setLoading(false)
+                    })
+            } else {
+                const data = {
+                    company_id: company_id,
+                    user_id: company_user_role_id,
+                    dates: [selectedDates],
+                    shift: 1,
+                    visit_data: MpoAreaData,
+                    hulting_station: values.hulting_station,
+                    is_admin_opened: false,
+                    is_unplanned: true,
                     is_approved: true,
                 }
-            }
-            ]
-            AddTourPlan(data)
-                .then(res => {
-                    if (res.data) {
-                        setIsDrawerOpen(false)
-                        setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
-                        setTimeout(() => {
-                            setSuccessMessage({ show: false, message: '' });
-                        }, 3000);
-                    } else {
-                        setErrorMessage({ show: true, message: response.error.data[0] });
+                AddHigherOrder(data)
+                    .then((res) => {
+                        if (res.data) {
+                            setIsDrawerOpen(false)
+                            setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
+                            setTimeout(() => {
+                                setSuccessMessage({ show: false, message: '' });
+                            }, 3000);
+                        } else if (res.error.status === '400') {
+                            setLoading(false)
+                            setErrorMessage({ show: true, message: res.error.data[0] });
+                            setTimeout(() => {
+                                setErrorMessage({ show: false, message: '' });
+                            }, 3000);
+                        }
+                    })
+                    .catch(err => {
+                        setLoading(false)
+                        setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                         setTimeout(() => {
                             setErrorMessage({ show: false, message: '' });
                         }, 3000);
-                    }
-                })
-                .catch(err => {
-                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 3000);
-                })
-                .finally(() => {
-                    setLoading(false)
-                })
+                    })
+                    .finally(() => {
+                        setLoading(false)
+                    })
+            }
         } else {
-            const data = {
-                company_id: company_id,
-                user_id: company_user_role_id,
-                dates: [selectedDates],
-                shift: 1,
-                visit_data: MpoAreaData,
-                hulting_station: values.hulting_station,
-                is_admin_opened: false,
-                is_unplanned: true,
-                is_approved: true,
-            }
-            AddHigherOrder(data)
-                .then((res) => {
-                    if (res.data) {
-                        setIsDrawerOpen(false)
-                        setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
-                        setTimeout(() => {
-                            setSuccessMessage({ show: false, message: '' });
-                        }, 3000);
-                    } else if (res.error.status === '400') {
-                        setErrorMessage({ show: true, message: res.error.data[0] });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 3000);
-                    }
-                })
-                .catch(err => {
-                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 3000);
-                })
-                .finally(() => {
-                    setLoading(false)
-                })
+            setLoading(false);
+            setIsDrawerOpen(false)
+            setErrorMessage({ show: true, message: 'Unplanned tourplan can be create in today dates only.' });
+            setTimeout(() => {
+                setErrorMessage({ show: false, message: '' });
+            }, 3000);
         }
     }
 
