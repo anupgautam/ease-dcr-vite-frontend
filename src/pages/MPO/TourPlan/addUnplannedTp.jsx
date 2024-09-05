@@ -34,19 +34,26 @@ const AddUnplannedTp = () => {
 
     const [selectedDates, setSelectedDates] = useState(today);
 
-    const mpoAccordingToExecutiveLevel = usePostUserIdToGetLowerLevelExecutiveMutation(company_user_role_id, {
-        skip: !company_user_role_id
-    })
-
-    const executiveLevelOptions = useMemo(() => {
-        if (mpoAccordingToExecutiveLevel !== undefined) {
-            if (mpoAccordingToExecutiveLevel.status === 'fulfilled') {
-                return mpoAccordingToExecutiveLevel.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name })
-                )
-            }
+    const mpoAccordingToExecutiveLevel = usePostUserIdToGetLowerLevelExecutiveMutation(company_user_role_id,
+        {
+            skip: !company_user_role_id
         }
-        return [];
-    }, [mpoAccordingToExecutiveLevel])
+    )
+    const [LowerExecutive] = usePostUserIdToGetLowerLevelExecutiveMutation()
+
+    const [executiveLevelOptions, setExecutiveLevelOptions] = useState([]);
+
+    useEffect(() => {
+        if (company_user_role_id) {
+            LowerExecutive({ id: company_user_role_id })
+                .then((res) => {
+                    if (res.data) {
+                        const data = res.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
+                        setExecutiveLevelOptions(data);
+                    }
+                })
+        }
+    }, [company_user_role_id])
 
 
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_role_id }, {
@@ -332,12 +339,14 @@ const AddUnplannedTp = () => {
 }
 
 const MpoUserWiseArea = ({ id, setMpoAreaData }) => {
+    const { company_id } = useSelector((state) => state.cookie);
     const [visitData, setVisitData] = useState([]);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id }, {
-        skip: !company_id || !role || !id
-    });
-
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: id },
+        //     {
+        //     skip: !company_id || !role || !id
+        // }
+    );
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
             return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))

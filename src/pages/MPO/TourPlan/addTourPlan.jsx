@@ -254,92 +254,44 @@ const AddTourPlan = () => {
 
     const handleSave = () => {
         setLoading(true)
-        if (user_role === "MPO") {
-            let new_data = TourPlanTodos.map((tour) => ({
-                company_name: company_id,
-                mpo_name: company_user_role_id,
-                mpo_area: newData,
-                tour_plan: {
-                    shift: { shift: 1 },
-                    tour_plan: {
-                        select_the_month: getNepaliMonthName(moment(tour.selected_date).month() + 1),
-                        select_the_date_id: tour.selected_date,
-                        purpose_of_visit: tour.purpose_of_visit,
-                        hulting_station: tour.hulting_station,
-                        is_dcr_added: false,
-                        is_unplanned: false,
-                        is_admin_opened: false,
-                        is_doctor_dcr_added: false,
-                        is_chemist_dcr_added: false,
-                        is_stockist_dcr_added: false
-                    }
-                },
-                approved_by: null,
-                is_approved: false,
-            }));
-
-            AddTourPlan(new_data)
-                .then(res => {
-                    if (res.data) {
-                        setIsDrawerOpen(false)
-                        setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
-                        setTimeout(() => {
-                            setSuccessMessage({ show: false, message: '' });
-                        }, 3000);
-                    } else {
-                        setErrorMessage({ show: true, message: response.error.data[0] });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 3000);
-                    }
-                })
-                .catch(err => {
-                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+        let sending_data = { ...values };
+        sending_data['dates'] = [selectedDates];
+        sending_data['shift'] = 1;
+        sending_data['visit_data'] = MpoAreaData;
+        sending_data['hulting_station'] = values['hulting_station'];
+        sending_data['is_admin_opened'] = false;
+        sending_data['user_id'] = company_user_role_id;
+        console.log('sending_data', sending_data);
+        AddHigherOrder(sending_data)
+            .then(res => {
+                if (res.data) {
+                    setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
+                    setTimeout(() => {
+                        setSuccessMessage({ show: false, message: '' });
+                    }, 3000);
+                }
+                else if (res.error) {
+                    setErrorMessage({ show: true, message: res.error[0] });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
                     }, 3000);
-                })
-                .finally(() => {
-                    setLoading(false)
-                })
-        } else {
-            let sending_data = { ...values };
-            sending_data['dates'] = [selectedDates];
-            sending_data['shift'] = 1;
-            sending_data['visit_data'] = MpoAreaData;
-            sending_data['hulting_station'] = values['hulting_station'];
-            sending_data['is_admin_opened'] = false;
-            AddHigherOrder(sending_data)
-                .then(res => {
-                    if (res.data) {
-                        setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
-                        setTimeout(() => {
-                            setSuccessMessage({ show: false, message: '' });
-                        }, 3000);
-                    }
-                    else if (res.error) {
-                        setErrorMessage({ show: true, message: res.error[0] });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 3000);
-                    }
-                    else {
-                        setErrorMessage({ show: true, message: res.error.data[0] });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 3000);
-                    }
-                })
-                .catch(err => {
-                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                }
+                else {
+                    setErrorMessage({ show: true, message: res.error.data[0] });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
                     }, 3000);
-                })
-                .finally(() => {
-                    setLoading(false)
-                })
-        }
+                }
+            })
+            .catch(err => {
+                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                setTimeout(() => {
+                    setErrorMessage({ show: false, message: '' });
+                }, 3000);
+            })
+            .finally(() => {
+                setLoading(false)
+            })
     }
 
     return (
