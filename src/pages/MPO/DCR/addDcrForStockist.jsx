@@ -260,7 +260,6 @@ const AddDCRForStockist = () => {
                 sendingData['visited_doctor'] = null;
                 sendingData['shift'] = null;
             }
-            console.log('sending data', sendingData);
             updateDcr({ id: id, value: sendingData })
                 .then((res) => {
                     if (res.data) {
@@ -287,7 +286,6 @@ const AddDCRForStockist = () => {
                         } else {
                             DcrForStockist()
                                 .then((res) => {
-                                    console.log('res.data', res.data);
                                     if (res.data) {
                                         setSuccessMessage({ show: true, message: 'Dcr Added Successfully. Add Another Dcr.' });
                                         setTimeout(() => {

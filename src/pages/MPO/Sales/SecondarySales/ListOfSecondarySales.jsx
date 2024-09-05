@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import SecondarySalesCount from './SecondarySalesCount'
 import SecondarySalesSearch from './SecondarySalesSearch';
+import AddSecondarySales from './AddSecondarySales';
 
 
 const ListOfSecondarySales = () => {
@@ -19,6 +20,7 @@ const ListOfSecondarySales = () => {
                         <Grid item xs={10}>
                             <SecondarySalesCount />
                         </Grid>
+                        <AddSecondarySales />
                     </Grid>
                 </Box>
             </Container>

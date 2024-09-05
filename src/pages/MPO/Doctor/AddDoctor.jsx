@@ -126,10 +126,10 @@ const AddDoctor = () => {
     ]);
 
     //! Get MPO Area
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id }, 
-    {
-        skip: !company_id || !user_role || !company_user_role_id
-    }
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id },
+        {
+            skip: !company_id || !user_role || !company_user_role_id
+        }
     );
 
     const mpoAreaData = useMemo(() => {
@@ -270,12 +270,25 @@ const AddDoctor = () => {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Box marginBottom={2}>
-                                        <Controls.Input
-                                            name="doctor_address"
-                                            label="Doctor Address"
+                                        <Controls.Select
+                                            name="doctor_territory"
+                                            label="Doctor Territory*"
                                             value={values.name}
                                             onChange={handleInputChange}
-                                            error={errors.doctor_address}
+                                            options={mpoAreaData}
+                                            error={errors.doctor_territory}
+                                        />
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Box marginBottom={2}>
+                                        <Controls.Select
+                                            name="category_name"
+                                            label="Doctor Category*"
+                                            value={values.name}
+                                            onChange={handleInputChange}
+                                            options={doctorcategories}
+                                            error={errors.category_name}
                                         />
                                     </Box>
                                 </Grid>
@@ -351,25 +364,12 @@ const AddDoctor = () => {
                                 }
                                 <Grid item xs={12}>
                                     <Box marginBottom={2}>
-                                        <Controls.Select
-                                            name="doctor_territory"
-                                            label="Doctor Territory*"
+                                        <Controls.Input
+                                            name="doctor_address"
+                                            label="Doctor Address"
                                             value={values.name}
                                             onChange={handleInputChange}
-                                            options={mpoAreaData}
-                                            error={errors.doctor_territory}
-                                        />
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Box marginBottom={2}>
-                                        <Controls.Select
-                                            name="category_name"
-                                            label="Doctor Category*"
-                                            value={values.name}
-                                            onChange={handleInputChange}
-                                            options={doctorcategories}
-                                            error={errors.category_name}
+                                            error={errors.doctor_address}
                                         />
                                     </Box>
                                 </Grid>

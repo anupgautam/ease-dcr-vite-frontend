@@ -112,7 +112,6 @@ const AddDcrForHo = () => {
         visited_with: ""
     })
 
-    console.log('initialFValues', initialFValues);
 
     const [TpDetail, setTpDetail] = useState(null);
 

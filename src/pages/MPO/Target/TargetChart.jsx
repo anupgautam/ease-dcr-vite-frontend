@@ -43,7 +43,6 @@ export default function TargetChart(props) {
     { value: '2090', label: '2090' },
   ]
 
-
   const handleNepaliYearChange = useCallback((event) => {
     setSelectedYear(event.target.value);
   }, [])
@@ -84,6 +83,7 @@ export default function TargetChart(props) {
   useEffect(() => {
     if (selectedCompanyUser !== null && selectedYear == null) {
       targetUser({ 'id': selectedCompanyUser }).then((res) => {
+        console.log(res)
         setChartData({
           options: {
             chart: {
@@ -111,16 +111,17 @@ export default function TargetChart(props) {
     }
     else if (selectedCompanyUser !== null && selectedYear !== null) {
       targetUser({ 'id': selectedCompanyUser, 'year': selectedYear }).then((res) => {
+        console.log(res)
         setChartData({
           options: {
             labels: ['Target Amount', 'Sales'],
             colors: ['#FF4560', '#008FFB'],
-            series: [res.data.target_amount[0], res.data.sales[0]],
+            series: [res?.data?.target_amount[0], res?.data?.sales[0]],
             legend: {
               position: 'bottom'
             }
           },
-          series: [res.data.target_amount[0], res.data.sales[0]],
+          series: [res?.data?.target_amount[0], res?.data?.sales[0]],
           type: "pie",
           width: "700",
           header: "Pie Chart"
@@ -157,7 +158,7 @@ export default function TargetChart(props) {
                         label="Role Name"
                       >
                         <MenuItem value={null}>None</MenuItem>
-                        {roles.map((role) => (
+                        {roles?.map((role) => (
                           <MenuItem key={role.id} value={role.id}>
                             {role.title && role.title}
                           </MenuItem>
@@ -196,7 +197,7 @@ export default function TargetChart(props) {
                         label="Year"
                       >
                         <MenuItem value={null}>None</MenuItem>
-                        {year.map((year) => (
+                        {year?.map((year) => (
                           <MenuItem key={year.value} value={year.value}>
                             {year.label}
                           </MenuItem>
@@ -207,8 +208,10 @@ export default function TargetChart(props) {
                 </Grid>
               </Grid>
             </Box>
-            <ApexChart
-              data={chartData} />
+            {chartData &&
+              <ApexChart
+                data={chartData} />
+            }
           </Card>
         </>
       )}

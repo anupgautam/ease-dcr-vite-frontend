@@ -13,12 +13,12 @@ import { useSelector } from 'react-redux';
 const TABLE_HEAD = [
     { id: 'chemist_name', label: 'Chemist Name', alignRight: false },
     { id: 'chemist_phone_number', label: 'Chemist Phone Number', alignRight: false },
-    { id: 'chemist_address', label: 'Chemist Address', alignRight: false },
+    { id: 'chemist_territory', label: 'Chemist Territory', alignRight: false },
     { id: 'chemist_category', label: 'Chemist Category', alignRight: false },
     { id: 'chemist_pan_number', label: 'Chemist PAN Number', alignRight: false },
     { id: 'chemist_contact_person', label: 'Chemist Contact Person', alignRight: false },
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
-    { id: 'chemist_territory', label: 'Chemist Territory', alignRight: false },
+    { id: 'chemist_address', label: 'Chemist Address', alignRight: false },
 ];
 
 const AddMultipleChemist = () => {
@@ -240,15 +240,17 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 // error={errors.doctor_phone_number}
                 />
             </TableCell>
-            <TableCell align="left">
-                <Controls.Input
-                    name="chemist_address"
-                    label="Chemist Address"
-                    value={Formdata.chemist_address}
+            <TableCell align="left" style={{ width: "200px" }}>
+                <Controls.Select
+                    name="chemist_territory"
+                    label="Chemist Territory*"
+                    value={Formdata.chemist_territory}
                     onChange={handleInputChange}
-                // error={errors.doctor_address}
+                    // error={errors.doctor_territory}
+                    options={mpoAreaData}
                 />
             </TableCell>
+
             <TableCell align="left" style={{ width: "200px" }}>
                 <Controls.Select
                     name="chemist_category"
@@ -299,14 +301,13 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                         /> : <>{email}</>
                 }
             </TableCell>
-            <TableCell align="left" style={{ width: "200px" }}>
-                <Controls.Select
-                    name="chemist_territory"
-                    label="Chemist Territory*"
-                    value={Formdata.chemist_territory}
+            <TableCell align="left">
+                <Controls.Input
+                    name="chemist_address"
+                    label="Chemist Address"
+                    value={Formdata.chemist_address}
                     onChange={handleInputChange}
-                    // error={errors.doctor_territory}
-                    options={mpoAreaData}
+                // error={errors.doctor_address}
                 />
             </TableCell>
         </>

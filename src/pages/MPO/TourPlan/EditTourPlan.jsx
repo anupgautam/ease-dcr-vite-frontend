@@ -92,6 +92,8 @@ const EditTourPlan = ({ idharu, onClose }) => {
         }
     }, [TourPlan?.data]);
 
+    console.log(TourPlan?.data)
+
     const { values, errors, setErrors, handleInputChange } = useForm(
         initialFValues,
         true,
@@ -212,7 +214,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                         multiple
                                         options={areas}
                                         getOptionLabel={(option) => option.title}
-                                        value={MpoTpArea}
+                                        defaultValue={MpoTpArea}
                                         onChange={handleMpoTpArea}
                                         renderInput={(params) => (
                                             <TextField {...params} label="Select the Areas" error={Boolean(errors.area_name)} helperText={errors.area_name} />
