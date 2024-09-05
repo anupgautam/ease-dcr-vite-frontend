@@ -14,10 +14,10 @@ import { useSelector } from 'react-redux';
 const TABLE_HEAD = [
     { id: 'stockist_name', label: 'Stockist Name', alignRight: false },
     { id: 'stockist_phone_number', label: 'Stockist Phone Number', alignRight: false },
+    { id: 'stockist_territory', label: 'Stockist Territory', alignRight: false },
+    { id: 'stockist_category', label: 'Stockist Category', alignRight: false },
     { id: 'stockist_address', label: 'Stockist Address', alignRight: false },
     { id: 'stockist_pan_vat_number', label: 'Stockist VAT or PAN Number', alignRight: false },
-    { id: 'stockist_category', label: 'Stockist Category', alignRight: false },
-    { id: 'stockist_territory', label: 'Stockist Territory', alignRight: false },
 ];
 
 const AddMultipleStockist = () => {
@@ -254,6 +254,27 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 // className={"drawer-first-name-input"}
                 />
             </TableCell>
+            <TableCell align="left" style={{ width: "250px" }}>
+                <Controls.Select
+                    name="stockist_territory"
+                    label="Stockist Territory*"
+                    value={Formdata.stockist_territory}
+                    onChange={handleInputChange}
+                    // error={errors.doctor_territory}
+                    options={companyAreaData}
+                />
+            </TableCell>
+            <TableCell align="left" style={{ width: "250px" }}>
+                <Controls.Select
+                    name="stockist_category"
+                    label="Stockist Category*"
+                    // className={"drawer-first-name-input"}
+                    value={Formdata.stockist_category}
+                    options={doctorcategories}
+                    onChange={handleInputChange}
+                // error={errors.doctorDCRId}
+                />
+            </TableCell>
             <TableCell align="left">
                 <Controls.Input
                     name="stockist_address"
@@ -274,27 +295,8 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 // className={"drawer-first-name-input"}
                 />
             </TableCell>
-            <TableCell align="left" style={{ width: "200px" }}>
-                <Controls.Select
-                    name="stockist_category"
-                    label="Stockist Category*"
-                    // className={"drawer-first-name-input"}
-                    value={Formdata.stockist_category}
-                    options={doctorcategories}
-                    onChange={handleInputChange}
-                // error={errors.doctorDCRId}
-                />
-            </TableCell>
-            <TableCell align="left" style={{ width: "200px" }}>
-                <Controls.Select
-                    name="stockist_territory"
-                    label="Stockist Territory*"
-                    value={Formdata.stockist_territory}
-                    onChange={handleInputChange}
-                    // error={errors.doctor_territory}
-                    options={companyAreaData}
-                />
-            </TableCell>
+
+
         </>
     )
 }

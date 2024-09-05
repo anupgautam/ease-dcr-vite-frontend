@@ -14,8 +14,8 @@ const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
   // const mpo_id = useSelector(state => state.dcrData.selected_user);
   const [companyRoles, setCompanyRoles] = useState([]);
   const [companyRole] = usePostHigherLevelExecutiveGetDataMutation();
-  const { data } = useGetVisitedWithByDcrIdQuery(id);
 
+  const { data } = useGetVisitedWithByDcrIdQuery(id);
   useEffect(() => {
     companyRole({ id: mpoId })
       .then((res) => {
@@ -27,6 +27,7 @@ const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
       })
   }, [mpoId])
 
+  console.log(companyRoles)
   const [CompanyRolesData, setCompanyRolesData] = useState('');
   const [Caching, setCaching] = useState(null);
 

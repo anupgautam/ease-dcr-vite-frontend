@@ -257,13 +257,17 @@ const AddChemist = () => {
                                     </Grid>
                                     <Grid item xs={6}>
                                         <Box marginBottom={2}>
-                                            <Controls.Input
-                                                name="chemist_address"
-                                                label="Chemist Address"
-                                                value={values.name}
-                                                onChange={handleInputChange}
-                                                error={errors.chemist_address}
-                                            />
+                                            <Box marginBottom={2}>
+                                                <Controls.Select
+                                                    name="chemist_territory"
+                                                    label="Chemist Territory*"
+                                                    value={values.name}
+                                                    onChange={handleInputChange}
+                                                    error={errors.chemist_territory}
+                                                    options={mpoAreaData}
+                                                />
+                                            </Box>
+
                                         </Box>
                                     </Grid>
                                 </Grid>
@@ -324,13 +328,12 @@ const AddChemist = () => {
                                     </Box>
                                 }
                                 <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="chemist_territory"
-                                        label="Chemist Territory*"
+                                    <Controls.Input
+                                        name="chemist_address"
+                                        label="Chemist Address"
                                         value={values.name}
                                         onChange={handleInputChange}
-                                        error={errors.chemist_territory}
-                                        options={mpoAreaData}
+                                        error={errors.chemist_address}
                                     />
                                 </Box>
                                 {/* <Box marginBottom={2}>
@@ -364,21 +367,26 @@ const AddChemist = () => {
                 <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
                     <CircularProgress />
                 </Grid>
-            )}
-            {ErrorMessage.show && (
-                <Grid>
-                    <Box className="messageContainer errorMessage">
-                        <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                    </Box>
-                </Grid>
-            )}
-            {SuccessMessage.show && (
-                <Grid>
-                    <Box className="messageContainer successMessage">
-                        <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                    </Box>
-                </Grid>
-            )}
+            )
+            }
+            {
+                ErrorMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer errorMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )
+            }
+            {
+                SuccessMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer successMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )
+            }
         </>
     )
 }

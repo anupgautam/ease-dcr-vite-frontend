@@ -235,6 +235,27 @@ const AddStockist = () => {
                                     />
                                 </Box>
                                 <Box marginBottom={2}>
+                                    <Controls.Select
+                                        name="stockist_territory"
+                                        label="Stockist Territory*"
+                                        value={values.name}
+                                        onChange={handleInputChange}
+                                        error={errors.stockist_territory}
+                                        options={companyAreaData}
+                                    />
+                                </Box>
+                                <Box marginBottom={2}>
+                                    <Controls.Select
+                                        name="stockist_category"
+                                        label="Stockist Category"
+                                        value={values.name}
+                                        onChange={handleInputChange}
+                                        error={errors.stockist_category}
+                                        options={[{ id: 'A', title: 'A' }, { id: 'B', title: 'B' }, { id: 'C', title: 'C' }]}
+                                    />
+                                </Box>
+
+                                <Box marginBottom={2}>
                                     <Controls.Input
                                         name="stockist_address"
                                         label="Stockist Address*"
@@ -262,26 +283,7 @@ const AddStockist = () => {
                                         error={errors.pan_vat_number}
                                     />
                                 </Box>
-                                <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="stockist_category"
-                                        label="Stockist Category"
-                                        value={values.name}
-                                        onChange={handleInputChange}
-                                        error={errors.stockist_category}
-                                        options={[{ id: 'A', title: 'A' }, { id: 'B', title: 'B' }, { id: 'C', title: 'C' }]}
-                                    />
-                                </Box>
-                                <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="stockist_territory"
-                                        label="Stockist Territory*"
-                                        value={values.name}
-                                        onChange={handleInputChange}
-                                        error={errors.stockist_territory}
-                                        options={companyAreaData}
-                                    />
-                                </Box>
+
                                 <Stack spacing={1} direction="row">
                                     <Controls.SubmitButton
                                         variant="contained"

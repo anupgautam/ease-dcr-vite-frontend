@@ -13,14 +13,14 @@ import { useSelector } from 'react-redux';
 const TABLE_HEAD = [
     { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
     { id: 'doctor_phone_number', label: 'Doctor Phone Number', alignRight: false },
-    { id: 'doctor_address', label: 'Doctor Address', alignRight: false },
+    { id: 'doctor_territory', label: 'Doctor Territory', alignRight: false },
     { id: 'doctor_gender', label: 'Doctor Gender', alignRight: false },
     { id: 'doctor_category', label: 'Doctor Category', alignRight: false },
     { id: 'doctor_nmc_number', label: 'Doctor NMC Number', alignRight: false },
     { id: 'doctor_qualification', label: 'Doctor Qualification', alignRight: false },
     { id: 'doctor_specialization', label: 'Doctor Specialization', alignRight: false },
     { id: 'mpo_name', label: 'MPO Name', alignRight: false },
-    { id: 'doctor_territory', label: 'Doctor Territory', alignRight: false },
+    { id: 'doctor_address', label: 'Doctor Address', alignRight: false },
 ];
 
 
@@ -266,25 +266,14 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 // className={"drawer-first-name-input"}
                 />
             </TableCell>
-            <TableCell align="left">
-                <Controls.Input
-                    name="doctor_address"
-                    label="Doctor Address"
-                    value={Formdata.doctor_address}
-                    onChange={handleInputChange}
-                // error={errors.doctor_address}
-                // className={"drawer-first-name-input"}
-                />
-            </TableCell>
             <TableCell align="left" style={{ width: "200px" }}>
                 <Controls.Select
-                    name="doctor_gender"
-                    label="Doctor Gender"
-                    // className={"drawer-first-name-input"}
-                    value={Formdata.doctor_gender}
-                    options={doctorGender}
+                    name="doctor_territory"
+                    label="Doctor Territory*"
+                    value={Formdata.doctor_territory}
                     onChange={handleInputChange}
-                // error={errors.doctor_gender}
+                    // error={errors.doctor_territory}
+                    options={mpoAreaData}
                 />
             </TableCell>
             <TableCell align="left" style={{ width: "200px" }}>
@@ -296,6 +285,17 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                     options={doctorcategories}
                     onChange={handleInputChange}
                 // error={errors.doctorDCRId}
+                />
+            </TableCell>
+            <TableCell align="left" style={{ width: "200px" }}>
+                <Controls.Select
+                    name="doctor_gender"
+                    label="Doctor Gender"
+                    // className={"drawer-first-name-input"}
+                    value={Formdata.doctor_gender}
+                    options={doctorGender}
+                    onChange={handleInputChange}
+                // error={errors.doctor_gender}
                 />
             </TableCell>
             <TableCell align="left">
@@ -350,13 +350,13 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 }
             </TableCell>
             <TableCell align="left" style={{ width: "200px" }}>
-                <Controls.Select
-                    name="doctor_territory"
-                    label="Doctor Territory*"
-                    value={Formdata.doctor_territory}
+                <Controls.Input
+                    name="doctor_address"
+                    label="Doctor Address"
+                    value={Formdata.doctor_address}
                     onChange={handleInputChange}
-                    // error={errors.doctor_territory}
-                    options={mpoAreaData}
+                // error={errors.doctor_address}
+                // className={"drawer-first-name-input"}
                 />
             </TableCell>
         </>
