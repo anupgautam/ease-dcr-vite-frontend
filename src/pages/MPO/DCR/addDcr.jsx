@@ -67,6 +67,7 @@ const AddDcrForHo = () => {
     // const [higherOrderTourplans, setHigherOrderTourplans] = useState([]);
 
     const { data: higherOrderTourplans } = useGetHigherOrderTourPlanUsingIdQuery(company_user_role_id);
+    console.log('higherOrderTourplans', higherOrderTourplans)
 
     // useEffect(() => {
     //     GethingherOrder({ user_id: company_user_role_id })

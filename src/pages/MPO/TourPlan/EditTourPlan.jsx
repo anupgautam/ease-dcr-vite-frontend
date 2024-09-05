@@ -199,6 +199,15 @@ const EditTourPlan = ({ idharu, onClose }) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Box marginBottom={2}>
+                                    <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Select the Date*</label><br />
+                                    <NepaliDatePicker
+                                        value={dateData}
+                                        format="YYYY-MM-DD"
+                                        onChange={(value) => setDateData(value)} />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Box marginBottom={2}>
                                     <Autocomplete
                                         multiple
                                         options={areas}
@@ -213,19 +222,12 @@ const EditTourPlan = ({ idharu, onClose }) => {
                             </Grid>
                         </Grid>
                         <Box marginBottom={2}>
-                            <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Select the Date*</label><br />
-                            <NepaliDatePicker
-                                value={dateData}
-                                format="YYYY-MM-DD"
-                                onChange={(value) => setDateData(value)} />
-                        </Box>
-                        <Box marginBottom={2}>
                             <Controls.Input
                                 name="purpose_of_visit"
-                                label="Remarks"
+                                label="Day Status"
                                 value={values.purpose_of_visit}
                                 onChange={handleInputChange}
-                                placeholdertext="Remarks"
+                                placeholdertext="Day Status"
                             />
                         </Box>
                         <Grid container spacing={2}>
