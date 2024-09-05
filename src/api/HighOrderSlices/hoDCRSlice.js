@@ -38,9 +38,9 @@ export const HODCRSlice = apiSlice.injectEndpoints({
                 url: `other-roles/higher-order-dcr/${id}`,
                 method: 'GET'
             }),
-            providesTags:['HODCR']
+            providesTags: ['HODCR']
         }),
-        
+
         //! Delete HODCRs by id
         deleteHODCRsById: builder.mutation({
             query: (id) => {
@@ -76,9 +76,9 @@ export const HODCRSlice = apiSlice.injectEndpoints({
         searchHODCR: builder.query({
             query: (FilteredData) => {
                 // 
-                const { user_id, month, date, company_name } = FilteredData;
+                const { user_id, month, date, company_name, year } = FilteredData;
                 return {
-                    url: `other-roles/higher-order-dcr-with-pagination/?user_id=${user_id}&month=${month}&date=${date}&company_id=${company_name}`,
+                    url: `other-roles/higher-order-dcr-with-pagination/?user_id=${user_id}&month=${month}&date=${date}&year=${year}&company_id=${company_name}`,
                     method: 'GET',
                     // body: { ...FilteredData },
                 }

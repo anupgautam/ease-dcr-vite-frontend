@@ -15,13 +15,13 @@ import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { usePostAllMPONamesNoPageMutation } from '@/api/MPOSlices/DoctorSlice';
 import { useGetShiftsQuery } from '@/api/DCRs Api Slice/TourPlanApiSlice';
-import { useGetUsersByCompanyRoleIdExecutativeLevelQuery,usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
+import { useGetUsersByCompanyRoleIdExecutativeLevelQuery, usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
 import {
     useAddHigherOrderDcrMutation,
     useCreateDcrForChemistWithNullValuesMutation,
     useCreateDcrForStockistWithNullValuesMutation,
     useCreateDcrWithNullValuesForDoctorMutation,
-    useGetHigherOrderTourPlanUsingIdMutation
+    useGetHigherOrderTourPlanUsingIdQuery
 } from '@/api/MPOSlices/tourPlan&Dcr';
 import { useNavigate } from 'react-router-dom';
 import { useGetcompanyUserRolesByIdQuery } from '@/api/CompanySlices/companyUserRoleSlice';
@@ -41,37 +41,41 @@ const AddDcrForHo = () => {
     const { data: ShiftData } = useGetShiftsQuery();
 
     const shiftAllData = useMemo(() => {
-        if (ShiftData?.data) {
-            return ShiftData?.data.map(key => ({ id: key.id, title: key.shift }))
+        if (ShiftData) {
+            return ShiftData.map(key => ({ id: key.id, title: key.shift }))
         }
         return [];
     }, [ShiftData])
 
-    const mpoAccordingToExecutiveLevel = usePostUserIdToGetLowerLevelExecutiveMutation( company_user_role_id )
 
-    const executiveLevelOptions = useMemo(() => {
-        if (mpoAccordingToExecutiveLevel) {
-            if (mpoAccordingToExecutiveLevel.status === 'fulfilled') {
-                return mpoAccordingToExecutiveLevel.data.map(key =>
-                    ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name })
-                )
-            }
-        }
-        return [];
-    }, [mpoAccordingToExecutiveLevel])
+    const [LowerExecutive] = usePostUserIdToGetLowerLevelExecutiveMutation()
 
-    const [higherOrderTourplans, setHigherOrderTourplans] = useState([]);
-
-    const [GethingherOrder] = useGetHigherOrderTourPlanUsingIdMutation();
+    const [executiveLevelOptions, setExecutiveLevelOptions] = useState([]);
 
     useEffect(() => {
-        GethingherOrder({ user_id: company_user_role_id })
-            .then((res) => {
-                setHigherOrderTourplans(res.data);
-            })
-            .catch((err) => {
-            })
-    }, [company_user_id])
+        if (company_user_role_id) {
+            LowerExecutive({ id: company_user_role_id })
+                .then((res) => {
+                    if (res.data) {
+                        const data = res.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
+                        setExecutiveLevelOptions(data);
+                    }
+                })
+        }
+    }, [company_user_role_id])
+
+    // const [higherOrderTourplans, setHigherOrderTourplans] = useState([]);
+
+    const { data: higherOrderTourplans } = useGetHigherOrderTourPlanUsingIdQuery(company_user_role_id);
+
+    // useEffect(() => {
+    //     GethingherOrder({ user_id: company_user_role_id })
+    //         .then((res) => {
+    //             setHigherOrderTourplans(res.data);
+    //         })
+    //         .catch((err) => {
+    //         })
+    // }, [company_user_id])
 
     const [MpoData] = usePostAllMPONamesNoPageMutation()
 
@@ -107,15 +111,28 @@ const AddDcrForHo = () => {
         visited_with: ""
     })
 
+    console.log('initialFValues', initialFValues);
 
-    const selectTourPlanById = useCallback((key) => {
-        setInitialFvalues({
+    const [TpDetail, setTpDetail] = useState(null);
+
+
+
+
+    const selectTourPlanById = (key) => {
+        setTpDetail({
             id: key.id,
-            shift: key.shift.id,
-            visited_with: key.visited_with.id,
             date: key.date,
         })
-    }, [])
+    }
+
+    useEffect(() => {
+        if (TpDetail) {
+            setInitialFvalues({
+                id: TpDetail.id,
+                date: TpDetail.date,
+            })
+        }
+    }, [TpDetail])
 
     const {
         values,
@@ -168,8 +185,9 @@ const AddDcrForHo = () => {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
+
     //!Modal wala ko click event
-    const onAddDcr = useCallback(async (e) => {
+    const onAddDcr = async (e) => {
         setLoading(true)
         const data = {
             date: values.date,
@@ -178,14 +196,13 @@ const AddDcrForHo = () => {
             user_id: company_user_id,
             company_id: company_id
         }
-        createDCR(data)
+        await createDCR(data)
             .then((res) => {
                 if (res.data) {
                     setIsDrawerOpen(false)
                     setSuccessMessage({ show: true, message: 'Successfully Added DCR.' });
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
-                        window.location.reload(true);
                     }, 2000);
                 } else {
                     setErrorMessage({ show: true, message: response.error.data[0] });
@@ -205,7 +222,7 @@ const AddDcrForHo = () => {
             })
 
         setIsDrawerOpen(false)
-    }, [])
+    }
 
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -265,16 +282,14 @@ const AddDcrForHo = () => {
                                                                         <Grid item xs={3.5}>
                                                                             <Box style={{ padding: '5px', textAlign: 'center', border: '1.2px solid #2d8960', borderRadius: "5px", marginTop: '11px' }}>
                                                                                 <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{key.date.slice(8)}</Typography>
-                                                                                <Typography style={{ fontSize: '13px', color: "black", marginTop: "-5px" }}>{key.month.slice(0, 3)}</Typography>
                                                                             </Box>
                                                                         </Grid>
                                                                         <Grid item xs={8.5}>
                                                                             <Box >
                                                                                 <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
-                                                                                    {key.shift.shift}
+                                                                                    {key.month}
                                                                                 </span>
 
-                                                                                {/* <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", color: 'black', fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.visited_with.user_name.first_name + " " + key.visited_with.user_name.middle_name + " " + key.visited_with.user_name.last_name}</Typography> */}
                                                                             </Box>
                                                                         </Grid>
                                                                     </Grid>
