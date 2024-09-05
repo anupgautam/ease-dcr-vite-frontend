@@ -102,6 +102,17 @@ const EditUser = ({ idharu, onClose }) => {
 
     })
 
+    const [multipleDivisions, setMultipleDivisions] = useState([])
+    const handleMultipleDivsions = (e, value) => {
+        setMultipleDivisions(value);
+    }
+
+    const [multipleCompanyAreas, setMultipleCompanyAreas] = useState([])
+    const handleMultpleCompanyAreas = (e, value) => {
+        setMultipleCompanyAreas(value);
+    }
+
+
     const { values,
         errors,
         setErrors,
@@ -161,6 +172,14 @@ const EditUser = ({ idharu, onClose }) => {
 
     useEffect(() => {
         if (User?.data) {
+            // const selectedDivisions = User?.data?.division_name?.map(area => ({
+            //     id: id,
+            //     title: division_name
+            // }))
+            // const selectedCompanyAreas = User?.data?.company_area?.map(area => ({
+            //     id: id,
+            //     title: company_area
+            // }))
             setInitialFValues({
                 first_name: User?.data?.user_name?.first_name,
                 middle_name: User?.data?.user_name?.middle_name,
@@ -169,11 +188,16 @@ const EditUser = ({ idharu, onClose }) => {
                 phone_number: User?.data?.user_name?.phone_number,
                 role_name: User?.data?.role_name?.id,
                 executive_level: User?.data?.executive_level?.id,
-                division_name: User?.data?.division_name?.id,
                 station_type: User?.data?.station_type,
+                division_name: User?.data?.division_name?.id,
                 company_area: User?.data?.company_area?.id
+                // division_name: selectedDivisions,
+                // company_area: selectedCompanyAreas
             });
             setDateData(User?.data?.user_name.date_of_joining ? User?.data?.user_name.date_of_joining : now)
+
+            setMultipleDivisions(selectedDivisions || [])
+            setMultipleCompanyAreas(selectedCompanyAreas || [])
         }
     }, [User])
 
@@ -205,8 +229,27 @@ const EditUser = ({ idharu, onClose }) => {
         formData.append('access', access);
         formData.append("date_of_joining", dateData);
         formData.append("is_active", true);
+
+        // const data = {
+        //     first_name: values.first_name,
+        //     middle_name: values.middle_name,
+        //     last_name: values.last_name,
+        //     phone_number: values.phone_number,
+        //     email: values.email,
+        //     role_name: values.role_name,
+        //     executive_level: values.executive_level,
+        //     station_type: values.station_type,
+        //     company_id: company_id,
+        //     refresh: refresh,
+        //     access: access,
+        //     data_of_joining: dateData,
+        //     is_active: true,
+        //     division_name: multipleDivisions.map(division => ({ company_mpo_area_id: area.id }))
+        //     company_area: multipleCompanyAreas.map(areas => ({}))
+        // }
         try {
             const response = await updateUsers(formData).unwrap();
+            // const response = await updateUsers({ id: idharu, value: data }).unwrap();
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited User' });
                 setTimeout(() => {
@@ -337,6 +380,21 @@ const EditUser = ({ idharu, onClose }) => {
                         />
                     </Box>
                     <Box marginBottom={2}>
+                        {/* <Autocomplete
+                            multiple
+                            options={divisions}
+                            getOptionLabel={(option) => option.title}
+                            value={multipleDivisions}
+                            onChange={handleMultipleDivsions}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Division Name*" error={Boolean(errors.division_name)} helperText={errors.division_name} />
+                            )}
+                            renderOption={(props, option) => (
+                                <li {...props} key={option.id}>
+                                    {option.title}
+                                </li>
+                            )}
+                        /> */}
                         <Controls.Select
                             name="division_name"
                             label="Division Name*"
@@ -359,6 +417,21 @@ const EditUser = ({ idharu, onClose }) => {
                         />
                     </Box>
                     <Box marginBottom={2}>
+                        {/* <Autocomplete
+                            multiple
+                            options={areas}
+                            getOptionLabel={(option) => option.title}
+                            value={multipleCompanyAreas}
+                            onChange={handleMultpleCompanyAreas}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Select the Areas" error={Boolean(errors.company_area)} helperText={errors.company_area} />
+                            )}
+                            renderOption={(props, option) => (
+                                <li {...props} key={option.id}>
+                                    {option.title}
+                                </li>
+                            )}
+                        /> */}
                         <Controls.Select
                             name="company_area"
                             label="Company Wise Area*"

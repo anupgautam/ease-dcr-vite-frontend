@@ -258,7 +258,7 @@ const AddDcrForHo = () => {
 
                                                 <Box style={{ width: "100%", overflowX: "auto", whiteSpace: 'nowrap', cursor: "pointer" }}>
                                                     {
-                                                        higherOrderTourplans.map((key, index) => (
+                                                        higherOrderTourplans?.map((key, index) => (
                                                             <Box style={{ width: '220px', display: "inline-block", marginRight: "10px" }} key={index} onClick={(e) => selectTourPlanById(key)}>
                                                                 <Box style={{ borderRadius: '5px', border: '1.2px solid #dbe0e4', padding: "5px", paddingTop: "10px", paddingLeft: "10px", paddingRight: '10px' }}>
                                                                     <Grid container spacing={2}>
