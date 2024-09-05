@@ -193,7 +193,7 @@ const AddDcrForHo = () => {
             date: values.date,
             visited_with: values.visited_with,
             shift: values.shift,
-            user_id: company_user_id,
+            user_id: company_user_role_id,
             company_id: company_id
         }
         await createDCR(data)
