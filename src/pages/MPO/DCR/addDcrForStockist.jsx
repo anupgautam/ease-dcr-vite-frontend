@@ -160,7 +160,7 @@ const AddDCRForStockist = () => {
                     res.data.forEach(keyData => {
                         executive.push({
                             id: keyData.id,
-                            title: keyData.user_name.email,
+                            title: keyData.user_name.first_name + " " + keyData.user_name.middle_name + " " + keyData.user_name.last_name,
                         });
                     });
                     setExecutiveOptions(executive);
@@ -250,74 +250,77 @@ const AddDCRForStockist = () => {
             if (
                 sendingData['visited_area'] ||
                 sendingData['shift'] ||
-                sendingData['visited_doctor']
+                sendingData['visited_stockist']
             ) {
                 sendingData['visited_area'] = sendingData['visited_area'];
                 sendingData['shift'] = values.shift;
-                sendingData['visited_doctor'] = sendingData['visited_doctor'];
+                sendingData['visited_stockist'] = sendingData['visited_stockist'];
             } else {
                 sendingData['visited_area'] = null;
                 sendingData['visited_doctor'] = null;
                 sendingData['shift'] = null;
             }
+            console.log('sending data', sendingData);
             updateDcr({ id: id, value: sendingData })
                 .then((res) => {
                     if (res.data) {
-                        createMpoDcr({
-                            mpo_name: company_user_id,
-                            dcr_id: id,
-                            shift: values.shift,
-                        })
-                            .then((res) => {
-                                if (res.data) {
-                                    if (LastData === true) {
-                                        updateTourplan({
-                                            id: values.tour_id,
-                                            value: { is_stockist_dcr_added: true },
-                                        })
-                                            .then(res => {
-                                                if (res.data) {
-                                                    setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
-                                                    setTimeout(() => {
-                                                        setSuccessMessage({ show: false, message: '' });
-                                                        navigate('/dashboard/admin/dcr');
-                                                    }, 2000);
-                                                }
-                                            })
-                                            .catch(err => {
-
-                                            })
-                                            .finally(() => {
-                                                setLoading(false)
-                                            })
-                                    } else {
-                                        DcrForStockist()
-                                            .then((res) => {
-                                                if (res.data) {
-                                                    setSuccessMessage({ show: true, message: 'Dcr Added Successfully. Add Another Dcr.' });
-                                                    setTimeout(() => {
-                                                        setSuccessMessage({ show: false, message: '' });
-                                                        navigate(`/dashboard/admin/dcr/for/stockist?id=${res.data.id}`)
-                                                    }, 2000);
-                                                }
-                                            })
+                        if (LastData === true) {
+                            updateTourplan({
+                                id: values.tour_id,
+                                value: { is_stockist_dcr_added: true },
+                            })
+                                .then(res => {
+                                    if (res.data) {
+                                        setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
+                                        setTimeout(() => {
+                                            setSuccessMessage({ show: false, message: '' });
+                                            navigate('/dashboard/admin/dcr');
+                                        }, 2000);
                                     }
-                                } else {
-                                    setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
-                                    setTimeout(() => {
-                                        setErrorMessage({ show: false, message: '' });
-                                    }, 2000);
-                                }
-                            })
-                            .catch(err => {
-                                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                                setTimeout(() => {
-                                    setErrorMessage({ show: false, message: '' });
-                                }, 2000);
-                            })
-                            .finally(() => {
-                                setLoading(false)
-                            })
+                                })
+                                .catch(err => {
+
+                                })
+                                .finally(() => {
+                                    setLoading(false)
+                                })
+                        } else {
+                            DcrForStockist()
+                                .then((res) => {
+                                    console.log('res.data', res.data);
+                                    if (res.data) {
+                                        setSuccessMessage({ show: true, message: 'Dcr Added Successfully. Add Another Dcr.' });
+                                        setTimeout(() => {
+                                            setSuccessMessage({ show: false, message: '' });
+                                            navigate(`/dashboard/admin/dcr/for/stockist?id=${res.data.id}`)
+                                        }, 2000);
+                                    }
+                                })
+                        }
+                        // createMpoDcr({
+                        //     mpo_name: company_user_id,
+                        //     dcr_id: id,
+                        //     shift: values.shift,
+                        // })
+                        //     .then((res) => {
+                        //         if (res.data) {
+
+                        //         } else {
+                        //             setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
+                        //             setTimeout(() => {
+                        //                 setErrorMessage({ show: false, message: '' });
+                        //             }, 2000);
+                        //         }
+                        //     })
+                        //     .catch(err => {
+                        //         setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                        //         setTimeout(() => {
+                        //             setErrorMessage({ show: false, message: '' });
+                        //         }, 2000);
+                        //     })
+                        //     .finally(() => {
+                        //         setLoading(false)
+                        //     })
                     } else {
                         setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                         setTimeout(() => {

@@ -35,7 +35,7 @@ export const TargetSlices = apiSlice.injectEndpoints({
             query: (filters) => {
                 const { selectedYear, selectedRole } = filters;
                 return {
-                    url: `expenses/target/?year=${selectedYear ? selectedYear : ""}&target_to__role_name=${selectedRole ? selectedRole : ""}`,
+                    url: `expenses/target/?target_from__company_name=${filters.company_name}&year=${selectedYear ? selectedYear : ""}&target_to__role_name=${selectedRole ? selectedRole : ""}`,
                     method: 'GET'
                 }
             },

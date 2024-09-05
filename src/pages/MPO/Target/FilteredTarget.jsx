@@ -24,15 +24,17 @@ import { useTheme } from "@mui/material/styles";
 import EditTarget from './EditTarget';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
+import { useSelector } from 'react-redux';
 
 const FilteredTarget = ({ selectedYear, selectedRole }) => {
 
     const now = new BSDate().now();
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const monthData = getNepaliMonthName(now._date.month);
     const yearData = now._date.year;
 
-    const { data } = useGetTargetsByFilterQuery({ selectedYear, selectedRole });
+    const { data } = useGetTargetsByFilterQuery({ selectedYear, selectedRole, company_name: company_id });
     const [deleteTarget] = useDeleteTargetsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
