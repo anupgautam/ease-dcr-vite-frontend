@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import {
     Box, Grid,
-    Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel, CircularProgress
+    Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel, CircularProgress, Autocomplete
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -30,10 +30,9 @@ import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/U
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
-    const { company_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, role, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
-    const [users, setUsers] = useState([]);
     const [dateData, setDateData] = useState();
 
     //! Getting TourPlan by ID
@@ -41,9 +40,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         skip: !idharu
     });
 
-
     const [LowerExecutive] = usePostUserIdToGetLowerLevelExecutiveMutation();
-
 
     useEffect(() => {
         if (TourPlan?.data?.user_id?.id) {
@@ -57,7 +54,24 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         }
     }, [TourPlan?.data?.user_id?.id])
 
+    // const [userLists] = usePostUserIdToGetLowerLevelExecutiveMutation()
 
+    // const [users, setUsers] = useState([]);
+
+    // useEffect(() => {
+    //     if (company_user_role_id) {
+    //         userLists({ id: company_user_role_id })
+    //             .then((res) => {
+    //                 if (res.data) {
+    //                     const data = res?.data?.map(key => ({
+    //                         id: key.id,
+    //                         title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
+    //                     }));
+    //                     setUsers(data)
+    //                 }
+    //             })
+    //     }
+    // }, [company_user_role_id])
 
     // //! Get selected area
     const shiftData = useGetShiftsQuery();
@@ -310,6 +324,24 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                     ))}
                                 </Select>
                             </FormControl>
+
+                            <Autocomplete
+                                multiple
+                                options={filteredOptions}
+                                value={selectedAreas}
+                                // options={mpoAreaData}
+                                // value={MpoTpArea.map(id => mpoAreaData.find(option => option.id === id) || {})}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMpoTpArea}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Select the Visited With*" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
                         </Box>
                         {Array.isArray(values?.visited_data) &&
                             values.visited_data.map((key, index) => (
