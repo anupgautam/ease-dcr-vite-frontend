@@ -34,6 +34,7 @@ import {
 import EditHoDCR from '../EditDCRs/EditHoDCR';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 
 const TABLE_HEAD = [
@@ -41,6 +42,7 @@ const TABLE_HEAD = [
     { id: 'shift', label: 'Shift', alignRight: false },
     { id: 'date', label: 'Date', alignRight: false },
     { id: 'visited_with', label: 'Visited With', alignRight: false },
+    { id: '' },
     { id: '' },
 ];
 
@@ -64,12 +66,14 @@ const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
         setIsDrawerOpen(false);
     }, []);
 
-    const FilteredData = { user_id: user_role === 'admin' ? selectedUser : company_user_role_id, month: selectedMonth, date: selectedDate, company_name: company_id }
+    const FilteredData = { year: selectedDate, user_id: user_role === 'admin' ? selectedUser : company_user_id, month: selectedMonth, date: '', company_name: company_id }
 
     //! Search Results 
-    const results = useSearchHODCRQuery(FilteredData, {
-        skip: !user_role || !company_id || !selectedDate || !selectedMonth || !company_user_role_id || !selectedUser
-    });
+    const results = useSearchHODCRQuery(FilteredData,
+        // {
+        //     skip: !user_role || !company_id || !selectedDate || !selectedMonth || !company_user_role_id
+        // }
+    );
 
     //!States
     const [fetchedResults, setFetchedResults] = useState(null);
