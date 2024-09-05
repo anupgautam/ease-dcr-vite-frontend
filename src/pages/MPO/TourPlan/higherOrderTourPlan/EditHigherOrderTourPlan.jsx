@@ -21,7 +21,7 @@ import {
     useUpdateHOTourPlansMutation
 } from '../../../../api/HighOrderSlices/hoTourPlanSlice';
 import { useGetMpoAreaQuery } from '../../../../api/MPOSlices/TourPlanSlice';
-import { useGetUsersByCompanyRoleIdExecutativeLevelQuery,usePostUserIdToGetLowerLevelExecutiveMutation } from '../../../../api/MPOSlices/UserSlice';
+import { useGetUsersByCompanyRoleIdExecutativeLevelQuery, usePostUserIdToGetLowerLevelExecutiveMutation } from '../../../../api/MPOSlices/UserSlice';
 import moment from 'moment';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
@@ -41,10 +41,9 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         skip: !idharu
     });
 
-    const userLists = usePostUserIdToGetLowerLevelExecutiveMutation(TourPlan?.data?.user_id?.id, {
-        skip: !TourPlan?.data?.user_id?.id
-    })
+    const userLists = usePostUserIdToGetLowerLevelExecutiveMutation(TourPlan?.data?.user_id?.id)
 
+    console.log(userLists)
     useEffect(() => {
         const user = []
         if (userLists) {

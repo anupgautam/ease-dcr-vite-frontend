@@ -163,7 +163,7 @@ const DefaultHOTourPlan = () => {
                                                         </DialogTitle>
                                                         <DialogActions>
                                                             <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
-                                                                Yes{selectedId}
+                                                                Yes
                                                             </Button>
                                                             <Button
                                                                 onClick={handleClose}

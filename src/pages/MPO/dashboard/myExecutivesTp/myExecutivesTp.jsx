@@ -70,6 +70,7 @@ const TABLE_HEAD = [
     { id: 'area_name', label: 'Area', alignRight: false },
     { id: 'date', label: 'Date', alignRight: false },
     { id: 'is_approved', label: 'Approved', alignRight: false },
+    { id: 'hulting_station', label: 'Hulting Station', alignRight: false },
     { id: '' },
 ];
 
@@ -452,7 +453,19 @@ const MyExecutiveTp = () => {
                                                                                     </TableCell>
                                                                                     {/* <TableCell align="left">{tourplan.tour_plan.tour_plan.select_the_month}</TableCell> */}
                                                                                     <TableCell align="left">{moment(tourplan.tour_plan.tour_plan.select_the_date_id).format('DD')}</TableCell>
-                                                                                    <TableCell align="left">{tourplan.is_approved === true ? "Approved" : "Not Approved"}</TableCell>
+                                                                                    <TableCell align="left">{tourplan.is_approved === true ? <>
+                                                                                        <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75 }} >
+                                                                                            <Badge>
+                                                                                                <Iconify icon="mdi:tick-circle" />
+                                                                                            </Badge>
+                                                                                        </IconButton>
+                                                                                    </> : <>
+                                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} >
+                                                                                            <Badge>
+                                                                                                <Iconify icon="mdi:cross-circle" />
+                                                                                            </Badge>
+                                                                                        </IconButton>
+                                                                                    </>}  </TableCell>
                                                                                     {
                                                                                         tourplan.is_approved === false &&
                                                                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
@@ -461,6 +474,7 @@ const MyExecutiveTp = () => {
                                                                                             </Badge>
                                                                                         </IconButton>
                                                                                     }
+                                                                                    <TableCell align="left">{tourplan.hulting_station}</TableCell>
                                                                                     {/* //! Delete  */}
                                                                                     {
                                                                                         user_role === 'admin' &&

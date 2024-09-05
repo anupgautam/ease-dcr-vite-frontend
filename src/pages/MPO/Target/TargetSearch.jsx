@@ -265,7 +265,7 @@ const TargetSearch = (props) => {
                                         <TableBody>
                                             {(searchResults?.search?.length <= 3) ?
                                                 <>
-                                                    {selectedRole || selectedYear ?
+                                                    {selectedYear ?
                                                         <FilteredTarget
                                                             selectedRole={''}
                                                             selectedYear={selectedYear} /> :

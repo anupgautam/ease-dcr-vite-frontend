@@ -121,19 +121,19 @@ const AddUnplannedTp = () => {
                             setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
                             setTimeout(() => {
                                 setSuccessMessage({ show: false, message: '' });
-                            }, 3000);
+                            }, 5000);
                         } else {
                             setErrorMessage({ show: true, message: response.error.data[0] });
                             setTimeout(() => {
                                 setErrorMessage({ show: false, message: '' });
-                            }, 3000);
+                            }, 5000);
                         }
                     })
                     .catch(err => {
                         setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                         setTimeout(() => {
                             setErrorMessage({ show: false, message: '' });
-                        }, 3000);
+                        }, 5000);
                     })
                     .finally(() => {
                         setLoading(false)
@@ -157,13 +157,13 @@ const AddUnplannedTp = () => {
                             setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
                             setTimeout(() => {
                                 setSuccessMessage({ show: false, message: '' });
-                            }, 3000);
+                            }, 5000);
                         } else if (res.error.status === '400') {
                             setLoading(false)
                             setErrorMessage({ show: true, message: res.error.data[0] });
                             setTimeout(() => {
                                 setErrorMessage({ show: false, message: '' });
-                            }, 3000);
+                            }, 5000);
                         }
                     })
                     .catch(err => {
@@ -171,7 +171,7 @@ const AddUnplannedTp = () => {
                         setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                         setTimeout(() => {
                             setErrorMessage({ show: false, message: '' });
-                        }, 3000);
+                        }, 5000);
                     })
                     .finally(() => {
                         setLoading(false)
@@ -183,7 +183,7 @@ const AddUnplannedTp = () => {
             setErrorMessage({ show: true, message: 'Unplanned tourplan can be create in today dates only.' });
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            }, 5000);
         }
     }
 

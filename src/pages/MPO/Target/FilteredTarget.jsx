@@ -103,18 +103,20 @@ const FilteredTarget = ({ selectedYear, selectedRole }) => {
                             <TableCell align="left">{target?.target_amount}</TableCell>
                             <TableCell align="left">{target?.sales}</TableCell>
                             <TableCell align="left">
-                                {/* //!Edit */}
-                                <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(target.id)} >
-                                    <Badge>
-                                        <Iconify icon="eva:edit-fill" />
-                                    </Badge>
-                                </IconButton>
-                                {/*//! Delete  */}
-                                <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(target.id); handleClickOpen() }}>
-                                    <Badge>
-                                        <Iconify icon="eva:trash-2-outline" />
-                                    </Badge>
-                                </IconButton>
+                                {user_role === "admin" && <>
+                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(target.id)}>
+                                        <Badge>
+                                            <Iconify icon="eva:edit-fill" />
+                                        </Badge>
+                                    </IconButton>
+                                    <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(target.id); handleClickOpen() }}>
+                                        <Badge>
+                                            <Iconify icon="eva:trash-2-outline" />
+                                        </Badge>
+                                    </IconButton>
+                                </>
+                                }
+
                             </TableCell>
                             <Dialog
                                 fullScreen={fullScreen}

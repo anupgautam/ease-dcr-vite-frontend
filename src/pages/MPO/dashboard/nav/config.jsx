@@ -134,6 +134,11 @@ const navConfig = [
     icon: <Icon icon="simple-line-icons:event" style={{ fontSize: '20px' }} />,
   },
   {
+    title: 'Allowances',
+    path: 'admin/travelallowances',
+    icon: <Icon icon="tabler:map-pin-dollar" style={{ fontSize: '20px' }} />,
+  },
+  {
     title: 'Settings',
     path: 'settings/admin/companyareas',
     icon: <Icon icon="mdi:cog" style={{ fontSize: '20px' }} />,
