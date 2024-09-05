@@ -212,7 +212,7 @@ export default function Router() {
         },
         {
           path: 'admin/travelallowances',
-          element: <Authentication component={ListOfTravelAllowancesController} allowRoles={['MPO', 'other-roles']} />,
+          element: <Authentication component={ListOfTravelAllowancesController} allowRoles={['MPO', 'other-roles', 'admin']} />,
         },
         {
           path: 'admin/upload',

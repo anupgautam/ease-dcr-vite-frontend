@@ -192,7 +192,22 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                                                                         <TableCell>
                                                                             <Stack direction="row" alignItems="center" spacing={2}>
                                                                                 <Typography variant="subtitle2" noWrap>
-                                                                                    {tourplan.is_approved === true ? 'Approved' : 'Not Approved'}
+                                                                                    {tourplan.is_approved === true ? <>
+                                                                                        <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75, ml: 0.75 }}>
+                                                                                            <Badge>
+                                                                                                <Iconify icon="fluent:text-change-accept-24-filled" width={30} height={20} />
+                                                                                            </Badge>
+                                                                                        </IconButton>
+                                                                                    </> :
+                                                                                        <>
+                                                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75, ml:0.75 }}>
+                                                                                                <Badge>
+                                                                                                    <Iconify icon="fluent:text-change-reject-24-filled"
+                                                                                                        width={30} height={20}
+                                                                                                    />
+                                                                                                </Badge>
+                                                                                            </IconButton>
+                                                                                        </>}
                                                                                 </Typography>
                                                                             </Stack>
                                                                         </TableCell>

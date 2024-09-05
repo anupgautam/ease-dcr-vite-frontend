@@ -191,7 +191,7 @@ const FilterTravelAllowances = () => {
         if (Users?.data) {
             return Users?.data?.map((key) => ({
                 id: key.id,
-                title: key.user_name.first_name + " " + key.user_name.last_name + " " + key.user_name.email
+                title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
             }));
         }
         return [];
@@ -222,21 +222,24 @@ const FilterTravelAllowances = () => {
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={3}>
-                            <Autocomplete
-                                options={usersoptions}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleUsersOptionsChange}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Users" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        </Grid>
+                        {user_role === 'admin' &&
+                            <Grid item xs={3}>
+                                <Autocomplete
+                                    options={usersoptions}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleUsersOptionsChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Users" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                />
+                            </Grid>
+                        }
+
                         <Grid item xs={1.75}>
                             <FormControl fullWidth>
                                 <InputLabel>Year</InputLabel>

@@ -136,7 +136,6 @@ const FilteredTourPlan = () => {
     }, [])
 
 
-    // const [companyUserList, setCompanyUserList] = useState([]);
     const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' }, {
         skip: !company_id || !page
     });
@@ -164,21 +163,6 @@ const FilteredTourPlan = () => {
         setSelectedOption(value);
     }, []);
 
-
-
-    // useEffect(() => {
-    //     let dataList1 = []
-    //     if (userList?.data) {
-    //         userList.data.forEach((key) => {
-    //             // Perform null/undefined check for 'role_name' and 'role' properties
-    //             const roleName = key.role_name && key.role_name.role_name && key.role_name.role_name.role_name;
-    //             dataList1.push({ id: key.id, title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`, role: roleName });
-    //         });
-    //     }
-    //     setCompanyUserList(dataList1);
-    //     dispatch(addUserList(dataList1));
-    // }, [userList]);
-
     const onEdit = useCallback((id) => {
         setSelectedUpdateId(id);
         setIsDrawerOpen(true);
@@ -203,10 +187,7 @@ const FilteredTourPlan = () => {
         return [];
     }, [data])
 
-
     //! Options
-
-
     const [selectedYear, setSelectedYear] = useState(yearData);
     const yearList = ['2075', '2076', '2077', '2078', '2079', '2080', '2081', '2082', '2083', '2084', '2085', '2086', '2087', '2088', '2089', '2090']
 
@@ -230,13 +211,6 @@ const FilteredTourPlan = () => {
         setSelectedMonth(event.target.value);
     };
 
-
-    // const dateOnly = dateString.split('T')[0];
-
-    // const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: user_role === 'admin' ? id : company_user_id, page: page, role_data: user_role === 'admin' ? "" : '' }, {
-    //     skip: !company_id || !selectedMonth || !user_role || !id || !company_user_id || !page || !user_role
-    // })
-
     const { data: TourPlanSearch } = user_role === "MPO" && useGetTourplanOfMpoByDateMonthQuery(
         {
             company_name: company_id,
@@ -246,9 +220,6 @@ const FilteredTourPlan = () => {
             page: page,
             role_data: user_role === 'admin' ? "" : '',
         },
-        // {
-        //     skip: !company_id || !selectedMonth || !id || !company_user_role_id || !page,
-        // }
     );
 
 
@@ -265,8 +236,6 @@ const FilteredTourPlan = () => {
     const handleRoleSelect = (e, value) => {
         setRoleSelect(value);
     }
-
-
 
     //! Date Format 
     const [startDate, setStartDate] = useState();
@@ -377,7 +346,6 @@ const FilteredTourPlan = () => {
                                                         <TableBody>
                                                             <>
                                                                 {
-
                                                                     TourPlanSearch === undefined ? <>
                                                                         {
                                                                             eightArrays.map((key) => {
@@ -437,13 +405,38 @@ const FilteredTourPlan = () => {
                                                                                                     tourplan.mpo_area_read.map((key, index) => (
                                                                                                         <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }} key={index}>{key.company_mpo_area_id.area_name},</Typography>
                                                                                                     ))
-
                                                                                                 }
                                                                                             </TableCell>
                                                                                             <TableCell align="left">{moment(tourplan.tour_plan.tour_plan.select_the_date_id).format('DD')}</TableCell>
-                                                                                            <TableCell align="left">{tourplan.is_approved === true ? "Approved" : "Not Approved"}</TableCell>
+                                                                                            <TableCell align="left">{tourplan.is_approved === true ?
+                                                                                                <>
+                                                                                                    <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75, ml: 0.75 }}>
+                                                                                                        <Badge>
+                                                                                                            <Iconify icon="fluent:text-change-accept-24-filled" width={30} height={20} />
+                                                                                                        </Badge>
+                                                                                                    </IconButton>
+                                                                                                </> : <>
+                                                                                                    <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75, ml: 0.75 }}>
+                                                                                                        <Badge>
+                                                                                                            <Iconify icon="fluent:text-change-reject-24-filled" width={30} height={20} />
+                                                                                                        </Badge>
+                                                                                                    </IconButton></>
+                                                                                            }</TableCell>
                                                                                             <TableCell align="left">{tourplan.tour_plan.tour_plan.hulting_station}</TableCell>
-                                                                                            <TableCell align="left">{tourplan.tour_plan.tour_plan.is_unplanned === true ? "Unplanned" : "Not Unplanned"}</TableCell>
+                                                                                            <TableCell align="left">{tourplan.tour_plan.tour_plan.is_unplanned === true ?
+                                                                                                <>
+                                                                                                    <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75, ml: 3 }}>
+                                                                                                        <Badge>
+                                                                                                            <Iconify icon="mdi:tick-circle" />
+                                                                                                        </Badge>
+                                                                                                    </IconButton>
+                                                                                                </> : <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75, ml: 3 }}>
+                                                                                                    <Badge>
+                                                                                                        <Iconify icon="mdi:cross-circle" />
+                                                                                                    </Badge>
+                                                                                                </IconButton>
+                                                                                            }
+                                                                                            </TableCell>
                                                                                             <TableCell align="left">{tourplan.approved_by.user_name.first_name + " " + tourplan.approved_by.user_name.middle_name + " " + tourplan.approved_by.user_name.last_name}</TableCell>
                                                                                             {/* //! Edit  */}
                                                                                             <TableCell align="left">
@@ -531,7 +524,7 @@ const FilteredTourPlan = () => {
                             />
                     }
                 </>
-            </Card>
+            </Card >
         </>
     )
 }

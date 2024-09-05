@@ -91,7 +91,6 @@ const DefaultList = () => {
 
     const id = company_id;
 
-
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteTourPlansByIdMutation()
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -137,7 +136,18 @@ const DefaultList = () => {
                                                         </TableCell>
                                                         <TableCell align="left">{tourplan.tour_plan.tour_plan.select_the_area.area_name}</TableCell>
                                                         <TableCell align="left">{tourplan.tour_plan.tour_plan.select_the_date_id}</TableCell>
-                                                        <TableCell align="left">{tourplan.tour_plan.tour_plan.is_unplanned === true ? "Unplanned" : "Not Unplanned"}</TableCell>
+                                                        <TableCell align="left">{tourplan.tour_plan.tour_plan.is_unplanned === true ? <>
+                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75, ml: 0.75 }}>
+                                                                <Badge>
+                                                                    <Iconify icon="fluent:text-change-accept-24-filled" width={30} height={20} />
+                                                                </Badge>
+                                                            </IconButton>
+                                                        </> : <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75, ml: 0.75 }}>
+                                                            <Badge>
+                                                                <Iconify icon="fluent:text-change-reject-24-filled" width={30} height={20} />
+                                                            </Badge>
+                                                        </IconButton>
+                                                        }</TableCell>
                                                         <TableCell align="left">{tourplan.approved_by.user_name.first_name + " " + tourplan.approved_by.user_name.middle_name + " " + tourplan.approved_by.user_name.last_name}</TableCell>
                                                         <TableCell align="left">
                                                             {/*//! Edit  */}

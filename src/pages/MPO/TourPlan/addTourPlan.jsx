@@ -111,19 +111,56 @@ const AddTourPlan = () => {
         );
     }
 
+    console.log(CompanyRoles)
+    // const handleRolesChange = (e, value) => {
+    //     setCompanyRoles(value?.id)
+    //     console.log(value?.id)
+    // }
+    // console.log(CompanyRoles)
+    //! States
     const [MpoTpArea, setMpoTpArea] = useState([]);
     const [TPAreaName, setTPAreaName] = useState([])
 
+    //! Display value
+    const [selectedAreas, setSelectedAreas] = useState(
+        MpoTpArea.map((id) => mpoAreaData.find((option) => option.id === id) || {})
+    )
+
+    //! On Chnage
     const handleMpoTpArea = (event, value) => {
         const mpotparea = value.map(option => option.id)
         const mpotpareavalue = value.map(option => option.title)
         setMpoTpArea(mpotparea)
         setTPAreaName(mpotpareavalue)
+        setSelectedAreas(value)
     }
+    //! Filter Options
+    const filteredOptions = mpoAreaData.filter(
+        (option) => !selectedAreas.some((selected) => selected.id === option.id)
+    );
+
+    //! States Executive
+    const [visitedWithWala, setVisitedWithWala] = useState([])
+
+    //! Display value
+    const [selectedExecutiveOptions, setSelectedExecutiveOptions] = useState(
+        visitedWithWala.map((id) => executiveLevelOptions.find((option) => option.id === id) || {})
+    )
+
+    //! on Change Executive wala
+    const handleVisitedWith = (e, value) => {
+        const visitedWith = value.map(option => option.id)
+        setVisitedWithWala(visitedWith)
+        setSelectedExecutiveOptions(value)
+        setCompanyRoles(visitedWith)
+    }
+    //! Filter option executive
+    const filteredExecutiveOptions = executiveLevelOptions.filter(
+        (option) => !selectedExecutiveOptions.some((selected) => selected.id === option.id)
+    )
 
     const [MpoAreaData, setMpoAreaData] = useState([]);
-
-
+    const [visitedWithData, setVisitedWithData] = useState([]);
 
     const addTodo = () => {
         setLoading(true);
@@ -180,19 +217,19 @@ const AddTourPlan = () => {
 
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
-                    }, 3000);
+                    }, 5000);
                 } else {
                     setErrorMessage({ show: true, message: res.error.data[0] });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
-                    }, 3000);
+                    }, 5000);
                 }
             })
             .catch(err => {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                }, 5000);
             })
             .finally(() => {
                 setLoading(false);
@@ -250,7 +287,6 @@ const AddTourPlan = () => {
         }
         return [];
     }, [MpoTpArea])
-
 
     const handleSave = () => {
         setLoading(true)
@@ -400,9 +436,11 @@ const AddTourPlan = () => {
                                     <Box marginBottom={2}>
                                         <Autocomplete
                                             multiple
-                                            options={mpoAreaData} // Options for the autocomplete
+                                            options={filteredOptions}
+                                            value={selectedAreas}
+                                            // options={mpoAreaData}
+                                            // value={MpoTpArea.map(id => mpoAreaData.find(option => option.id === id) || {})}
                                             getOptionLabel={(option) => option.title}
-                                            value={MpoTpArea.map(id => mpoAreaData.find(option => option.id === id) || {})} // Bind selected values
                                             onChange={handleMpoTpArea}
                                             renderInput={(params) => (
                                                 <TextField {...params} label="Select the Areas" />
@@ -437,7 +475,7 @@ const AddTourPlan = () => {
                                 </Box>
                             </> : <Box>
                                 <Box marginBottom={2}>
-                                    <FormControl sx={{ m: 1, width: 300 }}>
+                                    {/* <FormControl sx={{ m: 1, width: 300 }}>
                                         <InputLabel>{"Select the Visited With*"}</InputLabel>
                                         <Select
                                             labelId="demo-multiple-name-label"
@@ -459,10 +497,25 @@ const AddTourPlan = () => {
                                                 </MenuItem>
                                             ))}
                                         </Select>
-                                    </FormControl>
+                                    </FormControl> */}
+                                    <Autocomplete
+                                        multiple
+                                        options={filteredExecutiveOptions}
+                                        value={selectedExecutiveOptions}
+                                        getOptionLabel={(option) => option.title}
+                                        onChange={handleVisitedWith}
+                                        renderInput={(params) => (
+                                            <TextField {...params} label="Select the Visited With*" />
+                                        )}
+                                        renderOption={(props, option) => (
+                                            <li {...props} key={option.id}>
+                                                {option.title}
+                                            </li>
+                                        )}
+                                    />
                                 </Box>
                                 {
-                                    CompanyRoles.map((key, index) => (
+                                    CompanyRoles?.map((key, index) => (
                                         <MpoUserWiseArea id={company_user_role_id} key={index} setMpoAreaData={setMpoAreaData} MpoAreaData={MpoAreaData} />
                                     ))
                                 }
