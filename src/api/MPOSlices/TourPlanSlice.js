@@ -398,6 +398,17 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
             invalidatesTags: ['TourPlan']
         }),
 
+        postUserIdToGetMpoArea: builder.mutation({
+            query: (TPDays) => {
+                return {
+                    url: `user/get-lower-level-areas/`,
+                    method: 'POST',
+                    body: TPDays,
+                }
+            },
+            invalidatesTags: ['TourPlan']
+        }),
+
         //! Update TP Days
         //! Update users data by id
         updateTPDays: builder.mutation({
@@ -461,6 +472,7 @@ export const {
     useGetTPLockDaysByIdQuery,
     useCreateTPDaysMutation,
     useUpdateTPDaysMutation,
+    usePostUserIdToGetMpoAreaMutation,
 } = TourPlanSlice
 
 //! returns the query result object

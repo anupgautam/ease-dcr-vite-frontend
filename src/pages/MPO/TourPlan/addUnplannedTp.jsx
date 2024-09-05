@@ -6,7 +6,7 @@ import {
     NepaliDateConverter,
 } from "react-nepali-date-picker-lite";
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
-import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
+import { useGetMpoAreaQuery, usePostUserIdToGetMpoAreaMutation } from "@/api/MPOSlices/TourPlanSlice";
 import Controls from "@/reusable/forms/controls/Controls";
 import { useForm } from '../../../reusable/forms/useForm'
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from "@/api/MPOSlices/tourPlan&Dcr";
@@ -342,17 +342,22 @@ const MpoUserWiseArea = ({ id, setMpoAreaData }) => {
     const { company_id } = useSelector((state) => state.cookie);
     const [visitData, setVisitData] = useState([]);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: id },
-        //     {
-        //     skip: !company_id || !role || !id
-        // }
-    );
-    const mpoAreaData = useMemo(() => {
-        if (MpoArea?.data) {
-            return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))
-        }
-        return [];
-    }, [MpoArea])
+    const [mpoAreaData, setmpoAreaData] = useState([]);
+    const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
+
+    useEffect(() => {
+        AllMpoAreaData({ id: id })
+            .then((res) => {
+                console.log('res,data', res);
+                if (res.data) {
+                    const data = res.data.map((key) => ({
+                        id: key.id,
+                        title: key.area_name
+                    }));
+                    setmpoAreaData(data)
+                }
+            })
+    }, [id])
 
 
     const handleInputChange = (event) => {

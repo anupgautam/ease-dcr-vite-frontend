@@ -25,7 +25,7 @@ import {
     NepaliDateConverter,
 } from "react-nepali-date-picker-lite";
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
-import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
+import { useGetMpoAreaQuery, usePostUserIdToGetMpoAreaMutation } from '@/api/MPOSlices/TourPlanSlice';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from '@/api/MPOSlices/tourPlan&Dcr';
 import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
@@ -463,7 +463,7 @@ const AddTourPlan = () => {
                                 </Box>
                                 {
                                     CompanyRoles.map((key, index) => (
-                                        <MpoUserWiseArea id={key} key={index} setMpoAreaData={setMpoAreaData} MpoAreaData={MpoAreaData} />
+                                        <MpoUserWiseArea id={company_user_role_id} key={index} setMpoAreaData={setMpoAreaData} MpoAreaData={MpoAreaData} />
                                     ))
                                 }
                                 <Box marginBottom={2}>
@@ -537,12 +537,31 @@ const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
         //     skip: !company_id || !role || !id
         // }
     );
-    const mpoAreaData = useMemo(() => {
-        if (MpoArea?.data) {
-            return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))
-        }
-        return [];
-    }, [MpoArea])
+
+    const [mpoAreaData, setmpoAreaData] = useState([]);
+    const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
+
+    useEffect(() => {
+        AllMpoAreaData({ id: id })
+            .then((res) => {
+                console.log('res,data', res);
+                if (res.data) {
+                    const data = res.data.map((key) => ({
+                        id: key.id,
+                        title: key.area_name
+                    }));
+                    setmpoAreaData(data)
+                }
+            })
+    }, [id])
+
+
+    // const mpoAreaData = useMemo(() => {
+    //     if (MpoArea?.data) {
+    //         return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))
+    //     }
+    //     return [];
+    // }, [MpoArea])
 
     const handleInputChange = (event) => {
         const selectedAreaId = event.target.value;
