@@ -160,6 +160,7 @@ const AddTourPlan = () => {
 
     const [MpoAreaData, setMpoAreaData] = useState([]);
     const [visitedWithData, setVisitedWithData] = useState([]);
+    console.log('MpoAreaData', MpoAreaData);
 
     const addTodo = () => {
         setLoading(true);
@@ -515,7 +516,7 @@ const AddTourPlan = () => {
                                 </Box>
                                 {
                                     CompanyRoles?.map((key, index) => (
-                                        <MpoUserWiseArea id={company_user_role_id} key={index} setMpoAreaData={setMpoAreaData} MpoAreaData={MpoAreaData} />
+                                        <MpoUserWiseArea id={key} key={index} setMpoAreaData={setMpoAreaData} MpoAreaData={MpoAreaData} />
                                     ))
                                 }
                                 <Box marginBottom={2}>
@@ -594,7 +595,7 @@ const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
     const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
 
     useEffect(() => {
-        AllMpoAreaData({ id: id })
+        AllMpoAreaData({ id: company_user_role_id })
             .then((res) => {
                 if (res.data) {
                     const data = res.data.map((key) => ({

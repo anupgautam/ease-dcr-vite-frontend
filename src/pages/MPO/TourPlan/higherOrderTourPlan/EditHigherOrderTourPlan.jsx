@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import {
     Box, Grid,
-    Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel, CircularProgress, Autocomplete
+    Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel, CircularProgress
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -20,19 +20,20 @@ import {
     useGetHOTourPlansByIdQuery,
     useUpdateHOTourPlansMutation
 } from '../../../../api/HighOrderSlices/hoTourPlanSlice';
-import { useGetMpoAreaQuery } from '../../../../api/MPOSlices/TourPlanSlice';
-import { useGetUsersByCompanyRoleIdExecutativeLevelQuery, usePostUserIdToGetLowerLevelExecutiveMutation } from '../../../../api/MPOSlices/UserSlice';
+import { usePostUserIdToGetMpoAreaMutation } from '../../../../api/MPOSlices/TourPlanSlice';
 import moment from 'moment';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useSelector } from 'react-redux';
+import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
 
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
-    const { company_id, user_role, company_user_id, role, company_user_role_id } = useSelector((state) => state.cookie);
+    const { company_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
+    const [users, setUsers] = useState([]);
     const [dateData, setDateData] = useState();
 
     //! Getting TourPlan by ID
@@ -40,36 +41,23 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         skip: !idharu
     });
 
-    // const userLists = usePostUserIdToGetLowerLevelExecutiveMutation(TourPlan?.data?.user_id?.id)
 
-    const [userLists] = usePostUserIdToGetLowerLevelExecutiveMutation()
+    const [LowerExecutive] = usePostUserIdToGetLowerLevelExecutiveMutation();
 
-    const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        // const user = []
-        // if (userLists) {
-        //     userLists?.data?.forEach((key) => {
-        //         user.push({
-        //             id: key?.id,
-        //             title: key?.user_name?.first_name + " " + key?.user_name?.last_name
-        //         })
-        //     })
-        //     setUsers(user);
-        // }
-        if (company_user_role_id) {
-            userLists({ id: company_user_role_id })
+        if (TourPlan?.data?.user_id?.id) {
+            LowerExecutive({ id: TourPlan?.data?.user_id?.id })
                 .then((res) => {
                     if (res.data) {
-                        const data = res?.data?.map(key => ({
-                            id: key.id,
-                            title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
-                        }));
-                        setUsers(data)
+                        const data = res.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
+                        setUsers(data);
                     }
                 })
         }
-    }, [company_user_role_id])
+    }, [TourPlan?.data?.user_id?.id])
+
+
 
     // //! Get selected area
     const shiftData = useGetShiftsQuery();
@@ -90,7 +78,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         temp.user_id = returnValidation(['null'], values.user_id)
         temp.shift = returnValidation(['null'], values.shift)
         temp.date = returnValidation(['null'], values.date)
-        temp.visited_with = returnValidation(['null'], values.visited_with)
+        temp.visited_data = returnValidation(['null'], values.visited_data)
 
 
         setErrors({
@@ -107,11 +95,13 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         user_id: "",
         shift: "",
         month: "",
-        visited_with: "",
+        visited_data: "",
         is_dcr_added: "",
         is_approved: "",
         hulting_station: "",
     })
+
+    const [MpoAreaData, setMpoAreaData] = useState([]);
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
 
@@ -124,8 +114,6 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         );
     };
 
-    const [MpoAreaData, setMpoAreaData] = useState([]);
-
     useEffect(() => {
         if (TourPlan.data) {
             setInitialFValues({
@@ -136,12 +124,21 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                 is_dcr_added: TourPlan?.data?.is_dcr_added,
                 is_approved: TourPlan?.data?.is_approved,
                 hulting_station: TourPlan?.data?.hulting_station,
+                visited_data: TourPlan?.data?.visited_data
             });
             setDateData(TourPlan?.data?.date ? TourPlan?.data?.date : now)
         }
     }, [TourPlan.data])
 
-    console.log(TourPlan?.data)
+    const handleAreaChange = (selectedAreaId, visitedWith) => {
+        const newMpoAreaData = MpoAreaData.map((data) => {
+            if (data.visited_with === visitedWith) {
+                return { ...data, area: selectedAreaId };
+            }
+            return data;
+        });
+        setMpoAreaData(newMpoAreaData);
+    };
 
     const { values,
         errors,
@@ -153,6 +150,15 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         false,
         true
     )
+
+    useEffect(() => {
+        if (values.visited_data) {
+            const defaultVisitedWith = values.visited_data.map(item => item.visited_with);
+            setCompanyRoles(defaultVisitedWith);
+        }
+    }, [values]);
+
+    console.log('values', values);
 
     useEffect(() => {
         validate();
@@ -168,6 +174,19 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
+    useEffect(() => {
+        if (values?.visited_data) {
+            const defaultRoles = values.visited_data.map((data) => data.visited_with);
+            setCompanyRoles(defaultRoles);
+
+            const defaultAreaData = values.visited_data.map((data) => ({
+                visited_with: data.visited_with,
+                area: data.area
+            }));
+            setMpoAreaData(defaultAreaData);
+        }
+    }, [values]);
+
     //! Edit tourplan
     const [updateTourPlans] = useUpdateHOTourPlansMutation();
     const history = useNavigate();
@@ -182,7 +201,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         formData.append("date", typeof values.date === "string" ? values.date : DateToString(values.date));
         formData.append("is_dcr_added", values.is_dcr_added === null ? false : values.is_dcr_added);
         formData.append("is_approved", values.is_approved);
-        formData.append("visited_with", values.visited_with);
+        formData.append("visit_data", values.visited_with);
         formData.append("hulting_station", values.hulting_station);
         formData.append('month', monthData)
         formData.append('id', idharu)
@@ -233,7 +252,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                         style={{ marginBottom: "40px" }}
                     >
                         <Typography variant="h6" className="drawer-box-text">
-                            Edit TourPlan
+                            Edit TourPlan <br />
                             <IconButton
                                 className="close-button"
                                 onClick={onClose}
@@ -266,19 +285,8 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                         <Box marginBottom={2}>
                             <NepaliDatePicker value={dateData} format="YYYY-MM-DD" onChange={(value) => setDateData(value)} />
                         </Box>
-                        {/* <Box marginBottom={2}>
-                            <Controls.Select
-                                name="visited_with"
-                                label="Visited With*"
-                                value={values.visited_with}
-                                onChange={handleInputChange}
-                                options={users}
-                                error={errors.visited_with}
-                            // className={"drawer-first-name-input"}
-                            />
-                        </Box> */}
                         <Box marginBottom={2}>
-                            {/* <FormControl sx={{ m: 1, width: 300 }}>
+                            <FormControl sx={{ m: 1, width: 300 }}>
                                 <InputLabel>{"Select the Visited With*"}</InputLabel>
                                 <Select
                                     labelId="demo-multiple-name-label"
@@ -301,39 +309,21 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                         </MenuItem>
                                     ))}
                                 </Select>
-                            </FormControl> */}
-
-                            <Autocomplete
-                                multiple
-                                options={filteredOptions}
-                                value={selectedAreas}
-                                // options={mpoAreaData}
-                                // value={MpoTpArea.map(id => mpoAreaData.find(option => option.id === id) || {})}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleMpoTpArea}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Select the Visited With*" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
+                            </FormControl>
                         </Box>
-                        {
-                            users.map((key, index) => (
-                                <MpoUserWiseArea id={key} key={index} setMpoAreaData={setMpoAreaData} MpoAreaData={MpoAreaData} />
+                        {Array.isArray(values?.visited_data) &&
+                            values.visited_data.map((key, index) => (
+                                <MpoUserWiseArea
+                                    id={TourPlan?.data?.user_id?.id}
+                                    value={key.area}
+                                    key={index}
+                                    setMpoAreaData={setMpoAreaData}
+                                    MpoAreaData={MpoAreaData}
+                                    visitedWith={key.visited_with}
+                                    onAreaChange={handleAreaChange}
+                                />
                             ))
                         }
-                        <Box marginBottom={2}>
-                            <Controls.Checkbox
-                                name="is_approved"
-                                value={values.is_approved}
-                                onChange={handleInputChange}
-                                label="Is Approved"
-                            />
-                        </Box>
                         <Box marginBottom={2}>
                             <Controls.Input
                                 name="hulting_station"
@@ -341,6 +331,14 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                 value={values.hulting_station}
                                 onChange={handleInputChange}
                                 placeholderText="Hulting Station"
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <Controls.Checkbox
+                                name="is_approved"
+                                value={values.is_approved}
+                                onChange={handleInputChange}
+                                label="Is Approved"
                             />
                         </Box>
                         <Stack spacing={1} direction="row">
@@ -385,38 +383,42 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     );
 };
 
-const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
-    const { company_id, user_role, company_user_id, role } = useSelector((state) => state.cookie);
+const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData, value, onAreaChange }) => {
+    const [visitData, setVisitData] = useState(value || "");
+    const [mpoAreaData, setmpoAreaData] = useState([]);
+    const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
 
-    const [visitData, setVisitData] = useState([]);
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: role === 'other' ? '' : id }, {
-        skip: !company_id || !role || !id
-    });
+    useEffect(() => {
+        AllMpoAreaData({ id })
+            .then((res) => {
+                if (res.data) {
+                    const data = res.data.map((key) => ({
+                        id: key.id,
+                        title: key.area_name
+                    }));
+                    setmpoAreaData(data);
+                }
+            });
+    }, [id]);
 
-    const mpoAreaData = useMemo(() => {
-        if (MpoArea?.data) {
-            return MpoArea?.data.map((key) => ({ id: key.id, title: key.area_name }))
-        }
-        return [];
-    }, [MpoArea])
 
     const handleInputChange = (event) => {
         const selectedAreaId = event.target.value;
-        const newVisitData = [...MpoAreaData, { visited_with: id, area: selectedAreaId }];
-        setMpoAreaData(newVisitData);
         setVisitData(selectedAreaId);
+        onAreaChange(selectedAreaId, visitedWith);
     };
+
     return (
         <Box marginBottom={2}>
             <Controls.Select
                 name={`select_the_area`}
                 label="Select the Area*"
-                value={visitData}
+                value={visitData} // Bind to the visitData state, which contains the default area
                 onChange={handleInputChange}
                 options={mpoAreaData}
             />
         </Box>
-    )
-}
+    );
+};
 
 export default React.memo(EditHOTourPlan);
