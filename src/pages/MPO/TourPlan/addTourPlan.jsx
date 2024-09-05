@@ -111,7 +111,6 @@ const AddTourPlan = () => {
         );
     }
 
-    console.log(CompanyRoles)
     // const handleRolesChange = (e, value) => {
     //     setCompanyRoles(value?.id)
     //     console.log(value?.id)
@@ -207,6 +206,7 @@ const AddTourPlan = () => {
         AddTourPlan(new_data)
             .then(res => {
                 if (res.data) {
+                    console.log(res?.data)
                     setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
                     const updatedData = res.data.map((item, index) => ({
                         ...item,
@@ -297,33 +297,32 @@ const AddTourPlan = () => {
         sending_data['hulting_station'] = values['hulting_station'];
         sending_data['is_admin_opened'] = false;
         sending_data['user_id'] = company_user_role_id;
-        console.log('sending_data', sending_data);
         AddHigherOrder(sending_data)
             .then(res => {
                 if (res.data) {
                     setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
-                    }, 3000);
+                    }, 5000);
                 }
                 else if (res.error) {
                     setErrorMessage({ show: true, message: res.error[0] });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
-                    }, 3000);
+                    }, 5000);
                 }
                 else {
                     setErrorMessage({ show: true, message: res.error.data[0] });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
-                    }, 3000);
+                    }, 5000);
                 }
             })
             .catch(err => {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                }, 5000);
             })
             .finally(() => {
                 setLoading(false)
@@ -597,7 +596,6 @@ const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
     useEffect(() => {
         AllMpoAreaData({ id: id })
             .then((res) => {
-                console.log('res,data', res);
                 if (res.data) {
                     const data = res.data.map((key) => ({
                         id: key.id,

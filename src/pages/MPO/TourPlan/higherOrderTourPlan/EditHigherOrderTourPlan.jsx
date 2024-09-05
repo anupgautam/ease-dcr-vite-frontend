@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import {
     Box, Grid,
-    Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel, CircularProgress
+    Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel, CircularProgress, Autocomplete
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -30,10 +30,9 @@ import { useSelector } from 'react-redux';
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
-    const { company_id, user_role, company_user_id, role } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, role, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
-    const [users, setUsers] = useState([]);
     const [dateData, setDateData] = useState();
 
     //! Getting TourPlan by ID
@@ -41,23 +40,36 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         skip: !idharu
     });
 
-    const userLists = usePostUserIdToGetLowerLevelExecutiveMutation(TourPlan?.data?.user_id?.id)
+    // const userLists = usePostUserIdToGetLowerLevelExecutiveMutation(TourPlan?.data?.user_id?.id)
 
-    console.log(userLists)
+    const [userLists] = usePostUserIdToGetLowerLevelExecutiveMutation()
+
+    const [users, setUsers] = useState([]);
+
     useEffect(() => {
-        const user = []
-        if (userLists) {
-            userLists?.data?.forEach((key) => {
-                user.push({
-                    id: key?.id,
-                    title: key?.user_name?.first_name + " " + key?.user_name?.last_name
+        // const user = []
+        // if (userLists) {
+        //     userLists?.data?.forEach((key) => {
+        //         user.push({
+        //             id: key?.id,
+        //             title: key?.user_name?.first_name + " " + key?.user_name?.last_name
+        //         })
+        //     })
+        //     setUsers(user);
+        // }
+        if (company_user_role_id) {
+            userLists({ id: company_user_role_id })
+                .then((res) => {
+                    if (res.data) {
+                        const data = res?.data?.map(key => ({
+                            id: key.id,
+                            title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
+                        }));
+                        setUsers(data)
+                    }
                 })
-            })
-            setUsers(user);
         }
-    }, [userLists])
-
-
+    }, [company_user_role_id])
 
     // //! Get selected area
     const shiftData = useGetShiftsQuery();
@@ -128,6 +140,8 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
             setDateData(TourPlan?.data?.date ? TourPlan?.data?.date : now)
         }
     }, [TourPlan.data])
+
+    console.log(TourPlan?.data)
 
     const { values,
         errors,
@@ -252,7 +266,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                         <Box marginBottom={2}>
                             <NepaliDatePicker value={dateData} format="YYYY-MM-DD" onChange={(value) => setDateData(value)} />
                         </Box>
-                        <Box marginBottom={2}>
+                        {/* <Box marginBottom={2}>
                             <Controls.Select
                                 name="visited_with"
                                 label="Visited With*"
@@ -262,9 +276,9 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                 error={errors.visited_with}
                             // className={"drawer-first-name-input"}
                             />
-                        </Box>
+                        </Box> */}
                         <Box marginBottom={2}>
-                            <FormControl sx={{ m: 1, width: 300 }}>
+                            {/* <FormControl sx={{ m: 1, width: 300 }}>
                                 <InputLabel>{"Select the Visited With*"}</InputLabel>
                                 <Select
                                     labelId="demo-multiple-name-label"
@@ -287,7 +301,25 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                         </MenuItem>
                                     ))}
                                 </Select>
-                            </FormControl>
+                            </FormControl> */}
+
+                            <Autocomplete
+                                multiple
+                                options={filteredOptions}
+                                value={selectedAreas}
+                                // options={mpoAreaData}
+                                // value={MpoTpArea.map(id => mpoAreaData.find(option => option.id === id) || {})}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMpoTpArea}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Select the Visited With*" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
                         </Box>
                         {
                             users.map((key, index) => (

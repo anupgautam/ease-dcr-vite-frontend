@@ -4,7 +4,11 @@ import {
     Typography,
     Button,
     Grid,
-    CircularProgress
+    CircularProgress,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -15,17 +19,40 @@ import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from '../../../../reusable/components/forms/controls/Controls';
 import { returnValidation } from '../../../../validation';
 import { useSelector } from 'react-redux';
-
+import { useGetStockistsWithoutPaginationQuery } from '@/api/MPOSlices/stockistApiSlice';
 import {
     useCreateSecondarySalesMutation
 } from '@/api/MPOSlices/SecondarySalesApiSlice';
 
 import {
+    NepaliDateConverter
+} from "react-nepali-date-picker-lite";
+import {
     useGetAllProductsOptionsQuery
 } from '@/api/MPOSlices/productApiSlice'
+import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 
-const AddSecondarySales = ({ selectedOption, monthData, selectedYear }) => {
+
+// const AddSecondarySales = ({ selectedOption, monthData, selectedYear }) => {
+const AddSecondarySales = ({ selectedOption }) => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+
+
+    //! Get Stockist
+    const mpo_id = useSelector(state => state.dcrData.selected_user);
+
+    // const { Stockist } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id })
+    const Stockist = useGetStockistsWithoutPaginationQuery(company_id);
+
+    const rolesOptions = useMemo(() => {
+        if (Stockist?.data) {
+            return Stockist?.data?.map((key) => ({
+                id: key.id,
+                title: key.stockist_name.stockist_name
+            }))
+        }
+        return [];
+    }, [Stockist])
 
     //! Get doctor categories
     const Products = useGetAllProductsOptionsQuery(company_id)
@@ -40,6 +67,62 @@ const AddSecondarySales = ({ selectedOption, monthData, selectedYear }) => {
     //! Create Secondary Sales
     const [createSecondarySales] = useCreateSecondarySalesMutation()
 
+    const now = new BSDate().now();
+    const [companyId, setCompanyId] = useState(parseInt(company_id));
+
+    const month = now._date.month;
+    const yearData = now._date.year;
+
+    //! Months
+    const months = [
+        { value: 1, label: "Baisakh" },
+        { value: 2, label: "Jestha" },
+        { value: 3, label: "Asadh" },
+        { value: 4, label: "Shrawan" },
+        { value: 5, label: "Bhadra" },
+        { value: 6, label: "Ashwin" },
+        { value: 7, label: "Kartik" },
+        { value: 8, label: "Mangsir" },
+        { value: 9, label: "Poush" },
+        { value: 10, label: "Magh" },
+        { value: 11, label: "Falgun" },
+        { value: 12, label: "Chaitra" }
+    ];
+
+    const [selectedMonth, setSelectedMonth] = useState(month)
+
+    const handleNepaliMonthChange = useCallback((event) => {
+        setSelectedMonth(event.target.value);
+        setCompanyId(company_id);
+    }, []);
+
+    //! Year
+    const years = [
+        { value: 2079, label: "2079" },
+        { value: 2080, label: "2080" },
+        { value: 2081, label: "2081" },
+        { value: 2082, label: "2082" },
+        { value: 2083, label: "2083" },
+        { value: 2084, label: "2084" },
+        { value: 2085, label: "2085" },
+        { value: 2086, label: "2086" },
+        { value: 2087, label: "2087" },
+        { value: 2088, label: "2088" },
+        { value: 2089, label: "2089" },
+        { value: 2090, label: "2090" },
+    ]
+    const [dateData, setDateData] = useState('')
+    const [selectedYear, setSelectedYear] = useState(yearData);
+
+    const handleYearChange = useCallback((event) => {
+        setSelectedYear(event.target.value);
+        setCompanyId(company_id);
+    }, []);
+
+
+    //! Format Date
+    const today = NepaliDateConverter.getNepaliDate();
+    const [selectedDates, setSelectedDates] = useState(today);
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
@@ -97,7 +180,8 @@ const AddSecondarySales = ({ selectedOption, monthData, selectedYear }) => {
         values.exchange_breakage,
         values.l_rate,
         values.st_value,
-        values.sl_value
+        values.sl_value,
+        values.stockist
     ])
 
     const [loading, setLoading] = useState(false);
@@ -109,9 +193,9 @@ const AddSecondarySales = ({ selectedOption, monthData, selectedYear }) => {
         e.preventDefault();
         setLoading(true)
         const formData = new FormData();
-        formData.append("stockist", selectedOption);
+        formData.append("stockist", values.stockist);
         formData.append("year", selectedYear);
-        formData.append("month", monthData);
+        formData.append("month", selectedMonth);
         formData.append("product", values.product);
         formData.append("opening_stock", values.opening_stock);
         formData.append("closing_stock", values.closing_stock);
@@ -176,15 +260,61 @@ const AddSecondarySales = ({ selectedOption, monthData, selectedYear }) => {
                     </Box>
 
                     <Box marginBottom={2}>
-                        <Controls.Select
-                            name="product"
-                            label="Product Name*"
-                            value={values.name}
-                            options={products}
-                            onChange={handleInputChange}
-                            error={errors.doctorDCRId}
-                        />
+
                     </Box>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <Box marginBottom={2}>
+                                {/* <Autocomplete
+                                    multiple
+                                    options={rolesOptions}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleOptionChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Stockist" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                /> */}
+                                <Controls.Select
+                                    name="product"
+                                    label="Product Name*"
+                                    value={values.name}
+                                    options={products}
+                                    onChange={handleInputChange}
+                                    error={errors.doctorDCRId}
+                                />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box marginBottom={2}>
+                                {/* <Autocomplete
+                                    options={rolesOptions}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleOptionChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Stockist" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                /> */}
+                                <Controls.Select
+                                    name="stockist"
+                                    label="Stockist Name*"
+                                    value={values.name}
+                                    options={rolesOptions}
+                                    onChange={handleInputChange}
+                                    error={errors.doctorDCRId}
+                                />
+                            </Box>
+                        </Grid>
+                    </Grid>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <Box marginBottom={2}>
@@ -254,6 +384,44 @@ const AddSecondarySales = ({ selectedOption, monthData, selectedYear }) => {
                                     onChange={handleInputChange}
                                     error={errors.sales}
                                 />
+                            </Box>
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <Box marginBottom={2}>
+                                <FormControl fullWidth>
+                                    <InputLabel>Year</InputLabel>
+                                    <Select
+                                        value={selectedYear}
+                                        onChange={handleYearChange}
+                                        label="Year"
+                                    >
+                                        {years.map((month) => (
+                                            <MenuItem key={month.value} value={month.value}>
+                                                {month.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box marginBottom={2}>
+                                <FormControl fullWidth>
+                                    <InputLabel>Month</InputLabel>
+                                    <Select
+                                        value={selectedMonth}
+                                        onChange={handleNepaliMonthChange}
+                                        label="Month"
+                                    >
+                                        {months.map((month) => (
+                                            <MenuItem key={month.value} value={month.value}>
+                                                {month.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Box>
                         </Grid>
                     </Grid>

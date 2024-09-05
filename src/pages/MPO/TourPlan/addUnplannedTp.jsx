@@ -348,7 +348,6 @@ const MpoUserWiseArea = ({ id, setMpoAreaData }) => {
     useEffect(() => {
         AllMpoAreaData({ id: id })
             .then((res) => {
-                console.log('res,data', res);
                 if (res.data) {
                     const data = res.data.map((key) => ({
                         id: key.id,

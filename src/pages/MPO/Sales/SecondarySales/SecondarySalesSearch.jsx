@@ -47,9 +47,9 @@ import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
 import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
-    { id: 'product_name', label: 'Product Name', alignRight: false },
+    { id: 'product', label: 'Product Name', alignRight: false },
+    { id: 'stockist', label: 'Stockist Name', alignRight: false },
     { id: 'purchase', label: 'Purchase', alignRight: false },
-    { id: 'stockist_name', label: 'Stockist Name', alignRight: false },
     { id: 'year', label: 'Year', alignRight: false },
     { id: 'month', label: 'Month', alignRight: false },
     { id: 'sales_return', label: 'Sales Return', alignRight: false },

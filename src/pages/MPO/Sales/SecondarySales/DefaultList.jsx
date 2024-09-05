@@ -84,7 +84,7 @@ const DefaultList = () => {
 
     // ! Get all chemist wala
     const { data } = useGetAllSecondarySalesQuery(page);
-    // 
+    console.log(data)
 
     // !Delete chemists
     const [deleteSecondarySale] = useDeleteSecondarySalesByIdMutation()
@@ -109,22 +109,30 @@ const DefaultList = () => {
                     </>
                     :
                     <>
-                        {data && data?.results?.map((chem, index) => (
+                        {data && data?.map((chem, index) => (
                             <>
                                 <TableRow hover tabIndex={-1} key={chem.id}>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell component="th" scope="row" align="left">
                                         <Typography variant="subtitle2" noWrap>
-                                            {chem.chemist_name.chemist_name}
+                                            {chem.product}
                                         </Typography>
                                     </TableCell>
-                                    <TableCell align="left">{chem.chemist_name.chemist_phone_number}</TableCell>
-                                    <TableCell align="left">{chem.chemist_name.chemist_address}</TableCell>
-                                    <TableCell align="left">{chem.chemist_name.chemist_gender}</TableCell>
+                                    <TableCell align="left">{chem.stockist}</TableCell>
+                                    <TableCell align="left">{chem.purchase}</TableCell>
+                                    <TableCell align="left">{chem.year}</TableCell>
+                                    <TableCell align="left">{chem.month}</TableCell>
+                                    <TableCell align="left">{chem.sales_return}</TableCell>
+                                    <TableCell align="left">{chem.total}</TableCell>
+                                    <TableCell align="left">{chem.exchange_breakage}</TableCell>
+                                    <TableCell align="left">{chem.closing_stock}</TableCell>
+                                    <TableCell align="left">{chem.l_rate}</TableCell>
+                                    <TableCell align="left">{chem.st_value}</TableCell>
+                                    <TableCell align="left">{chem.sl_value}</TableCell>
                                     <TableCell align="left">
                                         {/* {
                                     {/* //!Edit */}
-                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(chem.chemist_name.id)}>
+                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(chem.id)}>
                                             <Badge>
                                                 <Iconify icon="eva:edit-fill" />
                                             </Badge>
