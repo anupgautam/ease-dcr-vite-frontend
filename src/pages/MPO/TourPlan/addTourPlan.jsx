@@ -54,9 +54,11 @@ const AddTourPlan = () => {
     }, [])
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_role_id }, {
-        skip: !company_id || !company_user_role_id
-    })
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_role_id },
+        {
+            skip: !company_id || !company_user_role_id
+        }
+    )
 
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
