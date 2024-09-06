@@ -83,7 +83,6 @@ export default function TargetChart(props) {
   useEffect(() => {
     if (selectedCompanyUser !== null && selectedYear == null) {
       targetUser({ 'id': selectedCompanyUser }).then((res) => {
-        console.log(res)
         setChartData({
           options: {
             chart: {
@@ -111,7 +110,6 @@ export default function TargetChart(props) {
     }
     else if (selectedCompanyUser !== null && selectedYear !== null) {
       targetUser({ 'id': selectedCompanyUser, 'year': selectedYear }).then((res) => {
-        console.log(res)
         setChartData({
           options: {
             labels: ['Target Amount', 'Sales'],

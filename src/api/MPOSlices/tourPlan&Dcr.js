@@ -21,7 +21,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: value,
                 }
             },
-            invalidatesTags: ['Tourplan', 'User'],
+            invalidatesTags: ['Tourplan', 'User', 'HOTourPlan'],
         }),
         getHigherOrderTourPlanUsingId: builder.query({
             query: (value) => {

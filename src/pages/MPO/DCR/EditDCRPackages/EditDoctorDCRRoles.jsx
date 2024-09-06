@@ -27,7 +27,6 @@ const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
       })
   }, [mpoId])
 
-  console.log(companyRoles)
   const [CompanyRolesData, setCompanyRolesData] = useState('');
   const [Caching, setCaching] = useState(null);
 

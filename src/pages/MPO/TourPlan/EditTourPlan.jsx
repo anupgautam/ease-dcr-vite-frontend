@@ -92,7 +92,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
         }
     }, [TourPlan?.data]);
 
-    console.log(TourPlan?.data)
 
     const { values, errors, setErrors, handleInputChange } = useForm(
         initialFValues,
