@@ -212,8 +212,6 @@ const FilteredTourPlan = () => {
         setSelectedMonth(event.target.value);
     };
 
-    // const { data: TourPlanSearch } = user_role === "MPO" || role === "MPO" && useGetTourplanOfMpoByDateMonthQuery(
-    // const { data: TourPlanSearch } = user_role === "MPO" && useGetTourplanOfMpoByDateMonthQuery(
     //     {
     //         company_name: company_id,
     //         date: selectedYear,
@@ -236,7 +234,7 @@ const FilteredTourPlan = () => {
             role_data: user_role === 'admin' ? "" : '',
         },
         {
-            skip: !shouldFetchTourPlan, // Skip the query when `shouldFetchTourPlan` is false
+            skip: !shouldFetchTourPlan,
         }
     );
 
