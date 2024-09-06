@@ -211,7 +211,11 @@ const FilteredTourPlan = () => {
         setSelectedMonth(event.target.value);
     };
 
+<<<<<<< HEAD
     const { data: TourPlanSearch } = user_role === "MPO" || role === "MPO" && useGetTourplanOfMpoByDateMonthQuery(
+=======
+    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery(
+>>>>>>> b3d07d8 ([Success Message wala])
         {
             company_name: company_id,
             date: selectedYear,
@@ -524,7 +528,7 @@ const FilteredTourPlan = () => {
                             />
                     }
                 </>
-            </Card >
+            </Card>
         </>
     )
 }

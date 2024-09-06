@@ -274,11 +274,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
                         </Stack>
                     </Form>
                 </Box>
-                {loading && (
-                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
-                        <CircularProgress />
-                    </Grid>
-                )}
                 {ErrorMessage.show && (
                     <Grid>
                         <Box className="messageContainer errorMessage">
@@ -294,6 +289,11 @@ const EditTourPlan = ({ idharu, onClose }) => {
                     </Grid>
                 )}
             </Drawer>
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                    <CircularProgress />
+                </Grid>
+            )}
         </>
     );
 }

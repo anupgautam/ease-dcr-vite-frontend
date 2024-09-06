@@ -200,7 +200,7 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                                                                                         </IconButton>
                                                                                     </> :
                                                                                         <>
-                                                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75, ml:0.75 }}>
+                                                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75, ml: 0.75 }}>
                                                                                                 <Badge>
                                                                                                     <Iconify icon="fluent:text-change-reject-24-filled"
                                                                                                         width={30} height={20}
@@ -303,7 +303,6 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
         </>
     )
 }
-
 
 const HigherAreaData = ({ id }) => {
     const { data } = useGetAreaMPOByIdQuery(id, {

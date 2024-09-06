@@ -241,36 +241,42 @@ const AddChemist = () => {
                                         Add Multiple Chemist
                                     </Button>
                                 </Box>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={6}>
-                                        <Box marginBottom={2}>
-                                            <Controls.Input
-                                                id="autoFocus"
-                                                name="chemist_name"
-                                                label="Chemist Name*"
-                                                value={values.name}
-                                                onChange={handleInputChange}
-                                                error={errors.chemist_name}
-                                                autoFocus
-                                            />
-                                        </Box>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Box marginBottom={2}>
-                                            <Box marginBottom={2}>
-                                                <Controls.Select
-                                                    name="chemist_territory"
-                                                    label="Chemist Territory*"
-                                                    value={values.name}
-                                                    onChange={handleInputChange}
-                                                    error={errors.chemist_territory}
-                                                    options={mpoAreaData}
-                                                />
-                                            </Box>
 
-                                        </Box>
-                                    </Grid>
-                                </Grid>
+                                <Box marginBottom={2}>
+                                    <Controls.Input
+                                        id="autoFocus"
+                                        name="chemist_name"
+                                        label="Chemist Name*"
+                                        value={values.name}
+                                        onChange={handleInputChange}
+                                        error={errors.chemist_name}
+                                        autoFocus
+                                    />
+                                </Box>
+                                {
+                                    user_role === 'admin' &&
+                                    <Box marginBottom={2}>
+                                        <Controls.Select
+                                            name="mpo_name"
+                                            label="MPO*"
+                                            value={values.name}
+                                            onChange={handleInputChange}
+                                            error={errors.mpo_name}
+                                            options={mpoNames}
+                                        />
+                                    </Box>
+                                }
+                                <Box marginBottom={2}>
+                                    <Controls.Select
+                                        name="chemist_territory"
+                                        label="Chemist Territory*"
+                                        value={values.name}
+                                        onChange={handleInputChange}
+                                        error={errors.chemist_territory}
+                                        options={mpoAreaData}
+                                    />
+                                </Box>
+
                                 <Box marginBottom={2}>
                                     <Controls.Input
                                         name="chemist_phone_number"
@@ -302,7 +308,7 @@ const AddChemist = () => {
                                         </Box>
                                     </Grid>
                                     <Grid item xs={6}>
-                                        <Box style={{ marginTop: "-5px" }} marginBottom={2}>
+                                        <Box style={{ marginTop: "1px" }} marginBottom={2}>
                                             <Controls.Select
                                                 name="chemist_category"
                                                 label="Chemist Category*"
@@ -314,19 +320,7 @@ const AddChemist = () => {
                                         </Box>
                                     </Grid>
                                 </Grid>
-                                {
-                                    user_role === 'admin' &&
-                                    <Box marginBottom={2}>
-                                        <Controls.Select
-                                            name="mpo_name"
-                                            label="MPO*"
-                                            value={values.name}
-                                            onChange={handleInputChange}
-                                            error={errors.mpo_name}
-                                            options={mpoNames}
-                                        />
-                                    </Box>
-                                }
+
                                 <Box marginBottom={2}>
                                     <Controls.Input
                                         name="chemist_address"
@@ -362,31 +356,32 @@ const AddChemist = () => {
                             </>
                     }
                 </Box>
+                {loading && (
+                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                        <CircularProgress />
+                    </Grid>
+                )
+                }
+                {
+                    ErrorMessage.show && (
+                        <Grid>
+                            <Box className="messageContainer errorMessage">
+                                <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                            </Box>
+                        </Grid>
+                    )
+                }
+                {
+                    SuccessMessage.show && (
+                        <Grid>
+                            <Box className="messageContainer successMessage">
+                                <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                            </Box>
+                        </Grid>
+                    )
+                }
             </Drawer>
-            {loading && (
-                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
-                    <CircularProgress />
-                </Grid>
-            )
-            }
-            {
-                ErrorMessage.show && (
-                    <Grid>
-                        <Box className="messageContainer errorMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                )
-            }
-            {
-                SuccessMessage.show && (
-                    <Grid>
-                        <Box className="messageContainer successMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                )
-            }
+
         </>
     )
 }

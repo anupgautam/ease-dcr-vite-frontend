@@ -11,7 +11,8 @@ import {
     OutlinedInput,
     Autocomplete,
     TextField,
-    CircularProgress
+    CircularProgress,
+    Badge
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -66,7 +67,6 @@ const AddTourPlan = () => {
         }
         return [];
     }, [MpoArea])
-
 
     const { data: ShiftData } = useGetShiftsQuery();
 
@@ -204,6 +204,7 @@ const AddTourPlan = () => {
             is_approved: false,
         }));
 
+        console.log(new_data)
         AddTourPlan(new_data)
             .then(res => {
                 if (res.data) {
@@ -214,8 +215,8 @@ const AddTourPlan = () => {
                         mpo_area_name: TPAreaName[index]
                     }));
 
-                    setTpResponseData(prevData => [...prevData, ...updatedData]);
-
+                    // setTpResponseData(prevData => [...prevData, ...updatedData]);
+                    handleCloseDrawer()
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
                     }, 5000);
@@ -406,6 +407,9 @@ const AddTourPlan = () => {
                                                                 <Typography key={index} variant="body2" style={{ fontSize: "12px", fontWeight: "600", marginTop: '4px' }}>
                                                                     {key.mpo_area_name}
                                                                 </Typography>
+                                                                <IconButton color={'success'} >
+                                                                    <Iconify icon="mdi:tick-circle" />
+                                                                </IconButton>
                                                             </Box>
                                                         </Grid>
                                                     </Grid>
@@ -556,26 +560,27 @@ const AddTourPlan = () => {
                         </Button>
                     </Stack>
                 </Box>
+                {ErrorMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer errorMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )}
+                {SuccessMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer successMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )}
             </Drawer>
             {loading && (
-                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1500 }}>
                     <CircularProgress />
                 </Grid>
             )}
-            {ErrorMessage.show && (
-                <Grid>
-                    <Box className="messageContainer errorMessage">
-                        <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                    </Box>
-                </Grid>
-            )}
-            {SuccessMessage.show && (
-                <Grid>
-                    <Box className="messageContainer successMessage">
-                        <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                    </Box>
-                </Grid>
-            )}
+
         </>
     )
 }

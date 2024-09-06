@@ -13,11 +13,11 @@ import { useSelector } from 'react-redux';
 const TABLE_HEAD = [
     { id: 'chemist_name', label: 'Chemist Name', alignRight: false },
     { id: 'chemist_phone_number', label: 'Chemist Phone Number', alignRight: false },
+    { id: 'mpo_name', label: 'MPO Name', alignRight: false },
     { id: 'chemist_territory', label: 'Chemist Territory', alignRight: false },
     { id: 'chemist_category', label: 'Chemist Category', alignRight: false },
     { id: 'chemist_pan_number', label: 'Chemist PAN Number', alignRight: false },
     { id: 'chemist_contact_person', label: 'Chemist Contact Person', alignRight: false },
-    { id: 'mpo_name', label: 'MPO Name', alignRight: false },
     { id: 'chemist_address', label: 'Chemist Address', alignRight: false },
 ];
 
@@ -241,6 +241,19 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 />
             </TableCell>
             <TableCell align="left" style={{ width: "200px" }}>
+                {
+                    user_role === 'admin' ?
+                        <Controls.Select
+                            name="mpo_name"
+                            label="MPO*"
+                            value={Formdata.mpo_name}
+                            onChange={handleInputChange}
+                            // error={errors.mpo_name}
+                            options={mpoNames}
+                        /> : <>{email}</>
+                }
+            </TableCell>
+            <TableCell align="left" style={{ width: "200px" }}>
                 <Controls.Select
                     name="chemist_territory"
                     label="Chemist Territory*"
@@ -288,19 +301,7 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                     label="Is Invested"
                 />
             </TableCell> */}
-            <TableCell align="left" style={{ width: "200px" }}>
-                {
-                    user_role === 'admin' ?
-                        <Controls.Select
-                            name="mpo_name"
-                            label="MPO*"
-                            value={Formdata.mpo_name}
-                            onChange={handleInputChange}
-                            // error={errors.mpo_name}
-                            options={mpoNames}
-                        /> : <>{email}</>
-                }
-            </TableCell>
+
             <TableCell align="left">
                 <Controls.Input
                     name="chemist_address"
