@@ -32,6 +32,7 @@ import { ConstructionOutlined } from '@mui/icons-material';
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
+    console.log(onClose)
     const { company_id, user_role, company_user_id, role, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
