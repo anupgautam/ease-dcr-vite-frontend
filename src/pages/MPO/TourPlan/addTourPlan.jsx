@@ -45,14 +45,14 @@ const AddTourPlan = () => {
     const [TpResponseData, setTpResponseData] = useState([]);
 
 
-    const toggleDrawer = useCallback(() => {
+    const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);
-    }, [])
+    }
 
-    const handleCloseDrawer = useCallback(() => {
+    const handleCloseDrawer = () => {
         setIsDrawerOpen(false);
         setTpResponseData([]);
-    }, [])
+    }
 
 
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_role_id },
@@ -100,6 +100,11 @@ const AddTourPlan = () => {
     const [formValuesArray, setFormValuesArray] = useState([]);
     const [selectedDates, setSelectedDates] = useState(today);
 
+    const initialStates = () => {
+        setSelectedDates(today);
+        setSelectedAreas([])
+        setSelectedExecutiveOptions([])
+    }
     const [CompanyRoles, setCompanyRoles] = useState([]);
 
     const handleRolesChange = (event) => {
@@ -113,9 +118,7 @@ const AddTourPlan = () => {
 
     // const handleRolesChange = (e, value) => {
     //     setCompanyRoles(value?.id)
-    //     console.log(value?.id)
     // }
-    // console.log(CompanyRoles)
     //! States
     const [MpoTpArea, setMpoTpArea] = useState([]);
     const [TPAreaName, setTPAreaName] = useState([])
@@ -160,8 +163,8 @@ const AddTourPlan = () => {
 
     const [MpoAreaData, setMpoAreaData] = useState([]);
     const [visitedWithData, setVisitedWithData] = useState([]);
-    console.log('MpoAreaData', MpoAreaData);
 
+    //! Add MPO TP
     const addTodo = () => {
         setLoading(true);
         const newTodo = {
@@ -170,7 +173,8 @@ const AddTourPlan = () => {
             hulting_station: formValuesArray.hulting_station || "",
         };
 
-        setTourPlanTodos(prevTodos => [...prevTodos, newTodo]);
+        // setTourPlanTodos(prevTodos => [...prevTodos, newTodo]);
+        // setTourPlanTodos(newTodo);
 
         setFormValuesArray({
             select_the_area: "",
@@ -181,7 +185,7 @@ const AddTourPlan = () => {
 
         setMpoTpArea([]);
 
-        let new_data = [...TourPlanTodos, newTodo].map((tour) => ({
+        let new_data = [newTodo].map((tour) => ({
             company_name: company_id,
             mpo_name: company_user_role_id,
             mpo_area: newData,
@@ -204,11 +208,9 @@ const AddTourPlan = () => {
             is_approved: false,
         }));
 
-        console.log(new_data)
         AddTourPlan(new_data)
             .then(res => {
                 if (res.data) {
-                    console.log(res?.data)
                     setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
                     const updatedData = res.data.map((item, index) => ({
                         ...item,
@@ -216,22 +218,24 @@ const AddTourPlan = () => {
                     }));
 
                     // setTpResponseData(prevData => [...prevData, ...updatedData]);
-                    handleCloseDrawer()
+                    initialStates()
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
-                    }, 5000);
+                        toggleDrawer()
+                    }, 4000);
                 } else {
+                    initialStates()
                     setErrorMessage({ show: true, message: res.error.data[0] });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
-                    }, 5000);
+                    }, 4000);
                 }
             })
             .catch(err => {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
-                }, 5000);
+                }, 4000);
             })
             .finally(() => {
                 setLoading(false);
@@ -290,6 +294,8 @@ const AddTourPlan = () => {
         return [];
     }, [MpoTpArea])
 
+
+    //! Others TP
     const handleSave = () => {
         setLoading(true)
         let sending_data = { ...values };
@@ -302,28 +308,36 @@ const AddTourPlan = () => {
         AddHigherOrder(sending_data)
             .then(res => {
                 if (res.data) {
+                    initialStates()
                     setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
+                        toggleDrawer()
                     }, 5000);
                 }
                 else if (res.error) {
-                    setErrorMessage({ show: true, message: res.error[0] });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 5000);
-                }
-                else {
+                    initialStates()
                     setErrorMessage({ show: true, message: res.error.data[0] });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
+                        toggleDrawer()
+                    }, 5000);
+                }
+                else {
+                    initialStates()
+                    setErrorMessage({ show: true, message: res.error.data[0] });
+                    setTimeout(() => {
+                        setErrorMessage({ show: false, message: '' });
+                        toggleDrawer()
                     }, 5000);
                 }
             })
             .catch(err => {
+                initialStates()
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
+                    toggleDrawer()
                 }, 5000);
             })
             .finally(() => {
@@ -596,6 +610,8 @@ const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
         // }
     );
 
+    const [MpoTpArea, setMpoTpArea] = useState([]);
+    const [TPAreaName, setTPAreaName] = useState([])
     const [mpoAreaData, setmpoAreaData] = useState([]);
     const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
 
@@ -612,6 +628,24 @@ const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
             })
     }, [id])
 
+    //! Display value
+    const [selectedAreas, setSelectedAreas] = useState(
+        MpoTpArea.map((id) => mpoAreaData.find((option) => option.id === id) || {})
+    )
+
+    //! On Chnage
+    const handleMpoTpArea = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        const mpotpareavalue = value.map(option => option.title)
+        setMpoTpArea(mpotparea)
+        setTPAreaName(mpotpareavalue)
+        setSelectedAreas(value)
+    }
+
+    //! Filter Options
+    const filteredOptions = mpoAreaData.filter(
+        (option) => !selectedAreas.some((selected) => selected.id === option.id)
+    );
 
     // const mpoAreaData = useMemo(() => {
     //     if (MpoArea?.data) {
@@ -622,10 +656,42 @@ const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
 
     const handleInputChange = (event) => {
         const selectedAreaId = event.target.value;
-        const newVisitData = [...MpoAreaData, { visited_with: id, area: selectedAreaId }];
+        // const newVisitData = [...MpoAreaData, { visited_with: id, area: selectedAreaId }];
+
+        const newVisitData = [{ visited_with: id, area: selectedAreaId }];
         setMpoAreaData(newVisitData);
         setVisitData(selectedAreaId);
+        console.log(MpoAreaData)
     }
+
+    const [mulipleSelectedAreasId, setMultipleSelectedAreasId] = useState([])
+    //! On Chnage
+    // const handleMpoTpVisitedArea = (event, value) => {
+    //     // const mpotparea = value.map(option => option.id)
+    //     // const mpotpareavalue = value.map(option => option.title)
+    //     // setMpoTpArea(mpotparea)
+    //     // setTPAreaName(mpotpareavalue)
+    //     setSelectedAreas(value)
+
+    //     const selectedAreaId = value.map(option => option.id)
+    //     console.log(selectedAreaId)
+    //     // const newVisitData = [...MpoAreaData, { visited_with: id, area: selectedAreaId }];
+    //     // const newVisitData = [{ visited_with: id, area: selectedAreaId }];
+    //     const newVisitData = id.map(id => ({
+    //         visited_with: id,
+    //         area: selectedAreaId
+    //     }))
+    //     // setMpoAreaData(newVisitData);
+    //     setMpoAreaData(prevState => {
+    //         const updatedVisitData = [...prevState, ...newVisitData];
+    //         return updatedVisitData;
+    //     });
+    //     setVisitData(selectedAreaId);
+    //     console.log(MpoAreaData)
+    // }
+    // useEffect(() => {
+    //     console.log(MpoAreaData)
+    // }, [(MpoAreaData || id)]);
 
     return (
         <Box marginBottom={2}>
@@ -636,6 +702,24 @@ const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
                 onChange={handleInputChange}
                 options={mpoAreaData}
             />
+
+            {/* <Autocomplete
+                multiple
+                options={filteredOptions}
+                value={selectedAreas}
+                // options={mpoAreaData}
+                // value={MpoTpArea.map(id => mpoAreaData.find(option => option.id === id) || {})}
+                getOptionLabel={(option) => option.title}
+                onChange={handleMpoTpVisitedArea}
+                renderInput={(params) => (
+                    <TextField {...params} label="Select the Areas" />
+                )}
+                renderOption={(props, option) => (
+                    <li {...props} key={option.id}>
+                        {option.title}
+                    </li>
+                )}
+            /> */}
         </Box>
     )
 }

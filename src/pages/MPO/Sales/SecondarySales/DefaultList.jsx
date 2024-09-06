@@ -84,7 +84,6 @@ const DefaultList = () => {
 
     // ! Get all chemist wala
     const { data } = useGetAllSecondarySalesQuery(page);
-    console.log(data)
 
     // !Delete chemists
     const [deleteSecondarySale] = useDeleteSecondarySalesByIdMutation()

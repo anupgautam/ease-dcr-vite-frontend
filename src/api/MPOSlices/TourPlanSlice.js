@@ -149,7 +149,6 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
         }),
         getAreaMPOById: builder.query({
             query: (id) => {
-                console.log("useGetAreaMPOByIdQuery")
                 return {
                     url: `mpo/company-mpo-area/${id}/`,
                     method: 'GET'

@@ -22,17 +22,19 @@ const AddUnplannedTp = () => {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const toggleDrawer = useCallback(() => {
+    const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);
-    }, []);
+    };
 
-    const handleCloseDrawer = useCallback(() => {
+    const handleCloseDrawer = () => {
         setIsDrawerOpen(false);
-    }, []);
+    }
 
     // const today = NepaliDateConverter.getNepaliDate();
 
     const [selectedDates, setSelectedDates] = useState(today);
+
+
 
     const mpoAccordingToExecutiveLevel = usePostUserIdToGetLowerLevelExecutiveMutation(company_user_role_id,
         {
@@ -68,7 +70,9 @@ const AddUnplannedTp = () => {
         return [];
     }, [MpoArea])
 
-    const initialFValues = {}
+    const initialFValues = {
+
+    }
 
     const {
         values,
@@ -87,6 +91,9 @@ const AddUnplannedTp = () => {
     const [AddTourPlan] = useAddTourplanMutation();
     const [AddHigherOrder] = useAddHigherTourPlanMutation();
 
+    const initialStates = () => {
+        setSelectedDates(today);
+    }
     const addTourPlan = () => {
         setLoading(true)
         if (selectedDates === today) {
@@ -117,10 +124,10 @@ const AddUnplannedTp = () => {
                 AddTourPlan(data)
                     .then(res => {
                         if (res.data) {
-                            setIsDrawerOpen(false)
                             setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
                             setTimeout(() => {
                                 setSuccessMessage({ show: false, message: '' });
+                                setIsDrawerOpen(false)
                             }, 5000);
                         } else {
                             setErrorMessage({ show: true, message: response.error.data[0] });
@@ -153,14 +160,17 @@ const AddUnplannedTp = () => {
                 AddHigherOrder(data)
                     .then((res) => {
                         if (res.data) {
-                            setIsDrawerOpen(false)
                             setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
+                            initialStates()
+                            resetForm()
                             setTimeout(() => {
                                 setSuccessMessage({ show: false, message: '' });
-                            }, 5000);
+                                setIsDrawerOpen(false)
+                            }, 4000);
                         } else if (res.error.status === '400') {
                             setLoading(false)
                             setErrorMessage({ show: true, message: res.error.data[0] });
+                            initialStates()
                             setTimeout(() => {
                                 setErrorMessage({ show: false, message: '' });
                             }, 5000);
@@ -169,6 +179,7 @@ const AddUnplannedTp = () => {
                     .catch(err => {
                         setLoading(false)
                         setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                        initialStates()
                         setTimeout(() => {
                             setErrorMessage({ show: false, message: '' });
                         }, 5000);
@@ -179,10 +190,11 @@ const AddUnplannedTp = () => {
             }
         } else {
             setLoading(false);
-            setIsDrawerOpen(false)
             setErrorMessage({ show: true, message: 'Unplanned tourplan can be create in today dates only.' });
+            initialStates()
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
+                setIsDrawerOpen(false)
             }, 5000);
         }
     }

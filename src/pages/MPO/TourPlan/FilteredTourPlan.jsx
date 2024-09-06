@@ -71,6 +71,7 @@ const FilteredTourPlan = () => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const localData = JSON.parse(localStorage.getItem('user_login'));
+
     useEffect(() => {
         if (localData) {
             sessionStorage.setItem('User_id', localData.user_id);
@@ -133,7 +134,7 @@ const FilteredTourPlan = () => {
         const data = e.target.ariaLabel
         let thisArray = data.split(" ")
         setPage(thisArray[3]);
-    }, [])
+    }, [page])
 
 
     const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: '' }, {
@@ -166,11 +167,11 @@ const FilteredTourPlan = () => {
     const onEdit = useCallback((id) => {
         setSelectedUpdateId(id);
         setIsDrawerOpen(true);
-    }, []);
+    }, [isDrawerOpen, selectedUpdateId]);
 
     const onCloseDrawer = useCallback(() => {
         setIsDrawerOpen(false);
-    }, []);
+    }, [isDrawerOpen]);
 
     //! Get User roles wala
     const { data, isLoading, isSuccess, isError, error } = useGetUsersMPOWalaQuery(company_id, {
@@ -211,7 +212,21 @@ const FilteredTourPlan = () => {
         setSelectedMonth(event.target.value);
     };
 
-    const { data: TourPlanSearch } = user_role === "MPO" || role === "MPO" && useGetTourplanOfMpoByDateMonthQuery(
+    // const { data: TourPlanSearch } = user_role === "MPO" || role === "MPO" && useGetTourplanOfMpoByDateMonthQuery(
+    // const { data: TourPlanSearch } = user_role === "MPO" && useGetTourplanOfMpoByDateMonthQuery(
+    //     {
+    //         company_name: company_id,
+    //         date: selectedYear,
+    //         month: selectedMonth,
+    //         mpo_name: user_role === 'admin' ? id : company_user_role_id,
+    //         page: page,
+    //         role_data: user_role === 'admin' ? "" : '',
+    //     },
+    // );
+
+    const shouldFetchTourPlan = user_role === "MPO" || role === "MPO";
+
+    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery(
         {
             company_name: company_id,
             date: selectedYear,
@@ -220,8 +235,10 @@ const FilteredTourPlan = () => {
             page: page,
             role_data: user_role === 'admin' ? "" : '',
         },
+        {
+            skip: !shouldFetchTourPlan, // Skip the query when `shouldFetchTourPlan` is false
+        }
     );
-
 
     //! Search results
 
@@ -271,11 +288,11 @@ const FilteredTourPlan = () => {
 
     const handleClickOpen = useCallback(() => {
         setOpenDialogue(true)
-    }, [])
+    }, [openDialogue])
 
     const handleClose = useCallback(() => {
         setOpenDialogue(false)
-    }, [])
+    }, [openDialogue])
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
