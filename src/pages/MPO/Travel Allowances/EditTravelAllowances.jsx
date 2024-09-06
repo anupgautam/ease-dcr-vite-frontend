@@ -348,25 +348,31 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
                         </Stack>
                     </Form>
                 </Box>
+                {loading && (
+                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                        <CircularProgress />
+                    </Grid>
+                )}
+                {
+                    ErrorMessage.show === true ? (
+                        <Grid>
+                            <Box className="messageContainer errorMessage">
+                                <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                            </Box>
+                        </Grid>
+                    ) : null
+                }
+                {
+                    SuccessMessage.show === true ? (
+                        <Grid>
+                            <Box className="messageContainer successMessage">
+                                <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                            </Box>
+                        </Grid>
+                    ) : null
+                }
             </Drawer>
-            {
-                ErrorMessage.show === true ? (
-                    <Grid>
-                        <Box className="messageContainer errorMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                ) : null
-            }
-            {
-                SuccessMessage.show === true ? (
-                    <Grid>
-                        <Box className="messageContainer successMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                ) : null
-            }
+
         </>
     );
 };

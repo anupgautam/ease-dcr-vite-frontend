@@ -256,6 +256,16 @@ const EditChemist = ({ idharu, onClose }) => {
                             />
                         </Box>
                         <Box marginBottom={2}>
+                            <Controls.Select
+                                name="chemist_territory"
+                                label="Chemist Territory*"
+                                value={values.chemist_territory}
+                                onChange={handleInputChange}
+                                error={errors.chemist_territory}
+                                options={mpoAreaData}
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
                             <Controls.Input
                                 name="chemist_contact_person"
                                 label="Chemist Contact Person*"
@@ -289,16 +299,7 @@ const EditChemist = ({ idharu, onClose }) => {
                                 </Box>
                             </Grid>
                         </Grid>
-                        <Box marginBottom={2}>
-                            <Controls.Select
-                                name="chemist_territory"
-                                label="Chemist Territory*"
-                                value={values.chemist_territory}
-                                onChange={handleInputChange}
-                                error={errors.chemist_territory}
-                                options={mpoAreaData}
-                            />
-                        </Box>
+
                         {/* <Box marginBottom={2}>
                             <Controls.Checkbox
                                 name="is_invested"

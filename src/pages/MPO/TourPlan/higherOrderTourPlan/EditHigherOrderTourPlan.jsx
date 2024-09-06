@@ -30,6 +30,7 @@ import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/U
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
+    console.log(onClose)
     const { company_id, user_role, company_user_id, role, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
@@ -391,11 +392,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                         </Stack>
                     </Form>
                 </Box>
-                {loading && (
-                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
-                        <CircularProgress />
-                    </Grid>
-                )}
+
                 {ErrorMessage.show && (
                     <Grid>
                         <Box className="messageContainer errorMessage">
@@ -411,6 +408,11 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                     </Grid>
                 )}
             </Drawer>
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                    <CircularProgress />
+                </Grid>
+            )}
         </>
     );
 };

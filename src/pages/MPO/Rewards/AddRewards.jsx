@@ -76,9 +76,9 @@ const AddRewards = () => {
                 setSuccessMessage({ show: true, message: 'Successfully Added Rewards' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
+                    setIsDrawerOpen(false);
+                    resetForm();
                 }, 3000);
-                resetForm();
-                setIsDrawerOpen(false);
             } catch (error) {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                 setTimeout(() => {
@@ -163,26 +163,23 @@ const AddRewards = () => {
                         </Button>
                     </Stack>
                 </Box>
-            </Drawer>
-            {loading && (
-                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
-                    <CircularProgress />
-                </Grid>
-            )}
-            {ErrorMessage.show && (
-                <Grid>
+                {ErrorMessage.show && (
                     <Box className="messageContainer errorMessage">
                         <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
                     </Box>
-                </Grid>
-            )}
-            {SuccessMessage.show && (
-                <Grid>
+                )}
+                {SuccessMessage.show && (
                     <Box className="messageContainer successMessage">
                         <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
                     </Box>
+                )}
+            </Drawer>
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1500 }}>
+                    <CircularProgress />
                 </Grid>
             )}
+
         </>
     );
 };
