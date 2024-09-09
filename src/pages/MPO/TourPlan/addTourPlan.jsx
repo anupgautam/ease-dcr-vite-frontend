@@ -217,11 +217,11 @@ const AddTourPlan = () => {
                         mpo_area_name: TPAreaName[index]
                     }));
 
-                    // setTpResponseData(prevData => [...prevData, ...updatedData]);
+                    setTpResponseData(prevData => [...prevData, ...updatedData]);
                     initialStates()
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
-                        toggleDrawer()
+                        // toggleDrawer()
                     }, 4000);
                 } else {
                     initialStates()
