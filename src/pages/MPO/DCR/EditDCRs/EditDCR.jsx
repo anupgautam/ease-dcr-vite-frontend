@@ -25,7 +25,7 @@ import EditDCRRewards from '../EditDCRPackages/EditDCRRewards';
 import { useSelector } from 'react-redux';
 import { useGetShiftWiseDoctorDCRByIdQuery, useUpdateShiftWiseDoctorDCRMutation } from '@/api/DCRs Api Slice/doctorDCR/shiftWiseDoctorDCRSlice';
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
-import { useGetAllCompanyAreasQuery } from '../../../../api/CompanySlices/companyAreaSlice'
+import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 
 
 const EditDCR = ({ idharu, onClose }) => {
@@ -98,7 +98,7 @@ const EditDCR = ({ idharu, onClose }) => {
         true
     )
 
-    const { data: doctorsdata } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_user_role_id, mpo_name: values.mpo_name, mpo_area: values.visited_area })
+    const { data: doctorsdata } = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_name: values.mpo_name, mpo_area: values.visited_area })
 
     const doctors = useMemo(() => {
         if (doctorsdata !== undefined) {
@@ -107,13 +107,14 @@ const EditDCR = ({ idharu, onClose }) => {
         return [];
     }, [doctorsdata])
 
-    const MpoArea = useGetAllCompanyAreasQuery(company_user_role_id, {
-        skip: !company_user_role_id
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: mpo_id }, {
+        skip: !company_id || !mpo_id
     });
+
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
-            return MpoArea?.data.map((key) => ({ id: key.id, title: key.company_area }))
+            return MpoArea?.data.map((key) => ({ id: key.id, title: key.area_name }))
         }
         return [];
     }, [MpoArea])

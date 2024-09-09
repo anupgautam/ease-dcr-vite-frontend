@@ -25,7 +25,7 @@ const EditChemistDCROrderedProducts = ({ id, context, editApi }) => {
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
         skip: !mpo_id
     });
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_user_role_id, division_name: mpoArea?.division_name })
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: mpoArea?.division_name?.id })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {

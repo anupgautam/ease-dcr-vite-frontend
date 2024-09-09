@@ -19,7 +19,7 @@ import { extractErrorMessage } from '../../../reusable/extractErrorMessage';
 const LoginFormInputs = () => {
 
     const [shouldAnimate, setShouldAnimate] = useState(false);
-    const navigate = useNavigate();
+        const navigate = useNavigate();
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')

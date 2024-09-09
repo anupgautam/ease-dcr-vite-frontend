@@ -15,7 +15,7 @@ const EditDCRStockistRewards = ({ id, context, editApi }) => {
 
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const companyRewards = useSelector(state => state.dcrData.rewards);
-  const { data: rewardAllData } = useGetAllRewardsByCompanyIdQuery(company_user_role_id);
+  const { data: rewardAllData } = useGetAllRewardsByCompanyIdQuery(company_id);
 
 
   const companyRewards = useMemo(() => {

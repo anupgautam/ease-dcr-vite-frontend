@@ -215,8 +215,6 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
             setDefaultExecutives(defaultVisitedWith)
             // const visitedIds = values?.visited_data?.map((item) => item.id)
             // const defaultVisitedUsers = users?.filter((user) => visitedIds.includes(user.id))
-            // console.log(visitedIds)
-            // console.log(defaultVisitedUsers)
             // setDefaultExecutives(defaultVisitedUsers)
         }
     }, [values]);
@@ -258,7 +256,6 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     const monthData = getNepaliMonthName(moment(dateData).month() + 1);
     const handleSubmit = useCallback(async (e) => {
-        // console.log(values.visited_with)
         setLoading(true)
         e.preventDefault();
         const formData = new FormData();
@@ -294,10 +291,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         }
     }, [updateTourPlans, values])
 
-    // console.log(values.visited_data)
     // const visitedData = values?.visited_data?.map((visiteddata) => visiteddata.visited_with)
-    // console.log(visitedData)
-    console.log(values.visited_data)
     return (
         <>
             <Drawer

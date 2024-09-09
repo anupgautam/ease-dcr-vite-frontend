@@ -104,9 +104,11 @@ const EditChemistDCR = ({ idharu, onClose }) => {
 
 
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_user_role_id, mpo_name: mpo_id }, {
-        skip: !company_user_role_id || !mpo_id
+    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: mpo_id }, {
+        skip: !company_id || !mpo_id
     });
+
+
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
@@ -115,11 +117,11 @@ const EditChemistDCR = ({ idharu, onClose }) => {
         return [];
     }, [MpoArea])
 
-    const { data: chemistData } = useGetAllVisitedMpoWiseChemistQuery({ company_name: company_user_role_id, mpo_name: mpo_id, mpo_area: values.visited_area })
+    const { data: chemistData } = useGetAllVisitedMpoWiseChemistQuery({ company_name: company_id, mpo_name: mpo_id, mpo_area: values.visited_area })
 
     const chemists = useMemo(() => {
         if (chemistData !== undefined) {
-            return chemistData.data.map((key) => ({ id: key.id, title: key.chemist_name.chemist_name }))
+            return chemistData?.map((key) => ({ id: key.id, title: key.chemist_name.chemist_name }))
         }
         return [];
     }, [chemistData])

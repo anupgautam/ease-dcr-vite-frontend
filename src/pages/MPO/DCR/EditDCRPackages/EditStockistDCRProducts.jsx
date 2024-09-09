@@ -19,7 +19,7 @@ const EditStockistDCRProducts = ({ id, context, editApi, division }) => {
     const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
     const [postData, setPostData] = useState({});
     // const companyProducts = useSelector(state => state.dcrData.company_products);
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_user_role_id, division_name: division })
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division?.id })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {
