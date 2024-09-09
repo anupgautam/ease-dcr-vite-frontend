@@ -283,6 +283,7 @@ const MyExecutiveTp = () => {
             skip: !selectedOption || !selectedOption?.id || !selectedMonth || !selectedYear || !page || !company_id
         }
     )
+    console.log(TourPlanSearch)
     return (
         <>
             <Grid item xs={10}>
@@ -457,6 +458,7 @@ const MyExecutiveTp = () => {
                                                                                     </TableCell>
                                                                                     {/* <TableCell align="left">{tourplan.tour_plan.tour_plan.select_the_month}</TableCell> */}
                                                                                     <TableCell align="left">{moment(tourplan.tour_plan.tour_plan.select_the_date_id).format('DD')}</TableCell>
+
                                                                                     <TableCell align="left">{tourplan.is_approved === true ? <>
                                                                                         <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75 }} >
                                                                                             <Badge>
@@ -469,7 +471,9 @@ const MyExecutiveTp = () => {
                                                                                                 <Iconify icon="mdi:cross-circle" />
                                                                                             </Badge>
                                                                                         </IconButton>
-                                                                                    </>}  </TableCell>
+                                                                                    </>}
+                                                                                    </TableCell>
+                                                                                    <TableCell align="left">{tourplan.tour_plan.tour_plan.hulting_station}</TableCell>
                                                                                     {
                                                                                         tourplan.is_approved === false &&
                                                                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
@@ -478,7 +482,7 @@ const MyExecutiveTp = () => {
                                                                                             </Badge>
                                                                                         </IconButton>
                                                                                     }
-                                                                                    <TableCell align="left">{tourplan.hulting_station}</TableCell>
+
                                                                                     {/* //! Delete  */}
                                                                                     {
                                                                                         user_role === 'admin' &&

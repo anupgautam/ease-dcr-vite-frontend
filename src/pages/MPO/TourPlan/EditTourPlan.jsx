@@ -67,6 +67,8 @@ const EditTourPlan = ({ idharu, onClose }) => {
         setMpoTpArea(value);
     };
 
+    
+
     useEffect(() => {
         if (TourPlan?.data) {
             const selectedAreas = TourPlan?.data?.mpo_area_read?.map(area => ({
