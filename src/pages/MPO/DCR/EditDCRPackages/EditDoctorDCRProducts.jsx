@@ -10,6 +10,7 @@ import { useGetAllProductsOptionsWithDivisionQuery, usePostProductPromotionsMuta
 import { useGetProductForDcrByIdQuery } from "@/api/MPOSlices/ProductSlice";
 import Controls from "@/reusable/forms/controls/Controls";
 import { useSelector } from 'react-redux';
+import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSlices/companyProductSlice";
 
 
 const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
@@ -18,7 +19,8 @@ const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const companyProducts = useSelector(state => state.dcrData.company_products);
   const { data } = useGetPromotedProductByDcrIdQuery(id);
-  const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_user_role_id, division_name: division })
+
+  const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division?.id })
 
   const productList = useMemo(() => {
     if (productData !== undefined) {
@@ -29,7 +31,6 @@ const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
     }
     return [];
   }, [productData])
-
 
   const [ProductPromotions, setProductPromotion] = useState('');
   const [ProductNotListed, setProductListed] = useState(null);

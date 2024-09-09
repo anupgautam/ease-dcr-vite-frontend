@@ -20,6 +20,7 @@ import {
     useCreateRewardsMutation
 } from '@/api/MPOSlices/rewardsApiSlice';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '../../../reusable/extractErrorMessage';
 
 const AddRewards = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -73,12 +74,19 @@ const AddRewards = () => {
             formData.append("company_name", company_id);
             try {
                 const response = await createRewards(formData).unwrap();
-                setSuccessMessage({ show: true, message: 'Successfully Added Rewards' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                    setIsDrawerOpen(false);
-                    resetForm();
-                }, 3000);
+                if (response) {
+                    setSuccessMessage({ show: true, message: 'Successfully Added Rewards' });
+                    setTimeout(() => {
+                        setSuccessMessage({ show: false, message: '' });
+                        setIsDrawerOpen(false);
+                        resetForm();
+                    }, 3000);
+                }
+                else if (response?.error) {
+                    setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
+                    setLoading(false);
+                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                }
             } catch (error) {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                 setTimeout(() => {

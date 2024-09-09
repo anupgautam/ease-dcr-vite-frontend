@@ -23,7 +23,7 @@ import {
     useGetUsersRoleQuery,
 } from '@/api/MPOSlices/UserSlice';
 import { useSelector } from 'react-redux';
-
+import { extractErrorMessage } from '../../../reusable/extractErrorMessage';
 
 const AddTPLock = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -89,12 +89,19 @@ const AddTPLock = () => {
             formData.append("company_name", company_id);
             try {
                 const response = await createTPDays(formData).unwrap();
-                setSuccessMessage({ show: true, message: 'Successfully Added TP Lock Days' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
-                resetForm();
-                setIsDrawerOpen(false);
+                if (response) {
+                    setSuccessMessage({ show: true, message: 'Successfully Added TP Lock Days' });
+                    setTimeout(() => {
+                        setSuccessMessage({ show: false, message: '' });
+                    }, 3000);
+                    resetForm();
+                    setIsDrawerOpen(false);
+                }
+                else if (response?.error) {
+                    setErrorMessage({ show: true, message: extractErrorMessage({ data: res.error }) });
+                    setLoading(false);
+                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                }
             } catch (error) {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                 setTimeout(() => {
