@@ -14,6 +14,7 @@ import Cookies from 'js-cookie';
 import '../../../styles/muiTextBox.css'
 import "../../../styles/styles.css";
 import { setCookie, setUserRole } from '../../../reducers/cookieReducer';
+import { extractErrorMessage } from '../../../reusable/extractErrorMessage';
 
 const LoginFormInputs = () => {
 
@@ -125,14 +126,7 @@ const LoginFormInputs = () => {
                         }, 1000);
 
                     } else if (res.error) {
-                        if (res.error?.originalStatus === 500) {
-                            setErrorMessage({ show: true, message: 'Server Error. Please try again later.' });
-                        }
-                        else if (res.error?.originalStatus === 401) {
-                            setErrorMessage({ show: true, message: 'Unauthorized' });
-                        } else {
-                            setErrorMessage({ show: true, message: "Login Failed" });
-                        }
+                        setErrorMessage({ show: true, message: extractErrorMessage({ data: res.error }) });
                         setLoading(false);
                         setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     }
