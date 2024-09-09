@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import {
     Box, Grid,
-    Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel, CircularProgress, Autocomplete
+    Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel, CircularProgress, Autocomplete,
+    TextField
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -26,6 +27,7 @@ import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useSelector } from 'react-redux';
 import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
+import { ConstructionOutlined } from '@mui/icons-material';
 
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
@@ -34,6 +36,43 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     const now = new BSDate().now();
     const [dateData, setDateData] = useState();
+
+    const [MpoTpArea, setMpoTpArea] = useState([]);
+    const [TPAreaName, setTPAreaName] = useState([])
+    const [mpoAreaData, setmpoAreaData] = useState([]);
+    const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
+
+    useEffect(() => {
+        AllMpoAreaData({ id: company_user_role_id })
+            .then((res) => {
+                if (res.data) {
+                    const data = res.data.map((key) => ({
+                        id: key.id,
+                        title: key.area_name
+                    }));
+                    setmpoAreaData(data)
+                }
+            })
+    }, [company_user_role_id])
+
+    //! Display value
+    const [selectedAreas, setSelectedAreas] = useState(
+        MpoTpArea.map((id) => mpoAreaData.find((option) => option.id === id) || {})
+    )
+
+    //! On Chnage
+    const handleMpoTpArea = (event, value) => {
+        const mpotparea = value.map(option => option.id)
+        const mpotpareavalue = value.map(option => option.title)
+        setMpoTpArea(mpotparea)
+        setTPAreaName(mpotpareavalue)
+        setSelectedAreas(value)
+    }
+
+    //! Filter Options
+    const filteredOptions = mpoAreaData.filter(
+        (option) => !selectedAreas.some((selected) => selected.id === option.id)
+    );
 
     //! Getting TourPlan by ID
     const TourPlan = useGetHOTourPlansByIdQuery(idharu, {
@@ -54,24 +93,24 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         }
     }, [TourPlan?.data?.user_id?.id])
 
-    // const [userLists] = usePostUserIdToGetLowerLevelExecutiveMutation()
+    const [userLists] = usePostUserIdToGetLowerLevelExecutiveMutation()
 
-    // const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState([]);
 
-    // useEffect(() => {
-    //     if (company_user_role_id) {
-    //         userLists({ id: company_user_role_id })
-    //             .then((res) => {
-    //                 if (res.data) {
-    //                     const data = res?.data?.map(key => ({
-    //                         id: key.id,
-    //                         title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
-    //                     }));
-    //                     setUsers(data)
-    //                 }
-    //             })
-    //     }
-    // }, [company_user_role_id])
+    useEffect(() => {
+        if (company_user_role_id) {
+            userLists({ id: company_user_role_id })
+                .then((res) => {
+                    if (res.data) {
+                        const data = res?.data?.map(key => ({
+                            id: key.id,
+                            title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
+                        }));
+                        setUsers(data)
+                    }
+                })
+        }
+    }, [company_user_role_id])
 
     // //! Get selected area
     const shiftData = useGetShiftsQuery();
@@ -128,6 +167,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         );
     };
 
+
     useEffect(() => {
         if (TourPlan.data) {
             setInitialFValues({
@@ -165,10 +205,19 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         true
     )
 
+    // const [visitedNames, setVisitedNames] = useState([])
+    const [defaultExecutives, setDefaultExecutives] = useState()
+
     useEffect(() => {
-        if (values.visited_data) {
+        if (values?.visited_data) {
             const defaultVisitedWith = values.visited_data.map(item => item.visited_with);
             setCompanyRoles(defaultVisitedWith);
+            setDefaultExecutives(defaultVisitedWith)
+            // const visitedIds = values?.visited_data?.map((item) => item.id)
+            // const defaultVisitedUsers = users?.filter((user) => visitedIds.includes(user.id))
+            // console.log(visitedIds)
+            // console.log(defaultVisitedUsers)
+            // setDefaultExecutives(defaultVisitedUsers)
         }
     }, [values]);
 
@@ -192,6 +241,9 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
             const defaultRoles = values.visited_data.map((data) => data.visited_with);
             setCompanyRoles(defaultRoles);
 
+            // const visitedIds = values?.visited_data?.map((item) => item.id)
+            // setDefaultExecutives(visitedIds)
+
             const defaultAreaData = values.visited_data.map((data) => ({
                 visited_with: data.visited_with,
                 area: data.area
@@ -206,6 +258,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     const monthData = getNepaliMonthName(moment(dateData).month() + 1);
     const handleSubmit = useCallback(async (e) => {
+        // console.log(values.visited_with)
         setLoading(true)
         e.preventDefault();
         const formData = new FormData();
@@ -214,7 +267,8 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         formData.append("date", typeof values.date === "string" ? values.date : DateToString(values.date));
         formData.append("is_dcr_added", values.is_dcr_added === null ? false : values.is_dcr_added);
         formData.append("is_approved", values.is_approved);
-        formData.append("visit_data", values.visited_with);
+        // formData.append("visit_data", values.visited_data?.map((visiteddata) => visiteddata.visited_with));
+        formData.append("visit_data", JSON.stringify(defaultExecutives));
         formData.append("hulting_station", values.hulting_station);
         formData.append('month', monthData)
         formData.append('id', idharu)
@@ -240,6 +294,10 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         }
     }, [updateTourPlans, values])
 
+    // console.log(values.visited_data)
+    // const visitedData = values?.visited_data?.map((visiteddata) => visiteddata.visited_with)
+    // console.log(visitedData)
+    console.log(values.visited_data)
     return (
         <>
             <Drawer
@@ -324,7 +382,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                 </Select>
                             </FormControl>
 
-                            <Autocomplete
+                            {/* <Autocomplete
                                 multiple
                                 options={filteredOptions}
                                 value={selectedAreas}
@@ -340,7 +398,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                         {option.title}
                                     </li>
                                 )}
-                            />
+                            /> */}
                         </Box>
                         {Array.isArray(values?.visited_data) &&
                             values.visited_data.map((key, index) => (
