@@ -87,6 +87,9 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
             date: selectedDate,
             page: page,
             company_name: company_id
+        },
+        {
+            skip: !user_role || !company_user_role_id || !selectedMonth || !selectedDate || !page || !company_id
         }
     );
 
