@@ -256,7 +256,6 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     const monthData = getNepaliMonthName(moment(dateData).month() + 1);
     const handleSubmit = useCallback(async (e) => {
-        // console.log(values.visited_with)
         setLoading(true)
         e.preventDefault();
         const formData = new FormData();
