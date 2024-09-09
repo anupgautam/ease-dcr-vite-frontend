@@ -355,18 +355,22 @@ const MyChemist = ({ id, AddProduct, chemistList, setAddProduct, dcr_id }) => {
     useEffect(() => {
         if (orderedInformation.id && OrderData.length > 0) {
             setAddProduct((prevAddProduct) => {
-                const existingProductIndex = prevAddProduct.findIndex(item => item.id === id);
+                // Find the index of the existing product by matching the ID.
+                const existingProductIndex = prevAddProduct.findIndex(item => item.id === orderedInformation.id);
 
+                // Create an array of product information based on the stockist data.
                 const productInformation = OrderData.map(stockistId => ({
                     ordered_quantity: orderedQuantity[stockistId]?.quantity || "",
                     select_the_stockist: stockistId,
                 }));
 
                 if (existingProductIndex !== -1) {
+                    // If the product exists, create a new array with the updated product information.
                     const updatedAddProduct = [...prevAddProduct];
                     updatedAddProduct[existingProductIndex].product_information = productInformation;
                     return updatedAddProduct;
                 } else {
+                    // If the product does not exist, add it to the array.
                     return [
                         ...prevAddProduct,
                         {
