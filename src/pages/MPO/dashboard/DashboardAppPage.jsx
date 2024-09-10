@@ -52,28 +52,29 @@ export default function DashboardAppPage() {
       Stats({ company_name: companyName }).then((res) => {
         if (res) {
           const mostOrderedChems = res?.data?.most_ordered_product?.chemist_ordered_product?.map((key, index) => ({
-            id: `chemist-${key.product_name}-${index}`, // Ensure unique ID
+            id: `${key.product_name}-${index}`,
             name: key.product_name,
             value: key.ordered_quantity,
           }));
           setMostOrderedChem(mostOrderedChems);
 
           const mostOrderedStock = res?.data?.most_ordered_product?.stockist_ordered_product?.map((key, index) => ({
-            id: `stockist-${key.ordered_product.product_name.product_name}-${index}`,  // Ensure unique ID
+            id: `${key.ordered_product.product_name.product_name}-${index}`,
             name: key.ordered_product.product_name.product_name,
             value: key.ordered_quantity,
           }));
+
           setMostOrderedStoc(mostOrderedStock);
 
           const mostPromotedChems = res?.data?.most_promoted_product?.chemist?.map((key, index) => ({
-            id: `promoted-chemist-${key.product_name.product_name}-${index}`, // Ensure unique ID
+            id: `${key.product_name.product_name}-${index}`,
             name: key.product_name.product_name,
             value: null,
           }));
           setMostPromotedChem(mostPromotedChems);
 
           const mostPromotedDocs = res?.data?.most_promoted_product?.doctor?.map((key, index) => ({
-            id: `promoted-doctor-${key.product_name.product_name}-${index}`, // Ensure unique ID
+            id: `${key.product_name.product_name}-${index}`,
             name: key.product_name.product_name,
             value: null,
           }));
@@ -168,8 +169,8 @@ export default function DashboardAppPage() {
                     />
                     <TableBody>
                       {totalStats === undefined ? (
-                        tenArrays.map((key) => (
-                          <TableRow key={key}>
+                        tenArrays.map((key, index) => (
+                          <TableRow key={index}>
                             <TableCell><Skeleton /></TableCell>
                             <TableCell><Skeleton /></TableCell>
                             <TableCell><Skeleton /></TableCell>
@@ -177,7 +178,7 @@ export default function DashboardAppPage() {
                         ))
                       ) : (
                         totalStats?.data?.company?.chemist?.map((mostVisited, index) => (
-                          <TableRow tabIndex={-1} role="checkbox" key={mostVisited.id || `chemist-${index}`}>
+                          <TableRow tabIndex={-1} role="checkbox" key={`${index}`}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell component="th" scope="row" align="left">
                               <Typography variant="subtitle2" noWrap>
@@ -221,7 +222,7 @@ export default function DashboardAppPage() {
                         ))
                       ) : (
                         totalStats?.data?.company?.doctor?.map((mostVisited, index) => (
-                          <TableRow tabIndex={-1} role="checkbox" key={mostVisited.id || `doctor-${index}`}>
+                          <TableRow tabIndex={-1} role="checkbox" key={`${index}`}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell component="th" scope="row" align="left">
                               <Typography variant="subtitle2" noWrap>
@@ -265,7 +266,7 @@ export default function DashboardAppPage() {
                         ))
                       ) : (
                         totalStats?.data?.company?.stockist?.map((mostVisited, index) => (
-                          <TableRow tabIndex={-1} role="checkbox" key={mostVisited.id || `stockist-${index}`}>
+                          <TableRow tabIndex={-1} role="checkbox" key={`${index}`}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell component="th" scope="row" align="left">
                               <Typography variant="subtitle2" noWrap>
