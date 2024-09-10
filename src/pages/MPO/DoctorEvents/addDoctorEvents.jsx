@@ -28,6 +28,7 @@ import {
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 
 const AddDoctorEvents = () => {
@@ -143,8 +144,12 @@ const AddDoctorEvents = () => {
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
+            } else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             } else {
-                setErrorMessage({ show: true, message: response.error.data[0] });
+                setErrorMessage({ show: true, message: "Something went wrong." });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
                 }, 3000);

@@ -23,6 +23,7 @@ import {
 } from '@/api/MPOSlices/ProductSlice';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 
 const AddProduct = () => {
@@ -138,6 +139,10 @@ const AddProduct = () => {
                         setTimeout((e) => {
                             setSuccessMessage({ show: false, message: '' });
                         }, 3000);
+                    } else if (response?.error) {
+                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        setLoading(false);
+                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     } else {
                         setErrorMessage({ show: true, message: response.error.data[0] });
                         setTimeout(() => {

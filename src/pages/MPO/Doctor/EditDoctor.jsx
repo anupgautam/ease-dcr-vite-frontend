@@ -20,6 +20,7 @@ import {
     useUpdateDoctorsMutation,
 } from "@/api/MPOSlices/DoctorSlice";
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 
@@ -176,6 +177,10 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                     onClose();
                     setSuccessMessage({ show: false, message: '' });
                 }, 2000);
+            } else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             } else {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                 setTimeout(() => {

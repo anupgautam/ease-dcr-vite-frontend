@@ -25,6 +25,7 @@ import {
 } from '@/api/CompanySlices/companyAreaWiseExpenses'
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -34,7 +35,6 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
 
     //! Getting TravelAllowance by ID
     const TravelAllowance = useGetExpenseByTheIdQuery(idharu);
-
 
     //! Months
     const months = [
@@ -173,13 +173,17 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
         formData.append('company_name', company_id);
         formData.append('id', idharu)
         try {
-            await updateTravelAllowances(formData).unwrap()
-                .then((res) => {
-                    if (res) {
+            const response = await updateTravelAllowances(formData).unwrap()
+                .then((response) => {
+                    if (response) {
                         setSuccessMessage({ show: true, message: 'Successfully Edited TravelAllowance' });
                         setTimeout(() => {
                             setSuccessMessage({ show: false, message: '' });
                         }, 3000);
+                    } else if (response?.error) {
+                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        setLoading(false);
+                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     } else {
                         setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                         setTimeout(() => {

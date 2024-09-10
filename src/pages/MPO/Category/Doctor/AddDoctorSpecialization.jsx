@@ -20,7 +20,7 @@ import {
     useCreateDoctorsSpecializationMutation
 } from '@/api/MPOSlices/DoctorSlice';
 import { useSelector } from 'react-redux';
-
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const AddDoctorSpecialization = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -74,11 +74,21 @@ const AddDoctorSpecialization = () => {
         formData.append("category_name", values.category_name);
         formData.append("company_name", company_id);
         try {
-            await createDoctorCategory(formData).unwrap();
-            setSuccessMessage({ show: true, message: 'Successfully Added Doctor Categories' });
-            setTimeout(() => {
-                setSuccessMessage({ show: false, message: '' });
-            }, 3000);
+            const response = await createDoctorCategory(formData).unwrap();
+            if (response) {
+                setSuccessMessage({ show: true, message: 'Successfully Added Doctor Categories' });
+                setTimeout(() => {
+                    setSuccessMessage({ show: false, message: '' });
+                }, 3000);
+            } else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
+            else {
+                setErrorMessage({ show: true, message: "Error" });
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
         } catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {

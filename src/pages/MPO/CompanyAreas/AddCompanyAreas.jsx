@@ -139,6 +139,10 @@ const AddCompanyAreas = () => {
                 setLoading(false);
                 setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
+            else {
+                setErrorMessage({ show: true, message: "Error" });
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
         } catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {

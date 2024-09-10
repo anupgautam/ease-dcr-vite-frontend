@@ -23,6 +23,7 @@ import { useGetChemistAllDCRByIdQuery } from "@/api/DCRs Api Slice/chemistDCR/Ch
 import ChemistOrderProduct from "./orderProduct/chemistOrderProduct";
 import { useSelector } from 'react-redux';
 import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: ' Name', alignRight: false },
@@ -85,6 +86,14 @@ const AddDCRforChemist = () => {
                     if (!isDuplicate) {
                         setChemistData(prevData => [...prevData, newData]);
                     }
+                } else if (response?.error) {
+                    setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                    setLoading(false);
+                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                }
+                else {
+                    setErrorMessage({ show: true, message: "Error" });
+                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                 }
             } catch (error) {
                 console.error('Error creating null values for chemist:', error);
@@ -355,7 +364,13 @@ const AddDCRforChemist = () => {
                                     setLoading(false)
                                 })
 
-                        } else {
+                        }
+                        else if (res?.error) {
+                            setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                            setLoading(false);
+                            setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        }
+                        else {
                             setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
                             setTimeout(() => {
                                 setErrorMessage({ show: false, message: '' });

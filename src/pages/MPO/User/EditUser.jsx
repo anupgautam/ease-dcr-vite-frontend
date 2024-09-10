@@ -28,6 +28,9 @@ import {
 import { useUpdateUsersMutation } from '@/api/MPOSlices/UserSlice'
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+
+
 const EditUser = ({ idharu, onClose }) => {
 
     const { company_id, refresh, access } = useSelector((state) => state.cookie);
@@ -255,6 +258,10 @@ const EditUser = ({ idharu, onClose }) => {
                 setTimeout(() => {
                     onClose(); setSuccessMessage({ show: false, message: '' });
                 }, 2000);
+            } else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             } else {
                 setErrorMessage({ show: true, message: 'Data failed to add.' });
                 setTimeout(() => {

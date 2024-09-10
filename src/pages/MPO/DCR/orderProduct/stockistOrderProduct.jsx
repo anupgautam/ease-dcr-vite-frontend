@@ -22,7 +22,7 @@ import { useGetUsersByIdQuery } from '@/api/DemoUserSlice';
 import { useAddChemistOrderedProductMutation } from '@/api/DCRs Api Slice/chemistDCR/chemistOrderedProductInformation';
 import { useAddStockistOrderedProductMutation } from '@/api/DCRs Api Slice/stockistDCR/stockistOrderedProductSlice';
 import { useSelector } from 'react-redux';
-
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const StockistOrderedProduct = ({ id }) => {
     const { company_id, user_role, company_user_id, company_user_role_id, company_division_name } = useSelector((state) => state.cookie);
@@ -103,8 +103,14 @@ const StockistOrderedProduct = ({ id }) => {
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
-            } else {
-                setErrorMessage({ show: true, message: response.error.data[0] });
+            }
+            else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
+            else {
+                setErrorMessage({ show: true, message: "Something went wrong." });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
                 }, 3000);

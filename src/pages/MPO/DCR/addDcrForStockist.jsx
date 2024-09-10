@@ -18,6 +18,7 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { useForm } from "@/reusable/forms/useForm";
 import StockistOrderedProduct from "./orderProduct/stockistOrderProduct";
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const AddDCRForStockist = () => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -153,8 +154,8 @@ const AddDCRForStockist = () => {
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
     useEffect(() => {
-        executiveUsers({ id: company_user_role_id },{
-            skip:!company_user_role_id
+        executiveUsers({ id: company_user_role_id }, {
+            skip: !company_user_role_id
         })
             .then(res => {
                 if (res.data) {
@@ -321,6 +322,10 @@ const AddDCRForStockist = () => {
                         //     .finally(() => {
                         //         setLoading(false)
                         //     })
+                    } else if (res?.error) {
+                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        setLoading(false);
+                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     } else {
                         setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                         setTimeout(() => {

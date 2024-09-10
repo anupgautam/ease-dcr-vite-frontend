@@ -18,6 +18,7 @@ import {
     useUpdateRewardsMutation
 } from '@/api/MPOSlices/rewardsApiSlice';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const EditRewards = ({ idharu, onClose }) => {
     const { company_id, refresh, access } = useSelector((state) => state.cookie);
@@ -96,7 +97,13 @@ const EditRewards = ({ idharu, onClose }) => {
                     onClose();
                     setSuccessMessage({ show: false, message: '' });
                 }, 2000);
-            } else {
+            }
+            else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
+            else {
                 setErrorMessage({ show: true, message: 'Data failed to update.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });

@@ -19,6 +19,7 @@ import {
     useCreateCompanyDivisionsMutation
 } from '@/api/DivisionSilces/companyDivisionSlice';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const AddDivision = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -74,10 +75,21 @@ const AddDivision = () => {
         formData.append("company_name", company_id);
         try {
             const response = await createDivisions(formData).unwrap();
-            setSuccessMessage({ show: true, message: 'Successfully Added Company Division' });
-            setTimeout(() => {
-                setSuccessMessage({ show: false, message: '' });
-            }, 3000);
+            if (response) {
+                setSuccessMessage({ show: true, message: 'Successfully Added Company Division' });
+                setTimeout(() => {
+                    setSuccessMessage({ show: false, message: '' });
+                }, 3000);
+            }
+            else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
+            else {
+                setErrorMessage({ show: true, message: "Error" });
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
         } catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {

@@ -14,6 +14,7 @@ import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import moment from "moment";
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery, usePostUserIdToGetLowerLevelExecutiveMutation } from "@/api/MPOSlices/UserSlice";
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 
 const AddUnplannedTp = () => {
@@ -129,6 +130,11 @@ const AddUnplannedTp = () => {
                                 setSuccessMessage({ show: false, message: '' });
                                 setIsDrawerOpen(false)
                             }, 5000);
+                        }
+                        else if (response?.error) {
+                            setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                            setLoading(false);
+                            setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                         } else {
                             setErrorMessage({ show: true, message: response.error.data[0] });
                             setTimeout(() => {

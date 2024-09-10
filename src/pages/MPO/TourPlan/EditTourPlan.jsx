@@ -24,6 +24,7 @@ import {
 import { useSelector } from 'react-redux';
 import DateToString from '@/reusable/forms/utils/dateToString';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 import moment from 'moment';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
@@ -147,6 +148,10 @@ const EditTourPlan = ({ idharu, onClose }) => {
                     setSuccessMessage({ show: false, message: '' });
                     onClose();
                 }, 2000);
+            } else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             } else {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                 setTimeout(() => {

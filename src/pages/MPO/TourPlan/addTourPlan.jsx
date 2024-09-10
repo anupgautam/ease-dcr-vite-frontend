@@ -30,6 +30,7 @@ import { useGetMpoAreaQuery, usePostUserIdToGetMpoAreaMutation } from '@/api/MPO
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from '@/api/MPOSlices/tourPlan&Dcr';
 import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 import moment from 'moment';
 import { useSelector } from 'react-redux';
@@ -223,6 +224,10 @@ const AddTourPlan = () => {
                         setSuccessMessage({ show: false, message: '' });
                         // toggleDrawer()
                     }, 4000);
+                } else if (response?.error) {
+                    setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                    setLoading(false);
+                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                 } else {
                     initialStates()
                     setErrorMessage({ show: true, message: res.error.data[0] });
@@ -315,13 +320,11 @@ const AddTourPlan = () => {
                         toggleDrawer()
                     }, 5000);
                 }
-                else if (res.error) {
-                    initialStates()
-                    setErrorMessage({ show: true, message: res.error.data[0] });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                        toggleDrawer()
-                    }, 5000);
+                else if (response?.error) {
+                    setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                    setLoading(false);
+                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                    toggleDrawer()
                 }
                 else {
                     initialStates()
