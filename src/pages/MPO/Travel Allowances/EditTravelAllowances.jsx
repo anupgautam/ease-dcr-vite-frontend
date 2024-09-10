@@ -244,7 +244,7 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
                                         id="auto-focus"
                                         autoFocus
                                         name="area_from"
-                                        label="From"
+                                        label="Morning Area"
                                         value={values.area_from}
                                         onChange={handleInputChange}
                                         error={errors.area_from}
@@ -255,7 +255,7 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
                                 <Box marginBottom={2}>
                                     <Controls.Input
                                         name="area_to"
-                                        label="To"
+                                        label="Evening Area"
                                         value={values.area_to}
                                         onChange={handleInputChange}
                                         errors={errors.area_to}
