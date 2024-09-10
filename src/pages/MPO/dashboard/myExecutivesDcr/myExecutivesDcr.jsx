@@ -99,8 +99,8 @@ const MyExecutivesDcr = () => {
         skip: !company_id || !roleSelect?.id
     });
 
-    const userData = useGetUsersByIdQuery(company_user_id, {
-        skip: !company_user_id
+    const userData = useGetUsersByIdQuery(company_user_role_id, {
+        skip: !company_user_role_id
     });
 
     useEffect(() => {

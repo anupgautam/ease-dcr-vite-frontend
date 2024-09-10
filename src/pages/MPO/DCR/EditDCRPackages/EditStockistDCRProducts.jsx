@@ -19,7 +19,9 @@ const EditStockistDCRProducts = ({ id, context, editApi, division }) => {
     const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
     const [postData, setPostData] = useState({});
     // const companyProducts = useSelector(state => state.dcrData.company_products);
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division?.id })
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division?.id }, {
+        skip: !company_id || !division?.id
+    })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {
@@ -53,17 +55,17 @@ const EditStockistDCRProducts = ({ id, context, editApi, division }) => {
 
     }
 
-    const addProduct = useCallback((e) => {
+    const addProduct = (e) => {
         addOrderedProduct({
             'dcr_id': id,
             'product_id': null,
             'ordered_quantity': null,
         })
-    }, [])
+    }
 
-    const deleteProduct = useCallback((e, id) => {
+    const deleteProduct = (e, id) => {
         deleteOrderedProduct(id);
-    }, [])
+    }
 
     return (
         <Grid item xs={12}>

@@ -22,7 +22,9 @@ const EditStockistDCRRoles = ({ id, context, editApi }) => {
   const [companyRole] = usePostHigherLevelExecutiveGetDataMutation();
 
   useEffect(() => {
-    companyRole({ id: mpo_id }).then((res) => {
+    companyRole({ id: mpo_id }, {
+      skip: !mpo_id
+    }).then((res) => {
       const roles = []
       res.data.forEach((key) => {
         roles.push({ id: key.id, title: key.user_name.first_name + " " + key.user_name.last_name })

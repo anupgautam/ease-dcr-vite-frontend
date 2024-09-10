@@ -33,16 +33,18 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
     const [updateDcr] = useUpdateDcrForChemistValuesMutation();
 
     const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: company_division_name },
-        // {
-        //     skip: !company_user_role_id
-        // }
+        {
+            skip: !company_id || !company_division_name
+        }
     )
 
 
     useEffect(() => {
         if (allData?.Formdata?.ordered_products?.length !== 0) {
             let sendingData = { id: allData?.id, visited_chemist: "", visited_area: "", date: "", shift: "", company_roles: [], ordered_products: allData?.Formdata?.ordered_products, company_product: [], rewards: [] };
-            updateDcr({ id: allData?.id, value: sendingData })
+            updateDcr({ id: allData?.id, value: sendingData }, {
+                skip: !allData?.id || !sendingData
+            })
                 .then((res) => {
                 })
         }

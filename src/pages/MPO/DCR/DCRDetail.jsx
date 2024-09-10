@@ -51,7 +51,7 @@ const DCRDetail = () => {
 
             <div className=" grid grid-cols-3 gap-2.5 ">
               <div className=" rounded-[1.1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg bg-white/80 backdrop-lg">
-              <Typography variant="h6" style={{ marginBottom: "10px" }}>Dcr Detail</Typography>
+                <Typography variant="h6" style={{ marginBottom: "10px" }}>Dcr Detail</Typography>
                 <Typography variant="body2" color="textSecondary">
                   Shift: {data?.dcr?.shift?.shift}
                 </Typography>
@@ -93,7 +93,7 @@ const DCRDetail = () => {
                 </Typography>
                 <PromotedProduct id={data?.dcr?.dcr?.id} />
               </div>
-              
+
               <div className=" rounded-[1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg  bg-white/80 backdrop-blur-lg">
                 <Typography variant="h6" style={{ marginBottom: "10px" }}>
                   Rewards
@@ -150,7 +150,9 @@ const RewardsRole = ({ id }) => {
 };
 
 const RewardsRoleById = ({ id }) => {
-  const { data } = useGetRewardsByIdQuery(id);
+  const { data } = useGetRewardsByIdQuery(id, {
+    skip: !id
+  });
   return (
     <>
       <Typography variant="body2" color="textSecondary">
@@ -162,6 +164,7 @@ const RewardsRoleById = ({ id }) => {
 
 const VisitedWith = ({ id }) => {
   const { data } = useGetVisitedWithByDcrIdQuery(id);
+  console.log(data)
   return (
     <>
       {data !== undefined ? (
@@ -177,6 +180,7 @@ const VisitedWith = ({ id }) => {
 
 const VisitedWithById = ({ id }) => {
   const { data } = useGetUsersByCompanyUserByIdQuery(id);
+  console.log(data)
   return (
     <>
       <Typography variant="body2" color="textSecondary">

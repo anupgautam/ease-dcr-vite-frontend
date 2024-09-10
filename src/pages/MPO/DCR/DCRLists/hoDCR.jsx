@@ -57,14 +57,14 @@ const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
 
-    const onEdit = useCallback((id) => {
+    const onEdit = (id) => {
         setSelectedUpdateId(id);
         setIsDrawerOpen(true);
-    }, []);
+    }
 
-    const onCloseDrawer = useCallback(() => {
+    const onCloseDrawer = () => {
         setIsDrawerOpen(false);
-    }, []);
+    }
 
     const FilteredData = { year: selectedDate, user_id: user_role === 'admin' ? selectedUser : company_user_role_id, month: selectedMonth, date: '', company_name: company_id }
 
@@ -90,9 +90,9 @@ const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
     }, [results]);
 
     //! Corrected
-    const handlePageChange = useCallback((event, newPage) => {
+    const handlePageChange = (event, newPage) => {
         setCurrentPage(newPage);
-    }, []);
+    }
 
     const startIndex = (currentPage - 1) * elementsPerPage;
     const endIndex = startIndex + elementsPerPage;
@@ -107,13 +107,13 @@ const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-    const handleClickOpen = useCallback(() => {
+    const handleClickOpen = () => {
         setOpenDialogue(true)
-    }, [])
+    }
 
-    const handleClose = useCallback(() => {
+    const handleClose = () => {
         setOpenDialogue(false)
-    }, [])
+    }
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 

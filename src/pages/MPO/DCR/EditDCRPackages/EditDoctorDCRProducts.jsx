@@ -1,16 +1,15 @@
 import { Box, Grid, Typography } from "@mui/material";
 import React, { useState, useMemo } from "react";
+import Controls from "@/reusable/forms/controls/Controls";
+import { FaPlus } from "react-icons/fa";
+import { useTransition } from 'react-transition-state';
+import RoundButton from "@/reusable/components/button/roundbutton";
+import { useSelector } from 'react-redux';
 import {
   useGetPromotedProductByDcrIdQuery
 } from "../../../../api/DCRs Api Slice/doctorDCR/DoctorDCRAllSlice";
-import { useTransition } from 'react-transition-state';
-import RoundButton from "@/reusable/components/button/roundbutton";
-import { FaPlus } from "react-icons/fa";
 import { useGetAllProductsOptionsWithDivisionQuery, usePostProductPromotionsMutation } from "@/api/MPOSlices/productApiSlice";
 import { useGetProductForDcrByIdQuery } from "@/api/MPOSlices/ProductSlice";
-import Controls from "@/reusable/forms/controls/Controls";
-import { useSelector } from 'react-redux';
-import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSlices/companyProductSlice";
 
 
 const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
@@ -18,9 +17,13 @@ const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
 
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const companyProducts = useSelector(state => state.dcrData.company_products);
-  const { data } = useGetPromotedProductByDcrIdQuery(id);
+  const { data } = useGetPromotedProductByDcrIdQuery(id, {
+    skip: !id
+  });
 
-  const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division?.id })
+  const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division?.id }, {
+    skip: !company_id || !division?.id
+  })
 
   const productList = useMemo(() => {
     if (productData !== undefined) {
@@ -35,7 +38,9 @@ const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
   const [ProductPromotions, setProductPromotion] = useState('');
   const [ProductNotListed, setProductListed] = useState(null);
 
-  const { data: newProductList } = useGetProductForDcrByIdQuery(ProductNotListed?.company_product_id);
+  const { data: newProductList } = useGetProductForDcrByIdQuery(ProductNotListed?.company_product_id, {
+    skip: !ProductNotListed?.company_product_id
+  });
 
   const onProductPromotion = e => setProductPromotion(e.target.value);
 
@@ -43,7 +48,9 @@ const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
 
   const handleProductPromotion = () => {
     const data = { dcr_id: id, company_product_id: ProductPromotions }
-    PostProductPromotions(data)
+    PostProductPromotions(data, {
+      skip: !id, ProductPromotions
+    })
       .then((res) => {
         if (res.data) {
           setProductListed(res.data);
