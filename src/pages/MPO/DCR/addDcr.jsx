@@ -26,6 +26,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useGetcompanyUserRolesByIdQuery } from '@/api/CompanySlices/companyUserRoleSlice';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 
 const AddDcrForHo = () => {
@@ -203,7 +204,12 @@ const AddDcrForHo = () => {
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
                     }, 2000);
-                } else {
+                } else if (res?.error) {
+                    setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                    setLoading(false);
+                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                }
+                else {
                     setErrorMessage({ show: true, message: response.error.data[0] });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });

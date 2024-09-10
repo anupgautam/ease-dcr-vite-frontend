@@ -23,6 +23,7 @@ import { useGetMpoAreaQuery, usePostAreaofMPOMutation } from '@/api/MPOSlices/To
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const AddMpoArea = () => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -140,7 +141,13 @@ const AddMpoArea = () => {
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
-            } else {
+            }
+            else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
+            else {
                 setErrorMessage({ show: true, message: response.error.data });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });

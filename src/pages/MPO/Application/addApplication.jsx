@@ -22,6 +22,7 @@ import { useSelector } from 'react-redux';
 
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useCreateApplicationsMutation } from '../../../api/ApplicationSlices/ApplicationSlices';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const AddApplication = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -99,7 +100,13 @@ const AddApplication = () => {
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
-            } else {
+            }
+            else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
+            else {
                 setErrorMessage({ show: true, message: "Unable to Add Application" });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });

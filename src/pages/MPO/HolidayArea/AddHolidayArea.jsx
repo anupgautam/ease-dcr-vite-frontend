@@ -23,6 +23,7 @@ import {
 } from '@/api/CompanySlices/companyAreaSlice';
 import { useGetCompanyHolidaysQuery, useCreateHolidayAreasMutation } from '@/api/HolidaySlices/holidaySlices';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const AddHolidayArea = () => {
     const { company_id, user_role, company_user_id, access, refresh } = useSelector((state) => state.cookie);
@@ -105,10 +106,21 @@ const AddHolidayArea = () => {
         setLoading(true)
         try {
             const response = await createHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptions }).unwrap();
-            setSuccessMessage({ show: true, message: 'Successfully Added Holiday Areas' });
-            setTimeout(() => {
-                setSuccessMessage({ show: false, message: '' });
-            }, 3000);
+            if (response) {
+                setSuccessMessage({ show: true, message: 'Successfully Added Holiday Areas' });
+                setTimeout(() => {
+                    setSuccessMessage({ show: false, message: '' });
+                }, 3000);
+            }
+            else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
+            else {
+                setErrorMessage({ show: true, message: "Error" });
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
         } catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {

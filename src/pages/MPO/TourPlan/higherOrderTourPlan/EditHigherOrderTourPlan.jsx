@@ -271,14 +271,25 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         formData.append('id', idharu)
         formData.append('company_id', company_id)
         try {
-            await updateTourPlans(formData).unwrap();
+            const response = await updateTourPlans(formData).unwrap();
             setEdited(true);
-            setSuccessMessage({ show: true, message: 'Successfully Edited TourPlan' });
-            setTimeout(() => {
-                history("/dashboard/admin/tourplan")
-                setSuccessMessage({ show: false, message: '' });
-                onClose();
-            }, 2000);
+            if (response) {
+                setSuccessMessage({ show: true, message: 'Successfully Edited TourPlan' });
+                setTimeout(() => {
+                    history("/dashboard/admin/tourplan")
+                    setSuccessMessage({ show: false, message: '' });
+                    onClose();
+                }, 2000);
+            }
+            else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
+            else {
+                setErrorMessage({ show: true, message: "Error" });
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
         }
         catch (error) {
 

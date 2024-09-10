@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import {
     Box,
     Typography,
@@ -25,6 +25,7 @@ import {
 } from "@/api/MPOSlices/tourPlan&Dcr";
 import { useGetStockistsByCompanyAreaQuery } from '@/api/MPOSlices/StockistSlice';
 import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 
 const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) => {
@@ -138,8 +139,14 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
                             quantity: ""
                         });
                     }, 3000);
-                } else {
-                    setErrorMessage({ show: true, message: response.error.data[0] });
+                }
+                else if (response?.error) {
+                    setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                    setLoading(false);
+                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                }
+                else {
+                    setErrorMessage({ show: true, message: "Something went wrong." });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
                     }, 3000);

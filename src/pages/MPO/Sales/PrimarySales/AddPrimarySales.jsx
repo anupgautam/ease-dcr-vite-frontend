@@ -15,6 +15,7 @@ import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from '../../../../reusable/components/forms/controls/Controls';
 import { returnValidation } from '../../../../validation';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 import {
     useCreatePrimarySalesMutation
@@ -127,10 +128,21 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
         formData.append('company_name', company_id)
         try {
             const response = await createPrimarySales(formData).unwrap();
-            setSuccessMessage({ show: true, message: 'Successfully Added Primary Sales' });
-            setTimeout(() => {
-                setSuccessMessage({ show: false, message: '' });
-            }, 3000);
+            if (response) {
+                setSuccessMessage({ show: true, message: 'Successfully Added Primary Sales' });
+                setTimeout(() => {
+                    setSuccessMessage({ show: false, message: '' });
+                }, 3000);
+            }
+            else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
+            else {
+                setErrorMessage({ show: true, message: "Error" });
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
         } catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {

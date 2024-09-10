@@ -25,6 +25,7 @@ import {
     useGetAreaMPOByIdQuery,
 } from '@/api/MPOSlices/TourPlanSlice.js';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 
 const EditMpoArea = ({ idharu, onClose }) => {
@@ -207,8 +208,14 @@ const EditMpoArea = ({ idharu, onClose }) => {
                         setTimeout(() => {
                             setSuccessMessage({ show: false, message: '' });
                         }, 2000);
-                    } else {
-                        setErrorMessage({ show: true, message: response.error.data[0] });
+                    }
+                    else if (response?.error) {
+                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        setLoading(false);
+                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                    }
+                    else {
+                        setErrorMessage({ show: true, message: "Something went wrong." });
                         setTimeout(() => {
                             setErrorMessage({ show: false, message: '' });
                         }, 2000);

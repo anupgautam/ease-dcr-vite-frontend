@@ -21,6 +21,7 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { useForm } from "@/reusable/forms/useForm";
 import { UserListHead } from "@/sections/@dashboard/user";
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const TABLE_HEAD = [
     { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
@@ -331,6 +332,10 @@ const AddDcrForDoctor = () => {
                                 .catch(err => {
 
                                 });
+                        } else if (res?.error) {
+                            setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                            setLoading(false);
+                            setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                         } else {
                             setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
                             setTimeout(() => {

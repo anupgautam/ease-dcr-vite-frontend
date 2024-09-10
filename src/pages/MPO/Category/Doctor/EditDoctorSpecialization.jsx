@@ -20,6 +20,7 @@ import {
     useUpdateDoctorsSpecializationMutation,
 } from '@/api/MPOSlices/DoctorSlice'
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const EditDoctorCategories = ({ idharu, onClose }) => {
 
@@ -96,7 +97,13 @@ const EditDoctorCategories = ({ idharu, onClose }) => {
                     onClose();
                     setSuccessMessage({ show: false, message: '' });
                 }, 2000);
-            } else {
+            }
+            else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
+            else {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
