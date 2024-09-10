@@ -138,7 +138,9 @@ const AddDCRforChemist = () => {
             rewards: 'select',
         },
     })
-    const dcrForChemist = useGetChemistAllDCRByIdQuery(id);
+    const dcrForChemist = useGetChemistAllDCRByIdQuery(id, {
+        skip: !id
+    });
 
     const [NewTourPlanData, setNewTourPlanData] = useState('');
 
@@ -200,7 +202,9 @@ const AddDCRforChemist = () => {
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
     useEffect(() => {
-        executiveUsers({ id: company_user_role_id })
+        executiveUsers({ id: company_user_role_id }, {
+            skip: !company_user_role_id
+        })
             .then(res => {
                 if (res.data) {
                     const executive = [];
@@ -321,7 +325,9 @@ const AddDCRforChemist = () => {
                     shift: allData.shift,
                     dcr_id: allData.id,
                 };
-                updateDcr({ id: allData.id, value: sendingData })
+                updateDcr({ id: allData.id, value: sendingData }, {
+                    skip: !allData?.id || !sendingData
+                })
                     .then(res => {
                         setLoading(false);
                         if (res.data) {
@@ -534,13 +540,15 @@ const AddDCRforChemist = () => {
 
 //! Chemist DCR
 const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const Chemist = useGetChemistsByIdQuery(data.chemist_id);
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
     useEffect(() => {
-        executiveUsers({ id: company_user_id })
+        executiveUsers({ id: company_user_role_id }, {
+            skip: !company_user_role_id
+        })
             .then(res => {
                 if (res.data) {
                     const executive = [];

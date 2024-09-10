@@ -155,7 +155,9 @@ const RewardsRole = ({ id }) => {
 }
 
 const RewardsRoleById = ({ id }) => {
-    const { data } = useGetRewardsByIdQuery(id);
+    const { data } = useGetRewardsByIdQuery(id, {
+        skip: !id
+    });
     return (
         <>
             <Typography variant="body2" color="textSecondary">

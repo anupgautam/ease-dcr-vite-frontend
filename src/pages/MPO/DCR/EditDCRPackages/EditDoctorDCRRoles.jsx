@@ -7,7 +7,7 @@ import RoundButton from "@/reusable/components/button/roundbutton";
 import { FaPlus } from "react-icons/fa";
 import { usePostVisitedWithMutation } from "@/api/MPOSlices/productApiSlice";
 import { useGetVisitedWithByDcrIdQuery } from "@/api/MPOSlices/companyRolesSlice";
-import { useGetUsersByIdQuery } from "@/api/MPOSlices/UserSlice";
+import { useGetUsersByCompanyUserByIdQuery } from "@/api/MPOSlices/UserSlice";
 
 const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
@@ -15,12 +15,16 @@ const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
   const [companyRoles, setCompanyRoles] = useState([]);
   const [companyRole] = usePostHigherLevelExecutiveGetDataMutation();
 
-  const { data } = useGetVisitedWithByDcrIdQuery(id);
+  const { data } = useGetVisitedWithByDcrIdQuery(id, {
+    skip: !id
+  });
   useEffect(() => {
-    companyRole({ id: mpoId })
+    companyRole({ id: mpoId }, {
+      skip: !mpoId
+    })
       .then((res) => {
         const roles = []
-        res.data.forEach((key) => {
+        res?.data?.forEach((key) => {
           roles.push({ id: key.id, title: key.user_name.first_name + " " + key.user_name.last_name })
         })
         setCompanyRoles(roles);
@@ -29,10 +33,10 @@ const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
 
   const [CompanyRolesData, setCompanyRolesData] = useState('');
   const [Caching, setCaching] = useState(null);
-
-  const { data: roleData } = useGetUsersByIdQuery(Caching?.roles_id);
-
-
+  const { data: roleData } = useGetUsersByCompanyUserByIdQuery(Caching?.roles_id, {
+    skip: !Caching?.roles_id
+  });
+console.log(roleData)
   const onCompanyRolesData = e => setCompanyRolesData(e.target.value);
 
   const [PostVisitedWith] = usePostVisitedWithMutation();
@@ -153,9 +157,10 @@ const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
 }
 
 const VisitedWithData = ({ id }) => {
-  const { data } = useGetUsersByIdQuery(id, {
+  const { data } = useGetUsersByCompanyUserByIdQuery(id, {
     skip: !id
   });
+  console.log(data)
   return (
     <Box>
       <Typography className="add-product-design">{data?.user_name?.first_name + ' ' + data?.user_name?.last_name}</Typography>

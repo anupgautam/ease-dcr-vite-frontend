@@ -65,23 +65,23 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
     const [selectedId, setSelectedId] = useState(null);
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
 
-    const onEdit = useCallback((id, user_id) => {
+    const onEdit = (id, user_id) => {
         setSelectedUpdateId(id);
         dispatch(addSelectedUser(user_id))
         setIsDrawerOpen(true);
-    }, []);
+    }
 
-    const onCloseDrawer = useCallback(() => {
+    const onCloseDrawer = () => {
         setIsDrawerOpen(false);
-    }, []);
+    }
 
     //!Pagination logic
     const [page, setPage] = useState(1)
-    const handleChangePage = useCallback((e) => {
+    const handleChangePage = (e) => {
         const data = e.target.ariaLabel
         let thisArray = data.split(" ")
         setPage(thisArray[3]);
-    }, [])
+    }
 
 
     //! onSearch
@@ -104,9 +104,9 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
     }, [results]);
 
     //! Corrected
-    const handlePageChange = useCallback((event, newPage) => {
+    const handlePageChange = (event, newPage) => {
         setCurrentPage(newPage);
-    }, []);
+    }
 
     const startIndex = (currentPage - 1) * elementsPerPage;
     const endIndex = startIndex + elementsPerPage;
@@ -121,13 +121,13 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-    const handleClickOpen = useCallback(() => {
+    const handleClickOpen = () => {
         setOpenDialogue(true)
-    }, [])
+    }
 
-    const handleClose = useCallback(() => {
+    const handleClose = () => {
         setOpenDialogue(false)
-    }, [])
+    }
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 

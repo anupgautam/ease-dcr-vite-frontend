@@ -30,7 +30,9 @@ const StockistOrderedProduct = ({ id }) => {
     const { data: mpoArea } = useGetUsersByIdQuery(company_user_role_id, {
         skip: !company_user_role_id
     });
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: company_division_name })
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: company_division_name }, {
+        skip: !company_id || !company_division_name
+    })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {

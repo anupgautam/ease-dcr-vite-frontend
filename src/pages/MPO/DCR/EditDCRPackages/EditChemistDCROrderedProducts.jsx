@@ -25,7 +25,9 @@ const EditChemistDCROrderedProducts = ({ id, context, editApi }) => {
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
         skip: !mpo_id
     });
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: mpoArea?.division_name?.id })
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: mpoArea?.division_name?.id }, {
+        skip: !company_id || !mpoArea?.division_name?.id
+    })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {
@@ -37,10 +39,10 @@ const EditChemistDCROrderedProducts = ({ id, context, editApi }) => {
         return [];
     }, [productData])
 
-    const handleClick = useCallback((e, id) => {
+    const handleClick = (e, id) => {
         setProductID(id);
         setUpdateClick(!updateClick);
-    }, [])
+    }
 
     const companyArea = 1;
 

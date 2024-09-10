@@ -55,36 +55,36 @@ const DefaultStockistDCR = () => {
     const [open, setOpen] = useState(false);
 
 
-    const onEdit = useCallback((id, user_id) => {
+    const onEdit = (id, user_id) => {
         setSelectedUpdateId(id);
         dispatch(addSelectedUser(user_id))
         setIsDrawerOpen(true);
-    }, []);
+    }
 
-    const onCloseDrawer = useCallback(() => {
+    const onCloseDrawer = () => {
         setIsDrawerOpen(false);
-    }, []);
+    }
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-    const handleClickOpen = useCallback(() => {
+    const handleClickOpen = () => {
         setOpenDialogue(true)
-    }, [])
+    }
 
-    const handleClose = useCallback(() => {
+    const handleClose = () => {
         setOpenDialogue(false)
-    }, [])
+    }
 
     //!Pagination logic
     const [page, setPage] = useState(1)
-    const handleChangePage = useCallback((e) => {
+    const handleChangePage = (e) => {
         const data = e.target.ariaLabel
         let thisArray = data.split(" ")
         setPage(thisArray[3]);
-    }, [])
+    }
 
     // !Get Tour Plans
     const { data } = useGetAllStockistsDCRQuery({ page: page, id: company_user_role_id });

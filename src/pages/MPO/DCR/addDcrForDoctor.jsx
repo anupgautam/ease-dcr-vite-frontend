@@ -192,7 +192,9 @@ const AddDcrForDoctor = () => {
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
     useEffect(() => {
-        executiveUsers({ id: company_user_id })
+        executiveUsers({ id: company_user_role_id }, {
+            skip: !company_user_role_id
+        })
             .then(res => {
                 if (res.data) {
                     const executive = [];
@@ -520,7 +522,9 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
     useEffect(() => {
-        executiveUsers({ id: company_user_role_id })
+        executiveUsers({ id: company_user_role_id }, {
+            skip: !company_user_role_id
+        })
             .then(res => {
                 if (res.data) {
                     const executive = [];

@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 
 
 const EditDCRRewards = ({ id, context, editApi }) => {
+
   const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
@@ -35,7 +36,9 @@ const EditDCRRewards = ({ id, context, editApi }) => {
   const [rewardData, setRewardData] = useState('');
   const [Caching, setCaching] = useState(null);
 
-  const { data: rewardCaching } = useGetRewardsByIdQuery(Caching?.reward_id);
+  const { data: rewardCaching } = useGetRewardsByIdQuery(Caching?.reward_id, {
+    skip: !Caching?.reward_id
+  });
 
   const onRewardData = e => setRewardData(e.target.value);
 
@@ -154,7 +157,9 @@ const EditDCRRewards = ({ id, context, editApi }) => {
 }
 
 const CompanyRewardList = ({ id }) => {
-  const { data } = useGetRewardsByIdQuery(id);
+  const { data } = useGetRewardsByIdQuery(id, {
+    skip: !id
+  });
   return (
     <Box>
       <Typography className="add-product-design">{data?.reward}</Typography>

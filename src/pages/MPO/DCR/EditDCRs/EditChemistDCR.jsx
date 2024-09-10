@@ -49,7 +49,9 @@ const EditChemistDCR = ({ idharu, onClose }) => {
     const [dateData, setDateData] = useState()
     //! Getting TourPlan by ID
 
-    const DCRAll = useGetChemistAllDCRByIdQuery(idharu);
+    const DCRAll = useGetChemistAllDCRByIdQuery(idharu, {
+        skip: !idharu
+    });
     const dcrId = useGetChemistAllDCRByIdForMpoIdQuery(idharu);
 
     const [initialFValues, setInitialFValues] = useState({

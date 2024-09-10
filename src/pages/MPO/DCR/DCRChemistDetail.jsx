@@ -110,22 +110,23 @@ const DCRChemistDetail = () => {
 };
 
 const PromotedProduct = ({ id }) => {
-    const { data } = useGetChemistAllDCRByIdQuery(id)
-
-    // return (
-    //     <>
-    //         {
-    //             data !== undefined ?
-    //                 <>
-    //                     {
-    //                         data.map((key, index) => (
-    //                             <PromotedProductById id={key.company_product_id} key={index} />
-    //                         ))
-    //                     }
-    //                 </> : <></>
-    //         }
-    //     </>
-    // )
+    const { data } = useGetChemistAllDCRByIdQuery(id,{
+        skip:!id
+    })
+    return (
+        <>
+            {
+                data !== undefined ?
+                    <>
+                        {
+                            data.ordered_products.map((key, index) => (
+                                <PromotedProductById id={key.id} key={index} />
+                            ))
+                        }
+                    </> : <></>
+            }
+        </>
+    )
 }
 
 const PromotedProductById = ({ id }) => {
@@ -158,7 +159,9 @@ const RewardsRole = ({ id }) => {
 }
 
 const RewardsRoleById = ({ id }) => {
-    const { data } = useGetRewardsByIdQuery(id);
+    const { data } = useGetRewardsByIdQuery(id, {
+        skip: !id
+    });
     return (
         <>
             <Typography variant="body2" color="textSecondary">
@@ -170,6 +173,7 @@ const RewardsRoleById = ({ id }) => {
 
 const VisitedWith = ({ id }) => {
     const { data } = useGetChemistVisitedWithByDcrIdQuery(id);
+    console.log(data)
     return (
         <>
             {
@@ -188,7 +192,7 @@ const VisitedWith = ({ id }) => {
 
 const VisitedWithById = ({ id }) => {
     const { data } = useGetUsersByCompanyUserByIdQuery(id);
-
+    console.log(data)
     return (
         <>
             <Typography variant="body2" color="textSecondary">
