@@ -280,10 +280,9 @@ const MyExecutiveTp = () => {
 
     const hoTourPlan = useGetHOTourPlansByUserIdQuery({ user_id: selectedOption !== null ? selectedOption?.id : "", month: selectedMonth, date: selectedYear, page: page, company_name: company_id },
         {
-            skip: !selectedOption || !selectedOption?.id || !selectedMonth || !selectedYear || !page || !company_id
+            skip: !selectedOption || !selectedOption || !selectedMonth || !selectedYear || !page || !company_id
         }
     )
-    console.log(TourPlanSearch)
     return (
         <>
             <Grid item xs={10}>

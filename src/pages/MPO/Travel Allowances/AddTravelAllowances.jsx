@@ -208,7 +208,7 @@ const AddTravelAllowances = () => {
                                     id="auto-focus"
                                     autoFocus
                                     name="area_from"
-                                    label="From*"
+                                    label="Morning Area*"
                                     value={values.name}
                                     onChange={handleInputChange}
                                     errors={errors.area_from}
@@ -220,7 +220,7 @@ const AddTravelAllowances = () => {
                             <Box marginBottom={2}>
                                 <Controls.Input
                                     name="area_to"
-                                    label="To*"
+                                    label="Evening Area*"
                                     value={values.name}
                                     onChange={handleInputChange}
                                     errors={errors.area_to}

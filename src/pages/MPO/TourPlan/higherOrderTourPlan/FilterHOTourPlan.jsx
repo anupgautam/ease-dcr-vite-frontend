@@ -52,6 +52,7 @@ const TABLE_HEAD = [
 ];
 
 const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role }) => {
+
     const { company_id, user_role, company_user_role_id, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
@@ -82,7 +83,7 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
 
     const hoTourPlan = useGetHOTourPlansByUserIdQuery(
         {
-            user_id: user_role !== "admin" ? company_user_role_id : selectedUser,
+            user_id: user_role !== "admin" ? company_user_role_id : "",
             month: selectedMonth,
             date: selectedDate,
             page: page,

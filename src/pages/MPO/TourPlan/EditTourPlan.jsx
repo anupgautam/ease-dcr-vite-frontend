@@ -38,6 +38,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
     const TourPlan = useGetTourPlansByIdQuery(idharu, {
         skip: !idharu
     });
+    console.log(TourPlan)
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: TourPlan?.data?.mpo_name?.id }, {
         skip: !company_id || !TourPlan?.data?.mpo_name?.id
     });
@@ -66,8 +67,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
     const handleMpoTpArea = (event, value) => {
         setMpoTpArea(value);
     };
-
-    
 
     useEffect(() => {
         if (TourPlan?.data) {
@@ -141,7 +140,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
         try {
             const response = await updateTourPlans({ id: idharu, value: data }).unwrap();
 
-            if (response.data) {
+            if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited TourPlan' });
                 setTimeout(() => {
                     history("/dashboard/admin/tourplan");
@@ -189,7 +188,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                     <Form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <Box marginBottom={2}>
+                                <Box>
                                     <Controls.Input
                                         disabled={true}
                                         name="mpo_name"
@@ -201,8 +200,8 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                 </Box>
                             </Grid>
                             <Grid item xs={12}>
-                                <Box marginBottom={2}>
-                                    <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Select the Date*</label><br />
+                                <Box>
+                                    <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "5px" }}>Select the Date*</label><br />
                                     <NepaliDatePicker
                                         value={dateData}
                                         format="YYYY-MM-DD"
@@ -215,7 +214,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                         multiple
                                         options={areas}
                                         getOptionLabel={(option) => option.title}
-                                        defaultValue={MpoTpArea}
+                                        value={MpoTpArea}
                                         onChange={handleMpoTpArea}
                                         renderInput={(params) => (
                                             <TextField {...params} label="Select the Areas" error={Boolean(errors.area_name)} helperText={errors.area_name} />
