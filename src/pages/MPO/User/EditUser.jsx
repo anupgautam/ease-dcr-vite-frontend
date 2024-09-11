@@ -199,8 +199,8 @@ const EditUser = ({ idharu, onClose }) => {
             });
             setDateData(User?.data?.user_name.date_of_joining ? User?.data?.user_name.date_of_joining : now)
 
-            setMultipleDivisions(selectedDivisions || [])
-            setMultipleCompanyAreas(selectedCompanyAreas || [])
+            // setMultipleDivisions(selectedDivisions || [])
+            // setMultipleCompanyAreas(selectedCompanyAreas || [])
         }
     }, [User])
 

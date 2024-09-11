@@ -154,6 +154,7 @@ const AddTravelAllowances = () => {
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
+                setIsDrawerOpen(false)
             } else if (response?.error) {
                 setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                 setLoading(false);
@@ -172,7 +173,6 @@ const AddTravelAllowances = () => {
         } finally {
             setLoading(false)
         }
-        setIsDrawerOpen(false)
     }, [createTravelAllowances, values])
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

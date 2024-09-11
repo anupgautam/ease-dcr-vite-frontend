@@ -45,6 +45,7 @@ import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
 import { useSelector } from 'react-redux';
+import DefaultList from './DefaultList';
 
 const TABLE_HEAD = [
     { id: 'product', label: 'Product Name', alignRight: false },
@@ -139,26 +140,41 @@ const SecondarySalesSearch = () => {
 
     const now = new BSDate().now();
 
-    const monthData = getNepaliMonthName(now._date.month);
-    const yearData = now._date.year;
+    const month = now._date.month;
+    const year = now._date.year;
 
     //! Months
-    const months = [
-        { value: 'Baisakh', label: 'Baisakh' },
-        { value: 'Jesth', label: 'Jestha' },
-        { value: 'Asadh', label: 'Asadh' },
-        { value: 'Shrawan', label: 'Shrawan' },
-        { value: 'Bhadra', label: 'Bhadra' },
-        { value: 'Ashwin', label: 'Ashwin' },
-        { value: 'Kartik', label: 'Kartik' },
-        { value: 'Mangsir', label: 'Mangsir' },
-        { value: 'Poush', label: 'Poush' },
-        { value: 'Magh', label: 'Magh' },
-        { value: 'Falgun', label: 'Falgun' },
-        { value: 'Chaitra', label: 'Chaitra' },
-    ]
+    // const months = [
+    //     { value: 'Baisakh', label: 'Baisakh' },
+    //     { value: 'Jesth', label: 'Jestha' },
+    //     { value: 'Asadh', label: 'Asadh' },
+    //     { value: 'Shrawan', label: 'Shrawan' },
+    //     { value: 'Bhadra', label: 'Bhadra' },
+    //     { value: 'Ashwin', label: 'Ashwin' },
+    //     { value: 'Kartik', label: 'Kartik' },
+    //     { value: 'Mangsir', label: 'Mangsir' },
+    //     { value: 'Poush', label: 'Poush' },
+    //     { value: 'Magh', label: 'Magh' },
+    //     { value: 'Falgun', label: 'Falgun' },
+    //     { value: 'Chaitra', label: 'Chaitra' },
+    // ]
 
-    const [selectedMonth, setSelectedMonth] = useState(monthData)
+    const months = [
+        { value: 1, label: "Baisakh" },
+        { value: 2, label: "Jestha" },
+        { value: 3, label: "Asadh" },
+        { value: 4, label: "Shrawan" },
+        { value: 5, label: "Bhadra" },
+        { value: 6, label: "Ashwin" },
+        { value: 7, label: "Kartik" },
+        { value: 8, label: "Mangsir" },
+        { value: 9, label: "Poush" },
+        { value: 10, label: "Magh" },
+        { value: 11, label: "Falgun" },
+        { value: 12, label: "Chaitra" }
+    ];
+
+    const [selectedMonth, setSelectedMonth] = useState(month)
 
     const handleNepaliMonthChange = useCallback((event) => {
         setSelectedMonth(event.target.value);
@@ -186,7 +202,7 @@ const SecondarySalesSearch = () => {
         { value: 2090, label: "2090" },
     ]
     const [dateData, setDateData] = useState('')
-    const [selectedYear, setSelectedYear] = useState(yearData);
+    const [selectedYear, setSelectedYear] = useState(year);
 
     const handleYearChange = useCallback((event) => {
         setSelectedYear(event.target.value);
@@ -234,18 +250,14 @@ const SecondarySalesSearch = () => {
                                 alignItems="center"
                                 justifyContent="flex-end"
                             >
-                                <Box>
-                                    <ExcelCSVSecondarySales selectedOption={selectedOption} />
-                                </Box>
-                                {selectedOption && selectedMonth && selectedYear && (
-                                    <Box>
-                                        <AddSecondarySales
-                                            selectedOption={selectedOption}
-                                            selectedMonth={selectedMonth}
-                                            selectedYear={selectedYear}
-                                        />
-                                    </Box>
-                                )}
+                                <ExcelCSVSecondarySales selectedOption={selectedOption} />
+                                {/* {selectedOption && selectedMonth && selectedYear && ( */}
+                                <AddSecondarySales
+                                    selectedOption={selectedOption}
+                                    selectedMonth={selectedMonth}
+                                    selectedYear={selectedYear}
+                                />
+                                {/* )} */}
                             </Stack>
                         </Grid>
                     </Grid>
@@ -311,24 +323,9 @@ const SecondarySalesSearch = () => {
                                     headLabel={TABLE_HEAD}
                                 />
                                 <TableBody>
-                                    {(!selectedOption && !selectedMonth && !selectedYear) ?
-                                        <TableRow>
-                                            <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
-                                                <Paper
-                                                    sx={{
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    {/* <Typography variant="h6" paragraph>
-                                                    Select stockist, month and year to view data
-                                                </Typography> */}
-                                                    <Typography variant="body2">
-                                                        <strong>Requested Data Not found</strong>.
-                                                        <br /> Select stockist, month and year to view data
-                                                    </Typography>
-                                                </Paper>
-                                            </TableCell>
-                                        </TableRow> :
+                                    {(!selectedOption || !selectedMonth || !selectedYear) ?
+                                        <DefaultList />
+                                        :
                                         <>
                                             {
                                                 results && results?.data?.length == 0 ?

@@ -139,6 +139,7 @@ const AddProduct = () => {
                         setTimeout((e) => {
                             setSuccessMessage({ show: false, message: '' });
                         }, 3000);
+                        setIsDrawerOpen(false);
                     } else if (response?.error) {
                         setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                         setLoading(false);
@@ -163,7 +164,6 @@ const AddProduct = () => {
         } finally {
             setLoading(false)
         }
-        setIsDrawerOpen(false);
 
     }, [createProducts, values])
 

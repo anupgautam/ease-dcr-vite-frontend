@@ -80,6 +80,7 @@ const AddDoctorSpecialization = () => {
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
+                setIsDrawerOpen(false)
             } else if (response?.error) {
                 setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                 setLoading(false);
@@ -98,7 +99,6 @@ const AddDoctorSpecialization = () => {
             setLoading(false)
         }
 
-        setIsDrawerOpen(false)
     }, [createDoctorCategory, values]);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

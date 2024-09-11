@@ -133,6 +133,7 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
+                setIsDrawerOpen(false)
             }
             else if (response?.error) {
                 setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
@@ -152,7 +153,6 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
             setLoading(false)
         }
 
-        setIsDrawerOpen(false)
     }, [createPrimarySales, values]);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
