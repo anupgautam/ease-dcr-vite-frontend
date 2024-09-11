@@ -19,7 +19,7 @@ import { extractErrorMessage } from '../../../reusable/extractErrorMessage';
 const LoginFormInputs = () => {
 
     const [shouldAnimate, setShouldAnimate] = useState(false);
-        const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -230,29 +230,29 @@ const LoginFormInputs = () => {
                             Forgot Password?
                         </Link>
                     </Stack>
-                    <LoadingButton className="loginbutton" fullWidth size="large" type="submit" variant="contained">
-                        Login
-                    </LoadingButton>
-                    {ErrorMessage.show && (
-                        <Grid>
-                            <Box className="messageContainer errorMessage">
-                                <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                            </Box>
-                        </Grid>
-                    )}
-                    {SuccessMessage.show && (
-                        <Grid>
-                            <Box className="messageContainer successMessage">
-                                <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                            </Box>
-                        </Grid>
-                    )}
-                    {loading && (
-                        <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 100 }}>
-                            <CircularProgress />
-                        </Grid>
-                    )}
                 </Box>
+                <LoadingButton className="loginbutton" fullWidth size="large" type="submit" variant="contained">
+                    Login
+                </LoadingButton>
+                {ErrorMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer errorMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )}
+                {SuccessMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer successMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )}
+                {loading && (
+                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 100 }}>
+                        <CircularProgress />
+                    </Grid>
+                )}
             </form>
         </>
     )

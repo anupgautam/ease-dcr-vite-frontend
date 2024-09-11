@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import {
     Box,
-    Typography, Button, Grid, CircularProgress
+    Typography, Button, Grid, CircularProgress, Autocomplete, TextField
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -426,7 +426,7 @@ const EditUser = ({ idharu, onClose }) => {
                     <Box marginBottom={2}>
                         {/* <Autocomplete
                             multiple
-                            options={areas}
+                            options={companyAreas}
                             getOptionLabel={(option) => option.title}
                             value={multipleCompanyAreas}
                             onChange={handleMultpleCompanyAreas}

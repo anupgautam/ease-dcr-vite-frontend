@@ -164,7 +164,6 @@ const RewardsRoleById = ({ id }) => {
 
 const VisitedWith = ({ id }) => {
   const { data } = useGetVisitedWithByDcrIdQuery(id);
-  console.log(data)
   return (
     <>
       {data !== undefined ? (
@@ -180,7 +179,6 @@ const VisitedWith = ({ id }) => {
 
 const VisitedWithById = ({ id }) => {
   const { data } = useGetUsersByCompanyUserByIdQuery(id);
-  console.log(data)
   return (
     <>
       <Typography variant="body2" color="textSecondary">

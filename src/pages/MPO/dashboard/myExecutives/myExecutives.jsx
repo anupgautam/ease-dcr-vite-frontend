@@ -190,7 +190,7 @@ const MyExecutives = () => {
                                                     data && data?.map((usersearch, index) => (
                                                         <TableRow hover tabIndex={-1} key={usersearch.id}>
                                                             <TableCell>{index + 1}</TableCell>
-                                                            <TableCell TableCell component="th" scope="row" align="left" >
+                                                            <TableCell component="th" scope="row" align="left" >
                                                                 {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                                 <Typography variant="subtitle2" noWrap>
                                                                     {usersearch.user_name.first_name + " " + usersearch.user_name.middle_name + " " + usersearch.user_name.last_name}

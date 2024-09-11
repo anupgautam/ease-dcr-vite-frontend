@@ -39,7 +39,6 @@ const EditTourPlan = ({ idharu, onClose }) => {
     const TourPlan = useGetTourPlansByIdQuery(idharu, {
         skip: !idharu
     });
-    console.log(TourPlan)
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: TourPlan?.data?.mpo_name?.id }, {
         skip: !company_id || !TourPlan?.data?.mpo_name?.id
     });
