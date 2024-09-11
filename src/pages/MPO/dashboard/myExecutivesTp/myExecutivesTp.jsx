@@ -266,9 +266,9 @@ const MyExecutiveTp = () => {
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedOption !== null ? selectedOption?.id : "", page: page, role_data: '' },
-        //  {
-        //     skip: !company_id || !selectedYear || !selectedMonth || !selectedOption || !page
-        // }
+        {
+            skip: !company_id || !selectedYear || !selectedMonth || !selectedOption || !page
+        }
     )
 
 
@@ -391,7 +391,7 @@ const MyExecutiveTp = () => {
                                                             {
                                                                 eightArrays.map((key) => {
                                                                     return (
-                                                                        <TableRow id={key} tabIndex={-1} role="checkbox" >
+                                                                        <TableRow key={key} tabIndex={-1} role="checkbox" >
                                                                             <TableCell padding="checkbox" >
                                                                                 <Skeleton />
                                                                             </TableCell>
@@ -594,40 +594,43 @@ const MyExecutiveTp = () => {
                                                                             </TableCell>
 
                                                                             {/* //! Edit  */}
-                                                                            {
-                                                                                tourplan.is_approved === false &&
-                                                                                <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
-                                                                                    <Badge>
-                                                                                        <Iconify icon="eva:edit-fill" />
-                                                                                    </Badge>
-                                                                                </IconButton>
-                                                                            }
-                                                                            {/* //! Delete  */}
-                                                                            {/* <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
+                                                                            <TableCell align="left">
+
+                                                                                {
+                                                                                    tourplan.is_approved === false &&
+                                                                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
+                                                                                        <Badge>
+                                                                                            <Iconify icon="eva:edit-fill" />
+                                                                                        </Badge>
+                                                                                    </IconButton>
+                                                                                }
+                                                                                {/* //! Delete  */}
+                                                                                {/* <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
                                                                                 <Badge>
                                                                                     <Iconify icon="eva:trash-2-outline" />
                                                                                 </Badge>
                                                                             </IconButton> */}
-                                                                            <Dialog
-                                                                                fullScreen={fullScreen}
-                                                                                open={openDialogue}
-                                                                                onClose={handleClose}
-                                                                                aria-labelledby="responsive-dialog-title"
-                                                                            >
-                                                                                <DialogTitle id="responsive-dialog-title">
-                                                                                    {"Are you sure want to delete?"}
-                                                                                </DialogTitle>
-                                                                                <DialogActions>
-                                                                                    <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
-                                                                                        Yes{selectedId}
-                                                                                    </Button>
-                                                                                    <Button
-                                                                                        onClick={handleClose}
-                                                                                        autoFocus>
-                                                                                        No
-                                                                                    </Button>
-                                                                                </DialogActions>
-                                                                            </Dialog>
+                                                                                <Dialog
+                                                                                    fullScreen={fullScreen}
+                                                                                    open={openDialogue}
+                                                                                    onClose={handleClose}
+                                                                                    aria-labelledby="responsive-dialog-title"
+                                                                                >
+                                                                                    <DialogTitle id="responsive-dialog-title">
+                                                                                        {"Are you sure want to delete?"}
+                                                                                    </DialogTitle>
+                                                                                    <DialogActions>
+                                                                                        <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
+                                                                                            Yes{selectedId}
+                                                                                        </Button>
+                                                                                        <Button
+                                                                                            onClick={handleClose}
+                                                                                            autoFocus>
+                                                                                            No
+                                                                                        </Button>
+                                                                                    </DialogActions>
+                                                                                </Dialog>
+                                                                            </TableCell>
                                                                         </TableRow>
                                                                     ))
 

@@ -36,7 +36,6 @@ const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
   const { data: roleData } = useGetUsersByCompanyUserByIdQuery(Caching?.roles_id, {
     skip: !Caching?.roles_id
   });
-console.log(roleData)
   const onCompanyRolesData = e => setCompanyRolesData(e.target.value);
 
   const [PostVisitedWith] = usePostVisitedWithMutation();
@@ -160,7 +159,6 @@ const VisitedWithData = ({ id }) => {
   const { data } = useGetUsersByCompanyUserByIdQuery(id, {
     skip: !id
   });
-  console.log(data)
   return (
     <Box>
       <Typography className="add-product-design">{data?.user_name?.first_name + ' ' + data?.user_name?.last_name}</Typography>

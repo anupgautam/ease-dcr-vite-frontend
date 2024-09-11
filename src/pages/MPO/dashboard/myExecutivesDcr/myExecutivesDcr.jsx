@@ -48,7 +48,7 @@ const TABLE_HEAD = [
 ];
 
 const MyExecutivesDcr = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
 
@@ -216,10 +216,10 @@ const MyExecutivesDcr = () => {
         setOpenDialogue(false)
     }, [])
 
-    const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
-    const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedOption, page: page }, {
-        skip: !company_id || !selectedYear || !selectedMonth || !selectedOption || !page
-    })
+    // const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+    // const { data: TourPlanSearch } = useGetTourplanOfMpoByDateMonthQuery({ company_name: company_id, date: selectedYear, month: selectedMonth, mpo_name: selectedOption, page: page }, {
+    //     skip: !company_id || !selectedYear || !selectedMonth || !selectedOption || !page
+    // })
 
     return (
         <>
