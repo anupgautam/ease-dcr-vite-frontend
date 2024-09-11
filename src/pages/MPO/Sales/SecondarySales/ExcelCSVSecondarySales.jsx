@@ -191,7 +191,6 @@ const ExcelCSVSecondarySales = () => {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    console.log(results)
     return (
         <>
             <Button color="success" variant="contained" startIcon={<Iconify icon="mdi:microsoft-excel" />} onClick={() => setIsDrawerOpen(true)} >

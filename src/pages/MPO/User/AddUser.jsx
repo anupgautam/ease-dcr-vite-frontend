@@ -458,7 +458,7 @@ const AddUser = () => {
                                 />
                             </Box>
                             <Box marginBottom={2}>
-                                {/* <Controls.Select
+                                <Controls.Select
                                     name="division_name"
                                     label="Division*"
                                     className={"drawer-role-name-select"}
@@ -466,8 +466,8 @@ const AddUser = () => {
                                     onChange={handleInputChange}
                                     error={errors.division_name}
                                     options={divisionList}
-                                /> */}
-                                <Autocomplete
+                                />
+                                {/* <Autocomplete
                                     multiple
                                     options={divisionList}
                                     getOptionLabel={(option) => option.title}
@@ -480,10 +480,10 @@ const AddUser = () => {
                                             {option.title}
                                         </li>
                                     )}
-                                />
+                                /> */}
                             </Box>
                             <Box marginBottom={2}>
-                                {/* <Controls.Select
+                                <Controls.Select
                                     name="company_area"
                                     label="Company Wise Area*"
                                     className={"drawer-role-name-select"}
@@ -491,8 +491,8 @@ const AddUser = () => {
                                     onChange={handleInputChange}
                                     error={errors.company_area}
                                     options={companyAreas}
-                                /> */}
-                                <Autocomplete
+                                />
+                                {/* <Autocomplete
                                     multiple
                                     options={companyAreas}
                                     getOptionLabel={(option) => option.title}
@@ -505,7 +505,7 @@ const AddUser = () => {
                                             {option.title}
                                         </li>
                                     )}
-                                />
+                                /> */}
                             </Box>
                             <Box marginBottom={2}>
                                 <Controls.Input
