@@ -117,6 +117,8 @@ const AddCompanyAreaWiseExpense = () => {
             setTimeout(() => {
                 setSuccessMessage({ show: false, message: '' });
             }, 3000);
+            setIsDrawerOpen(false)
+
         } catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {
@@ -126,7 +128,6 @@ const AddCompanyAreaWiseExpense = () => {
             setLoading(false)
         }
 
-        setIsDrawerOpen(false)
     }, []);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

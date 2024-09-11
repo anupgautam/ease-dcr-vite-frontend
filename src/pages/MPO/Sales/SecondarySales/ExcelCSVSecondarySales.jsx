@@ -24,6 +24,7 @@ import {
 } from '../../../../api/MPOSlices/SecondarySalesApiSlice'
 import ExportToExcel from "@/reusable/utils/exportSheet";
 import { useSelector } from 'react-redux';
+import { BSDate } from "nepali-datepicker-react";
 
 const ExcelCSVSecondarySales = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -41,23 +42,41 @@ const ExcelCSVSecondarySales = () => {
     //     }
     // }
 
-    //! Months
-    const months = [
-        { value: 'baisakh', label: 'Baisakh' },
-        { value: 'jesth', label: 'Jestha' },
-        { value: 'Asadh', label: 'Asadh' },
-        { value: 'shrawn', label: 'Shrawan' },
-        { value: 'bhadra', label: 'Bhadra' },
-        { value: 'ashwin', label: 'Ashwin' },
-        { value: 'kartik', label: 'Kartik' },
-        { value: 'mangsir', label: 'Mangsir' },
-        { value: 'poush', label: 'Poush' },
-        { value: 'magh', label: 'Magh' },
-        { value: 'falgun', label: 'Falgun' },
-        { value: 'chaitra', label: 'Chaitra' },
-    ]
+    const now = new BSDate().now();
+    const year = now._date.year;
+    const month = now._date.month;
 
-    const [selectedMonth, setSelectedMonth] = useState()
+    //! Months
+    // const months = [
+    //     { value: 'baisakh', label: 'Baisakh' },
+    //     { value: 'jesth', label: 'Jestha' },
+    //     { value: 'Asadh', label: 'Asadh' },
+    //     { value: 'shrawn', label: 'Shrawan' },
+    //     { value: 'bhadra', label: 'Bhadra' },
+    //     { value: 'ashwin', label: 'Ashwin' },
+    //     { value: 'kartik', label: 'Kartik' },
+    //     { value: 'mangsir', label: 'Mangsir' },
+    //     { value: 'poush', label: 'Poush' },
+    //     { value: 'magh', label: 'Magh' },
+    //     { value: 'falgun', label: 'Falgun' },
+    //     { value: 'chaitra', label: 'Chaitra' },
+    // ]
+    const months = [
+        { value: 1, label: "Baisakh" },
+        { value: 2, label: "Jestha" },
+        { value: 3, label: "Asadh" },
+        { value: 4, label: "Shrawan" },
+        { value: 5, label: "Bhadra" },
+        { value: 6, label: "Ashwin" },
+        { value: 7, label: "Kartik" },
+        { value: 8, label: "Mangsir" },
+        { value: 9, label: "Poush" },
+        { value: 10, label: "Magh" },
+        { value: 11, label: "Falgun" },
+        { value: 12, label: "Chaitra" }
+    ];
+
+    const [selectedMonth, setSelectedMonth] = useState(month)
 
     const handleNepaliMonthChange = useCallback((event) => {
         setSelectedMonth(event.target.value);
@@ -84,7 +103,7 @@ const ExcelCSVSecondarySales = () => {
         { value: 2090, label: "2090" },
     ]
     const [dateData, setDateData] = useState('')
-    const [selectedYear, setSelectedYear] = useState(2024);
+    const [selectedYear, setSelectedYear] = useState(year);
     const [companyId, setCompanyId] = useState()
 
     const handleYearChange = useCallback((event) => {
@@ -96,7 +115,7 @@ const ExcelCSVSecondarySales = () => {
     const [searchSecondarySales, results] = useSearchSecondarySalesCSVMutation()
 
     //! onSearch
-    const FilteredData = { companyId: companyId, selectedMonth: selectedMonth, dateData: selectedYear }
+    const FilteredData = { companyId: company_id, selectedMonth: selectedMonth, dateData: selectedYear }
 
     useEffect(() => {
         if (selectedMonth || selectedYear) {
@@ -122,7 +141,7 @@ const ExcelCSVSecondarySales = () => {
     //! CSV Data 
 
     const headers = [
-        { label: 'Product Name', key: 'product' },
+        { label: 'Product', key: 'product' },
         { label: 'Opening Stock', key: 'opening_stock' },
         { label: 'Purchase', key: 'purchase' },
         { label: 'Stockist', key: 'stockist' },
@@ -172,10 +191,11 @@ const ExcelCSVSecondarySales = () => {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+    console.log(results)
     return (
         <>
             <Button color="success" variant="contained" startIcon={<Iconify icon="mdi:microsoft-excel" />} onClick={() => setIsDrawerOpen(true)} >
-                Export Data
+                Export
             </Button>
             <Drawer
                 anchor="right"
@@ -259,7 +279,7 @@ const ExcelCSVSecondarySales = () => {
                         } */}
                         {results?.data ?
                             <>
-                                <ExportToExcel headers={headers} fileName={`Doctors`} data={templateData} onClick={() => setIsDrawerOpen(false)} />
+                                <ExportToExcel headers={headers} fileName={`Secondary Sales`} data={templateData} onClick={() => setIsDrawerOpen(false)} />
                             </> : <></>}
                     </Stack>
                 </Box>

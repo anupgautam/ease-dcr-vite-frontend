@@ -20,7 +20,6 @@ const ListOfSecondarySales = () => {
                         <Grid item xs={10}>
                             <SecondarySalesCount />
                         </Grid>
-                        <AddSecondarySales />
                     </Grid>
                 </Box>
             </Container>

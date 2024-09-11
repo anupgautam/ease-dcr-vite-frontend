@@ -240,10 +240,10 @@ const AddUser = () => {
         formData.append("role_name", values.role_name);
         formData.append("executive_level", values.executive_level);
         formData.append("company_id", company_id);
-        formData.append("company_area", values.company_area);
-        formData.append("division_name", values.division_name);
-        // formData.append("company_area", JSON.stringify(areaOptions))
-        // formData.append("division_name", JSON.stringify(divisionOptions))
+        // formData.append("company_area", values.company_area);
+        // formData.append("division_name", values.division_name);
+        formData.append("company_area", JSON.stringify(areaOptions))
+        formData.append("division_name", JSON.stringify(divisionOptions))
         formData.append("station_type", values.station_type);
         formData.append("is_active", true);
         formData.append("date_of_joining", formattedDate);
@@ -255,6 +255,7 @@ const AddUser = () => {
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
+                setIsDrawerOpen(false);
             } else if (response?.error) {
                 setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                 setLoading(false);
@@ -262,6 +263,7 @@ const AddUser = () => {
             } else {
                 setErrorMessage({ show: true, message: response?.error?.data[0] || response?.error?.data?.user_name?.email[0] });
                 setTimeout(() => {
+                    setIsDrawerOpen(false);
                     setErrorMessage({ show: false, message: '' });
                 }, 3000);
             }
@@ -274,7 +276,6 @@ const AddUser = () => {
         finally {
             setLoading(false)
         }
-        setIsDrawerOpen(false);
     }, [createUsers, values]);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -457,7 +458,7 @@ const AddUser = () => {
                                 />
                             </Box>
                             <Box marginBottom={2}>
-                                <Controls.Select
+                                {/* <Controls.Select
                                     name="division_name"
                                     label="Division*"
                                     className={"drawer-role-name-select"}
@@ -465,8 +466,8 @@ const AddUser = () => {
                                     onChange={handleInputChange}
                                     error={errors.division_name}
                                     options={divisionList}
-                                />
-                                {/* <Autocomplete
+                                /> */}
+                                <Autocomplete
                                     multiple
                                     options={divisionList}
                                     getOptionLabel={(option) => option.title}
@@ -479,10 +480,10 @@ const AddUser = () => {
                                             {option.title}
                                         </li>
                                     )}
-                                /> */}
+                                />
                             </Box>
                             <Box marginBottom={2}>
-                                <Controls.Select
+                                {/* <Controls.Select
                                     name="company_area"
                                     label="Company Wise Area*"
                                     className={"drawer-role-name-select"}
@@ -490,8 +491,8 @@ const AddUser = () => {
                                     onChange={handleInputChange}
                                     error={errors.company_area}
                                     options={companyAreas}
-                                />
-                                {/* <Autocomplete
+                                /> */}
+                                <Autocomplete
                                     multiple
                                     options={companyAreas}
                                     getOptionLabel={(option) => option.title}
@@ -504,7 +505,7 @@ const AddUser = () => {
                                             {option.title}
                                         </li>
                                     )}
-                                /> */}
+                                />
                             </Box>
                             <Box marginBottom={2}>
                                 <Controls.Input

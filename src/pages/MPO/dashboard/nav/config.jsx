@@ -106,11 +106,11 @@ const navConfig = [
         path: 'admin/sales',
         icon: <Icon icon="bx:dollar" style={{ fontSize: '20px' }} />,
       },
-      {
-        title: 'Primary Sales',
-        path: 'admin/primarysales',
-        icon: <Icon icon="bx:dollar" style={{ fontSize: '20px' }} />,
-      },
+      // {
+      //   title: 'Primary Sales',
+      //   path: 'admin/primarysales',
+      //   icon: <Icon icon="bx:dollar" style={{ fontSize: '20px' }} />,
+      // },
       {
         title: 'Secondary Sales',
         path: 'admin/secondarysales',

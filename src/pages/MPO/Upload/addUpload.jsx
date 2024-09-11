@@ -95,6 +95,7 @@ const AddUpload = () => {
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
+                setIsDrawerOpen(false)
             } else if (response?.error) {
                 setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                 setLoading(false);
@@ -114,7 +115,6 @@ const AddUpload = () => {
         } finally {
             setLoading(false)
         }
-        setIsDrawerOpen(false)
     }, [createUpload, values])
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
