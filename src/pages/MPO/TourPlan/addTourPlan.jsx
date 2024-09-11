@@ -165,6 +165,19 @@ const AddTourPlan = () => {
     const [MpoAreaData, setMpoAreaData] = useState([]);
     const [visitedWithData, setVisitedWithData] = useState([]);
 
+
+
+    useEffect(() => {
+        if (CompanyRoles) {
+            const data = CompanyRoles.map((key) => {
+                return {
+                    visit_with: key
+                }
+            })
+            setMpoAreaData(data);
+        }
+    }, [CompanyRoles])
+
     //! Add MPO TP
     const addTodo = () => {
         setLoading(true);
@@ -269,12 +282,12 @@ const AddTourPlan = () => {
         }));
     }
 
-    const initialFValues = {
+    const [initialFValues, setInitialFValues] = useState({
         shift: "",
         visit_data: MpoAreaData,
         hulting_station: "",
         user_id: company_user_role_id,
-    }
+    })
 
     const {
         values,
@@ -317,8 +330,13 @@ const AddTourPlan = () => {
                     setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
-                        toggleDrawer()
                     }, 5000);
+                    setInitialFValues({
+                        shift: "",
+                        visit_data: MpoAreaData,
+                        hulting_station: "",
+                        user_id: company_user_role_id,
+                    })
                 }
                 else if (response?.error) {
                     setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
@@ -535,11 +553,11 @@ const AddTourPlan = () => {
                                         )}
                                     />
                                 </Box>
-                                {
+                                {/* {
                                     CompanyRoles?.map((key, index) => (
                                         <MpoUserWiseArea id={key} key={index} setMpoAreaData={setMpoAreaData} MpoAreaData={MpoAreaData} />
                                     ))
-                                }
+                                } */}
                                 <Box marginBottom={2}>
                                     <Controls.Input
                                         name={`hulting_station`}
@@ -602,129 +620,136 @@ const AddTourPlan = () => {
     )
 }
 
-const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
-    const { company_id, user_role, company_user_id, company_user_role_id, role } = useSelector((state) => state.cookie);
+// const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
+//     const { company_id, user_role, company_user_id, company_user_role_id, role } = useSelector((state) => state.cookie);
 
-    const [visitData, setVisitData] = useState([]);
+//     const [visitData, setVisitData] = useState([]);
 
-    const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: id },
-        //     {
-        //     skip: !company_id || !role || !id
-        // }
-    );
+//     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: id },
+//         //     {
+//         //     skip: !company_id || !role || !id
+//         // }
+//     );
 
-    const [MpoTpArea, setMpoTpArea] = useState([]);
-    const [TPAreaName, setTPAreaName] = useState([])
-    const [mpoAreaData, setmpoAreaData] = useState([]);
-    const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
+//     console.log('MpoAreaData', MpoAreaData);
 
-    useEffect(() => {
-        AllMpoAreaData({ id: company_user_role_id })
-            .then((res) => {
-                if (res.data) {
-                    const data = res.data.map((key) => ({
-                        id: key.id,
-                        title: key.area_name
-                    }));
-                    setmpoAreaData(data)
-                }
-            })
-    }, [id])
+//     const [MpoTpArea, setMpoTpArea] = useState([]);
+//     const [TPAreaName, setTPAreaName] = useState([])
+//     const [mpoAreaData, setmpoAreaData] = useState([]);
+//     const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
 
-    //! Display value
-    const [selectedAreas, setSelectedAreas] = useState(
-        MpoTpArea.map((id) => mpoAreaData.find((option) => option.id === id) || {})
-    )
+//     useEffect(() => {
+//         AllMpoAreaData({ id: company_user_role_id })
+//             .then((res) => {
+//                 if (res.data) {
+//                     const data = res.data.map((key) => ({
+//                         id: key.id,
+//                         title: key.area_name
+//                     }));
+//                     setmpoAreaData(data)
+//                 }
+//             })
+//     }, [id])
 
-    //! On Chnage
-    const handleMpoTpArea = (event, value) => {
-        const mpotparea = value.map(option => option.id)
-        const mpotpareavalue = value.map(option => option.title)
-        setMpoTpArea(mpotparea)
-        setTPAreaName(mpotpareavalue)
-        setSelectedAreas(value)
-    }
+//     //! Display value
+//     const [selectedAreas, setSelectedAreas] = useState(
+//         MpoTpArea.map((id) => mpoAreaData.find((option) => option.id === id) || {})
+//     )
 
-    //! Filter Options
-    const filteredOptions = mpoAreaData.filter(
-        (option) => !selectedAreas.some((selected) => selected.id === option.id)
-    );
+//     //! On Chnage
+//     const handleMpoTpArea = (event, value) => {
+//         const mpotparea = value.map(option => option.id)
+//         const mpotpareavalue = value.map(option => option.title)
+//         setMpoTpArea(mpotparea)
+//         setTPAreaName(mpotpareavalue)
+//         setSelectedAreas(value)
+//     }
 
-    // const mpoAreaData = useMemo(() => {
-    //     if (MpoArea?.data) {
-    //         return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))
-    //     }
-    //     return [];
-    // }, [MpoArea])
+//     //! Filter Options
+//     const filteredOptions = mpoAreaData.filter(
+//         (option) => !selectedAreas.some((selected) => selected.id === option.id)
+//     );
 
-    const handleInputChange = (event) => {
-        const selectedAreaId = event.target.value;
-        // const newVisitData = [...MpoAreaData, { visited_with: id, area: selectedAreaId }];
+//     // const mpoAreaData = useMemo(() => {
+//     //     if (MpoArea?.data) {
+//     //         return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))
+//     //     }
+//     //     return [];
+//     // }, [MpoArea])
 
-        const newVisitData = [{ visited_with: id, area: selectedAreaId }];
-        setMpoAreaData(newVisitData);
-        setVisitData(selectedAreaId);
-        console.log(MpoAreaData)
-    }
+//     const handleInputChange = (event) => {
+//         const selectedAreaId = event.target.value;
+//         // const newVisitData = [...MpoAreaData, { visited_with: id, area: selectedAreaId }];
 
-    const [mulipleSelectedAreasId, setMultipleSelectedAreasId] = useState([])
-    //! On Chnage
-    // const handleMpoTpVisitedArea = (event, value) => {
-    //     // const mpotparea = value.map(option => option.id)
-    //     // const mpotpareavalue = value.map(option => option.title)
-    //     // setMpoTpArea(mpotparea)
-    //     // setTPAreaName(mpotpareavalue)
-    //     setSelectedAreas(value)
+//         const newVisitData = [{ visited_with: id, area: selectedAreaId }];
+//         setMpoAreaData(newVisitData);
+//         setVisitData(selectedAreaId);
+//         console.log(MpoAreaData)
+//     }
 
-    //     const selectedAreaId = value.map(option => option.id)
-    //     console.log(selectedAreaId)
-    //     // const newVisitData = [...MpoAreaData, { visited_with: id, area: selectedAreaId }];
-    //     // const newVisitData = [{ visited_with: id, area: selectedAreaId }];
-    //     const newVisitData = id.map(id => ({
-    //         visited_with: id,
-    //         area: selectedAreaId
-    //     }))
-    //     // setMpoAreaData(newVisitData);
-    //     setMpoAreaData(prevState => {
-    //         const updatedVisitData = [...prevState, ...newVisitData];
-    //         return updatedVisitData;
-    //     });
-    //     setVisitData(selectedAreaId);
-    //     console.log(MpoAreaData)
-    // }
-    // useEffect(() => {
-    //     console.log(MpoAreaData)
-    // }, [(MpoAreaData || id)]);
+//     useEffect(() => {
+//         const newVisitData = [{ visited_with: id }];
+//         setMpoAreaData(newVisitData);
+//     }, [id])
 
-    return (
-        <Box marginBottom={2}>
-            <Controls.Select
-                name={`select_the_area`}
-                label="Select the Area*"
-                value={visitData}
-                onChange={handleInputChange}
-                options={mpoAreaData}
-            />
+//     const [mulipleSelectedAreasId, setMultipleSelectedAreasId] = useState([])
+//     //! On Chnage
+//     // const handleMpoTpVisitedArea = (event, value) => {
+//     //     // const mpotparea = value.map(option => option.id)
+//     //     // const mpotpareavalue = value.map(option => option.title)
+//     //     // setMpoTpArea(mpotparea)
+//     //     // setTPAreaName(mpotpareavalue)
+//     //     setSelectedAreas(value)
 
-            {/* <Autocomplete
-                multiple
-                options={filteredOptions}
-                value={selectedAreas}
-                // options={mpoAreaData}
-                // value={MpoTpArea.map(id => mpoAreaData.find(option => option.id === id) || {})}
-                getOptionLabel={(option) => option.title}
-                onChange={handleMpoTpVisitedArea}
-                renderInput={(params) => (
-                    <TextField {...params} label="Select the Areas" />
-                )}
-                renderOption={(props, option) => (
-                    <li {...props} key={option.id}>
-                        {option.title}
-                    </li>
-                )}
-            /> */}
-        </Box>
-    )
-}
+//     //     const selectedAreaId = value.map(option => option.id)
+//     //     console.log(selectedAreaId)
+//     //     // const newVisitData = [...MpoAreaData, { visited_with: id, area: selectedAreaId }];
+//     //     // const newVisitData = [{ visited_with: id, area: selectedAreaId }];
+//     //     const newVisitData = id.map(id => ({
+//     //         visited_with: id,
+//     //         area: selectedAreaId
+//     //     }))
+//     //     // setMpoAreaData(newVisitData);
+//     //     setMpoAreaData(prevState => {
+//     //         const updatedVisitData = [...prevState, ...newVisitData];
+//     //         return updatedVisitData;
+//     //     });
+//     //     setVisitData(selectedAreaId);
+//     //     console.log(MpoAreaData)
+//     // }
+//     // useEffect(() => {
+//     //     console.log(MpoAreaData)
+//     // }, [(MpoAreaData || id)]);
+
+//     return (
+//         <Box marginBottom={2}>
+//             {/* <Controls.Select
+//                 name={`select_the_area`}
+//                 label="Select the Area*"
+//                 value={visitData}
+//                 onChange={handleInputChange}
+//                 options={mpoAreaData}
+//             /> */}
+
+//             {/* <Autocomplete
+//                 multiple
+//                 options={filteredOptions}
+//                 value={selectedAreas}
+//                 // options={mpoAreaData}
+//                 // value={MpoTpArea.map(id => mpoAreaData.find(option => option.id === id) || {})}
+//                 getOptionLabel={(option) => option.title}
+//                 onChange={handleMpoTpVisitedArea}
+//                 renderInput={(params) => (
+//                     <TextField {...params} label="Select the Areas" />
+//                 )}
+//                 renderOption={(props, option) => (
+//                     <li {...props} key={option.id}>
+//                         {option.title}
+//                     </li>
+//                 )}
+//             /> */}
+//         </Box>
+//     )
+// }
 
 export default React.memo(AddTourPlan);

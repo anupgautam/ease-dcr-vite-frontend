@@ -157,7 +157,7 @@ const AddUnplannedTp = () => {
                     user_id: company_user_role_id,
                     dates: [selectedDates],
                     shift: 1,
-                    visit_data: MpoAreaData,
+                    visit_data: [{ 'visited_with': values.visited_with }],
                     hulting_station: values.hulting_station,
                     is_admin_opened: false,
                     is_unplanned: true,
@@ -295,12 +295,12 @@ const AddUnplannedTp = () => {
                                                 options={executiveLevelOptions}
                                             />
                                         </Box>
-                                        {
+                                        {/* {
                                             values.visited_with &&
                                             <Box marginBottom={2}>
                                                 <MpoUserWiseArea id={values.visited_with} setMpoAreaData={setMpoAreaData} MpoAreaData={MpoAreaData} />
                                             </Box>
-                                        }
+                                        } */}
                                         <Box marginBottom={2}>
                                             <Controls.Input
                                                 name={`hulting_station`}
@@ -357,46 +357,46 @@ const AddUnplannedTp = () => {
     )
 }
 
-const MpoUserWiseArea = ({ id, setMpoAreaData }) => {
-    const { company_id } = useSelector((state) => state.cookie);
-    const [visitData, setVisitData] = useState([]);
+// const MpoUserWiseArea = ({ id, setMpoAreaData }) => {
+//     const { company_id } = useSelector((state) => state.cookie);
+//     const [visitData, setVisitData] = useState([]);
 
-    const [mpoAreaData, setmpoAreaData] = useState([]);
-    const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
+//     const [mpoAreaData, setmpoAreaData] = useState([]);
+//     const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
 
-    useEffect(() => {
-        AllMpoAreaData({ id: id })
-            .then((res) => {
-                if (res.data) {
-                    const data = res.data.map((key) => ({
-                        id: key.id,
-                        title: key.area_name
-                    }));
-                    setmpoAreaData(data)
-                }
-            })
-    }, [id])
+//     useEffect(() => {
+//         AllMpoAreaData({ id: id })
+//             .then((res) => {
+//                 if (res.data) {
+//                     const data = res.data.map((key) => ({
+//                         id: key.id,
+//                         title: key.area_name
+//                     }));
+//                     setmpoAreaData(data)
+//                 }
+//             })
+//     }, [id])
 
 
-    const handleInputChange = (event) => {
-        const selectedAreaId = event.target.value;
-        const newVisitData = [{ visited_with: id, area: selectedAreaId }];
-        setMpoAreaData(newVisitData);
-        setVisitData(selectedAreaId);
-    }
+//     const handleInputChange = (event) => {
+//         const selectedAreaId = event.target.value;
+//         const newVisitData = [{ visited_with: id, area: selectedAreaId }];
+//         setMpoAreaData(newVisitData);
+//         setVisitData(selectedAreaId);
+//     }
 
-    return (
-        <Box marginBottom={2}>
-            <Controls.Select
-                name={`select_the_area`}
-                label="Select the Area*"
-                value={visitData}
-                onChange={handleInputChange}
-                options={mpoAreaData}
-            />
-        </Box>
-    )
-}
+//     return (
+//         <Box marginBottom={2}>
+//             <Controls.Select
+//                 name={`select_the_area`}
+//                 label="Select the Area*"
+//                 value={visitData}
+//                 onChange={handleInputChange}
+//                 options={mpoAreaData}
+//             />
+//         </Box>
+//     )
+// }
 
 
 export default React.memo(AddUnplannedTp);
