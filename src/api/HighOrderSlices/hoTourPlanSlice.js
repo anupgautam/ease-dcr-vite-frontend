@@ -19,7 +19,7 @@ export const HOTourPlanSlice = apiSlice.injectEndpoints({
                 url: `other-roles/higher-order-tourplan-with-pagination/?page=${page.page}&visited_with__company_name=${page.company_name}`,
                 method: 'GET'
             }),
-            providesTags: ['HOTourPlan', 'PostTourplan','TourPlan']
+            providesTags: ['HOTourPlan', 'PostTourplan', 'TourPlan']
         }),
 
         //! Get all HOTourPlans By id
@@ -106,30 +106,12 @@ export const HOTourPlanSlice = apiSlice.injectEndpoints({
         updateHOTourPlans: builder.mutation({
             query: (updateTourPlan) => {
                 return {
-                    url: `other-roles/higher-order-tour-plan/${updateTourPlan.get('id')}/`,
+                    url: `other-roles/higher-order-tour-plan/${updateTourPlan.id}/`,
                     method: 'PATCH',
                     body: updateTourPlan,
                 }
             },
             invalidatesTags: ['HOTourPlan'],
-            async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-                const patchResult = dispatch(
-                    apiSlice.util.updateQueryData('getAllHOTourPlans', id, (draft) => {
-                        Object.assign(draft, patch)
-                    })
-                )
-                try {
-                    await queryFulfilled
-                } catch {
-                    patchResult.undo()
-
-                    /**
-                     * Alternatively, on failure you can invalidate the corresponding cache tags
-                     * to trigger a re-fetch:
-                     * dispatch(api.util.invalidateTags(['Post']))
-                     */
-                }
-            },
         }),
     })
 })

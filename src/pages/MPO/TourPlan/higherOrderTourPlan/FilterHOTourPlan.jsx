@@ -43,7 +43,6 @@ import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'user_id', label: 'Name', alignRight: false },
-    { id: 'visited_area', label: 'Area', alignRight: false },
     { id: 'date', label: 'Date', alignRight: false },
     { id: 'visited_with', label: 'Visited With', alignRight: false },
     { id: 'approved', label: 'Approve TP', alignRight: false },
@@ -173,13 +172,6 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                                                                                 </Typography>
                                                                             </Stack>
                                                                         </TableCell>
-                                                                        <TableCell align="left">
-                                                                            {
-                                                                                tourplan.visited_data.map((key, index) => (
-                                                                                    <HigherAreaData id={key.area} key={index} />
-                                                                                ))
-                                                                            }
-                                                                        </TableCell>
                                                                         {/* <MpoAreaData mpoId={tourplan?.visited_with?.id} shiftId={tourplan?.shift?.id} dateId={tourplan.date} /> */}
                                                                         <TableCell align="left">{moment(tourplan.date).format('DD')}</TableCell>
                                                                         <TableCell component="th" scope="row" padding="none">
@@ -266,7 +258,7 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                                                                             </DialogTitle>
                                                                             <DialogActions>
                                                                                 <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
-                                                                                    Yes{selectedId}
+                                                                                    Yes
                                                                                 </Button>
                                                                                 <Button
                                                                                     onClick={handleClose}
@@ -304,17 +296,6 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                         </Card>
                     </> : <DefaultHOTourPlan />}
             </Card>
-        </>
-    )
-}
-
-const HigherAreaData = ({ id }) => {
-    const { data } = useGetAreaMPOByIdQuery(id, {
-        skip: !id
-    });
-    return (
-        <>
-            <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }}>{data?.area_name},</Typography>
         </>
     )
 }

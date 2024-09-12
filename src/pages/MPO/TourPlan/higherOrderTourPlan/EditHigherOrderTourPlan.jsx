@@ -28,6 +28,7 @@ import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useSelector } from 'react-redux';
 import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
 import { ConstructionOutlined } from '@mui/icons-material';
+import { extractErrorMessage } from '../../../../reusable/extractErrorMessage';
 
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
@@ -156,6 +157,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     const [MpoAreaData, setMpoAreaData] = useState([]);
 
+
     const [CompanyRoles, setCompanyRoles] = useState([]);
 
     const handleRolesChange = (event) => {
@@ -166,6 +168,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
             typeof value === 'string' ? value.split(',') : value,
         );
     };
+
 
 
     useEffect(() => {
@@ -184,15 +187,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         }
     }, [TourPlan.data])
 
-    const handleAreaChange = (selectedAreaId, visitedWith) => {
-        const newMpoAreaData = MpoAreaData.map((data) => {
-            if (data.visited_with === visitedWith) {
-                return { ...data, area: selectedAreaId };
-            }
-            return data;
-        });
-        setMpoAreaData(newMpoAreaData);
-    };
+
 
     const { values,
         errors,
@@ -213,11 +208,23 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
             const defaultVisitedWith = values.visited_data.map(item => item.visited_with);
             setCompanyRoles(defaultVisitedWith);
             setDefaultExecutives(defaultVisitedWith)
-            // const visitedIds = values?.visited_data?.map((item) => item.id)
-            // const defaultVisitedUsers = users?.filter((user) => visitedIds.includes(user.id))
-            // setDefaultExecutives(defaultVisitedUsers)
         }
     }, [values]);
+
+    const [VisitedData, setVisitedData] = useState('');
+
+
+    useEffect(() => {
+        if (CompanyRoles) {
+            const data = CompanyRoles.map((key) => {
+                return {
+                    visit_with: key
+                }
+            })
+            setMpoAreaData(data);
+        }
+    }, [CompanyRoles])
+
 
 
     useEffect(() => {
@@ -244,7 +251,6 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
             const defaultAreaData = values.visited_data.map((data) => ({
                 visited_with: data.visited_with,
-                area: data.area
             }));
             setMpoAreaData(defaultAreaData);
         }
@@ -255,41 +261,43 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     const history = useNavigate();
 
     const monthData = getNepaliMonthName(moment(dateData).month() + 1);
-    const handleSubmit = useCallback(async (e) => {
+    const handleSubmit = async (e) => {
         setLoading(true)
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append("user_id", TourPlan?.data?.user_id?.id);
-        formData.append("shift", 1);
-        formData.append("date", typeof values.date === "string" ? values.date : DateToString(values.date));
-        formData.append("is_dcr_added", values.is_dcr_added === null ? false : values.is_dcr_added);
-        formData.append("is_approved", values.is_approved);
-        // formData.append("visit_data", values.visited_data?.map((visiteddata) => visiteddata.visited_with));
-        formData.append("visit_data", JSON.stringify(defaultExecutives));
-        formData.append("hulting_station", values.hulting_station);
-        formData.append('month', monthData)
-        formData.append('id', idharu)
-        formData.append('company_id', company_id)
+        const data = { visit_data: MpoAreaData, id: idharu, company_id: company_id, user_id: TourPlan?.data?.user_id?.id, shift: 1, date: typeof values.date === "string" ? values.date : DateToString(values.date), is_dcr_added: values.is_dcr_added === null ? false : values.is_dcr_added, is_approved: values.is_approved, hulting_station: values.hulting_station, month: monthData }
+        // const formData = new FormData();
+        // formData.append("user_id", TourPlan?.data?.user_id?.id);
+        // formData.append("shift", 1);
+        // formData.append("date", typeof values.date === "string" ? values.date : DateToString(values.date));
+        // formData.append("is_dcr_added", values.is_dcr_added === null ? false : values.is_dcr_added);
+        // formData.append("is_approved", values.is_approved);
+        // // formData.append("visit_data", values.visited_data?.map((visiteddata) => visiteddata.visited_with));
+        // formData.append("visit_data", MpoAreaData);
+        // formData.append("hulting_station", values.hulting_station);
+        // formData.append('month', monthData)
+        // formData.append('id', idharu)
+        // formData.append('company_id', company_id)
         try {
-            const response = await updateTourPlans(formData).unwrap();
-            setEdited(true);
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited TourPlan' });
-                setTimeout(() => {
-                    history("/dashboard/admin/tourplan")
-                    setSuccessMessage({ show: false, message: '' });
-                    onClose();
-                }, 2000);
-            }
-            else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
-                setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-            }
-            else {
-                setErrorMessage({ show: true, message: "Error" });
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-            }
+            setEdited(true)
+            await updateTourPlans(data)
+                .then((response) => {
+                    if (response.data) {
+                        setSuccessMessage({ show: true, message: 'Successfully Edited TourPlan' });
+                        setTimeout(() => {
+                            history("/dashboard/admin/tourplan")
+                            setSuccessMessage({ show: false, message: '' });
+                            onClose();
+                        }, 2000);
+                    }
+                    else if (response?.error) {
+                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        setLoading(false);
+                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                    }
+                    else {
+                        setErrorMessage({ show: true, message: "Error" });
+                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                    }
+                })
         }
         catch (error) {
 
@@ -300,7 +308,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         } finally {
             setLoading(false)
         }
-    }, [updateTourPlans, values])
+    }
 
     // const visitedData = values?.visited_data?.map((visiteddata) => visiteddata.visited_with)
     return (
@@ -405,7 +413,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                 )}
                             /> */}
                         </Box>
-                        {Array.isArray(values?.visited_data) &&
+                        {/* {Array.isArray(values?.visited_data) &&
                             values.visited_data.map((key, index) => (
                                 <MpoUserWiseArea
                                     id={TourPlan?.data?.user_id?.id}
@@ -417,7 +425,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                     onAreaChange={handleAreaChange}
                                 />
                             ))
-                        }
+                        } */}
                         <Box marginBottom={2}>
                             <Controls.Input
                                 name="hulting_station"
@@ -478,42 +486,42 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     );
 };
 
-const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData, value, onAreaChange }) => {
-    const [visitData, setVisitData] = useState(value || "");
-    const [mpoAreaData, setmpoAreaData] = useState([]);
-    const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
+// const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData, value, onAreaChange }) => {
+//     const [visitData, setVisitData] = useState(value || "");
+//     const [mpoAreaData, setmpoAreaData] = useState([]);
+//     const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
 
-    useEffect(() => {
-        AllMpoAreaData({ id })
-            .then((res) => {
-                if (res.data) {
-                    const data = res.data.map((key) => ({
-                        id: key.id,
-                        title: key.area_name
-                    }));
-                    setmpoAreaData(data);
-                }
-            });
-    }, [id]);
+//     useEffect(() => {
+//         AllMpoAreaData({ id })
+//             .then((res) => {
+//                 if (res.data) {
+//                     const data = res.data.map((key) => ({
+//                         id: key.id,
+//                         title: key.area_name
+//                     }));
+//                     setmpoAreaData(data);
+//                 }
+//             });
+//     }, [id]);
 
 
-    const handleInputChange = (event) => {
-        const selectedAreaId = event.target.value;
-        setVisitData(selectedAreaId);
-        onAreaChange(selectedAreaId, visitedWith);
-    };
+//     const handleInputChange = (event) => {
+//         const selectedAreaId = event.target.value;
+//         setVisitData(selectedAreaId);
+//         onAreaChange(selectedAreaId, visitedWith);
+//     };
 
-    return (
-        <Box marginBottom={2}>
-            <Controls.Select
-                name={`select_the_area`}
-                label="Select the Area*"
-                value={visitData} // Bind to the visitData state, which contains the default area
-                onChange={handleInputChange}
-                options={mpoAreaData}
-            />
-        </Box>
-    );
-};
+//     return (
+//         <Box marginBottom={2}>
+//             <Controls.Select
+//                 name={`select_the_area`}
+//                 label="Select the Area*"
+//                 value={visitData} // Bind to the visitData state, which contains the default area
+//                 onChange={handleInputChange}
+//                 options={mpoAreaData}
+//             />
+//         </Box>
+//     );
+// };
 
 export default React.memo(EditHOTourPlan);

@@ -222,9 +222,12 @@ const AddTourPlan = () => {
             is_approved: false,
         }));
 
+        console.log('new_data', new_data);
+
         AddTourPlan(new_data)
             .then(res => {
                 if (res.data) {
+                    console.log('res.data', res.data);
                     setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
                     const updatedData = res.data.map((item, index) => ({
                         ...item,
