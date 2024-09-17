@@ -72,9 +72,7 @@ export const DoctorDCRAllSlice = apiSlice.injectEndpoints({
 
         //! Update Stockists DCR By ID 
         updateDoctorsAllDCR: builder.mutation({
-
             query: (updateDoctorsDCR) => {
-
                 return {
                     url: `dcr/dcr-for-doctor-company-product-map/${updateDoctorsDCR['data']['id']}/`,
                     method: 'PATCH',

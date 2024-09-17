@@ -10,6 +10,7 @@ import {
 } from "../../../../api/DCRs Api Slice/doctorDCR/DoctorDCRAllSlice";
 import { useGetAllProductsOptionsWithDivisionQuery, usePostProductPromotionsMutation } from "@/api/MPOSlices/productApiSlice";
 import { useGetProductForDcrByIdQuery } from "@/api/MPOSlices/ProductSlice";
+import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSlices/companyProductSlice";
 
 
 const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
@@ -21,9 +22,13 @@ const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
     skip: !id
   });
 
-  const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division?.id }, {
-    skip: !company_id || !division?.id
-  })
+  // const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division?.id }, {
+  //   skip: !company_id || !division?.id
+  // })
+
+  const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
+    skip: !company_id
+  });
 
   const productList = useMemo(() => {
     if (productData !== undefined) {

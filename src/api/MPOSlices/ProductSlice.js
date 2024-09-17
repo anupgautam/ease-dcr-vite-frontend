@@ -16,10 +16,10 @@ export const ProductSlice = apiSlice.injectEndpoints({
         //! GET all the product
         getAllProducts: builder.query({
             query: (page) =>
-                    ({
-                        url: `product/company-division-product/?company_name=${page.id}&page=${page.page}&division_name=${page.division_name}`,
-                        method: 'GET'
-                    }),
+            ({
+                url: `product/company-division-product/?company_name=${page.id}&page=${page.page}&division_name=${page.division_name}`,
+                method: 'GET'
+            }),
             providesTags: (result, error, arg) =>
                 [
                     'Product'
@@ -111,15 +111,17 @@ export const ProductSlice = apiSlice.injectEndpoints({
                 url: `product/company-division-product/${id}/`,
                 method: 'GET'
             }),
-            providesTags: ['Product']
+            providesTags: ['Product'],
+            invalidatesTags: ['Product']
+
         }),
 
         getProductsByDivisionId: builder.query({
             query: (id) =>
-                ({
-                    url: `product/company-division-product/?company_name=${id.company_name}&division_name=${id.division_name}`,
-                    method: 'GET'
-                }),
+            ({
+                url: `product/company-division-product/?company_name=${id.company_name}&division_name=${id.division_name}`,
+                method: 'GET'
+            }),
             providesTags: ['Product']
         }),
 

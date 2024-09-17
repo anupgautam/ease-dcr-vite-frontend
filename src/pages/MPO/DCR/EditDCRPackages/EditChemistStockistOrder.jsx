@@ -13,6 +13,9 @@ import { useGetAllStockistsWithoutPaginationQuery } from "@/api/MPOSlices/Stocki
 import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
 
 const EditChemistStockistOrder = ({ id, context, editApi, companyArea }) => {
+
+  const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const companyStockists = useSelector(state => state.dcrData.visited_stockist);
   const mpo_id = useSelector(state => state.dcrData.selected_user);
@@ -25,7 +28,7 @@ const EditChemistStockistOrder = ({ id, context, editApi, companyArea }) => {
 
   const companyStockists = useMemo(() => {
     if (StockistData !== undefined) {
-      return StockistData.data.map((key) => ({
+      return StockistData?.data?.map((key) => ({
         id: key.id,
         title: key.stockist_name.stockist_name
       }))

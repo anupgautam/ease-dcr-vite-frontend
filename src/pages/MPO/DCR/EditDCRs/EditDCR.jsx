@@ -14,7 +14,8 @@ import Controls from '../../../../reusable/components/forms/controls/Controls';
 //! Api Slices 
 import {
     useGetDoctorDcrByIdQuery,
-    useUpdateDoctorsAllDCRMutation
+    useAddDoctorsAllDCRMutation,
+    // useAddDoctorsAllDCRMutation
 } from '../../../../api/DCRs Api Slice/doctorDCR/DoctorDCRAllSlice';
 import { BSDate } from "nepali-datepicker-react";
 import editWithoutImage from '@/reusable/components/forms/utils/editUtils/editWithoutImage';
@@ -39,6 +40,7 @@ const EditDCR = ({ idharu, onClose }) => {
     const mpo_id = useSelector(state => state.dcrData.selected_user);
     const DCRAll = useGetDoctorDcrByIdQuery(idharu);
     const shiftWiseDCR = useGetShiftWiseDoctorDCRByIdQuery(idharu);
+    
     //! Nepali Date format 
     const [dateData, setDateData] = useState()
     const context = { 'company_product': 'select', 'company_roles': 'select', 'rewards': 'normal' }
@@ -58,6 +60,7 @@ const EditDCR = ({ idharu, onClose }) => {
         company_product: [],
         rewards: [],
         company_roles: [],
+        // dcr_id: [],
     });
 
 
@@ -76,7 +79,8 @@ const EditDCR = ({ idharu, onClose }) => {
                 expenses_reasoning: DCRAll?.data?.dcr?.dcr?.expenses_reasoning,
                 company_product: DCRAll?.data?.company_product,
                 rewards: DCRAll?.data?.rewards,
-                company_roles: DCRAll?.data?.company_roles
+                company_roles: DCRAll?.data?.company_roles,
+                // dcr_id: DCRAll?.data?.dcr?.dcr?.id
             });
             setDateData(DCRAll?.data?.dcr?.dcr?.date);
         }
@@ -127,7 +131,7 @@ const EditDCR = ({ idharu, onClose }) => {
 
     //! Edit tourplan
 
-    const [updateDCRAll] = useUpdateDoctorsAllDCRMutation();
+    const [updateDCRAll] = useAddDoctorsAllDCRMutation();
 
     useEffect(() => {
         if (DCRAll.data) {
@@ -142,7 +146,8 @@ const EditDCR = ({ idharu, onClose }) => {
         useDebounce(values.expenses_reasoning, 3000),
         values.company_product,
         values.rewards,
-        values.company_roles
+        values.company_roles,
+
     ]);
     const changeShift = (e) => {
         const form = new FormData();
@@ -289,7 +294,7 @@ const EditDCR = ({ idharu, onClose }) => {
                                 id={DCRAll?.data?.dcr?.dcr?.id}
                                 division={DCRAll?.data?.mpo_name?.division_name}
                                 context={context}
-                                editApi={useUpdateDoctorsAllDCRMutation} />
+                                editApi={useAddDoctorsAllDCRMutation} />
                         </Box>
                         <Box marginBottom={2}>
                             <EditDoctorDCRRoles
@@ -299,7 +304,7 @@ const EditDCR = ({ idharu, onClose }) => {
                                 id={idharu}
                                 mpoId={DCRAll?.data?.mpo_name?.id}
                                 context={context}
-                                editApi={useUpdateDoctorsAllDCRMutation} />
+                                editApi={useAddDoctorsAllDCRMutation} />
                         </Box>
 
                         <Box marginBottom={2}>
@@ -309,7 +314,7 @@ const EditDCR = ({ idharu, onClose }) => {
                                 onChange={handleInputChangeLoop}
                                 id={idharu}
                                 context={context}
-                                editApi={useUpdateDoctorsAllDCRMutation} />
+                                editApi={useAddDoctorsAllDCRMutation} />
 
                         </Box>
                     </Form>
