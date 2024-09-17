@@ -135,7 +135,7 @@ const ReusableFormsSelect = ({
   return (
     <>
       <>
-        {thisData.map((key) => (
+        {thisData?.map((key) => (
           <>
             <Box style={{ background: 'white', marginTop: '1rem', marginBottom: '1rem', borderRadius: "5px" }}>
               <TransitionGroup>
