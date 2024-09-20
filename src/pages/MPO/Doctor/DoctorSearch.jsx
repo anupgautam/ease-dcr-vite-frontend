@@ -218,7 +218,7 @@ const DoctorSearch = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={5.5} sm={3}>
+                        <Grid item md={5.5} xs={10} sm={3}>
                             <TextField
                                 label="Search Doctor"
                                 variant="outlined"
@@ -234,21 +234,24 @@ const DoctorSearch = () => {
                                 sx={{ m: 2 }}
                             />
                         </Grid>
-                        <Grid item xs={5} sm={3}>
-                            <Autocomplete
-                                options={mpoNames}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleMPONameChange}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="MPO Name" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        </Grid>
+                        {
+                            user_role === "admin" &&
+                            <Grid item md={5} xs={0} sm={3}>
+                                <Autocomplete
+                                    options={mpoNames}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleMPONameChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="MPO Name" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                />
+                            </Grid>
+                        }
                         {mpoName &&
                             <Grid item xs={3} >
                                 <Autocomplete
