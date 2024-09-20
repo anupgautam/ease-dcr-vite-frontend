@@ -82,7 +82,7 @@ const FilteredApplication = () => {
 
     const rolesOptions = useMemo(() => {
         if (isSuccess) {
-            return data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.last_name + " " + key.user_name.email }))
+            return data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + "" + key.user_name.middle_name + key.user_name.last_name }))
         }
         return [];
     }, [isSuccess])
@@ -159,19 +159,22 @@ const FilteredApplication = () => {
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
-                            <Autocomplete
-                                options={rolesOptions}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleOptionChange}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Users" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
+                            {
+                                user_role === 'admin' &&
+                                <Autocomplete
+                                    options={rolesOptions}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleOptionChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Users" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                />
+                            }
                         </Grid>
                         <Grid item xs={2.85}>
                             <NepaliDatePicker

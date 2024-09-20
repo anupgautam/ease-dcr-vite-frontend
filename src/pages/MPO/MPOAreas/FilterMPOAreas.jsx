@@ -209,36 +209,42 @@ const FilterMPOAreas = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={3}>
-                            <Autocomplete
-                                options={mpoNames}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleOptionChange}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="MPO Names" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Autocomplete
-                                options={companyAreaData}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleCompanyChange}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Head Quarter" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        </Grid>
+                        {
+                            user_role === "admin" &&
+                            <Grid item xs={3}>
+                                <Autocomplete
+                                    options={mpoNames}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleOptionChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="MPO Names" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                />
+                            </Grid>
+                        }
+                        {
+                            user_role === "admin" &&
+                            <Grid item xs={3}>
+                                <Autocomplete
+                                    options={companyAreaData}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleCompanyChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Head Quarter" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                />
+                            </Grid>
+                        }
                     </Grid>
                 </Box>
 

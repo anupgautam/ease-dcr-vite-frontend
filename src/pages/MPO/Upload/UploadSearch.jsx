@@ -85,21 +85,24 @@ const UploadSearch = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2} alignItems="center">
-                        <Grid item xs={3}>
-                            <Autocomplete
-                                options={rolesOptions}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleOptionChange}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Roles" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        </Grid>
+                        {
+                            user_role === "admin" &&
+                            <Grid item xs={3}>
+                                <Autocomplete
+                                    options={rolesOptions}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleOptionChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Roles" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                />
+                            </Grid>
+                        }
                         <Grid item xs={3}>
                             {selectedOption &&
                                 <TextField
