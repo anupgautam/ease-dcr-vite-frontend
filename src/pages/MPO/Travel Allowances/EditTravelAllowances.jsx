@@ -38,18 +38,18 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
 
     //! Months
     const months = [
-        { value: 1, label: "Baisakh" },
-        { value: 2, label: "Jestha" },
-        { value: 3, label: "Asadh" },
-        { value: 4, label: "Shrawan" },
-        { value: 5, label: "Bhadra" },
-        { value: 6, label: "Ashwin" },
-        { value: 7, label: "Kartik" },
-        { value: 8, label: "Mangsir" },
-        { value: 9, label: "Poush" },
-        { value: 10, label: "Magh" },
-        { value: 11, label: "Falgun" },
-        { value: 12, label: "Chaitra" }
+        { value: "Baishkh", label: "Baisakh" },
+        { value: "Jestha", label: "Jestha" },
+        { value: "Asadh", label: "Asadh" },
+        { value: "Shrawan", label: "Shrawan" },
+        { value: "Bhadra", label: "Bhadra" },
+        { value: "Ashwin", label: "Ashwin" },
+        { value: "Kartik", label: "Kartik" },
+        { value: "Mangsir", label: "Mangsir" },
+        { value: "Poush", label: "Poush" },
+        { value: "Magh", label: "Magh" },
+        { value: "Falgun", label: "Falgun" },
+        { value: "Chaitra", label: "Chaitra" }
     ];
     const [companyId, setCompanyId] = useState(parseInt(company_id))
     const [selectedMonth, setSelectedMonth] = useState('')
@@ -113,6 +113,8 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
         temp.area_to = returnValidation(['null'], values.area_to)
         temp.daily_allowance = returnValidation(['null'], values.daily_allowance)
         temp.travel_allowance = returnValidation(['null'], values.travel_allowance)
+        temp.miscellaneous_allowance = returnValidation(['null'], values.miscellaneous_allowance)
+        temp.other_allowance = returnValidation(['null'], values.other_allowance)
 
         setErrors({
             ...temp
@@ -128,7 +130,9 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
     }, [values.area_from,
     values.area_to,
     values.daily_allowance,
-    values.travel_allowance
+    values.travel_allowance,
+    values.miscellaneous_allowance,
+    values.other_allowance
     ])
 
     useEffect(() => {
@@ -138,6 +142,8 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
                 area_to: TravelAllowance?.data?.area_to,
                 daily_allowance: TravelAllowance?.data?.daily_allowance,
                 travel_allowance: TravelAllowance?.data?.travel_allowance,
+                miscellaneous_allowance: TravelAllowance?.data?.miscellaneous_allowance,
+                other_allowance: TravelAllowance?.data?.other_allowance,
                 company_name: TravelAllowance?.data?.company_name,
                 user_id: TravelAllowance?.data?.user_id,
                 year: TravelAllowance?.data?.year,
@@ -148,7 +154,6 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
             setSelectedYear(TravelAllowance?.data?.year ? TravelAllowance?.data?.year : now)
         }
     }, [TravelAllowance.data])
-
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -164,6 +169,8 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
         const formData = new FormData();
         formData.append("travel_allowance", values.travel_allowance);
         formData.append("daily_allowance", values.daily_allowance);
+        formData.append("miscellaneous_allowance", values.miscellaneous_allowance);
+        formData.append("other_allowance", values.other_allowance);
         formData.append("date", dateData);
         formData.append("area_to", values.area_to);
         formData.append("area_from", values.area_from);
@@ -212,6 +219,7 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
         }
     }, [updateTravelAllowances, values, idharu, dateData, selectedMonth, selectedYear])
 
+    console.log(TravelAllowance?.data)
     return (
         <>
             <Drawer
@@ -286,6 +294,28 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
                                     value={values.daily_allowance}
                                     onChange={handleInputChange}
                                     errors={errors.daily_allowance}
+                                />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box marginBottom={2}>
+                                <Controls.Input
+                                    name="miscellaneous_allowance"
+                                    label="Miscellaneous Expenses"
+                                    value={values.miscellaneous_allowance}
+                                    onChange={handleInputChange}
+                                    errors={errors.miscellaneous_allowance}
+                                />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box marginBottom={2}>
+                                <Controls.Input
+                                    name="other_allowance"
+                                    label="Other Expenses"
+                                    value={values.other_allowance}
+                                    onChange={handleInputChange}
+                                    errors={errors.other_allowance}
                                 />
                             </Box>
                         </Grid>

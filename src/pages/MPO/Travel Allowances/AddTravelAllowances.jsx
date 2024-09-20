@@ -140,6 +140,8 @@ const AddTravelAllowances = () => {
         const formData = new FormData();
         formData.append("travel_allowance", values.travel_allowance);
         formData.append("daily_allowance", values.daily_allowance);
+        formData.append("miscellaneous_allowance", values.miscellaneous_allowance);
+        formData.append("other_allowance", values.other_allowance);
         formData.append("date", selectedDates);
         formData.append("area_to", values.area_to);
         formData.append("area_from", values.area_from);
@@ -249,6 +251,24 @@ const AddTravelAllowances = () => {
                             value={values.name}
                             onChange={handleInputChange}
                             error={errors.daily_allowance}
+                        />
+                    </Box>
+                    <Box marginBottom={2}>
+                        <Controls.Input
+                            name="miscellaneous_allowance"
+                            label="Miscellaneous Expenses"
+                            value={values.name}
+                            onChange={handleInputChange}
+                            error={errors.miscellaneous_allowance}
+                        />
+                    </Box>
+                    <Box marginBottom={2}>
+                        <Controls.Input
+                            name="other_expenses"
+                            label="Other Expenses"
+                            value={values.name}
+                            onChange={handleInputChange}
+                            error={errors.other_expenses}
                         />
                     </Box>
                     <Box marginBottom={2}>
