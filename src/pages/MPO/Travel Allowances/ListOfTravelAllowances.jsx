@@ -10,9 +10,11 @@ import TravelAllowancesCount from './TravelAllowancesCount';
 import FilterTravelAllowances from './FilterTravelAllowances';
 import AddTravelAllowances from './AddTravelAllowances'
 import ExcelCSVTravelAllowances from './ExcelCSVTravelAllowances';
+import { useSelector } from 'react-redux';
 
 
 const ListOfTravelAllowances = () => {
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -35,7 +37,9 @@ const ListOfTravelAllowances = () => {
                                 alignItems="center"
                                 justifyContent="flex-end"
                             >
-                                <ExcelCSVTravelAllowances />
+                                {user_role === 'admin' &&
+                                    <ExcelCSVTravelAllowances />
+                                }
                                 <AddTravelAllowances />
                             </Stack>
                         </Grid>
