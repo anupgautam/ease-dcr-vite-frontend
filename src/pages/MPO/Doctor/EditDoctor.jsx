@@ -251,6 +251,18 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Box marginBottom={2}>
+                                    <Controls.Select
+                                        name="doctor_specialization"
+                                        label="Doctor Specialization*"
+                                        value={values.doctor_specialization}
+                                        onChange={handleInputChange}
+                                        error={errors.doctor_specialization}
+                                        options={doctorspecializations}
+                                    />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Box marginBottom={2}>
                                     <Controls.Input
                                         name="doctor_address"
                                         label="Doctor Address*"
@@ -293,18 +305,6 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                                         onChange={handleInputChange}
                                         error={errors.doctor_territory}
                                         options={mpoAreaData}
-                                    />
-                                </Box>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="doctor_specialization"
-                                        label="Doctor Specialization*"
-                                        value={values.doctor_specialization}
-                                        onChange={handleInputChange}
-                                        error={errors.doctor_specialization}
-                                        options={doctorspecializations}
                                     />
                                 </Box>
                             </Grid>

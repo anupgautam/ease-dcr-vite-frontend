@@ -256,6 +256,17 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 // className={"drawer-first-name-input"}
                 />
             </TableCell>
+            <TableCell align="left" style={{ width: "200px" }}>
+                <Controls.Select
+                    name="doctor_category"
+                    label="Doctor Category*"
+                    // className={"drawer-first-name-input"}
+                    value={Formdata.doctor_category}
+                    options={doctorcategories}
+                    onChange={handleInputChange}
+                // error={errors.doctorDCRId}
+                />
+            </TableCell>
             <TableCell align="left">
                 <Controls.Input
                     name="doctor_phone_number"
@@ -274,17 +285,6 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                     onChange={handleInputChange}
                     // error={errors.doctor_territory}
                     options={mpoAreaData}
-                />
-            </TableCell>
-            <TableCell align="left" style={{ width: "200px" }}>
-                <Controls.Select
-                    name="doctor_category"
-                    label="Doctor Category*"
-                    // className={"drawer-first-name-input"}
-                    value={Formdata.doctor_category}
-                    options={doctorcategories}
-                    onChange={handleInputChange}
-                // error={errors.doctorDCRId}
                 />
             </TableCell>
             <TableCell align="left" style={{ width: "200px" }}>

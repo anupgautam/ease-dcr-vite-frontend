@@ -276,6 +276,18 @@ const AddDoctor = () => {
                                 <Grid item xs={12}>
                                     <Box marginBottom={2}>
                                         <Controls.Select
+                                            name="doctor_specialization"
+                                            label="Doctor Specialization*"
+                                            value={values.name}
+                                            onChange={handleInputChange}
+                                            options={doctorspecializations}
+                                            error={errors.doctor_specialization}
+                                        />
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Box marginBottom={2}>
+                                        <Controls.Select
                                             name="doctor_territory"
                                             label="Doctor Territory*"
                                             value={values.name}
@@ -338,18 +350,6 @@ const AddDoctor = () => {
                                             value={values.name}
                                             onChange={handleInputChange}
                                             items={doctorGender}
-                                        />
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Box marginBottom={2}>
-                                        <Controls.Select
-                                            name="doctor_specialization"
-                                            label="Doctor Specialization*"
-                                            value={values.name}
-                                            onChange={handleInputChange}
-                                            options={doctorspecializations}
-                                            error={errors.doctor_specialization}
                                         />
                                     </Box>
                                 </Grid>

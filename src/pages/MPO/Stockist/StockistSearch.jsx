@@ -182,7 +182,7 @@ const StockistSearch = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={5} sm={3}>
+                        <Grid item md={3} xs={10} sm={3}>
                             <TextField
                                 label="Search Stockist"
                                 variant="outlined"
@@ -198,21 +198,24 @@ const StockistSearch = () => {
                                 sx={{ m: 2 }}
                             />
                         </Grid>
-                        <Grid item xs={5} sm={3}>
-                            <Autocomplete
-                                options={companyareas}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleCompanyNameChange}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Company Areas" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        </Grid>
+                        {
+                            user_role === "admin" &&
+                            <Grid item md={5} xs={0} sm={3}>
+                                <Autocomplete
+                                    options={companyareas}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleCompanyNameChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Company Areas" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                />
+                            </Grid>
+                        }
                     </Grid>
                 </Box>
                 <Scrollbar>
