@@ -43,6 +43,7 @@ import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { useSelector } from 'react-redux';
 import { decryptData } from '../User/excryption';
 import { useLocation } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 const TABLE_HEAD = [
@@ -213,6 +214,10 @@ const DoctorSearch = () => {
 
     const debouncedSearch = debounce(onSearch, 300);
 
+    const clearInput = () => {
+
+    }
+
     return (
         <>
             <Card>
@@ -227,6 +232,11 @@ const DoctorSearch = () => {
                                     startAdornment: (
                                         <InputAdornment position="start">
                                             <SearchIcon />
+                                        </InputAdornment>
+                                    ),
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <CloseIcon onClick={(e) => clearInput(e)} />
                                         </InputAdornment>
                                     ),
                                 }}

@@ -35,11 +35,6 @@ const ListOfTravelAllowances = () => {
                                 alignItems="center"
                                 justifyContent="flex-end"
                             >
-                                {/* {
-                                    user_role === "admin" &&
-                                    <ExportChemist />
-                                } */}
-
                                 <ExcelCSVTravelAllowances />
                                 <AddTravelAllowances />
                             </Stack>
