@@ -218,7 +218,7 @@ const DoctorSearch = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
-                        <Grid item md={5.5} xs={10} sm={3}>
+                        <Grid item md={3} xs={10} sm={3}>
                             <TextField
                                 label="Search Doctor"
                                 variant="outlined"
