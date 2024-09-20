@@ -215,7 +215,7 @@ const DoctorSearch = () => {
     const debouncedSearch = debounce(onSearch, 300);
 
     const clearInput = () => {
-
+        setSearchData('')
     }
 
     return (
@@ -234,11 +234,11 @@ const DoctorSearch = () => {
                                             <SearchIcon />
                                         </InputAdornment>
                                     ),
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <CloseIcon onClick={(e) => clearInput(e)} />
-                                        </InputAdornment>
-                                    ),
+                                    // endAdornment: SearchData ? (
+                                    //     <InputAdornment position="end">
+                                    //         <CloseIcon onClick={clearInput} style={{ cursor: 'pointer' }} />
+                                    //     </InputAdornment>
+                                    // ) : null
                                 }}
                                 style={{ padding: '30px' }}
                                 sx={{ m: 2 }}
