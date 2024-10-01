@@ -157,7 +157,7 @@ const AddDoctor = () => {
         formData.append('mpo_name', user_role === 'admin' ? values.mpo_name : company_user_role_id);
         formData.append('doctor_qualification', values.doctor_qualification);
         formData.append('doctor_specialization', values.doctor_specialization);
-        formData.append('company_id', company_id);
+        formData.append('company_name', company_id);
         try {
             const response = await createDoctors(formData);
             if (response.data) {
