@@ -14,7 +14,7 @@ const TravelAllowancesCount = () => {
     return (
         <>
             <Typography style={{ fontSize: "18px", fontWeight: '600' }}>
-                Allowances
+                Expenses
             </Typography>
         </>
     )

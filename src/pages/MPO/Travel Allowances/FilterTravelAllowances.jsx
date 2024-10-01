@@ -54,8 +54,10 @@ const TABLE_HEAD = [
     { id: 'month', label: 'Month', alignRight: false },
     { id: 'from', label: 'From', alignRight: false },
     { id: 'to', label: 'To', alignRight: false },
-    { id: 'daily_allowance', label: 'Daily Allowance', alignRight: false },
-    { id: 'travel_allowace', label: 'Travel Allowance', alignRight: false },
+    { id: 'daily_expenses', label: 'Daily Expenses', alignRight: false },
+    { id: 'travel_expenses', label: 'Travel Expenses', alignRight: false },
+    { id: 'miscellanous_expenses', label: 'Miscellaneous Expenses', alignRight: false },
+    { id: 'other_expenses', label: 'Other Expenses', alignRight: false },
     { id: '' },
 ];
 
@@ -207,21 +209,23 @@ const FilterTravelAllowances = () => {
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={2}>
-                            <Autocomplete
-                                options={rolesOptions}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleOptionChange}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Roles" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        </Grid>
+                        {user_role === 'admin' &&
+                            <Grid item xs={2}>
+                                <Autocomplete
+                                    options={rolesOptions}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleOptionChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Roles" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                />
+                            </Grid>
+                        }
                         {user_role === 'admin' &&
                             <Grid item xs={3}>
                                 <Autocomplete
@@ -336,6 +340,8 @@ const FilterTravelAllowances = () => {
                                                                 <TableCell align="left">{application.month}</TableCell>
                                                                 <TableCell align="left">{application.area_from}</TableCell>
                                                                 <TableCell align="left">{application.area_to}</TableCell>
+                                                                <TableCell align="left">Rs. {application.daily_allowance}</TableCell>
+                                                                <TableCell align="left">Rs. {application.travel_allowance}</TableCell>
                                                                 <TableCell align="left">Rs. {application.daily_allowance}</TableCell>
                                                                 <TableCell align="left">Rs. {application.travel_allowance}</TableCell>
                                                                 <TableCell align="left">
