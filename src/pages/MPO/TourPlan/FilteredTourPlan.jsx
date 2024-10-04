@@ -407,23 +407,23 @@ const FilteredTourPlan = () => {
                                                                                 :
                                                                                 TourPlanSearch.results.map((tourplan, index) => {
                                                                                     return (
-                                                                                        <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}
+                                                                                        <TableRow hover tabIndex={-1} role="checkbox" key={tourplan?.id}
                                                                                         >
                                                                                             <TableCell>{index + 1}</TableCell>
                                                                                             <TableCell component="th" scope="row" align="left">
                                                                                                 <Typography variant="subtitle2" noWrap>
-                                                                                                    {tourplan.mpo_name.user_name.first_name + " " + tourplan.mpo_name.user_name.middle_name + " " + tourplan.mpo_name.user_name.last_name}
+                                                                                                    {tourplan?.mpo_name?.user_name?.first_name + " " + tourplan?.mpo_name?.user_name?.middle_name + " " + tourplan?.mpo_name?.user_name?.last_name}
                                                                                                 </Typography>
                                                                                             </TableCell>
                                                                                             <TableCell align="left">
                                                                                                 {
                                                                                                     tourplan.mpo_area_read.map((key, index) => (
-                                                                                                        <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }} key={index}>{key.company_mpo_area_id.area_name},</Typography>
+                                                                                                        <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }} key={index}>{key?.company_mpo_area_id?.area_name},</Typography>
                                                                                                     ))
                                                                                                 }
                                                                                             </TableCell>
-                                                                                            <TableCell align="left">{moment(tourplan.tour_plan.tour_plan.select_the_date_id).format('DD')}</TableCell>
-                                                                                            <TableCell align="left">{tourplan.is_approved === true ?
+                                                                                            <TableCell align="left">{moment(tourplan?.tour_plan.tour_plan?.select_the_date_id).format('DD')}</TableCell>
+                                                                                            <TableCell align="left">{tourplan?.is_approved === true ?
                                                                                                 <>
                                                                                                     <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75, ml: 0.75 }}>
                                                                                                         <Badge>
@@ -437,8 +437,8 @@ const FilteredTourPlan = () => {
                                                                                                         </Badge>
                                                                                                     </IconButton></>
                                                                                             }</TableCell>
-                                                                                            <TableCell align="left">{tourplan.tour_plan.tour_plan.hulting_station}</TableCell>
-                                                                                            <TableCell align="left">{tourplan.tour_plan.tour_plan.is_unplanned === true ?
+                                                                                            <TableCell align="left">{tourplan?.tour_plan?.tour_plan?.hulting_station}</TableCell>
+                                                                                            <TableCell align="left">{tourplan?.tour_plan?.tour_plan?.is_unplanned === true ?
                                                                                                 <>
                                                                                                     <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75, ml: 3 }}>
                                                                                                         <Badge>
@@ -452,8 +452,7 @@ const FilteredTourPlan = () => {
                                                                                                 </IconButton>
                                                                                             }
                                                                                             </TableCell>
-                                                                                            <TableCell align="left">{tourplan.approved_by.user_name.first_name + " " + tourplan.approved_by.user_name.middle_name + " " + tourplan.approved_by.user_name.last_name}</TableCell>
-                                                                                            {/* //! Edit  */}
+                                                                                            <TableCell align="left">{tourplan?.approved_by?.user_name?.first_name + " " + tourplan?.approved_by?.user_name?.middle_name + " " + tourplan?.approved_by?.user_name?.last_name}</TableCell>
                                                                                             <TableCell align="left">
                                                                                                 {
                                                                                                     user_role === 'admin' &&

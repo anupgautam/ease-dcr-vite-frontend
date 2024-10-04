@@ -227,7 +227,7 @@ const EditUser = ({ idharu, onClose }) => {
         formData.append("station_type", values.station_type);
         formData.append("company_area", values.company_area);
         formData.append('id', idharu);
-        formData.append("company_id", company_id);
+        formData.append("company_name", company_id);
         formData.append('refresh', refresh)
         formData.append('access', access);
         formData.append("date_of_joining", dateData);

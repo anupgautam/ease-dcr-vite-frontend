@@ -428,7 +428,6 @@ const UserSearch = () => {
                                   )}
                                 </TableCell>
                                 <TableCell align="left">
-                                  {/* //!User Login */}
                                   {usersearch?.user_name?.is_admin === false ? <>
                                     <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => UserLogin(usersearch)}>
                                       <Badge>

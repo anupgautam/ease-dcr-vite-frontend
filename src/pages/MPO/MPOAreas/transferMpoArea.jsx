@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { Box, Button, Drawer, Grid, IconButton, Stack, Typography, CircularProgress } from "@mui/material";
+import { Box, Button, Drawer, Grid, IconButton, Stack, Typography, CircularProgress, Autocomplete, TextField } from "@mui/material";
 import React, { useEffect, useState, useMemo } from "react";
 import { usePostAllMPONamesNoPageMutation, useTransferMpoAreaMutation } from "@/api/MPOSlices/DoctorSlice";
 import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
@@ -9,7 +9,7 @@ import { useForm } from "@/reusable/forms/useForm";
 import { useSelector } from 'react-redux';
 
 const TransferMpoArea = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role } = useSelector((state) => state.cookie);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -18,7 +18,7 @@ const TransferMpoArea = () => {
     const [MpoList, setMpoList] = useState([]);
 
     const mpoNames = useMemo(() => {
-        if (MpoList?.data) {
+        if (MpoList) {
             return MpoList.map(key => ({ id: key.id, title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name }))
         }
         return [];
@@ -56,17 +56,24 @@ const TransferMpoArea = () => {
         skip: !company_id || !values.transfer_from
     });
 
+
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
-            return MpoArea?.data.push({ id: key.id, title: key.area_name })
+            return MpoArea.data.map(key => ({ id: key.id, title: key.area_name }));
         }
         return [];
-    }, [])
+    }, [MpoArea.data]);
 
     const [MpoTransferArea] = useTransferMpoAreaMutation();
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
+    const [areaOptions, setAreaOptions] = useState([])
+
+    const handleMultipleCompanyAreas = (event, value) => {
+        const selectedIds = value.map(option => option.id);
+        setAreaOptions(selectedIds);
+    };
 
     const transferArea = (e) => {
         e.preventDefault();
@@ -74,7 +81,7 @@ const TransferMpoArea = () => {
         const data = {
             "transfer_to_mpo": values.transfer_to,
             "transfer_from_mpo": values.transfer_from,
-            "area": values.mpo_area
+            "area_id": areaOptions,
         }
         MpoTransferArea(data)
             .then((res) => {
@@ -164,13 +171,28 @@ const TransferMpoArea = () => {
                         />
                     </Box>
                     <Box marginBottom={2}>
-                        <Controls.Select
+                        {/* <Controls.Select
                             name="mpo_area"
                             label="Mpo Area*"
                             value={values.mpo_area}
                             onChange={handleInputChange}
                             // error={errors.mpo_area}
                             options={mpoAreaData}
+                        /> */}
+
+                        <Autocomplete
+                            multiple
+                            options={mpoAreaData}
+                            getOptionLabel={(option) => option.title}
+                            onChange={handleMultipleCompanyAreas}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Mpo Area" />
+                            )}
+                            renderOption={(props, option) => (
+                                <li {...props} key={option.id}>
+                                    {option.title}
+                                </li>
+                            )}
                         />
                     </Box>
                     <Stack spacing={1} direction="row">

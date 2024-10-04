@@ -135,7 +135,7 @@ const AddDoctorEvents = () => {
         formData.append("event_title", values.event_title);
         formData.append("doctor_id", values.doctor_id);
         formData.append("event_date", selectedDates);
-        formData.append("mpo_id", user_role === "admin" ? mpoName : company_user_role_id);
+        formData.append("mpo_name", user_role === "admin" ? mpoName : company_user_role_id);
         formData.append('company_name', company_id)
         try {
             const response = await createDoctors(formData)

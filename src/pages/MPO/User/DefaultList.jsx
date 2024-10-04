@@ -87,6 +87,7 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
         skip: !company_id || !page
     });
 
+
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
     const [unlockUser] = useUnlockUsersMutation()
@@ -123,7 +124,7 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
     return (
         <>
             {
-                data === undefined ? <>
+                data && data?.results === undefined ? <>
                     {
                         eightArrays.map((key) => (
                             <TableRow key={key} >
@@ -140,25 +141,25 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
                             </TableRow>
                         ))}
                 </> :
-                    <>{data && data.results.map((user, index) => (
+                    <>{data?.results?.map((user, index) => (
                         <TableRow hover tabIndex={-1} role="checkbox" key={user.id}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell component="th" scope="row" align="left">
                                 <Typography variant="subtitle2" noWrap>
-                                    {user.user_name.first_name + ' ' + user.user_name.middle_name + ' ' + user.user_name.last_name}
+                                    {user?.user_name?.first_name + ' ' + user?.user_name?.middle_name + ' ' + user?.user_name?.last_name}
                                 </Typography>
                             </TableCell>
-                            <TableCell align="left">{user.user_name.email}</TableCell>
-                            <TableCell align="left">{user.user_name.phone_number}</TableCell>
-                            <TableCell align="left">{user.role_name.role_name_value}</TableCell>
-                            <TableCell align="left">{user.company_area.company_area}</TableCell>
-                            <TableCell align="left">{user.executive_level.user_name === null ? "" : user?.executive_level?.user_name?.first_name + " " + user?.executive_level?.user_name?.middle_name + " " + user?.executive_level?.user_name?.last_name}</TableCell>
-                            <TableCell align="left">{user.division_name.division_name === null ? "" : user.division_name.division_name}</TableCell>
+                            <TableCell align="left">{user?.user_name?.email}</TableCell>
+                            <TableCell align="left">{user?.user_name?.phone_number}</TableCell>
+                            <TableCell align="left">{user?.role_name?.role_name_value}</TableCell>
+                            <TableCell align="left">{user?.company_area?.company_area}</TableCell>
+                            <TableCell align="left">{user?.executive_level?.user_name === null ? "" : user?.executive_level?.user_name?.first_name + " " + user?.executive_level?.user_name?.middle_name + " " + user?.executive_level?.user_name?.last_name}</TableCell>
+                            <TableCell align="left">{user?.division_name?.division_name === null ? "" : user?.division_name?.division_name}</TableCell>
                             <TableCell align="left">
                                 {
                                     user?.role_name?.role_name?.role_name === "admin" ?
                                         "Active" :
-                                        <select onChange={(e) => handleChangeStatus(e, user)} defaultValue={user.user_name.is_active} className='select-styles'>
+                                        <select onChange={(e) => handleChangeStatus(e, user)} defaultValue={user?.user_name?.is_active} className='select-styles'>
                                             <option value={true}>Active</option>
                                             <option value={false}>Inactive</option>
                                         </select>
@@ -227,7 +228,7 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
                                 </> : <></>}
 
                                 {/* //!Edit */}
-                                <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(user.id)} >
+                                <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(user?.id)} >
                                     <Badge>
                                         <Iconify icon="eva:edit-fill" />
                                     </Badge>

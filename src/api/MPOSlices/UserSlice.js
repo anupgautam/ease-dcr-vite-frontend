@@ -173,6 +173,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     url: "user/company-user-role/create_role_user_and_company_user_role/",
                     method: 'POST',
                     body: createUsers,
+                    headers: {
+                        'Content-type': 'application/json; charset = UTF-8',
+                    }
                 }
             },
             invalidatesTags: ['CompanyUserRoles', 'User', "CompanyUsers"],
@@ -243,7 +246,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         updateUsers: builder.mutation({
             query: (updateUser) => {
                 return {
-                    url: `user/company-user-role/${updateUser.get('id')}/update_data/`,
+                    url: `user/company-user-role/${updateUser.get('id')}/`,
                     method: 'PATCH',
                     body: updateUser
                 }

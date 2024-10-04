@@ -226,30 +226,30 @@ const AddUser = () => {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
+
     //!Modal wala ko click event
     const onAddUsers = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("first_name", values.first_name);
-        formData.append("middle_name", values.middle_name);
-        formData.append("last_name", values.last_name);
-        formData.append("address", values.address);
-        formData.append("phone_number", values.phone_number);
-        formData.append("email", values.email);
-        formData.append("role_name", values.role_name);
-        formData.append("executive_level", values.executive_level);
-        formData.append("company_id", company_id);
-        // formData.append("company_area", values.company_area);
-        // formData.append("division_name", values.division_name);
-        formData.append("company_area", JSON.stringify(areaOptions))
-        formData.append("division_name", JSON.stringify(divisionOptions))
-        formData.append("station_type", values.station_type);
-        formData.append("is_active", true);
-        formData.append("date_of_joining", formattedDate);
-
+        const jsonData = {
+            first_name: values.first_name,
+            middle_name: values.middle_name,
+            last_name: values.last_name,
+            address: values.address,
+            phone_number: values.phone_number,
+            email: values.email,
+            role_name: values.role_name,
+            executive_level: values.executive_level,
+            company_name: company_id,
+            is_tp_locked: false,
+            company_area: areaOptions,
+            division_name: divisionOptions,
+            station_type: values.station_type,
+            is_active: true,
+            date_of_joining: formattedDate,
+        };
         try {
-            const response = await createUsers(formData)
+            const response = await createUsers(jsonData)
             if (response?.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Added User' });
                 setTimeout(() => {
@@ -458,7 +458,7 @@ const AddUser = () => {
                                 />
                             </Box>
                             <Box marginBottom={2}>
-                                <Controls.Select
+                                {/* <Controls.Select
                                     name="division_name"
                                     label="Division*"
                                     className={"drawer-role-name-select"}
@@ -466,8 +466,8 @@ const AddUser = () => {
                                     onChange={handleInputChange}
                                     error={errors.division_name}
                                     options={divisionList}
-                                />
-                                {/* <Autocomplete
+                                /> */}
+                                <Autocomplete
                                     multiple
                                     options={divisionList}
                                     getOptionLabel={(option) => option.title}
@@ -480,10 +480,10 @@ const AddUser = () => {
                                             {option.title}
                                         </li>
                                     )}
-                                /> */}
+                                />
                             </Box>
                             <Box marginBottom={2}>
-                                <Controls.Select
+                                {/* <Controls.Select
                                     name="company_area"
                                     label="Company Wise Area*"
                                     className={"drawer-role-name-select"}
@@ -491,8 +491,8 @@ const AddUser = () => {
                                     onChange={handleInputChange}
                                     error={errors.company_area}
                                     options={companyAreas}
-                                />
-                                {/* <Autocomplete
+                                /> */}
+                                <Autocomplete
                                     multiple
                                     options={companyAreas}
                                     getOptionLabel={(option) => option.title}
@@ -505,7 +505,7 @@ const AddUser = () => {
                                             {option.title}
                                         </li>
                                     )}
-                                /> */}
+                                />
                             </Box>
                             <Box marginBottom={2}>
                                 <Controls.Input

@@ -312,16 +312,6 @@ const EditMpoArea = ({ idharu, onClose }) => {
                             options={mpoStation}
                         />
                     </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Select
-                            name="company_area"
-                            label="Head Quarter*"
-                            value={values.company_area}
-                            onChange={handleInputChange}
-                            error={errors.company_area}
-                            options={companyAreaData}
-                        />
-                    </Box>
                     <Stack spacing={1} direction="row">
                         <Controls.SubmitButton
                             variant="contained"

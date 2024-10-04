@@ -112,7 +112,7 @@ const DefaultList = () => {
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {companyroles.role_name.role_name}
+                                                            {companyroles.role_name_value}
                                                         </Typography>
                                                     </TableCell>
                                                     <TableCell align="right">

@@ -209,13 +209,13 @@ const AllUserTp = () => {
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell component="th" scope="row" align="left" >
                                                                         <Typography variant="subtitle2" noWrap>
-                                                                            {usersearch.user_name.first_name + " " + usersearch.user_name.middle_name + " " + usersearch.user_name.last_name}
+                                                                            {usersearch?.user_name?.first_name + " " + usersearch?.user_name?.middle_name + " " + usersearch?.user_name?.last_name}
                                                                         </Typography>
                                                                     </TableCell>
-                                                                    <TableCell align="left">{usersearch.company_area.company_area}</TableCell>
-                                                                    <TableCell align="left">{usersearch.role_name.role_name_value}</TableCell>
+                                                                    <TableCell align="left">{usersearch?.company_area?.company_area}</TableCell>
+                                                                    <TableCell align="left">{usersearch?.role_name?.role_name_value}</TableCell>
                                                                     <TableCell align="left">
-                                                                        <Link to={`/dashboard/admin/tourplan?id=${usersearch.id}&role=${usersearch.role_name.role_name.role_name}`}>
+                                                                        <Link to={`/dashboard/admin/tourplan?id=${usersearch?.id}&role=${usersearch?.role_name?.role_name?.role_name}`}>
                                                                             <Button>VIEW TP</Button>
                                                                         </Link>
                                                                     </TableCell>
@@ -287,13 +287,13 @@ const AllUserTp = () => {
                                                                 <TableCell>{index + 1}</TableCell>
                                                                 <TableCell component="th" scope="row" align="left" >
                                                                     <Typography variant="subtitle2" noWrap>
-                                                                        {usersearch.user_name.first_name + " " + usersearch.user_name.middle_name + " " + usersearch.user_name.last_name}
+                                                                        {usersearch?.user_name?.first_name + " " + usersearch?.user_name?.middle_name + " " + usersearch?.user_name?.last_name}
                                                                     </Typography>
                                                                 </TableCell>
-                                                                <TableCell align="left">{usersearch.company_area.company_area}</TableCell>
-                                                                <TableCell align="left">{usersearch.role_name.role_name_value}</TableCell>
+                                                                <TableCell align="left">{usersearch?.company_area?.company_area}</TableCell>
+                                                                <TableCell align="left">{usersearch?.role_name?.role_name_value}</TableCell>
                                                                 <TableCell align="left">
-                                                                    <Link to={`/dashboard/admin/tourplan?id=${usersearch.id}&role=${usersearch.role_name.role_name.role_name}`}>
+                                                                    <Link to={`/dashboard/admin/tourplan?id=${usersearch?.id}&role=${usersearch?.role_name?.role_name?.role_name}`}>
                                                                         <Button>VIEW TP</Button>
                                                                     </Link>
                                                                 </TableCell>

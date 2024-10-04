@@ -88,7 +88,7 @@ const AddApplication = () => {
         formData.append("leave_type", values.leave_type);
         formData.append("leave_from", selectedDates);
         formData.append("leave_to", selectedDatesTo);
-        formData.append("mpo_name", company_user_id);
+        formData.append("user_id", company_user_id);
         // formData.append("mpo_name", user_role);
         formData.append('company_name', company_id)
         formData.append('is_submitted', true);

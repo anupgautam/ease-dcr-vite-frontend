@@ -198,24 +198,6 @@ const StockistSearch = () => {
                                 sx={{ m: 2 }}
                             />
                         </Grid>
-                        {
-                            user_role === "admin" &&
-                            <Grid item md={5} xs={0} sm={3}>
-                                <Autocomplete
-                                    options={companyareas}
-                                    getOptionLabel={(option) => option.title}
-                                    onChange={handleCompanyNameChange}
-                                    renderInput={(params) => (
-                                        <TextField {...params} label="Company Areas" />
-                                    )}
-                                    renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
-                                />
-                            </Grid>
-                        }
                     </Grid>
                 </Box>
                 <Scrollbar>
