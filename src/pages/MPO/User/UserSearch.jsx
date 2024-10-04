@@ -101,6 +101,7 @@ const UserSearch = () => {
     skip: !company_id
   });
 
+  // console.log(userList)
   useEffect(() => {
     let dataList = [{ id: "", title: "None" }];
     if (roleList?.data) {
@@ -113,6 +114,8 @@ const UserSearch = () => {
 
   const [searchResults, setSearchResults] = useState({ search: "" });
   const [searchUser, results] = useSearchCompanyUserRolesMutation();
+
+  console.log(results)
 
   // !on search
   const onSearch = (e) => {
@@ -336,8 +339,15 @@ const UserSearch = () => {
                                 <TableCell align="left">
                                   {usersearch?.role_name?.role_name_value}
                                 </TableCell>
-                                <TableCell align="left">
+                                {/* <TableCell align="left">
                                   {usersearch?.company_area?.company_area}
+                                </TableCell> */}
+                                <TableCell align="left">
+                                  {usersearch?.company_area?.map((area, index) => (
+                                    <div key={index}>
+                                      {area.company_area}
+                                    </div>
+                                  ))}
                                 </TableCell>
                                 <TableCell align="left">
                                   {usersearch.executive_level?.user_name === null
@@ -351,11 +361,18 @@ const UserSearch = () => {
                                     usersearch?.executive_level?.user_name
                                       ?.last_name}
                                 </TableCell>
-                                <TableCell align="left">
+                                {/* <TableCell align="left">
                                   {usersearch?.division_name?.division_name ===
                                     null
                                     ? ""
                                     : usersearch?.division_name?.division_name}
+                                </TableCell> */}
+                                <TableCell align="left">
+                                  {usersearch?.division_name?.map((division, index) => (
+                                    <div key={index}>
+                                      {division.division_name}
+                                    </div>
+                                  ))}
                                 </TableCell>
                                 <TableCell align="left">
                                   {usersearch?.role_name?.role_name?.role_name ===

@@ -87,7 +87,6 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
         skip: !company_id || !page
     });
 
-
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
     const [unlockUser] = useUnlockUsersMutation()
@@ -152,9 +151,23 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
                             <TableCell align="left">{user?.user_name?.email}</TableCell>
                             <TableCell align="left">{user?.user_name?.phone_number}</TableCell>
                             <TableCell align="left">{user?.role_name?.role_name_value}</TableCell>
-                            <TableCell align="left">{user?.company_area?.company_area}</TableCell>
+                            {/* <TableCell align="left">{user?.company_area?.company_area}</TableCell> */}
+                            <TableCell align="left">
+                                {user?.company_area?.map((area, index) => (
+                                    <div key={index}>
+                                        {area.company_area}
+                                    </div>
+                                ))}
+                            </TableCell>
                             <TableCell align="left">{user?.executive_level?.user_name === null ? "" : user?.executive_level?.user_name?.first_name + " " + user?.executive_level?.user_name?.middle_name + " " + user?.executive_level?.user_name?.last_name}</TableCell>
-                            <TableCell align="left">{user?.division_name?.division_name === null ? "" : user?.division_name?.division_name}</TableCell>
+                            {/* <TableCell align="left">{user?.division_name?.division_name === null ? "" : user?.division_name?.division_name}</TableCell> */}
+                            <TableCell align="left">
+                                {user?.division_name?.map((division, index) => (
+                                    <div key={index}>
+                                        {division.division_name}
+                                    </div>
+                                ))}
+                            </TableCell>
                             <TableCell align="left">
                                 {
                                     user?.role_name?.role_name?.role_name === "admin" ?
