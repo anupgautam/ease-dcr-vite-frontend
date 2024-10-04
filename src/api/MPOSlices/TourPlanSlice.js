@@ -106,7 +106,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
 
         getTourplanOfMpoByDateMonth: builder.query({
             query: mpoName => ({
-                url: `/mpo/company-mpo-tour-plan/?company_name=${mpoName.company_name}&mpo_name_id=${mpoName.mpo_name}&tour_plan__tour_plan__select_the_month=${mpoName.month}&page=${mpoName.page}&tour_plan__tour_plan__year=${mpoName.date}&mpo_name__role_name__role_name=${mpoName.role_data}`,
+                url: `/mpo/company-mpo-tour-plan/?company_name=${mpoName.company_name}&mpo_name=${mpoName.mpo_name}&tour_plan__tour_plan__select_the_month=${mpoName.month}&page=${mpoName.page}&tour_plan__tour_plan__year=${mpoName.date}&mpo_name__role_name__role_name=${mpoName.role_data}`,
                 method: 'GET',
             }),
             providesTags: ['Tourplan', 'TourPlan'],

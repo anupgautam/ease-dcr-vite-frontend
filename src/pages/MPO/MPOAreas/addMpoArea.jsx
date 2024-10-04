@@ -132,7 +132,6 @@ const AddMpoArea = () => {
         formData.append("area_name", values.area_name);
         formData.append("mpo_name", user_role === 'admin' ? values.mpo_name : company_user_role_id);
         formData.append("station_type", values.station_type);
-        formData.append('company_area', values.company_area);
         formData.append('company_name', company_id)
         try {
             const response = await createMpoArea(formData)
@@ -283,16 +282,6 @@ const AddMpoArea = () => {
                                         onChange={handleInputChange}
                                         error={errors.station_type}
                                         options={mpoStation}
-                                    />
-                                </Box>
-                                <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="company_area"
-                                        label="Head Quarter*"
-                                        value={values.name}
-                                        onChange={handleInputChange}
-                                        error={errors.company_area}
-                                        options={companyAreaData}
                                     />
                                 </Box>
                                 <Stack spacing={1} direction="row">

@@ -56,8 +56,8 @@ const ExcelCSVTourPlan = () => {
     const rolesOptions = useMemo(() => {
         if (Role?.data) {
             return Role?.data?.map((key) => ({
-                id: key.id,
-                title: key.role_name_value
+                id: key?.id,
+                title: key?.role_name_value
             }));
         } return [];
     }, [Role])
@@ -77,8 +77,8 @@ const ExcelCSVTourPlan = () => {
         if (User?.data) {
             return User?.data?.map((key) => ({
                 id: key.id,
-                title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name,
-                role: key.role_name.role_name.role_name,
+                title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name,
+                role: key?.role_name?.role_name_value,
             }));
         }
         return []

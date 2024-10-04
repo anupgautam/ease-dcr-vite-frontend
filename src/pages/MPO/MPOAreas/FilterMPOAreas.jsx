@@ -227,24 +227,6 @@ const FilterMPOAreas = () => {
                                 />
                             </Grid>
                         }
-                        {
-                            user_role === "admin" &&
-                            <Grid item xs={3}>
-                                <Autocomplete
-                                    options={companyAreaData}
-                                    getOptionLabel={(option) => option.title}
-                                    onChange={handleCompanyChange}
-                                    renderInput={(params) => (
-                                        <TextField {...params} label="Head Quarter" />
-                                    )}
-                                    renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
-                                />
-                            </Grid>
-                        }
                     </Grid>
                 </Box>
 

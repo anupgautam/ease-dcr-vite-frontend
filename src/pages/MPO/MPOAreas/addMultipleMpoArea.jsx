@@ -263,16 +263,6 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                     options={mpoStation}
                 />
             </TableCell>
-            <TableCell align="left" style={{ width: "220px" }}>
-                <Controls.Select
-                    name="company_area"
-                    label="Head Quarter*"
-                    value={Formdata.company_area}
-                    onChange={handleInputChange}
-                    // error={errors.mpo_name}
-                    options={companyAreaData}
-                />
-            </TableCell>
         </>
     )
 }

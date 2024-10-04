@@ -29,7 +29,7 @@ export const DoctorSlice = apiSlice.injectEndpoints({
         postAllMPONamesNoPage: builder.mutation({
             query: (page) => (
                 {
-                    url: `mpo/get-mpo-list`,
+                    url: `mpo/get-mpo-list/`,
                     method: 'POST',
                     body: page
                 }),

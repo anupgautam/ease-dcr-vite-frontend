@@ -33,9 +33,11 @@ import {
     useDeleteApplicationsByIdMutation,
 } from '@/api/ApplicationSlices/ApplicationSlices';
 import EditApplication from './EditApplication';
+import moment from 'moment';
 
 
 const TABLE_HEAD = [
+    { id: 'user_id', label: 'User Name', alignRight: false },
     { id: 'leave_type', label: 'Leave Type', alignRight: false },
     { id: 'leave_cause', label: 'Leave Cause', alignRight: false },
     { id: 'leave_from', label: 'Leave From', alignRight: false },
@@ -93,7 +95,7 @@ const DefaultApplication = () => {
     const [actualDate, setActualDate] = useState("");
     useEffect(() => {
         if (data && data.length > 0) {
-            const { submission_date } = data[0].application_id;
+            const { submission_date } = data[0];
             setDateFormat(submission_date);
         }
     }, [data]);
@@ -124,7 +126,7 @@ const DefaultApplication = () => {
         <>
             <Card>
                 <Scrollbar>
-                    <TableContainer sx={{ minWidth: 900 }}>
+                    <TableContainer sx={{ minWidth: 1200 }}>
                         <Table>
                             <UserListHead
                                 headLabel={TABLE_HEAD}
@@ -152,23 +154,28 @@ const DefaultApplication = () => {
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {application.application_id.leave_type}
+                                                            {application?.user_id?.user_name?.first_name + " " + application?.user_id?.user_name?.middle_name + " " + application?.user_id?.user_name?.last_name}
                                                         </Typography>
                                                     </TableCell>
-                                                    <TableCell align="left">{application.application_id.leave_cause}</TableCell>
-                                                    <TableCell align="left">{application.application_id.leave_from}</TableCell>
-                                                    <TableCell align="left">{application.application_id.leave_to}</TableCell>
-                                                    <TableCell align="left">{application.application_id.is_approved === true ? "Approved" : "Pending"}</TableCell>
-                                                    <TableCell align="left">{actualDate}</TableCell>
+                                                    <TableCell component="th" scope="row" align="left">
+                                                        <Typography variant="subtitle2" noWrap>
+                                                            {application?.leave_type}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell align="left">{application?.leave_cause}</TableCell>
+                                                    <TableCell align="left">{application?.leave_from}</TableCell>
+                                                    <TableCell align="left">{application?.leave_to}</TableCell>
+                                                    <TableCell align="left">{application?.is_approved === true ? "Approved" : "Pending"}</TableCell>
+                                                    <TableCell align="left">{moment(application.created_at).format('DD MMM YYYY')}</TableCell>
                                                     <TableCell align="left">
-                                                        <Label color={(application.application_id.is_approved === true ? 'green' : 'red')}>
-                                                            {sentenceCase(application.application_id.is_approved.toString())}</Label>
+                                                        <Label color={(application?.is_approved === true ? 'green' : 'red')}>
+                                                            {sentenceCase(application?.is_approved.toString())}</Label>
                                                     </TableCell>
                                                     <TableCell align="left">
                                                         {/*//! Edit  */}
                                                         {
                                                             user_role === 'admin' &&
-                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application.id, application.mpo_name.id)}>
+                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application?.id, application?.mpo_name?.id)}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:edit-fill" />
                                                                 </Badge>
@@ -177,7 +184,7 @@ const DefaultApplication = () => {
                                                         {/*//! Delete  */}
                                                         {
                                                             user_role === 'admin' &&
-                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(application.id); handleClickOpen() }}>
+                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(application?.id); handleClickOpen() }}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:trash-2-outline" />
                                                                 </Badge>

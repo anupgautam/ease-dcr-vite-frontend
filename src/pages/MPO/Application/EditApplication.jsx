@@ -164,7 +164,7 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
         formData.append("company_name", values.company_name);
         formData.append('id', idharu)
         formData.append('company_name', company_id)
-        formData.append('mpo_name', mpoId);
+        formData.append('user_id', mpoId);
         formData.append('is_submitted', values.is_submitted);
         try {
             const response = await updateApplications(formData).unwrap();
