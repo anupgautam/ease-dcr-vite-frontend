@@ -39,7 +39,7 @@ const EditUser = ({ idharu, onClose }) => {
 
     //! Getting User by ID
     const User = useGetcompanyUserRolesByIdQuery(idharu);
-
+    console.log(User)
 
     //! Get user roles
     const data = useGetAllCompanyRolesQuery(company_id, {
@@ -175,14 +175,14 @@ const EditUser = ({ idharu, onClose }) => {
 
     useEffect(() => {
         if (User?.data) {
-            // const selectedDivisions = User?.data?.division_name?.map(area => ({
-            //     id: id,
-            //     title: division_name
-            // }))
-            // const selectedCompanyAreas = User?.data?.company_area?.map(area => ({
-            //     id: id,
-            //     title: company_area
-            // }))
+            const selectedDivisions = User?.data?.division_name?.map(division => ({
+                id: division.id,
+                title: division.division_name
+            }))
+            const selectedCompanyAreas = User?.data?.company_area?.map(area => ({
+                id: area.id,
+                title: area.company_area
+            }))
             setInitialFValues({
                 first_name: User?.data?.user_name?.first_name,
                 middle_name: User?.data?.user_name?.middle_name,
@@ -192,15 +192,15 @@ const EditUser = ({ idharu, onClose }) => {
                 role_name: User?.data?.role_name?.id,
                 executive_level: User?.data?.executive_level?.id,
                 station_type: User?.data?.station_type,
-                division_name: User?.data?.division_name?.id,
-                company_area: User?.data?.company_area?.id
-                // division_name: selectedDivisions,
-                // company_area: selectedCompanyAreas
+                // division_name: User?.data?.division_name?.id,
+                // company_area: User?.data?.company_area?.id
+                division_name: selectedDivisions,
+                company_area: selectedCompanyAreas
             });
             setDateData(User?.data?.user_name.date_of_joining ? User?.data?.user_name.date_of_joining : now)
 
-            // setMultipleDivisions(selectedDivisions || [])
-            // setMultipleCompanyAreas(selectedCompanyAreas || [])
+            setMultipleDivisions(selectedDivisions || [])
+            setMultipleCompanyAreas(selectedCompanyAreas || [])
         }
     }, [User])
 
@@ -387,7 +387,7 @@ const EditUser = ({ idharu, onClose }) => {
                         />
                     </Box>
                     <Box marginBottom={2}>
-                        {/* <Autocomplete
+                        <Autocomplete
                             multiple
                             options={divisions}
                             getOptionLabel={(option) => option.title}
@@ -401,8 +401,8 @@ const EditUser = ({ idharu, onClose }) => {
                                     {option.title}
                                 </li>
                             )}
-                        /> */}
-                        <Controls.Select
+                        />
+                        {/* <Controls.Select
                             name="division_name"
                             label="Division Name*"
                             className={"drawer-role-name-select"}
@@ -410,7 +410,7 @@ const EditUser = ({ idharu, onClose }) => {
                             onChange={handleInputChange}
                             error={errors.division_name}
                             options={divisions}
-                        />
+                        /> */}
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Select
@@ -424,7 +424,7 @@ const EditUser = ({ idharu, onClose }) => {
                         />
                     </Box>
                     <Box marginBottom={2}>
-                        {/* <Autocomplete
+                        <Autocomplete
                             multiple
                             options={companyAreas}
                             getOptionLabel={(option) => option.title}
@@ -438,8 +438,8 @@ const EditUser = ({ idharu, onClose }) => {
                                     {option.title}
                                 </li>
                             )}
-                        /> */}
-                        <Controls.Select
+                        />
+                        {/* <Controls.Select
                             name="company_area"
                             label="Company Wise Area*"
                             className={"drawer-role-name-select"}
@@ -447,7 +447,7 @@ const EditUser = ({ idharu, onClose }) => {
                             onChange={handleInputChange}
                             error={errors.company_area}
                             options={companyAreas}
-                        />
+                        /> */}
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Input
