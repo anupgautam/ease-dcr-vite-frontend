@@ -11,6 +11,8 @@ import { useForm } from '../../reusable/forms/useForm';
 import Controls from '../../reusable/forms/controls/Controls';
 import { returnValidation } from '../../validation';
 import { useChangePasswordMutation } from '../../api/MPOSlices/AccountApiSlice';
+import { extractErrorMessage } from '../../reusable/extractErrorMessage';
+import { useSelector } from 'react-redux';
 
 //! new password mutation hook
 
@@ -25,6 +27,7 @@ export default function ChangePassword() {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' })
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' })
     const [success, setSuccess] = useState(false)
+    const { User_id } = useSelector((state) => state.cookie);
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
@@ -62,16 +65,15 @@ export default function ChangePassword() {
         setPwd(values.password)
         setConfirmPwd(values.new)
 
-    }, [values.old, values.password, values.new, validate])
+    }, [values.old, values.password, values.new,])
 
     const handleSubmission = async (e) => {
         e.preventDefault()
 
         if (oldPwd !== null && pwd === confirmPwd) {
-            // setConditionMet(true);
             try {
-                const res = await changePwd({ 'old_password': oldPwd, 'password': pwd, 'confirm_password': confirmPwd })
-                if (res?.data?.status === "success") {
+                const res = await changePwd({ 'old_password': oldPwd, 'new_password': pwd, 'user_id': User_id })
+                if (res?.data) {
                     setSuccess(true);
                     setSuccessMessage({ show: true, message: 'Password Successfully Changed' })
                     setTimeout(() => {
@@ -82,8 +84,8 @@ export default function ChangePassword() {
                     setConfirmPwd()
                     setValues({ old: '', password: '', new: '' })
                 }
-                if (res?.error?.status === 400) {
-                    setErrorMessage({ show: true, message: "Some error occured" });
+                else {
+                    setErrorMessage({ show: true, message: extractErrorMessage(res?.error) });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: "" });
                     }, [3000])

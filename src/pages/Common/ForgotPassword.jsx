@@ -11,6 +11,7 @@ import Controls from '../../reusable/forms/controls/Controls';
 import { returnValidation } from '../../validation';
 import { useForgotPasswordMutation } from '../../api/MPOSlices/AccountApiSlice';
 import Cookies from 'js-cookie'
+import { extractErrorMessage } from '../../reusable/extractErrorMessage';
 
 
 
@@ -100,8 +101,8 @@ export default function ForgotPassword() {
                     navigate('/otp');
                 }, [3000])
             }
-            if (res?.error?.status === 400) {
-                setErrorMessage({ show: true, message: "Email doesn't exist" });
+            else {
+                setErrorMessage({ show: true, message: extractErrorMessage(res.error)});
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: "" });
                 }, [3000])

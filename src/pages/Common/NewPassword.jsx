@@ -12,6 +12,7 @@ import Controls from '../../reusable/forms/controls/Controls';
 import { returnValidation } from '../../validation';
 import { useNewPasswordMutation } from '../../api/MPOSlices/AccountApiSlice';
 import Cookies from 'js-cookie';
+import { extractErrorMessage } from '../../reusable/extractErrorMessage';
 
 //! new password mutation hook
 
@@ -90,7 +91,7 @@ export default function NewPassword() {
         setPwd(values.password)
         setConfirmPwd(values.confirmPassword)
 
-    }, [values.password, values.confirmPassword, validate])
+    }, [values.password, values.confirmPassword])
 
     const handleSubmission = async (e) => {
         e.preventDefault()
@@ -98,20 +99,19 @@ export default function NewPassword() {
         if (pwd === confirmPwd) {
             setConditionMet(true);
             try {
-                const res = await newPwd({ 'email': Cookies.get('OTPgmail'), 'otp': Cookies.get('otp'), 'new_password': pwd, 'confirm_password': confirmPwd })
+                const res = await newPwd({ 'email': Cookies.get('OTPgmail'), 'new_password': pwd })
                 setSuccess(true);
                 if (res?.data) {
                     setSuccess(false)
                     Cookies.remove('otp')
-                    Cookies.remove('OTPgmail')
                     setSuccessMessage({ show: true, message: 'Password Successfully Changed' })
                     setTimeout(() => {
                         navigate('/login');
                     }, [3000])
                 }
-                if (res?.error?.status === 400) {
+                else {
                     setSuccess(false)
-                    setErrorMessage({ show: true, message: "OTP is not valid" });
+                    setErrorMessage({ show: true, message: extractErrorMessage(res.error) });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: "" });
                     }, [3000])

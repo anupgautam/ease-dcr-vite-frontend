@@ -13,7 +13,7 @@ import { Icon } from '@iconify/react';
 import { useGetCompanyUserByIdQuery, useGetcompanyUserRolesByIdQuery } from '../../../../api/CompanySlices/companyUserRoleSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCookie } from '../../../../reducers/cookieReducer';
-import { useGetAllUsersWithoutPaginationByIdQuery } from '../../../../api/MPOSlices/UserSlice';
+import { useGetAllUsersWithoutPaginationByIdQuery, useGetUsersByIdQuery } from '../../../../api/MPOSlices/UserSlice';
 
 const MENU_OPTIONS = [
   {
@@ -99,7 +99,7 @@ export default function AccountPopover() {
   const handleCloseDialogue = () => {
     setOpenDialogue(false)
   }
-  const userName = useGetAllUsersWithoutPaginationByIdQuery(company_user_id, {
+  const userName = useGetUsersByIdQuery(company_user_id, {
     skip: !company_user_id
   })
 

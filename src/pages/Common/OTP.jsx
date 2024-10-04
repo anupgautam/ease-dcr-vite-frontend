@@ -59,9 +59,9 @@ export default function OTP() {
 
         // Update the OTP state with the numeric value
         setOtp(numericValue);
-        handleSubmission();
 
     };
+
 
     // const handleKeyDown = (event) => {
     //     // Allow only numeric characters (0-9) and the Backspace key (key code 8)
@@ -114,7 +114,6 @@ export default function OTP() {
         validate();
         setEmail(values.email)
 
-s
     }, [values.email])
 
 
