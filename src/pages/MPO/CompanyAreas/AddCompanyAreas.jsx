@@ -117,17 +117,10 @@ const AddCompanyAreas = () => {
     const onAddCompanyAreas = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("company_area", values.company_area);
-        formData.append("station_type", values.station_type);
-        formData.append("company_name", company_id);
-        // formData.append("state", values.state);
-        // formData.append("longitude", initialFvalues);
-        // formData.append("latitude", values.latitude);
-        // formData.append("longitude", "0.000000");
-        // formData.append("latitude", "0.000000");
+
+        const data = { company_area: values.company_area, station_type: values.station_type, company_name: company_id }
         try {
-            const response = await createCompanyAreas(formData).unwrap();
+            const response = await createCompanyAreas(data).unwrap();
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Company Areas' });
                 setTimeout(() => {

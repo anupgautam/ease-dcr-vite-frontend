@@ -109,22 +109,11 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("company_area", values.company_area);
-        formData.append("station_type", values.station_type);
-        // formData.append("country", values.country);
-        // formData.append("division", values.division);
-        // formData.append("state", values.state);
-        // formData.append("longitude", "0.000000");
-        // formData.append("latitude", "0.000000");
-        // formData.append("longitude", values.longitude);
-        // formData.append("latitude", values.latitude);
-        formData.append("company_name", values.company_name);
-        formData.append('id', CompanyAreas?.data?.id);
-        // formData.append('refresh', refresh);
-        // formData.append('access', access);
+
+
+        const data = { id: CompanyAreas?.data?.id, company_area: values.company_area, station_type: values.station_type, company_name: company_id }
         try {
-            const response = await updateCompanyAreas(formData).unwrap();
+            const response = await updateCompanyAreas(data).unwrap();
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Company Areas' });
                 setTimeout(() => {
