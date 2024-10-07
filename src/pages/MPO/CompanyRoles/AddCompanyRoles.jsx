@@ -78,6 +78,7 @@ const AddCompanyRoles = () => {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
+
     //!Modal wala ko click event
     const onAddRoles = useCallback(async (e) => {
         e.preventDefault();
@@ -85,7 +86,7 @@ const AddCompanyRoles = () => {
         const jsonData = {
             role_name: values.role_name,
             priority_value: values.priority_value,
-            role_name_value: values.role_name_value,
+            role_name_value: values.roles_name_value,
             is_highest_priority: values.is_highest_priority,
             company_name: company_id
         };

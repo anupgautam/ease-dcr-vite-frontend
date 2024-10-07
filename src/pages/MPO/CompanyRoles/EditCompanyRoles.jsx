@@ -82,15 +82,16 @@ const EditCompanyRoles = ({ idharu, onClose }) => {
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append("role_name", values.role_name);
-        formData.append("is_highest_priority", values.is_highest_priority);
-        formData.append('id', idharu);
-        formData.append("company_id", company_id);
-        formData.append('refresh', refresh)
-        formData.append('access', access);
+        const jsonData = {
+            id: idharu,
+            role_name: values.role_name,
+            priority_value: values.priority_value,
+            role_name_value: values.role_name_value,
+            is_highest_priority: values.is_highest_priority,
+            company_name: company_id
+        };
         try {
-            const response = await updateCompanyRoles(formData).unwrap();
+            const response = await updateCompanyRoles(jsonData).unwrap();
             setSuccessMessage({ show: true, message: 'Successfully Edited CompanyRoles' });
             setTimeout(() => {
                 setSuccessMessage({ show: false, message: '' });
