@@ -34,18 +34,16 @@ const AddCompanyRoles = () => {
 
     const roles = useMemo(() => {
         if (Roles.data) {
-            return Roles.data.map((key) => ({ id: key.role_id, title: key.role_name }))
+            return Roles.data.map((key) => ({ id: key.id, title: key.role_name }))
         }
         return [];
     }, [Roles])
 
-    //! Validation wala  
     const validate = (fieldValues = values) => {
-        // 
         let temp = { ...errors }
         if ('role_name' in fieldValues)
             temp.role_name = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.role_name)
-        temp.role_name = returnValidation(['null'], values.roles_name)
+        temp.role_name_value = returnValidation(['null'], values.role_name_value)
         temp.priority_value = returnValidation(['null', 'lessThan50'], values.priority_value)
         temp.is_highest_priority = returnValidation(['null', 'lessThan50'], values.is_highest_priority)
 
@@ -87,7 +85,7 @@ const AddCompanyRoles = () => {
         const formData = new FormData();
         formData.append("role_name", values.role_name);
         formData.append("priority_value", values.priority_value);
-        formData.append('role_name_value', values.roles_name)
+        formData.append('role_name_value', values.role_name_value)
         formData.append('is_highest_priority', values.is_highest_priority)
         formData.append("company_name", company_id);
         try {
@@ -162,7 +160,7 @@ const AddCompanyRoles = () => {
                         <Controls.Select
                             name="role_name"
                             label="Role Name*"
-                            value={values.name}
+                            value={values.role_name}
                             onChange={handleInputChange}
                             error={errors.role_name}
                             options={roles}
@@ -172,11 +170,11 @@ const AddCompanyRoles = () => {
                         <Controls.Input
                             id="autoFocus"
                             autoFocus
-                            name="roles_name"
+                            name="roles_name_value"
                             label="Roles Name*"
-                            value={values.name}
+                            value={values.role_name_value}
                             onChange={handleInputChange}
-                            error={errors.roles_name}
+                            error={errors.role_name_value}
                         />
                     </Box>
 
