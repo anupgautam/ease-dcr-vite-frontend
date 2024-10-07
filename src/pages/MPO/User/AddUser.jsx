@@ -31,7 +31,9 @@ import {
 } from "react-nepali-date-picker-lite";
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
-
+import {
+    useGetAllcompanyUserRolesQuery
+} from '@/api/CompanySlices/companyUserRoleSlice';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 
 const AddUser = () => {
@@ -51,6 +53,7 @@ const AddUser = () => {
         }
         return [];
     }, [isSuccess, data]);
+
 
     //! Get company wise area
     const CompanyAreas = useGetAllCompanyAreasQuery(company_id, {
@@ -97,19 +100,6 @@ const AddUser = () => {
     const [getExecLevel] = useGetAllExecutiveLevelsMutation();
     // const companyId = company_id;
 
-    // useEffect(() => {
-    //     const exce = [];
-    //     getExecLevel(company_id, {
-    //         skip: !company_id
-    //     }).then((res) => {
-    //         // 
-    //         res?.data?.map((key) => {
-    //             exce.push({ id: key?.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name })
-    //         })
-    //     })
-    //     setExecutiveLevels(exce);
-    // }, [company_id])
-
     useEffect(() => {
         const fetchExecutiveLevels = async () => {
             try {
@@ -126,6 +116,11 @@ const AddUser = () => {
 
         if (company_id) fetchExecutiveLevels();
     }, [company_id, getExecLevel]);
+
+    const higherUserList = useGetAllcompanyUserRolesQuery({ company_name: company_id }, {
+        skip: !company_id
+    });
+    console.log(higherUserList)
 
 
     //! Format Date
@@ -226,7 +221,6 @@ const AddUser = () => {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
-
     //!Modal wala ko click event
     const onAddUsers = useCallback(async (e) => {
         e.preventDefault();
@@ -248,6 +242,7 @@ const AddUser = () => {
             is_active: true,
             date_of_joining: formattedDate,
         };
+        console.log(jsonData)
         try {
             const response = await createUsers(jsonData)
             if (response?.data) {
@@ -507,7 +502,7 @@ const AddUser = () => {
                                     )}
                                 />
                             </Box>
-                            <Box marginBottom={2}>
+                            {/* <Box marginBottom={2}>
                                 <Controls.Input
                                     name="station_type"
                                     label="Station Type*"
@@ -516,7 +511,7 @@ const AddUser = () => {
                                     onChange={handleInputChange}
                                     error={errors.station_type}
                                 />
-                            </Box>
+                            </Box> */}
                             <Stack spacing={1} direction="row">
                                 <Controls.SubmitButton
                                     variant="contained"

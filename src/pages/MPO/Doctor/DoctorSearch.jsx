@@ -49,7 +49,7 @@ import CloseIcon from '@mui/icons-material/Close';
 const TABLE_HEAD = [
     { id: 'doctor_name', label: 'Dr. Name', alignRight: false },
     { id: 'doctor_phone_number', label: 'Number', alignRight: false },
-    { id: 'doctor_address', label: 'Address', alignRight: false },
+    { id: 'area_name', label: 'Territory', alignRight: false },
     { id: 'doctor_qualification', label: 'Qualification', alignRight: false },
     { id: 'doctor_specialization', label: 'Specialization', alignRight: false },
     { id: 'doctor_category', label: 'Category', alignRight: false },
@@ -319,7 +319,7 @@ const DoctorSearch = () => {
                                                                             {doctorsearch?.doctor_name.doctor_name}
                                                                         </Typography>
                                                                     </TableCell>
-                                                                    <TableCell align="left">{doctorsearch?.doctor_name?.doctor_address}</TableCell>
+                                                                    <TableCell align="left">{doctorsearch?.doctor_name?.doctor_territory.area_name}</TableCell>
                                                                     <TableCell align="left">{doctorsearch?.doctor_name?.doctor_phone_number}</TableCell>
                                                                     <TableCell align="left">{doctorsearch?.doctor_name?.doctor_qualification}</TableCell>
                                                                     <TableCell align="left">{doctorsearch?.doctor_name?.doctor_specialization?.category_name}</TableCell>
