@@ -418,7 +418,7 @@ const FilteredTourPlan = () => {
                                                                                             <TableCell align="left">
                                                                                                 {
                                                                                                     tourplan.mpo_area_read.map((key, index) => (
-                                                                                                        <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }} key={index}>{key?.company_mpo_area_id?.area_name},</Typography>
+                                                                                                        <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }} key={index}>{key?.area_name},</Typography>
                                                                                                     ))
                                                                                                 }
                                                                                             </TableCell>
@@ -452,7 +452,7 @@ const FilteredTourPlan = () => {
                                                                                                 </IconButton>
                                                                                             }
                                                                                             </TableCell>
-                                                                                            <TableCell align="left">{tourplan?.approved_by?.user_name?.first_name + " " + tourplan?.approved_by?.user_name?.middle_name + " " + tourplan?.approved_by?.user_name?.last_name}</TableCell>
+                                                                                            <TableCell align="left">{tourplan.approved_by ? tourplan?.approved_by?.user_name?.first_name + " " + tourplan?.approved_by?.user_name?.middle_name + " " + tourplan?.approved_by?.user_name?.last_name : ""}</TableCell>
                                                                                             <TableCell align="left">
                                                                                                 {
                                                                                                     user_role === 'admin' &&

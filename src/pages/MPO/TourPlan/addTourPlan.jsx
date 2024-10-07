@@ -208,6 +208,7 @@ const AddTourPlan = () => {
                 tour_plan: {
                     select_the_month: getNepaliMonthName(moment(tour.selected_date).month() + 1),
                     select_the_date_id: tour.selected_date,
+                    year: moment(tour.selected_date).year(),
                     purpose_of_visit: tour.purpose_of_visit,
                     hulting_station: tour.hulting_station,
                     is_dcr_added: false,
