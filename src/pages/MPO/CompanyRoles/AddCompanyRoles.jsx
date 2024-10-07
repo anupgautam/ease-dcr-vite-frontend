@@ -82,14 +82,15 @@ const AddCompanyRoles = () => {
     const onAddRoles = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("role_name", values.role_name);
-        formData.append("priority_value", values.priority_value);
-        formData.append('role_name_value', values.role_name_value)
-        formData.append('is_highest_priority', values.is_highest_priority)
-        formData.append("company_name", company_id);
+        const jsonData = {
+            role_name: values.role_name,
+            priority_value: values.priority_value,
+            role_name_value: values.role_name_value,
+            is_highest_priority: values.is_highest_priority,
+            company_name: company_id
+        };
         try {
-            const response = await createCompanyRoles(formData).unwrap();
+            const response = await createCompanyRoles(jsonData).unwrap();
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Roles' });
                 setTimeout(() => {
