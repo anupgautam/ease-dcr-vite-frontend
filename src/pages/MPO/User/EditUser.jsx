@@ -15,6 +15,7 @@ import { returnValidation } from '../../../validation';
 //! Api Slices 
 import {
     useGetcompanyUserRolesByIdQuery,
+    useGetAllcompanyUserRolesQuery
 } from '@/api/CompanySlices/companyUserRoleSlice';
 import { useGetAllExecutiveLevelsMutation } from '@/api/CompanySlices/companyUserSlice';
 import { useGetAllCompanyRolesQuery } from '@/api/CompanySlices/companyRolesSlice';
@@ -39,7 +40,7 @@ const EditUser = ({ idharu, onClose }) => {
 
     //! Getting User by ID
     const User = useGetcompanyUserRolesByIdQuery(idharu);
-    console.log(User)
+    // console.log(User)
 
     //! Get user roles
     const data = useGetAllCompanyRolesQuery(company_id, {
@@ -74,21 +75,26 @@ const EditUser = ({ idharu, onClose }) => {
     }, [CompanyAreas])
 
     const [higherUserOptions, setHigherUserOptions] = useState([]);
-    const [higherUserList] = useGetAllExecutiveLevelsMutation();
+    // const [higherUserList] = useGetAllExecutiveLevelsMutation();
+    const higherUserList = useGetAllcompanyUserRolesQuery({ company_name: company_id }, {
+        skip: !company_id
+    });
+    console.log(higherUserList)
+    // const higherUserList
 
-    useEffect(() => {
-        if (User?.data?.company_name?.company_id) {
-            higherUserList(User?.data.company_name.company_id, {
-                skip: !User?.data?.company_name?.company_id
-            }).unwrap().then(res => {
-                const higherList = res.map(key => ({
-                    id: key.id,
-                    title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`,
-                }));
-                setHigherUserOptions(higherList);
-            }).catch(() => setHigherUserOptions([]));
-        }
-    }, [User?.data?.company_name?.company_id, higherUserList])
+    // useEffect(() => {
+    //     if (User?.data?.company_name?.company_id) {
+    //         higherUserList(User?.data.company_name.company_id, {
+    //             skip: !User?.data?.company_name?.company_id
+    //         }).unwrap().then(res => {
+    //             const higherList = res.map(key => ({
+    //                 id: key.id,
+    //                 title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`,
+    //             }));
+    //             setHigherUserOptions(higherList);
+    //         }).catch(() => setHigherUserOptions([]));
+    //     }
+    // }, [User?.data?.company_name?.company_id, higherUserList])
 
     const [initialFValues, setInitialFValues] = useState({
         first_name: "",

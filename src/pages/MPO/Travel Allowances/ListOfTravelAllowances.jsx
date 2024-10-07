@@ -40,7 +40,9 @@ const ListOfTravelAllowances = () => {
                                 {user_role === 'admin' &&
                                     <ExcelCSVTravelAllowances />
                                 }
-                                <AddTravelAllowances />
+                                {user_role !== 'admin' &&
+                                    <AddTravelAllowances />
+                                }
                             </Stack>
                         </Grid>
                     </Grid>

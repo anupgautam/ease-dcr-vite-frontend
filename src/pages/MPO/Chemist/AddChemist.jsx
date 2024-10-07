@@ -327,7 +327,7 @@ const AddChemist = () => {
                                     </Grid>
                                 </Grid>
 
-                                <Box marginBottom={2}>
+                                {/* <Box marginBottom={2}>
                                     <Controls.Input
                                         name="chemist_address"
                                         label="Chemist Address"
@@ -335,7 +335,7 @@ const AddChemist = () => {
                                         onChange={handleInputChange}
                                         error={errors.chemist_address}
                                     />
-                                </Box>
+                                </Box> */}
                                 {/* <Box marginBottom={2}>
                                     <Controls.Checkbox
                                         name="is_invested"

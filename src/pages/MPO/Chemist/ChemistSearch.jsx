@@ -47,7 +47,7 @@ import { useSelector } from 'react-redux';
 const TABLE_HEAD = [
     { id: 'chemist_name', label: 'Name', alignRight: false },
     { id: 'chemist_phone_number', label: 'Number', alignRight: false },
-    { id: 'chemist_address', label: 'Address', alignRight: false },
+    { id: 'area_name', label: 'Territory', alignRight: false },
     { id: 'chemist_category', label: 'Category', alignRight: false },
     // { id: 'is_invested', label: 'Is Invested', alignRight: false },
     { id: '' },

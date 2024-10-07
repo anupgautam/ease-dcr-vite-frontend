@@ -58,7 +58,6 @@ const ExpensesList = () => {
 
     const theme = useTheme();
 
-
     return (
         <>
             <Container>

@@ -104,6 +104,22 @@ export const CompanyAreaWiseExpenses = apiSlice.injectEndpoints({
             providesTags: ['CompanyAreaWiseExpenses']
         }),
 
+        //! Search Expenses for Mpo
+        searchMPOExpenses: builder.query({
+            query: (id) => ({
+                url: `expenses/mpo-expenses/?company_name=${id.company_name}&user_id=${id.user_id}&year=${id.year}&month=${id.month}`
+            }),
+            providesTags: ['CompanyAreaWiseExpenses']
+        }),
+
+        //! Search Expenses for Higher Order
+        searchHigherExpenses: builder.query({
+            query: (id) => ({
+                url: `expenses/higher-expenses/?company_name=${id.company_name}&user_id=${id.user_id}&year=${id.year}&month=${id.month}`
+            }),
+            providesTags: ['CompanyAreaWiseExpenses']
+        }),
+
         getExpenseByTheId: builder.query({
             query: (id) => ({
                 url: `expenses/expenses/${id}/`
@@ -183,6 +199,8 @@ export const {
     useUpdateCompanyAreaWiseExpensesMutation,
     useSearchCompanyAreaWiseExpensesMutation,
     useSearchTravelAllowancesQuery,
+    useSearchHigherExpensesQuery,
+    useSearchMPOExpensesQuery,
     useUpdateTravelAllowancesMutation,
     useGetExpenseByTheIdQuery,
 } = CompanyAreaWiseExpenses
