@@ -85,12 +85,9 @@ const EditDoctorCategories = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("category_name", values.category_name);
-        formData.append('id', idharu)
-        formData.append('company_id', company_id)
+        const data = { category_name: values.category_name, company_name: company_id, id: idharu }
         try {
-            const response = await updateCategorys(formData).unwrap();
+            const response = await updateCategorys(data).unwrap();
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Doctor Specialization' });
                 setTimeout(() => {

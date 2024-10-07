@@ -98,6 +98,8 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
         // values.latitude,
     ])
 
+    console.log('values', values);
+
     //! Edit user
     const [updateCompanyAreas] = useUpdateCompanyAreasMutation();
     const history = useNavigate();
@@ -111,10 +113,10 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
         setLoading(true)
 
 
-        const data = { id: CompanyAreas?.data?.id, company_area: values.company_area, station_type: values.station_type, company_name: company_id }
+        const data = { id: idharu, company_area: values.company_area, station_type: values.station_type, company_name: company_id }
         try {
-            const response = await updateCompanyAreas(data).unwrap();
-            if (response) {
+            const response = await updateCompanyAreas(data)
+            if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Company Areas' });
                 setTimeout(() => {
                     onClose();
@@ -187,7 +189,7 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
                         <Box marginBottom={2}>
                             <Controls.Input
                                 name="station_type"
-                                label="Area Name*"
+                                label="Station Type*"
                                 value={values.station_type}
                                 onChange={handleInputChange}
                                 error={errors.station_type}

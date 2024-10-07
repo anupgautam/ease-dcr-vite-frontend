@@ -70,11 +70,9 @@ const AddDoctorSpecialization = () => {
     const onAddDoctorSpecializations = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("category_name", values.category_name);
-        formData.append("company_name", company_id);
+        const data = {category_name: values.category_name, company_name: company_id}
         try {
-            const response = await createDoctorCategory(formData).unwrap();
+            const response = await createDoctorCategory(data).unwrap();
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Doctor Categories' });
                 setTimeout(() => {

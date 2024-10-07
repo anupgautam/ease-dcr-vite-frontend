@@ -84,16 +84,14 @@ export const CompanyAreaSlice = apiSlice.injectEndpoints({
 
         //! Update company users data by id
         updateCompanyAreas: builder.mutation({
-            query: (updateCompanyAreas) => {
-                //! FormData console 
-                var formDataObject = Array.from(updateCompanyAreas.entries()).reduce((obj, [key, value]) => {
-                    obj[key] = value;
-                    return obj;
-                }, {});
+            query: (data) => {
                 return {
-                    url: `company/company-area/${updateCompanyAreas.get('id')}/`,
-                    method: 'PUT',
-                    body: updateCompanyAreas
+                    url: `company/company-area/${data.id}/`,
+                    method: 'PATCH',
+                    body: data,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 }
             },
             invalidatesTags: ['CompanyAreas'],
