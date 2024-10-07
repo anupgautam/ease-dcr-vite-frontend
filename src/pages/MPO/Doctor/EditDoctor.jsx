@@ -153,24 +153,22 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("doctor_name", values.doctor_name);
-        formData.append("doctor_address", values.doctor_address);
-        formData.append("doctor_gender", values.doctor_gender);
-        formData.append("doctor_phone_number", values.doctor_phone_number);
-        formData.append("doctor_territory", values.doctor_territory);
-        formData.append("doctor_specialization", values.doctor_specialization);
-        formData.append("doctor_category", values.doctor_category);
-        formData.append("doctor_nmc_number", values.doctor_nmc_number);
-        formData.append("doctor_qualification", values.doctor_qualification);
-        formData.append("mpo_name", values.mpo_name);
-        formData.append("company_id", company_id);
-        formData.append('id', Doctor.data.doctor_name.id);
-        formData.append('refresh', refresh)
-        formData.append('access', access);
-        formData.append('is_investment', false)
+        const data = {
+            is_investment: false,
+            doctor_name: values.doctor_name,
+            doctor_phone_number: values.doctor_phone_number,
+            doctor_address: values.doctor_address,
+            doctor_gender: values.doctor_gender,
+            doctor_territory: values.doctor_territory,
+            doctor_category: values.category_name,
+            mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id,
+            doctor_qualification: values.doctor_qualification,
+            doctor_specialization: values.doctor_specialization,
+            company_name: company_id,
+            id: id,
+        };
         try {
-            const response = await updateDoctors(formData).unwrap();
+            const response = await updateDoctors(data).unwrap();
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Doctor' });
                 setTimeout(() => {
