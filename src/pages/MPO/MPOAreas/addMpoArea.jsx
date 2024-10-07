@@ -128,13 +128,9 @@ const AddMpoArea = () => {
     const onAddDoctors = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("area_name", values.area_name);
-        formData.append("mpo_name", user_role === 'admin' ? values.mpo_name : company_user_role_id);
-        formData.append("station_type", values.station_type);
-        formData.append('company_name', company_id)
+        const data = { area_name: values.area_name, mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id, station_type: values.station_type, company_name: company_id }
         try {
-            const response = await createMpoArea(formData)
+            const response = await createMpoArea(data)
             if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Area.' });
                 setTimeout(() => {
