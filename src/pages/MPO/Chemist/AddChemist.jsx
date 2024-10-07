@@ -118,19 +118,20 @@ const AddChemist = () => {
     const onAddChemists = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("chemist_name", values.chemist_name);
-        formData.append("chemist_phone_number", values.chemist_phone_number);
-        formData.append("chemist_address", values.chemist_address);
-        formData.append("chemist_territory", values.chemist_territory);
-        formData.append("chemist_category", values.chemist_category);
-        formData.append("chemist_contact_person", values.chemist_contact_person);
-        formData.append("chemist_pan_number", values.chemist_pan_number);
-        formData.append('company_id', company_id);
-        formData.append('mpo_name', user_role === 'admin' ? values.mpo_name : company_user_role_id);
-        formData.append('is_investment', false)
+        const data = {
+            chemist_name: values.chemist_name,
+            chemist_phone_number: values.chemist_phone_number,
+            chemist_address: values.chemist_address,
+            chemist_territory: values.chemist_territory,
+            chemist_category: values.chemist_category,
+            chemist_contact_person: values.chemist_contact_person,
+            chemist_pan_number: values.chemist_pan_number,
+            company_id: company_id,
+            mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id,
+            is_investment: false
+        };
         try {
-            const response = await createChemists(formData)
+            const response = await createChemists(data)
             if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Chemists' });
                 setTimeout(() => {
