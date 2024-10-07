@@ -70,6 +70,8 @@ const DefaultList = () => {
         setIsDrawerOpen(false);
     }, []);
 
+    console.log(data)
+
     return (
         <>
             {data === undefined ? (
@@ -95,7 +97,7 @@ const DefaultList = () => {
                                 </Typography>
                             </TableCell>
                             <TableCell align="left">{chem.chemist_name.chemist_phone_number}</TableCell>
-                            <TableCell align="left">{chem.chemist_name.chemist_address}</TableCell>
+                            <TableCell align="left">{chem.chemist_name.chemist_territory.area_name}</TableCell>
                             <TableCell align="left">{chem.chemist_name.chemist_category}</TableCell>
                             {/* <TableCell align="left">{chem.is_investment ? "Invested" : "Not Invested"}</TableCell> */}
                             {user_role === 'admin' && (

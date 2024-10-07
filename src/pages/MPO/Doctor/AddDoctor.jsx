@@ -260,6 +260,20 @@ const AddDoctor = () => {
                                     Add Multiple Doctor
                                 </Button>
                             </Box>
+                            {user_role === "admin" &&
+                                <Grid item xs={12}>
+                                    <Box marginBottom={2}>
+                                        <Controls.Select
+                                            name="mpo_name"
+                                            label="MPO Name*"
+                                            value={values.name}
+                                            onChange={handleInputChange}
+                                            options={mpoNames}
+                                            error={errors.mpo_name}
+                                        />
+                                    </Box>
+                                </Grid>
+                            }
                             <Grid container spacing={0}>
                                 <Grid item xs={12}>
                                     <Box marginBottom={2}>
@@ -354,21 +368,8 @@ const AddDoctor = () => {
                                         />
                                     </Box>
                                 </Grid>
-                                {user_role === "admin" &&
-                                    <Grid item xs={12}>
-                                        <Box marginBottom={2}>
-                                            <Controls.Select
-                                                name="mpo_name"
-                                                label="MPO Name*"
-                                                value={values.name}
-                                                onChange={handleInputChange}
-                                                options={mpoNames}
-                                                error={errors.mpo_name}
-                                            />
-                                        </Box>
-                                    </Grid>
-                                }
-                                <Grid item xs={12}>
+
+                                {/* <Grid item xs={12}>
                                     <Box marginBottom={2}>
                                         <Controls.Input
                                             name="doctor_address"
@@ -378,7 +379,7 @@ const AddDoctor = () => {
                                             error={errors.doctor_address}
                                         />
                                     </Box>
-                                </Grid>
+                                </Grid> */}
                                 {/* <Grid item xs={12}>
                                     <Box marginBottom={2}>
                                         <Controls.Checkbox

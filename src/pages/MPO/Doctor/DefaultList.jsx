@@ -77,6 +77,7 @@ const DefaultList = () => {
         setIsDrawerOpen(false);
     }
 
+    console.log(data)
     return (
         <>
             {data === undefined ? (
@@ -104,7 +105,7 @@ const DefaultList = () => {
                                 </Typography>
                             </TableCell>
                             <TableCell align="left">{doc?.doctor_name?.doctor_phone_number}</TableCell>
-                            <TableCell align="left">{doc?.doctor_name?.doctor_address}</TableCell>
+                            <TableCell align="left">{doc?.doctor_name?.doctor_territory.area_name}</TableCell>
                             <TableCell align="left">{doc?.doctor_name?.doctor_qualification}</TableCell>
                             <TableCell align="left">{doc?.doctor_name?.doctor_specialization?.category_name}</TableCell>
                             <TableCell align="left">{doc?.doctor_name?.doctor_category}</TableCell>
