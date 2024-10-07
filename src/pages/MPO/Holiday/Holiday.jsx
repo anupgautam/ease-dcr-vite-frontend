@@ -32,6 +32,7 @@ const Holiday = () => {
 
     //! Company holidays
     const Holiday = useGetHolidayNamesQuery(company_id);
+    console.log('Holiday', Holiday);
 
     const holidays = useMemo(() => {
         if (Holiday?.isSuccess) {
@@ -39,6 +40,8 @@ const Holiday = () => {
         }
         return [];
     }, [Holiday]);
+
+    console.log('holidays', holidays);
 
     const [holidaySelect, setHolidaySelect] = useState(DefaultData);
 

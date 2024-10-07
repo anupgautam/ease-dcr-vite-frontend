@@ -85,12 +85,12 @@ const LoginFormInputs = () => {
                         Cookies.set('User_id', res.data.user_id);
                         Cookies.set('company_id', res.data.company_id);
                         Cookies.set('company_user_id', res.data.company_user_id);
-                        Cookies.set('company_area_id', res.data.company_area_id.length === 1 ? res.data.company_area_id[0] : JSON.stringify(res.data.company_area_id));
                         Cookies.set('company_user_role_id', res.data.company_user_role_id);
-                        Cookies.set('company_division_name', res.data.company_division_name.length === 1 ? res.data.company_division_name : JSON.stringify(res.data.company_division_name));
                         Cookies.set('refresh', res.data.token.refresh);
                         Cookies.set('access', res.data.token.access);
                         Cookies.set('email', email);
+                        Cookies.set('company_area_id', res.data.company_area_id.length === 1 ? res.data.company_area_id[0] : JSON.stringify(res.data.company_area_id));
+                        Cookies.set('company_division_name', res.data.company_division_name.length === 1 ? res.data.company_division_name : JSON.stringify(res.data.company_division_name));
                         dispatch(setUserRole({ role: res.data.role }))
                         setSuccessMessage({ show: true, message: 'Successfully Logged In' });
                         setLoading(true);

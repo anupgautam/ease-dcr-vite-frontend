@@ -23,7 +23,7 @@ export const HolidaySlices = apiSlice.injectEndpoints({
         //! Get all Holidays
         getHolidayNames: builder.query({
             query: (page) => ({
-                url: `company/company-holiday/?company_id=${page}`,
+                url: `company/company-holiday/?company_name=${page}`,
                 method: 'GET'
             }),
             providesTags: ['Holiday']

@@ -54,7 +54,7 @@ const AddHolidayArea = () => {
     const Holidays = useGetCompanyHolidaysQuery(company_id);
     const holidays = useMemo(() => {
         if (Holidays.data) {
-            return Holidays.data.map((key) => ({ id: key.id, title: key.holiday_name }))
+            return Holidays.data.map((key) => ({ id: key?.id, title: key?.holiday_name }))
         }
         return [];
     }, [Holidays])
@@ -105,7 +105,7 @@ const AddHolidayArea = () => {
         e.preventDefault();
         setLoading(true)
         try {
-            const response = await createHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptions }).unwrap();
+            const response = await createHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptions, company_name: company_id }).unwrap();
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Holiday Areas' });
                 setTimeout(() => {

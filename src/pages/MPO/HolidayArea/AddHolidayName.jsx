@@ -76,12 +76,10 @@ const AddHolidayName = () => {
     const onAddHolidayName = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("holiday_name", values.holiday_name);
-        formData.append("company_name", company_id);
+        const data = { company_name: company_id, holiday_name: values.holiday_name }
         try {
-            const response = await createHolidayName(formData).unwrap();
-            if (response) {
+            const response = await createHolidayName(data).unwrap();
+            if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Holidays' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
