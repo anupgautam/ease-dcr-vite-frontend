@@ -70,11 +70,9 @@ const AddDivision = () => {
     const onAddCompanyDivision = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("division_name", values.division_name);
-        formData.append("company_name", company_id);
+        const data = { division_name: values.division_name, company_name: company_id }
         try {
-            const response = await createDivisions(formData).unwrap();
+            const response = await createDivisions(data)
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Company Division' });
                 setTimeout(() => {

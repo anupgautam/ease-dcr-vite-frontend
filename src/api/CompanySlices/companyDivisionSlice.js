@@ -80,8 +80,8 @@ export const CompanyDivisionSlice = apiSlice.injectEndpoints({
         updateCompanyDivisions: builder.mutation({
             query: (updateCompanyDivisions) => {
                 return {
-                    url: `/company/company-wise-division/${updateCompanyDivisions.get('id')}/`,
-                    method: 'PUT',
+                    url: `/company/company-wise-division/${updateCompanyDivisions.id}/`,
+                    method: 'PATCH',
                     body: updateCompanyDivisions
                 }
             },
