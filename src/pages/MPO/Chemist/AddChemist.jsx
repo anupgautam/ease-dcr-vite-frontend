@@ -126,10 +126,11 @@ const AddChemist = () => {
             chemist_category: values.chemist_category,
             chemist_contact_person: values.chemist_contact_person,
             chemist_pan_number: values.chemist_pan_number,
-            company_id: company_id,
+            company_name: company_id,
             mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id,
             is_investment: false
         };
+        console.log(values)
         try {
             const response = await createChemists(data)
             if (response.data) {
@@ -327,7 +328,7 @@ const AddChemist = () => {
                                     </Grid>
                                 </Grid>
 
-                                {/* <Box marginBottom={2}>
+                                <Box marginBottom={2}>
                                     <Controls.Input
                                         name="chemist_address"
                                         label="Chemist Address"
@@ -335,7 +336,7 @@ const AddChemist = () => {
                                         onChange={handleInputChange}
                                         error={errors.chemist_address}
                                     />
-                                </Box> */}
+                                </Box>
                                 {/* <Box marginBottom={2}>
                                     <Controls.Checkbox
                                         name="is_invested"

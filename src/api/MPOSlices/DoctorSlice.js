@@ -269,10 +269,15 @@ export const DoctorSlice = apiSlice.injectEndpoints({
         //! Update doctors data by id
         updateDoctors: builder.mutation({
             query: (updateDoctor) => {
+                console.log(updateDoctor)
                 return {
-                    url: `doctor/doctor/${updateDoctor.get('id')}/`,
-                    method: 'PUT',
-                    body: updateDoctor
+                    // url: `doctor/doctor/${updateDoctor.get('id')}/`,
+                    url: `doctor/doctor/${updateDoctor.id}/`,
+                    method: 'PATCH',
+                    body: updateDoctor,
+                    headers: {
+                        'Content-type': 'application/json; charset = UTF-8',
+                    }
                 }
             },
             invalidatesTags: ['Doctor'],

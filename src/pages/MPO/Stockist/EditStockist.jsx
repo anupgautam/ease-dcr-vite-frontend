@@ -20,6 +20,8 @@ import {
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import { useSelector } from 'react-redux';
 
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+
 const EditStockist = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
@@ -36,6 +38,7 @@ const EditStockist = ({ idharu, onClose }) => {
 
     //! Getting Stockist by ID
     const Stockist = useGetStockistsByIdQuery(idharu);
+    console.log(Stockist.data)
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
@@ -85,15 +88,12 @@ const EditStockist = ({ idharu, onClose }) => {
                 stockist_address: Stockist.data.stockist_name.stockist_address,
                 stockist_contact_number: Stockist.data.stockist_name.stockist_contact_number,
                 pan_vat_number: Stockist.data.stockist_name.pan_vat_number,
-                stockist_territory: Stockist.data.stockist_name.stockist_territory,
+                stockist_territory: Stockist.data.stockist_name.stockist_territory.id,
                 stockist_category: Stockist.data.stockist_name.stockist_category
 
             });
         }
     }, [Stockist.data])
-
-
-
     useEffect(() => {
         validate();
 
@@ -112,26 +112,31 @@ const EditStockist = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("stockist_name", values.stockist_name);
-        formData.append("stockist_address", values.stockist_address);
-        formData.append("stockist_contact_number", values.stockist_contact_number);
-        formData.append("pan_vat_number", values.pan_vat_number);
-        formData.append("stockist_territory", values.stockist_territory);
-        formData.append('id', idharu)
-        formData.append("company_name", company_id);
-        formData.append("stockist_category", values.stockist_category);
-        updateStockists(formData)
+        const stockistData = {
+            stockist_name: values.stockist_name,
+            stockist_address: values.stockist_address,
+            stockist_contact_number: values.stockist_contact_number,
+            pan_vat_number: values.pan_vat_number,
+            stockist_territory: values.stockist_territory,
+            id: idharu,
+            company_name: company_id,
+            stockist_category: values.stockist_category
+        };
+        console.log(stockistData)
         try {
-            const response = await updateStockists(formData).unwrap();
+            const response = await updateStockists(stockistData)
+            console.log(response)
             if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Stockists' });
+                setSuccessMessage({ show: true, message: 'Successfully Edited Stockist' });
                 setTimeout(() => {
                     onClose();
                     setSuccessMessage({ show: false, message: '' });
                 }, 2000);
-            }
-            else {
+            } else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            } else {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });

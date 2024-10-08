@@ -32,11 +32,13 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { UserListHead } from '../../../sections/@dashboard/user';
 import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRolesSlice';
+// import {
+//     useDeleteareaMPOMutation
+// } from '@/api/ApplicationSlices/ApplicationSlices';
 import {
-    useDeleteApplicationsByIdMutation
-} from '@/api/ApplicationSlices/ApplicationSlices';
-import {
-    useSearchMPOAreaMutation
+    useAreaMPOQuery,
+    useSearchMPOAreaMutation,
+    useDeleteareaMPOMutation
 } from '@/api/MPOSlices/TourPlanSlice';
 import {
     usePostAllMPONamesNoPageMutation
@@ -185,7 +187,7 @@ const FilterMPOAreas = () => {
 
 
     // !Delete Application
-    const [deleteApplication] = useDeleteApplicationsByIdMutation()
+    const [deleteApplication] = useDeleteareaMPOMutation()
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);

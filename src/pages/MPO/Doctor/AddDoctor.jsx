@@ -154,6 +154,7 @@ const AddDoctor = () => {
             doctor_gender: values.doctor_gender,
             doctor_territory: values.doctor_territory,
             doctor_category: values.category_name,
+            doctor_nmc_number: values.doctor_nmc_number,
             mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id,
             doctor_qualification: values.doctor_qualification,
             doctor_specialization: values.doctor_specialization,
@@ -369,7 +370,7 @@ const AddDoctor = () => {
                                     </Box>
                                 </Grid>
 
-                                {/* <Grid item xs={12}>
+                                <Grid item xs={12}>
                                     <Box marginBottom={2}>
                                         <Controls.Input
                                             name="doctor_address"
@@ -379,7 +380,7 @@ const AddDoctor = () => {
                                             error={errors.doctor_address}
                                         />
                                     </Box>
-                                </Grid> */}
+                                </Grid>
                                 {/* <Grid item xs={12}>
                                     <Box marginBottom={2}>
                                         <Controls.Checkbox

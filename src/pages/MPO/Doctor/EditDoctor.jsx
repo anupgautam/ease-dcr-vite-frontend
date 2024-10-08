@@ -30,6 +30,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
 
     //! Getting doctor by ID
     const Doctor = useGetDoctorsByIdQuery(id);
+    // console.log(Doctor.data)
 
     //! Get doctor categories
     const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id, {
@@ -119,12 +120,12 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
     useEffect(() => {
         if (Doctor.data) {
             setInitialFValues({
-                'doctor_id': Doctor?.data?.id,
+                'id': Doctor?.data?.id,
                 'doctor_name': Doctor?.data?.doctor_name?.doctor_name,
                 'doctor_address': Doctor?.data?.doctor_name?.doctor_address,
                 'doctor_gender': Doctor?.data?.doctor_name?.doctor_gender,
                 'doctor_phone_number': Doctor?.data?.doctor_name?.doctor_phone_number,
-                'doctor_territory': Doctor?.data?.doctor_name?.doctor_territory,
+                'doctor_territory': Doctor?.data?.doctor_name?.doctor_territory.id,
                 'doctor_category': Doctor?.data?.doctor_name?.doctor_category,
                 'doctor_nmc_number': Doctor?.data?.doctor_name?.doctor_nmc_number,
                 'doctor_qualification': Doctor?.data?.doctor_name?.doctor_qualification,
@@ -160,13 +161,14 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
             doctor_address: values.doctor_address,
             doctor_gender: values.doctor_gender,
             doctor_territory: values.doctor_territory,
-            doctor_category: values.category_name,
+            doctor_category: values.doctor_category,
             mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id,
             doctor_qualification: values.doctor_qualification,
             doctor_specialization: values.doctor_specialization,
             company_name: company_id,
             id: id,
         };
+        console.log(values)
         try {
             const response = await updateDoctors(data).unwrap();
             if (response) {

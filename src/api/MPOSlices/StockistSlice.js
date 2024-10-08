@@ -144,9 +144,12 @@ export const StockistSlice = apiSlice.injectEndpoints({
         updateStockists: builder.mutation({
             query: (updateStockist) => {
                 return {
-                    url: `stockist/company-stockist/${updateStockist.get('id')}/update_stockist/`,
-                    method: 'PUT',
-                    body: updateStockist
+                    url: `stockist/company-stockist/${updateStockist.id}/`,
+                    method: 'PATCH',
+                    body: updateStockist,
+                    headers: {
+                        'Content-type': 'application/json; charset = UTF-8',
+                    }
                 }
             },
             invalidatesTags: ['Stockist'],

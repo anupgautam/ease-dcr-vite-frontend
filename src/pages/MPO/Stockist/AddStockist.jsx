@@ -94,16 +94,19 @@ const AddStockist = () => {
     const onAddStockists = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("stockist_name", values.stockist_name);
-        formData.append("stockist_contact_number", values.stockist_contact_number);
-        formData.append("stockist_address", values.stockist_address);
-        formData.append("pan_vat_number", values.pan_vat_number);
-        formData.append("stockist_territory", values.stockist_territory);
-        formData.append("stockist_category", values.stockist_category);
-        formData.append("company_name", company_id);
+        const stockistData = {
+            stockist_name: values.stockist_name,
+            stockist_contact_number: values.stockist_contact_number,
+            stockist_address: values.stockist_address,
+            pan_vat_number: values.pan_vat_number,
+            stockist_territory: values.stockist_territory,
+            stockist_category: values.stockist_category,
+            company_name: company_id
+        };
+
+
         try {
-            const response = await createStockists(formData)
+            const response = await createStockists(stockistData)
             if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Stockist' });
                 setTimeout(() => {
