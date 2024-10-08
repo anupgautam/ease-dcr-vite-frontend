@@ -112,6 +112,31 @@ export const CompanyAreaWiseExpenses = apiSlice.injectEndpoints({
             providesTags: ['CompanyAreaWiseExpenses']
         }),
 
+        //! POST Expenses for Mpo
+        postMPOExpenses: builder.mutation({
+            query: (createMPOExpenses) => {
+                return {
+                    url: "expenses/mpo-expenses/",
+                    method: 'POST',
+                    body: createMPOExpenses,
+                }
+            },
+            invalidatesTags: ['CompanyAreaWiseExpenses']
+        }),
+
+        //! POST Expenses for Higher Order
+        postHigherExpenses: builder.mutation({
+            query: (createHigherExpenses) => {
+                console.log("For Higher")
+                return {
+                    url: "expenses/higher-expenses/",
+                    method: 'POST',
+                    body: createHigherExpenses,
+                }
+            },
+            invalidatesTags: ['CompanyAreaWiseExpenses']
+        }),
+
         //! Search Expenses for Higher Order
         searchHigherExpenses: builder.query({
             query: (id) => ({
@@ -203,6 +228,8 @@ export const {
     useSearchMPOExpensesQuery,
     useUpdateTravelAllowancesMutation,
     useGetExpenseByTheIdQuery,
+    usePostMPOExpensesMutation,
+    usePostHigherExpensesMutation,
 } = CompanyAreaWiseExpenses
 
 //! returns the query result object

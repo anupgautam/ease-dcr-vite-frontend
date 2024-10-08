@@ -83,8 +83,8 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
     }, []);
 
     const [initialFValues, setInitialFValues] = useState({
-        area_from: "",
-        area_to: "",
+        // area_from: "",
+        // area_to: "",
         daily_allowance: "",
         travel_allowance: "",
         company_name: "",
@@ -109,11 +109,11 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
         // 
         let temp = { ...errors }
         if ('area_from' in fieldValues)
-            temp.area_from = returnValidation(['null'], values.area_from)
-        temp.area_to = returnValidation(['null'], values.area_to)
+            // temp.area_from = returnValidation(['null'], values.area_from)
+        // temp.area_to = returnValidation(['null'], values.area_to)
         temp.daily_allowance = returnValidation(['null'], values.daily_allowance)
         temp.travel_allowance = returnValidation(['null'], values.travel_allowance)
-        temp.miscellaneous_allowance = returnValidation(['null'], values.miscellaneous_allowance)
+        // temp.miscellaneous_allowance = returnValidation(['null'], values.miscellaneous_allowance)
         temp.other_allowance = returnValidation(['null'], values.other_allowance)
 
         setErrors({
@@ -127,22 +127,23 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
 
     useEffect(() => {
         validate();
-    }, [values.area_from,
-    values.area_to,
-    values.daily_allowance,
-    values.travel_allowance,
-    values.miscellaneous_allowance,
-    values.other_allowance
+    }, [
+        // values.area_from,
+        // values.area_to,
+        values.daily_allowance,
+        values.travel_allowance,
+        // values.miscellaneous_allowance,
+        values.other_allowance
     ])
 
     useEffect(() => {
         if (TravelAllowance?.data) {
             setInitialFValues({
-                area_from: TravelAllowance?.data?.area_from,
-                area_to: TravelAllowance?.data?.area_to,
+                // area_from: TravelAllowance?.data?.area_from,
+                // area_to: TravelAllowance?.data?.area_to,
                 daily_allowance: TravelAllowance?.data?.daily_allowance,
                 travel_allowance: TravelAllowance?.data?.travel_allowance,
-                miscellaneous_allowance: TravelAllowance?.data?.miscellaneous_allowance,
+                // miscellaneous_allowance: TravelAllowance?.data?.miscellaneous_allowance,
                 other_allowance: TravelAllowance?.data?.other_allowance,
                 company_name: TravelAllowance?.data?.company_name,
                 user_id: TravelAllowance?.data?.user_id,

@@ -70,6 +70,7 @@ import DCRChemistDetail from './pages/MPO/DCR/DCRChemistDetail';
 import DCRStockistDetail from './pages/MPO/DCR/DCRStockistDetail';
 import DCRHODetail from './pages/MPO/DCR/DCRHODetail';
 import AddMultipleUser from './pages/MPO/User/addMultipleUser';
+import FilterTravelAllowances from './pages/MPO/Travel Allowances/FilterTravelAllowances';
 
 export default function Router() {
   const routes = useRoutes([
@@ -254,6 +255,10 @@ export default function Router() {
         {
           path: 'admin/expenses',
           element: <Authentication component={ListOfExpensesController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/expenses/user',
+          element: <Authentication component={FilterTravelAllowances} allowRoles={['admin']} />,
         },
         {
           path: 'admin/leave',

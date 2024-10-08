@@ -19,14 +19,16 @@ import {
     FormControl,
     InputLabel,
     Grid,
-    Autocomplete
+    Autocomplete,
+    Stack,
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
 import 'react-datepicker/dist/react-datepicker.css';
+import ExcelCSVTravelAllowances from './ExcelCSVTravelAllowances';
 
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -45,10 +47,13 @@ import {
 } from '@/api/CompanySlices/companyUserRoleSlice';
 import { useGetCompanyRolesByCompanyQuery, } from '../../../api/MPOSlices/companyRolesSlice';
 import EditTravelAllowances from './EditTravelAllowances';
-import ExcelCSVTravelAllowances from './ExcelCSVTravelAllowances';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import AddTravelAllowances from './AddTravelAllowancesMPO';
+import AddTravelAllowancesMPO from './AddTravelAllowancesMPO';
+import AddTravelAllowancesHigher from './AddTravelAllowancesHigher';
 
 const TABLE_HEAD = [
     { id: 'date', label: 'Date', alignRight: false },
@@ -66,6 +71,12 @@ const TABLE_HEAD = [
 const FilterTravelAllowances = () => {
     const { company_id, user_role } = useSelector((state) => state.cookie);
 
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const id = searchParams.get('id');
+    const role = searchParams.get('role');
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -127,8 +138,6 @@ const FilterTravelAllowances = () => {
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
-    const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     const handleClickOpen = useCallback(() => {
         setOpenDialogue(true)
@@ -209,17 +218,17 @@ const FilterTravelAllowances = () => {
     // const results = useSearchTravelAllowancesQuery({ company_name: company_id, user_id: selectedUser.id ? selectedUser.id : "", year: selectedYear ? selectedYear : "", month: selectedMonth ? selectedMonth : "" })
 
     const results = isHigher === "MPO"
-        ? useSearchMPOExpensesQuery({ company_name: company_id, user_id: selectedUser || "", year: selectedYear || "", month: selectedMonth || "" })
-        : useSearchHigherExpensesQuery({ company_name: company_id, user_id: selectedUser || "", year: selectedYear || "", month: selectedMonth || "" });
+        ? useSearchMPOExpensesQuery({ company_name: company_id, user_id: id || "", year: selectedYear || "", month: selectedMonth || "" })
+        : useSearchHigherExpensesQuery({ company_name: company_id, user_id: id || "", year: selectedYear || "", month: selectedMonth || "" });
 
-    console.log(selectedUser)
+    console.log(results)
 
     return (
         <>
             <Card>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={2.5}>
+                        {/* <Grid item xs={2.5}>
                             <Autocomplete
                                 options={rolesOptions}
                                 getOptionLabel={(option) => option.title}
@@ -250,7 +259,7 @@ const FilterTravelAllowances = () => {
                                     )}
                                 />
                             </Grid>
-                        }
+                        } */}
 
                         <Grid item xs={1.75}>
                             <FormControl fullWidth>
@@ -289,6 +298,31 @@ const FilterTravelAllowances = () => {
                         {/* <Grid item xs={3} container justifyContent="flex-end">
                             <ExcelCSVTravelAllowances data={results} userName={selectedUser.title} />
                         </Grid> */}
+
+                        <Grid item xs={12} md={3}>
+                            <Stack
+                                direction={isSmallScreen ? 'column' : 'row'}
+                                spacing={2}
+                                alignItems="center"
+                                justifyContent="flex-end"
+                            >
+
+                                {user_role === 'admin' &&
+                                    <ExcelCSVTravelAllowances />
+                                }
+                                {/* {(user_role !== 'admin' && role === "MPO") &&
+                                    <AddTravelAllowancesMPO />
+                                }
+                                {(user_role !== 'admin' && role !== "MPO") &&
+                                    <AddTravelAllowancesHigher />
+                                } */}
+                                {user_role === "MPO" ?
+                                    <AddTravelAllowancesMPO />
+                                    :
+                                    <AddTravelAllowancesHigher />
+                                }
+                            </Stack>
+                        </Grid>
                     </Grid>
                 </Box>
 
@@ -376,7 +410,7 @@ const FilterTravelAllowances = () => {
                     </Scrollbar>
                 </Card>
             </Card>
-            <Dialog
+            {/* <Dialog
                 fullScreen={fullScreen}
                 open={openDialogue}
                 onClose={handleClose}
@@ -395,7 +429,7 @@ const FilterTravelAllowances = () => {
                         No
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog> */}
             {isDrawerOpen && <EditTravelAllowances
                 idharu={selectedUpdateId} onClose={onCloseDrawer} mpoId={mpoId}
             />

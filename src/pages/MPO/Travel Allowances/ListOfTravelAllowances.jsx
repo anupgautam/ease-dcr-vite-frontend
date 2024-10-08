@@ -8,10 +8,10 @@ import {
 } from '@mui/material';
 import TravelAllowancesCount from './TravelAllowancesCount';
 import FilterTravelAllowances from './FilterTravelAllowances';
-import AddTravelAllowances from './AddTravelAllowances'
+import AddTravelAllowances from './AddTravelAllowancesMPO'
 import ExcelCSVTravelAllowances from './ExcelCSVTravelAllowances';
 import { useSelector } from 'react-redux';
-
+import TravelRolePage from './TravelRolePage';
 
 const ListOfTravelAllowances = () => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -47,7 +47,8 @@ const ListOfTravelAllowances = () => {
                         </Grid>
                     </Grid>
                 </Box>
-                <FilterTravelAllowances />
+                <TravelRolePage/>
+                {/* <FilterTravelAllowances /> */}
             </Container>
         </>
     )
