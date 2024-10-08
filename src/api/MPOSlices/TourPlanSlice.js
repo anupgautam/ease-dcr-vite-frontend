@@ -416,7 +416,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
         updateTPDays: builder.mutation({
             query: (updateTPDays) => {
                 return {
-                    url: `company/company-roles-tp-lock/${updateTPDays.get('id')}/`,
+                    url: `company/company-roles-tp-lock/${updateTPDays.id}/`,
                     method: 'PATCH',
                     body: updateTPDays
                 }

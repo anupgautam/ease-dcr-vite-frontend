@@ -83,12 +83,9 @@ const AddTPLock = () => {
         e.preventDefault();
         setLoading(true)
         if (validate()) {
-            const formData = new FormData();
-            formData.append("company_roles", values.company_roles);
-            formData.append("tp_lock_days", values.tp_lock_days);
-            formData.append("company_name", company_id);
+            const data = { company_name: company_id, tp_lock_days: values.tp_lock_days, company_roles: values.company_roles };
             try {
-                const response = await createTPDays(formData).unwrap();
+                const response = await createTPDays(data)
                 if (response) {
                     setSuccessMessage({ show: true, message: 'Successfully Added TP Lock Days' });
                     setTimeout(() => {
