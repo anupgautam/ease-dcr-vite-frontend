@@ -152,7 +152,7 @@ export const doctorApiSlice = apiSlice.injectEndpoints({
         }),
         getAllVisitedMpoWiseDoctor: builder.query({
             query: (id) => ({
-                url: `doctor/company-wise-doctor-without-pagination/?company_name=${id.company_name}&mpo_name=${id.mpo_name}&doctor_name__doctor_territory=${id.mpo_area}`,
+                url: `doctor/company-wise-doctor-without-pagination/?company_name=${id.company_name}&mpo_name=${id.mpo_name}&doctor_territory=${id.mpo_area}`,
                 method: 'GET'
             }),
             providesTags: ['DoctorDCR']

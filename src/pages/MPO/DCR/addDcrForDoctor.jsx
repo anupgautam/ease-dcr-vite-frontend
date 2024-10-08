@@ -22,6 +22,8 @@ import { useForm } from "@/reusable/forms/useForm";
 import { UserListHead } from "@/sections/@dashboard/user";
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import moment from "moment";
+import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 
 const TABLE_HEAD = [
     { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
@@ -77,7 +79,7 @@ const AddDcrForDoctor = () => {
             try {
                 const response = await DcrForDoctor();
                 if (response.data) {
-                    const newData = { doctor_id: doctorId, dcr_id: response.data.id };
+                    const newData = { doctor_id: doctorId, dcr_id: response.data.data.id };
                     // Check if the entry already exists in DoctorData before adding it
                     const isDuplicate = DoctorData.some(item => item.doctor_id === newData.doctor_id && item.dcr_id === newData.dcr_id);
                     if (!isDuplicate) {
@@ -143,7 +145,7 @@ const AddDcrForDoctor = () => {
 
     const areaOptions = useMemo(() => {
         if (NewTourPlanData !== undefined) {
-            return NewTourPlanData?.mpo_area_read?.map(key => ({ id: key.company_mpo_area_id.id, title: key.company_mpo_area_id.area_name }))
+            return NewTourPlanData?.mpo_area_read?.map(key => ({ id: key.id, title: key.area_name }))
         }
         return [];
     }, [NewTourPlanData])
@@ -259,14 +261,14 @@ const AddDcrForDoctor = () => {
             for (const allData of AllMutipleData) {
                 let sendingData = { ...allData };
                 sendingData['id'] = allData.id;
-                if (sendingData['company_product']) {
+                if (sendingData['promoted_product']) {
                     let companyProduct = allData.company_product;
-                    sendingData['company_product'] = [];
+                    sendingData['promoted_product'] = [];
                     companyProduct.map(key => {
-                        sendingData['company_product'].push({ id: key });
+                        sendingData['promoted_product'].push({ id: key });
                     });
                 } else {
-                    sendingData['company_product'] = [];
+                    sendingData['promoted_product'] = [];
                 }
                 if (sendingData['rewards']) {
                     let rewards = allData.rewards;
@@ -298,40 +300,41 @@ const AddDcrForDoctor = () => {
                     sendingData['expenses'] = sendingData?.Formdata?.expenses;
                     sendingData['expenses_name'] = sendingData?.Formdata?.expenses_name;
                     sendingData['expenses_reasoning'] = sendingData?.Formdata?.expenses_reasoning;
+                    sendingData['month'] = getNepaliMonthName(moment(sendingData.date).month() + 1);
+                    sendingData['year'] = moment(sendingData.date).year();
+                    sendingData['mpo_name'] = company_user_role_id;
+                    sendingData['company_name'] = company_id;
+
                 } else {
                     sendingData['visited_area'] = null;
                     sendingData['visited_doctor'] = null;
                     sendingData['shift'] = null;
                 }
-                const mpoShiftData = {
-                    mpo_name: company_user_role_id,
-                    shift: allData.shift,
-                    dcr_id: allData.id,
-                };
+
                 updateDcr({ id: allData.id, value: sendingData })
                     .then(res => {
                         if (res.data) {
-                            createMpoDcr(mpoShiftData)
-                                .then(res => {
-                                    if (res.data) {
-                                        if (LastData === true) {
-                                            setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
-                                            setTimeout(() => {
-                                                setSuccessMessage({ show: false, message: '' });
-                                                navigate('/dashboard/admin/dcr');
-                                            }, 2000);
-                                        } else {
-                                            setSuccessMessage({ show: true, message: 'DCR Added Successfully Added.' });
-                                            setTimeout(() => {
-                                                setSuccessMessage({ show: false, message: '' });
-                                                // navigate('/dashboard/admin/dcr');
-                                            }, 2000);
-                                        }
-                                    }
-                                })
-                                .catch(err => {
+                            // createMpoDcr(mpoShiftData)
+                            //     .then(res => {
+                            //         if (res.data) {
+                            //             if (LastData === true) {
+                            setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
+                            setTimeout(() => {
+                                setSuccessMessage({ show: false, message: '' });
+                                // navigate('/dashboard/admin/dcr');
+                            }, 2000);
+                            //         } else {
+                            //             setSuccessMessage({ show: true, message: 'DCR Added Successfully Added.' });
+                            //             setTimeout(() => {
+                            //                 setSuccessMessage({ show: false, message: '' });
+                            //                 // navigate('/dashboard/admin/dcr');
+                            //             }, 2000);
+                            //         }
+                            //     }
+                            // })
+                            // .catch(err => {
 
-                                });
+                            // });
                         } else if (res?.error) {
                             setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                             setLoading(false);
@@ -372,26 +375,26 @@ const AddDcrForDoctor = () => {
                                         tourplanData !== undefined ?
                                             <>
                                                 {
-                                                    tourplanData.length !== 0 ?
+                                                    tourplanData?.length !== 0 ?
                                                         <Box style={{ marginBottom: '20px' }}>
 
                                                             <Box style={{ width: "100%", overflowX: "auto", whiteSpace: 'nowrap', cursor: "pointer" }}>
                                                                 {
-                                                                    tourplanData.map((key, index) => (
+                                                                    tourplanData?.map((key, index) => (
                                                                         <Box style={{ width: '220px', display: "inline-block", marginRight: "10px" }} key={index} onClick={(e) => selectTourPlanById(key)}>
                                                                             <Box style={{ borderRadius: '5px', border: '1.2px solid #dbe0e4', padding: "5px", paddingTop: "10px", paddingLeft: "10px", paddingRight: '10px' }}>
                                                                                 <Grid container spacing={2}>
                                                                                     <Grid item xs={3.5}>
                                                                                         <Box style={{ padding: '5px', textAlign: 'center', border: '1.2px solid #2d8960', borderRadius: "5px", marginTop: '11px', marginBottom: "11px" }}>
-                                                                                            <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{key.tour_plan.tour_plan.select_the_date_id.slice(8)}</Typography>
+                                                                                            <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{key?.tour_plan?.tour_plan?.select_the_date_id?.slice(8)}</Typography>
                                                                                         </Box>
                                                                                     </Grid>
                                                                                     <Grid item xs={8.5}>
                                                                                         <Box >
                                                                                             <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
-                                                                                                {key.tour_plan.tour_plan.select_the_month}
+                                                                                                {key?.tour_plan?.tour_plan?.select_the_month}
                                                                                             </span>
-                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.company_mpo_area_id.area_name)
+                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.area_name)
                                                                                                 .join(', ')}</Typography>
                                                                                         </Box>
                                                                                     </Grid>
