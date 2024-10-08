@@ -88,15 +88,9 @@ const EditDivision = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true);
-        const formData = new FormData();
-        formData.append("division_name", values.division_name);
-        formData.append("company_name", values.company_name);
-        formData.append("company_id", company_id);
-        formData.append('id', CompanyDivisions?.data?.id);
-        formData.append('refresh', refresh);
-        formData.append('access', access);
+        const data = { id: idharu, company_name: company_id, division_name: values.division_name }
         try {
-            const response = await updateCompanyDivisions(formData).unwrap();
+            const response = await updateCompanyDivisions(data)
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Division' });
                 setTimeout(() => {
