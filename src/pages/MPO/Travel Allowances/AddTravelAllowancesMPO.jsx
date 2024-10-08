@@ -26,11 +26,11 @@ import {
 import { useSelector } from 'react-redux';
 
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
-import { useCreateCompanyAreaWiseExpensesMutation } from '../../../api/CompanySlices/companyAreaWiseExpenses';
+import { usePostMPOExpensesMutation } from '../../../api/CompanySlices/companyAreaWiseExpenses';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
-const AddTravelAllowances = () => {
+const AddTravelAllowancesMPO = () => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
@@ -90,12 +90,12 @@ const AddTravelAllowances = () => {
     const today = NepaliDateConverter.getNepaliDate();
     const [selectedDates, setSelectedDates] = useState(today);
 
-    const [createTravelAllowances] = useCreateCompanyAreaWiseExpensesMutation()
+    const [createTravelAllowances] = usePostMPOExpensesMutation()
 
     const initialFValues = {
 
     }
-    
+
     const {
         values,
         setValues,
@@ -137,20 +137,19 @@ const AddTravelAllowances = () => {
     const onAddDoctors = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("travel_allowance", values.travel_allowance);
-        formData.append("daily_allowance", values.daily_allowance);
-        formData.append("miscellaneous_allowance", values.miscellaneous_allowance);
-        formData.append("other_allowance", values.other_allowance);
-        formData.append("date", selectedDates);
-        formData.append("area_to", values.area_to);
-        formData.append("area_from", values.area_from);
-        formData.append("month", selectedMonth);
-        formData.append("year", selectedYear);
-        formData.append("user_id", company_user_role_id);
-        formData.append('company_name', company_id)
+        const jsonData = {
+            travel_allowance: values.travel_allowance,
+            daily_allowance: values.daily_allowance,
+            other_allowance: values.other_allowance,
+            date: selectedDates,
+            month: selectedMonth,
+            year: selectedYear,
+            user_id: company_user_role_id,
+            company_name: company_id,
+        };
+
         try {
-            const response = await createTravelAllowances(formData)
+            const response = await createTravelAllowances(jsonData)
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Allowances.' });
                 setTimeout(() => {
@@ -205,10 +204,10 @@ const AddTravelAllowances = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Add Travel Allowances
+                            Add MPO Expenses
                         </Typography>
                     </Box>
-                    <Grid container spacing={2}>
+                    {/* <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <Box marginBottom={2}>
                                 <Controls.Input
@@ -234,7 +233,7 @@ const AddTravelAllowances = () => {
                                 />
                             </Box>
                         </Grid>
-                    </Grid>
+                    </Grid> */}
                     <Box marginBottom={2}>
                         <Controls.Input
                             name="travel_allowance"
@@ -253,7 +252,7 @@ const AddTravelAllowances = () => {
                             error={errors.daily_allowance}
                         />
                     </Box>
-                    <Box marginBottom={2}>
+                    {/* <Box marginBottom={2}>
                         <Controls.Input
                             name="miscellaneous_allowance"
                             label="Miscellaneous Expenses"
@@ -261,14 +260,14 @@ const AddTravelAllowances = () => {
                             onChange={handleInputChange}
                             error={errors.miscellaneous_allowance}
                         />
-                    </Box>
+                    </Box> */}
                     <Box marginBottom={2}>
                         <Controls.Input
-                            name="other_expenses"
+                            name="other_allowance"
                             label="Other Expenses"
                             value={values.name}
                             onChange={handleInputChange}
-                            error={errors.other_expenses}
+                            error={errors.other_allowance}
                         />
                     </Box>
                     <Box marginBottom={2}>
@@ -367,4 +366,4 @@ const AddTravelAllowances = () => {
     )
 }
 
-export default React.memo(AddTravelAllowances);
+export default React.memo(AddTravelAllowancesMPO);

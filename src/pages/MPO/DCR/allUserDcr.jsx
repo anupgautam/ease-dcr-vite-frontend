@@ -225,7 +225,13 @@ const AllUserDcr = () => {
                                                                     </TableCell>
                                                                     <TableCell align="left">{usersearch.company_area.company_area}</TableCell>
                                                                     <TableCell align="left">{usersearch.role_name.role_name_value}</TableCell>
-                                                                    <TableCell align="left">{usersearch.user_name.date_of_joining}</TableCell>
+                                                                    <TableCell align="left">
+                                                                        {new Date(usersearch.user_name.date_of_joining).toLocaleDateString('en-US', {
+                                                                            year: 'numeric',
+                                                                            month: 'short',
+                                                                            day: 'numeric',
+                                                                        })}
+                                                                    </TableCell>
                                                                     <TableCell align="left">{usersearch.dcr_feeded}</TableCell>
                                                                     <TableCell align="left">{usersearch.dcr_pending}</TableCell>
                                                                     <TableCell align="left">

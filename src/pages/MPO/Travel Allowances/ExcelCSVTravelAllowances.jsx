@@ -91,7 +91,6 @@ const ExcelCSVTourPlan = () => {
         setSelectedUser(value);
     };
 
-
     const now = new BSDate().now();
 
     const monthData = getNepaliMonthName(now._date.month);
@@ -157,8 +156,6 @@ const ExcelCSVTourPlan = () => {
         { label: 'Remark', key: 'remark', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
         { label: 'Hulting Station', key: 'hulting_station', fontSize: 13, fontColor: '#008000', fontWeight: 'bold' },
     ];
-
-
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

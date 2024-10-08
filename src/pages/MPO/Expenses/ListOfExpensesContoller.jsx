@@ -5,6 +5,7 @@ const ListOfExpensesController = () => {
     return (
         <>
             <ListOfExpenses />
+
         </>
     )
 }
