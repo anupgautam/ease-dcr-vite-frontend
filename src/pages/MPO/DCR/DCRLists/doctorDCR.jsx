@@ -185,12 +185,12 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
                                                                         {tourplan.mpo_name.user_name.first_name + " " + tourplan.mpo_name.user_name.last_name}
                                                                     </Typography>
                                                                 </TableCell>
-                                                                <TableCell align="left">{tourplan.dcr.shift.shift}</TableCell>
-                                                                <TableCell align="left">{moment(tourplan.dcr.dcr.date).format('DD')}</TableCell>
-                                                                <TableCell align="left">{tourplan.dcr.dcr.visited_area.area_name}</TableCell>
+                                                                <TableCell align="left">{tourplan?.shift?.shift}</TableCell>
+                                                                <TableCell align="left">{moment(tourplan?.dcr?.date).format('DD')}</TableCell>
+                                                                <TableCell align="left">{tourplan?.dcr?.visited_area?.area_name}</TableCell>
                                                                 <TableCell component="th" scope="row" align="left">
                                                                     <Typography variant="subtitle2" noWrap>
-                                                                        {tourplan?.dcr?.dcr?.visited_doctor?.doctor_name?.doctor_name}
+                                                                        {tourplan?.dcr?.visited_doctor?.doctor_name?.doctor_name}
                                                                     </Typography>
                                                                 </TableCell>
                                                                 <TableCell align="left">
