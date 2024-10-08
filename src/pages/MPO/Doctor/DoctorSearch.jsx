@@ -81,6 +81,8 @@ const DoctorSearch = () => {
     const [mpoName, setMPOName] = useState('');
     const [MpoList, setMpoList] = useState([]);
 
+    console.log('mpoName', mpoName);
+
     const mpoNames = useMemo(() => {
         if (MpoList) {
             return MpoList.map(key => ({ id: key.id, title: key.user_name.first_name + ' ' + key.user_name.last_name }))
@@ -156,8 +158,10 @@ const DoctorSearch = () => {
 
     // ! Search Logic
     const { data: DoctorData } = useGetAllDoctorByMpoAndMpoAreaQuery({ company_name: company_id, mpo_area: mpoArea, mpo_name: user_role === 'admin' ? mpoName : company_user_role_id, page: page }, {
-        skip: !company_id || !mpoArea || !user_role || !company_user_role_id || !page
+        skip: !company_id || !user_role || !company_user_role_id || !page
     })
+
+    console.log('DoctorData', DoctorData);
 
     const [SearchData, setSearchData] = useState([]);
     const [SearchDataCondition, setSearchDataCondition] = useState(false);

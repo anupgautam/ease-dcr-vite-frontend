@@ -199,7 +199,7 @@ const ChemistSearch = () => {
         if (companyId || mpoArea || mpoName) {
 
             searchChemist(FilteredData, {
-                skip: !mpoArea || !mpoName || !companyId
+                skip: !mpoName || !companyId
             })
         }
     }, [companyId, mpoArea, mpoName])
