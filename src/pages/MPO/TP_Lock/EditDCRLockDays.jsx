@@ -21,6 +21,7 @@ import {
     useGetUsersRoleQuery,
 } from '@/api/MPOSlices/UserSlice';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '../../../reusable/extractErrorMessage';
 
 const EditTPLock = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -108,21 +109,17 @@ const EditTPLock = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("company_roles", companyRoles);
-        formData.append("tp_lock_days", values.tp_lock_days);
-        formData.append("company_name", company_id);
-        formData.append("id", idharu);
+        const data = { id: idharu, company_name: company_id, tp_lock_days: values.tp_lock_days, company_roles: companyRoles };
         try {
-            const response = await updateTPDays(formData).unwrap();
-            if (response) {
+            const response = await updateTPDays(data)
+            if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited TPDays' });
                 setTimeout(() => {
                     onClose()
                     setSuccessMessage({ show: false, message: '' });
                 }, 2000);
             } else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                setErrorMessage({ show: true, message: extractErrorMessage(response?.error) });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
                 }, 2000);
