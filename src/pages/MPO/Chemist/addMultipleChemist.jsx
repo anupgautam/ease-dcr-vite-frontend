@@ -187,7 +187,7 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
         chemist_contact_person: "",
         mpo_name: user_role === 'MPO' ? company_user_role_id : "",
         chemist_territory: "",
-        company_id: company_id,
+        company_name: company_id,
         is_investment: false,
     })
 

@@ -196,9 +196,8 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         mpo_name: user_role === "admin" ? "" : company_user_role_id,
         station_type: "",
         company_area: "",
-        company_name: company_id
+        company_name: company_id,
     })
-
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -261,6 +260,15 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                     onChange={handleInputChange}
                     // error={errors.mpo_name}
                     options={mpoStation}
+                />
+            </TableCell>
+            <TableCell align="left">
+                <Controls.Input
+                    name="company_area"
+                    label="Head Quarter*"
+                    value={Formdata.company_area}
+                    onChange={handleInputChange}
+                // error={errors.doctor_name}
                 />
             </TableCell>
         </>

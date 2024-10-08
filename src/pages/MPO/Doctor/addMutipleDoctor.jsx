@@ -12,14 +12,14 @@ import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
     { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
+    { id: 'mpo_name', label: 'MPO Name', alignRight: false },
+    { id: 'doctor_category', label: 'Doctor Category', alignRight: false },
     { id: 'doctor_phone_number', label: 'Doctor Phone Number', alignRight: false },
     { id: 'doctor_territory', label: 'Doctor Territory', alignRight: false },
     { id: 'doctor_gender', label: 'Doctor Gender', alignRight: false },
-    { id: 'doctor_category', label: 'Doctor Category', alignRight: false },
     { id: 'doctor_nmc_number', label: 'Doctor NMC Number', alignRight: false },
     { id: 'doctor_qualification', label: 'Doctor Qualification', alignRight: false },
     { id: 'doctor_specialization', label: 'Doctor Specialization', alignRight: false },
-    { id: 'mpo_name', label: 'MPO Name', alignRight: false },
     { id: 'doctor_address', label: 'Doctor Address', alignRight: false },
 ];
 
@@ -180,7 +180,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
 
     const mpoNames = useMemo(() => {
         if (MpoList) {
-            return MpoList.map(key => ({ id: key.id, title: key.user_name.first_name + ' ' + key.user_name.last_name }))
+            return MpoList.map(key => ({ id: key.id, title: key.user_name.first_name + ' ' + key.user_name.middle_name + " " + key.user_name.last_name }))
         }
         return [];
     }, [MpoList])
@@ -210,7 +210,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         is_investment: false,
         mpo_name: user_role === 'MPO' ? company_user_role_id : "",
         doctor_territory: "",
-        company_id: company_id
+        company_name: company_id
     })
 
 
@@ -255,6 +255,19 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 // error={errors.doctor_name}
                 // className={"drawer-first-name-input"}
                 />
+            </TableCell>
+            <TableCell align="left" style={{ width: "200px" }}>
+                {
+                    user_role === 'admin' ?
+                        <Controls.Select
+                            name="mpo_name"
+                            label="MPO*"
+                            value={Formdata.mpo_name}
+                            onChange={handleInputChange}
+                            // error={errors.mpo_name}
+                            options={mpoNames}
+                        /> : <>{email}</>
+                }
             </TableCell>
             <TableCell align="left" style={{ width: "200px" }}>
                 <Controls.Select
@@ -336,19 +349,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
                     label="Is Invested"
                 />
             </TableCell> */}
-            <TableCell align="left" style={{ width: "200px" }}>
-                {
-                    user_role === 'admin' ?
-                        <Controls.Select
-                            name="mpo_name"
-                            label="MPO*"
-                            value={Formdata.mpo_name}
-                            onChange={handleInputChange}
-                            // error={errors.mpo_name}
-                            options={mpoNames}
-                        /> : <>{email}</>
-                }
-            </TableCell>
+
             <TableCell align="left" style={{ width: "200px" }}>
                 <Controls.Input
                     name="doctor_address"

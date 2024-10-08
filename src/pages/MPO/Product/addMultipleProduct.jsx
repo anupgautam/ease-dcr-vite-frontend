@@ -41,7 +41,12 @@ const AddMultipleProduct = () => {
 
     const onAddDoctors = async (e) => {
         e.preventDefault();
-        setIsLoading(true); // Set loading state to true
+        setIsLoading(true);
+        // const filteredData = AllMutipleData.map(data => {
+        //     const { company_name, ...rest } = data;
+        //     return rest;
+        // });
+        // console.log(filteredData)
         for (const addData of AllMutipleData) {
             try {
                 const response = await createProduct(addData)
@@ -234,7 +239,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         bonus: "",
         product_type: "",
         image: [],
-        company_id: company_id,
+        // company_name: company_id,
     })
 
     const {
@@ -252,7 +257,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        const newData = { ...Formdata, [name]: value };
+        const newData = { ...Formdata, [name]: value, company_name: company_id };
 
         setFormData(newData);
 
