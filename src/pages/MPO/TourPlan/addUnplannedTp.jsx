@@ -108,6 +108,7 @@ const AddUnplannedTp = () => {
                         tour_plan: {
                             select_the_month: getNepaliMonthName(moment(selectedDates).month() + 1),
                             select_the_date_id: selectedDates,
+                            year: moment(selectedDates).year(),
                             purpose_of_visit: values.purpose_of_visit,
                             hulting_station: values.hulting_station,
                             is_dcr_added: false,
