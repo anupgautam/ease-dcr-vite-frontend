@@ -38,9 +38,9 @@ export const DoctorDCRSlice = apiSlice.injectEndpoints({
         //! Search Doctor DCR 
         searchDoctorsDCR: builder.query({
             query: (searchChemistsDCR) => {
-
+                // &date=${searchChemistsDCR.fullDate}
                 return {
-                    url: `dcr/mpo-shift-wise-dcr-for-doctor/?dcr__dcr__visited_doctor__company_name=${searchChemistsDCR.company_name}&mpo_name=${searchChemistsDCR.user_id}&dcr__dcr__month=${searchChemistsDCR.month}&dcr__dcr__year=${searchChemistsDCR.date}&dcr__dcr__date=${searchChemistsDCR.fullDate}`,
+                    url: `dcr/mpo-shift-wise-dcr-for-doctor/?company_name=${searchChemistsDCR.company_name}&mpo_name=${searchChemistsDCR.user_id}&month=${searchChemistsDCR.month}&year=${searchChemistsDCR.date}`,
                     method: 'GET',
                 }
             },

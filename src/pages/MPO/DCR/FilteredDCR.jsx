@@ -324,7 +324,7 @@ const FilteredDCR = () => {
                 </Box>
                 {role === "MPO" || user_role === "MPO" ?
                     <>
-                        {
+                        {/* {
                             user_role === "admin" &&
                             <>
                                 {selectedDCRType === "Doctor" ?
@@ -342,7 +342,7 @@ const FilteredDCR = () => {
                                     <></>
                                 }
                             </>
-                        }
+                        } */}
                         {
                             user_role === "MPO" &&
                             <>
@@ -362,7 +362,7 @@ const FilteredDCR = () => {
                                 }
                             </>
                         }
-                        {
+                        {/* {
                             user_role === "admin" &&
                             <>
                                 {selectedDCRType === "Chemist" ?
@@ -380,8 +380,8 @@ const FilteredDCR = () => {
                                     </> :
                                     <></>}
                             </>
-                        }
-                        {
+                        } */}
+                        {/* {
                             user_role === "MPO" &&
                             <>
                                 {selectedDCRType === "Chemist" ?
@@ -399,8 +399,8 @@ const FilteredDCR = () => {
                                     </> :
                                     <></>}
                             </>
-                        }
-                        {
+                        } */}
+                        {/* {
                             user_role === "admin" &&
                             <>
                                 {selectedDCRType === "Stockist" ?
@@ -418,8 +418,8 @@ const FilteredDCR = () => {
                                     </> :
                                     <></>}
                             </>
-                        }
-                        {
+                        } */}
+                        {/* {
                             user_role === "MPO" &&
                             <>
                                 {selectedDCRType === "Stockist" ?
@@ -435,7 +435,7 @@ const FilteredDCR = () => {
                                     </> :
                                     <></>}
                             </>
-                        }
+                        } */}
                         {
                             user_role === "other-roles" &&
                             <>
