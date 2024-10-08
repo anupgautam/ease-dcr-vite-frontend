@@ -116,19 +116,20 @@ const AddProduct = () => {
         e.preventDefault();
         setLoading(true)
         const formData = new FormData();
-        const file = BlobToFile(values.product_image, "productimage");
+        // const file = BlobToFile(File, "product_image");
 
-        if (file && file.size !== 0) {
-            formData.append("image", file, "productImage.jpg");
-        }
+        // if (file && file.size !== 0) {
+        // }
 
+
+        formData.append("product_image", File[0]);
         formData.append("product_name", values.product_name);
         formData.append("product_molecular_name", values.product_molecular_name);
         formData.append("product_price_per_strip_in_mrp", values.product_price_per_strip_in_mrp);
         formData.append("product_price_for_stockist", values.product_price_for_stockist);
         formData.append("product_description", values.product_description);
         formData.append("division_name", values.division_name);
-        formData.append('company_id', company_id);
+        formData.append('company_name', company_id);
         formData.append("bonus", values.bonus);
         formData.append("product_type", values.product_type);
         try {

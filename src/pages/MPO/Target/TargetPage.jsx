@@ -5,8 +5,10 @@ import Box from '@mui/material/Box';
 import TargetSearch from './TargetSearch';
 import TargetChart from './TargetChart';
 import AddTarget from './AddTarget';
+import { useSelector } from 'react-redux';
 
 const TargetPage = () => {
+    const { user_role } = useSelector((state) => state.cookie);
 
     function a11yProps(index) {
         return {
@@ -28,7 +30,9 @@ const TargetPage = () => {
                     <Tab label="List View" {...a11yProps(0)} />
                     <Tab label="Chart View" {...a11yProps(1)} />
                 </Tabs>
-                <AddTarget />
+                {user_role === "admin" &&
+                    <AddTarget />
+                }
             </Box>
             <TargetSearch index={0} value={value} />
             <TargetChart index={1} value={value} />

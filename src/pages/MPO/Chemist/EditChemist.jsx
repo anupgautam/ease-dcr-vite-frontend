@@ -23,14 +23,15 @@ import {
 
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+
 
 const EditChemist = ({ idharu, onClose }) => {
 
-    const { company_user_role_id, access, refresh, company_id } = useSelector((state) => state.cookie);
+    const { company_user_role_id, access, refresh, company_id, user_role } = useSelector((state) => state.cookie);
 
     //! Getting chemist by ID
     const Chemist = useGetChemistsByIdQuery(idharu);
-
     const chemistcategories = [
         { id: "A", title: "A" },
         { id: "B", title: "B" },
@@ -115,7 +116,7 @@ const EditChemist = ({ idharu, onClose }) => {
                 'chemist_address': Chemist?.data?.chemist_name?.chemist_address,
                 'chemist_pan_number': Chemist?.data?.chemist_name?.chemist_pan_number,
                 'chemist_phone_number': Chemist?.data?.chemist_name?.chemist_phone_number,
-                'chemist_territory': Chemist?.data?.chemist_name?.chemist_territory,
+                'chemist_territory': Chemist?.data?.chemist_name?.chemist_territory.id,
                 'chemist_contact_person': Chemist?.data?.chemist_name?.chemist_contact_person,
                 'chemist_category': Chemist?.data?.chemist_name?.chemist_category,
                 'mpo_name': Chemist?.data?.mpo_name,
@@ -143,28 +144,32 @@ const EditChemist = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("chemist_name", values.chemist_name);
-        formData.append("chemist_address", values.chemist_address);
-        formData.append("chemist_category", values.chemist_category);
-        formData.append("chemist_pan_number", values.chemist_pan_number);
-        formData.append("chemist_phone_number", values.chemist_phone_number);
-        formData.append("chemist_territory", values.chemist_territory);
-        formData.append("chemist_contact_person", values.chemist_contact_person);
-        formData.append("mpo_name", values.mpo_name);
-        formData.append("company_id", company_id);
-        formData.append('id', Chemist?.data?.id);
-        formData.append('refresh', refresh);
-        formData.append('access', access);
-        formData.append('is_investment', false)
+        const data = {
+            id: idharu,
+            chemist_name: values.chemist_name,
+            chemist_phone_number: values.chemist_phone_number,
+            chemist_address: values.chemist_address,
+            chemist_territory: values.chemist_territory,
+            chemist_category: values.chemist_category,
+            chemist_contact_person: values.chemist_contact_person,
+            chemist_pan_number: values.chemist_pan_number,
+            company_name: company_id,
+            mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id,
+            is_investment: false
+        };
+        console.log(values)
         try {
-            const response = await updateChemists(formData).unwrap();
+            const response = await updateChemists(data)
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Chemist' });
                 setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
                     onClose();
+                    setSuccessMessage({ show: false, message: '' });
                 }, 2000);
+            } else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             } else {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                 setTimeout(() => {

@@ -85,11 +85,14 @@ const TransferMpoArea = () => {
         }
         MpoTransferArea(data)
             .then((res) => {
+                console.log(res)
                 if (res?.data) {
                     setSuccessMessage({ show: true, message: 'Successfully Transfered Area.' });
+                    setLoading(false)
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
                     }, 3000);
+                    setIsDrawerOpen(false)
                 } else {
                     setErrorMessage({ show: true, message: res.error.data[0] });
                     setTimeout(() => {

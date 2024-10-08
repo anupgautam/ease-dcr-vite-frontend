@@ -25,6 +25,8 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
 
     const { company_id, user_role, company_user_id, access, refresh } = useSelector((state) => state.cookie);
 
+    const [File, setFile] = useState(null);
+
     //!  Getting Users by ID
     const Product = useGetProductsByIdQuery(idharu);
 
@@ -140,7 +142,8 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
                 'product_price_for_stockist': Product.data.product_name.product_price_for_stockist,
                 'company_name': Product.data.company_name.company_name,
                 'division_name': Product.data.division_name.id,
-                'product_type': Product.data.product_type
+                'product_type': Product.data.product_type,
+                'product_image': Product.data.product_image
             })
         }
     }, [Product.data, DivisionById.data])
@@ -157,6 +160,12 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
         e.preventDefault();
         setLoading(true);
         const formData = new FormData();
+        // const file = BlobToFile(File, "product_image");
+
+        // if (file && file.size !== 0) {
+        //     formData.append("product_image", file, "productImage.jpg");
+        // }
+        formData.append("product_image", File[0]);
         formData.append("product_name", values.product_name);
         formData.append("product_molecular_name", values.product_molecular_name);
         formData.append("product_description", values.product_description);
@@ -296,6 +305,12 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
                                 options={divisions}
                                 onChange={handleInputChange}
                                 error={errors.division_name}
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <Controls.Image
+                                setFile={setFile}
+                                aspectRatio={373 / 280}
                             />
                         </Box>
                         <Stack spacing={1} direction="row">

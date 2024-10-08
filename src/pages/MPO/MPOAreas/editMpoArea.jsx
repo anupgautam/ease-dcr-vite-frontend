@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import {
     Box,
-    Typography, Button, Grid
+    Typography, Button, Grid, CircularProgress
 } from '@mui/material'
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -158,7 +158,7 @@ const EditMpoArea = ({ idharu, onClose }) => {
         if (User?.data) {
             setInitialFValues({
                 area_name: User?.data?.area_name,
-                mpo_name: User?.data?.mpo_name?.id,
+                mpo_name: User?.data?.mpo_name,
                 station_type: User?.data?.station_type,
                 company_area: User?.data?.company_area
             });
@@ -208,6 +208,7 @@ const EditMpoArea = ({ idharu, onClose }) => {
                         setTimeout(() => {
                             setSuccessMessage({ show: false, message: '' });
                         }, 2000);
+                        setIsDrawerOpen(false)
                     }
                     else if (response?.error) {
                         setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });

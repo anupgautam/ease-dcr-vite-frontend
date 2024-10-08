@@ -170,9 +170,13 @@ export const ChemistSlice = apiSlice.injectEndpoints({
         updateChemists: builder.mutation({
             query: (updateChemist) => {
                 return {
-                    url: `chemist/chemist/${updateChemist.get('id')}/`,
+                    // url: `chemist/chemist/${updateChemist.get('id')}/`,
+                    url: `chemist/chemist/${updateChemist.id}/`,
                     method: 'PATCH',
-                    body: updateChemist
+                    body: updateChemist,
+                    headers: {
+                        'Content-type': 'application/json; charset = UTF-8',
+                    }
                 }
             },
             invalidatesTags: ['Chemist'],
