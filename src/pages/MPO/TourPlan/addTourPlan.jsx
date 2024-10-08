@@ -223,14 +223,12 @@ const AddTourPlan = () => {
             is_approved: false,
         }));
 
-        console.log('new_data', new_data);
 
         AddTourPlan(new_data)
             .then(res => {
                 if (res.data) {
-                    console.log('res.data', res.data);
                     setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
-                    const updatedData = res.data.map((item, index) => ({
+                    const updatedData = res.data.data.map((item, index) => ({
                         ...item,
                         mpo_area_name: TPAreaName[index]
                     }));
@@ -239,21 +237,15 @@ const AddTourPlan = () => {
                     initialStates()
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
-                        // toggleDrawer()
                     }, 4000);
-                } else if (response?.error) {
-                    setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                } else {
+                    setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
                     setLoading(false);
                     setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                } else {
-                    initialStates()
-                    setErrorMessage({ show: true, message: res.error.data[0] });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 4000);
                 }
             })
             .catch(err => {
+                console.log('err', err);
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });

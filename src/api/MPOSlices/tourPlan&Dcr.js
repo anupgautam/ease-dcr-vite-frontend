@@ -45,7 +45,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
         postToGetTheTourPlan: builder.query({
             query: value => {
                 return {
-                    url: `/mpo/company-mpo-tour-plan/get_tour_plan_mpo/?mpo_name=${value}`,
+                    url: `/mpo/company-mpo-tour-plan-get-tour-plan-mpo/?mpo_name=${value}&year=2081&month=Ashwin`,
                     method: 'GET',
                 };
             },
