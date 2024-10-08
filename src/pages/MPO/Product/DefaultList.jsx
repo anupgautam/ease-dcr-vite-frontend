@@ -72,6 +72,7 @@ const DefaultList = () => {
         skip: !company_id || !user_role || !company_division_name
     });
 
+
     // !Delete product
     const [deleteProduct] = useDeleteProductsByIdMutation()
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -83,6 +84,7 @@ const DefaultList = () => {
                     {
                         eightArrays.map((key) => (
                             <TableRow key={key} >
+                                <TableCell><Skeleton /></TableCell>
                                 <TableCell><Skeleton /></TableCell>
                                 <TableCell><Skeleton /></TableCell>
                                 <TableCell><Skeleton /></TableCell>
@@ -108,6 +110,7 @@ const DefaultList = () => {
                                 {/* </Stack> */}
                             </TableCell>
                             <TableCell align="left">{product.product_name.product_molecular_name}</TableCell>
+                            <TableCell align="left">{product.product_type}</TableCell>
                             <TableCell align="left">Rs. {product.product_name.product_price_per_strip_in_mrp}</TableCell>
                             <TableCell align="left">Rs. {product.product_name.product_price_for_stockist
                             }</TableCell>

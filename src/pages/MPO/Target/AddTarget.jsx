@@ -23,11 +23,13 @@ import { returnValidation } from '../../../validation';
 import {
     useCreateTargetMutation
 } from '../../../api/ExpensesSlices/targetSlices';
-import { useGetExecutiveLevelUsersQuery } from '../../../api/CompanySlices/companyUserRoleSlice';
+// import { useGetExecutiveLevelUsersQuery } from '../../../api/CompanySlices/companyUserRoleSlice';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { useGetAllCompanyUsersWithoutPaginationQuery } from '../../../api/CompanySlices/companyUserRoleSlice';
+import { Key } from '@mui/icons-material';
 
 const AddTarget = () => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -57,18 +59,17 @@ const AddTarget = () => {
         setSelectedYear(event.target.value);
     }, [])
 
-    const { data: rolesData } = useGetExecutiveLevelUsersQuery(company_user_id);
+    // const { data: rolesData } = useGetExecutiveLevelUsersQuery(company_user_id);
+    const Data = useGetAllCompanyUsersWithoutPaginationQuery({ company_name: company_user_role_id });
 
     const users = useMemo(() => {
-        if (rolesData !== undefined) {
-            return rolesData?.map((key) => ({
-                id: key.id,
+        if (Data?.data !== undefined) {
+            return Data?.data?.results?.map((key) => ({
+                id: key.user_name.id,
                 title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
             }))
         }
-        return [];
-    }, [rolesData])
-
+    })
 
     //! Drawer
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -82,8 +83,8 @@ const AddTarget = () => {
     }, [])
 
     const initialFValues = {
-    }
 
+    }
     const {
         values,
         setValues,
@@ -127,15 +128,17 @@ const AddTarget = () => {
     const onAddStockists = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("target_from", company_user_role_id);
-        formData.append("target_to", values.target_to);
-        // formData.append("sales", values.sales);
-        formData.append("year", selectedYear);
-        formData.append("target_amount", values.target_amount);
-        formData.append("company_name", company_id);
+        const jsonObject = {
+            target_from: company_user_role_id,
+            target_to: values.target_to.toString(),
+            // sales: values.sales,  // Uncomment if needed
+            year: selectedYear,
+            target_amount: values.target_amount,
+            company_name: company_id
+        };
+
         try {
-            const response = await createTarget(formData)
+            const response = await createTarget(jsonObject)
             if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Target' });
                 setTimeout(() => {
