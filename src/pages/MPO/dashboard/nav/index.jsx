@@ -12,6 +12,7 @@ import OtherRoleConfig from './otherRoleConfig';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { setCookie } from '../../../../reducers/cookieReducer';
+import SuperAdminConfig from './SuperAdminConfig';
 
 
 const NAV_WIDTH = 270;
@@ -100,6 +101,10 @@ export default function Nav({ openNav, onCloseNav }) {
         <img src="/assets/ease.png" height='180px' width='180px' alt="Ease SFA Logo" />
         {/* <Typography style={{ fontSize: "20px", color: "black", fontWeight: '700', letterSpacing: '.7px', marginTop: '7px' }}>Ease SFA</Typography> */}
       </Box>
+      {
+        user_role === "admin" &&
+        <NavSection data={SuperAdminConfig} />
+      }
       {
         user_role === "admin" &&
         <NavSection data={navConfig} />

@@ -71,6 +71,8 @@ import DCRStockistDetail from './pages/MPO/DCR/DCRStockistDetail';
 import DCRHODetail from './pages/MPO/DCR/DCRHODetail';
 import AddMultipleUser from './pages/MPO/User/addMultipleUser';
 import FilterTravelAllowances from './pages/MPO/Travel Allowances/FilterTravelAllowances';
+import ListOfCompanyController from './pages/MPO/Company/ListOfCompanyController';
+import ListOfCompanyUsersController from './pages/MPO/CompanyUsers/ListOfCompanyUsersController';
 
 export default function Router() {
   const routes = useRoutes([
@@ -98,6 +100,18 @@ export default function Router() {
     {
       path: '/uploadnewtab/:id',
       element: <UploadsDetail />,
+    },
+    {
+      path: '/superadmin/company',
+      element: <ListOfCompanyController />,
+    },
+    {
+      path: '/superadmin/companyroles',
+      element: <ListOfCompanyRolesController />,
+    },
+    {
+      path: '/superadmin/companyusers',
+      element: <ListOfCompanyUsersController />,
     },
     {
       path: '/dashboard',
