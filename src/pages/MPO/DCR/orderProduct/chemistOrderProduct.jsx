@@ -19,7 +19,7 @@ import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { useGetChemistOrderProductDataQuery } from '@/api/DCRs Api Slice/chemistDCR/chemistOrderedProductInformation';
 import { useGetAllCompanyProductsWithoutPaginationQuery } from '@/api/productSlices/companyProductSlice';
-import { useAddOrderedProductInformationChemistMutation } from '@/api/MPOSlices/tourPlan&Dcr';
+import { useAddOrderedProductInformationChemistMutation, usePostChemistOrderedProductMutation } from '@/api/MPOSlices/tourPlan&Dcr';
 import {
     useUpdateDcrForChemistValuesMutation
 } from "@/api/MPOSlices/tourPlan&Dcr";
@@ -29,7 +29,52 @@ import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 
 const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) => {
-    const { company_id, user_role, company_user_id, company_area_id, company_user_role_id, company_division_name } = useSelector((state) => state.cookie);
+    const { company_id, company_area_id, company_user_role_id, company_division_name } = useSelector((state) => state.cookie);
+
+
+    const newId = allData?.id;
+    const [OrderedProductState, setOrderedProductState] = useState({
+        dcr_id: newId,
+        product_id: "",
+        ordered_quantity: "",
+        company_name: company_id,
+        select_the_stockist: "",
+    });
+
+
+
+
+    const handleOrderedProductChange = (e) => {
+        const { name, value } = e.target;
+        setOrderedProductState({ ...OrderedProductState, [name]: value });
+    }
+
+    const [PostChemistOrderProduct] = usePostChemistOrderedProductMutation();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        PostChemistOrderProduct({ dcr_id: allData.id, product_id: OrderedProductState.product_id, ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id, select_the_stockist: OrderedProductState.select_the_stockist })
+            .then((res) => {
+                if (res.data) {
+                    setSuccessMessage({ show: true, message: 'Successfully Order Product.' });
+                    setOrderedProductState({
+                        dcr_id: allData.id,
+                        product_id: "",
+                        ordered_quantity: "",
+                        company_name: company_id,
+                        select_the_stockist: "",
+                    });
+                } else {
+                    setErrorMessage({ show: true, message: extractErrorMessage(res.error) });
+                    setTimeout(() => {
+                        setErrorMessage({ show: false, message: '' });
+                    }, 3000);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
 
     const [updateDcr] = useUpdateDcrForChemistValuesMutation();
 
@@ -105,6 +150,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
         quantity: ""
     })
 
+
     const {
         values,
         setValues,
@@ -173,24 +219,17 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
             >
                 Chemist Ordered Product
             </Button>
-            {/* <Button
-                variant="contained"
-                className="user-drawer-button"
-                onClick={() => setIsDrawerOpen(true)}
-            >
-                Add Chemist
-            </Button> */}
             <Drawer
                 anchor="right"
                 open={isDrawerOpen}
                 onClose={() => setIsDrawerOpen(false)}
                 padding="16px"
                 sx={{
-                    width: 400, // Set the desired width of the Drawer
+                    width: 400,
                     flexShrink: 0,
                     boxSizing: "border-box",
                     '& .MuiDrawer-paper': {
-                        width: 400 // Set the same width for the paper inside the Drawer
+                        width: 400
                     }
                 }}
             >
@@ -229,9 +268,10 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
                             <Select
                                 labelId="demo-multiple-name-label"
                                 id="demo-multiple-name"
-                                multiple
-                                value={data}
-                                onChange={handleOrderProductChange}
+                                multiple={false}
+                                name="product_id"
+                                value={OrderedProductState.product_id}
+                                onChange={handleOrderedProductChange}
                                 input={<OutlinedInput label="Select the Product*" />}
                                 sx={{ width: '100%' }}
                                 style={{
@@ -248,16 +288,43 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
                             </Select>
                         </FormControl>
                     </Box>
-                    {
-                        data.map((key, index) => (
-                            <MyChemist id={key} dcr_id={allData?.id} key={index} AddProduct={AddProduct} setAddProduct={setAddProduct} chemistList={chemistList} />
-                        ))
-                    }
+                    <FormControl sx={{ m: 1, width: 300 }}>
+                        <InputLabel>{"Select the Stockist With*"}</InputLabel>
+                        <Select
+                            labelId="demo-multiple-name-label"
+                            id="demo-multiple-name"
+                            name="select_the_stockist"
+                            multiple={false}
+                            value={OrderedProductState.select_the_stockist}
+                            onChange={handleOrderedProductChange}
+                            input={<OutlinedInput label="Select the Stockist With*" />}
+                            sx={{ width: '100%' }}
+                            style={{
+                                borderBlockColor: "white",
+                                width: "100%",
+                                textAlign: 'start'
+                            }}
+                        >
+                            {chemistList.map((item) => (
+                                <MenuItem key={item.id} value={item.id}>
+                                    {item.title}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <Box marginTop={2} marginBottom={2}>
+                        <Controls.Input
+                            name="ordered_quantity"
+                            label="Order Quantity*"
+                            value={OrderedProductState.ordered_quantity}
+                            onChange={handleOrderedProductChange}
+                        />
+                    </Box>
                     <Stack spacing={1} direction="row">
                         <Button
                             variant="contained"
                             className="summit-button"
-                            onClick={(e) => onAddOrderProduct(e)}
+                            onClick={handleSubmit}
                         >
                             Submit{" "}
                         </Button>
@@ -294,144 +361,6 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
 }
 
 
-
-const MyChemist = ({ id, AddProduct, chemistList, setAddProduct, dcr_id }) => {
-    const [orderedInformation, setOrderInformation] = useState({
-        id: "",
-        product_information: [],
-    });
-
-
-    const { data: dcrData } = useGetChemistOrderProductDataQuery({ dcr_id: dcr_id, id: id });
-
-    const transformDataWithKeys = (dataArray) => {
-        if (dataArray && dataArray.length > 0) {
-            const obj = dataArray[0];
-            let transformed = {};
-
-            Object.entries(obj).forEach(([key, value]) => {
-                transformed[key] = value;
-            });
-
-            return transformed;
-        }
-        return null;
-    };
-
-    const transformedData = transformDataWithKeys(dcrData);
-    const prevStockistDataIdRef = useRef(transformedData?.id);
-
-    useEffect(() => {
-        if (transformedData?.id) {
-            prevStockistDataIdRef.current = transformedData.id;
-        }
-    }, [transformedData?.id]);
-
-    useEffect(() => {
-        if (prevStockistDataIdRef.current) {
-            setOrderInformation((prev) => ({
-                ...prev,
-                id: prevStockistDataIdRef.current,
-            }));
-        }
-    }, [prevStockistDataIdRef.current]);
-
-    const [OrderData, setOrderedData] = useState([]);
-    const [orderedQuantity, setOrderedQuantity] = useState({});
-
-    const handleStockistChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-
-        setOrderedData(
-            typeof value === 'string' ? value.split(',') : value
-        );
-    };
-
-    const handleInputChange = (event, stockistId) => {
-        const { name, value } = event.target;
-
-        setOrderedQuantity((prevState) => ({
-            ...prevState,
-            [stockistId]: {
-                ...prevState[stockistId],
-                [name]: value,
-            },
-        }));
-    };
-
-    useEffect(() => {
-        if (orderedInformation.id && OrderData.length > 0) {
-            setAddProduct((prevAddProduct) => {
-                // Find the index of the existing product by matching the ID.
-                const existingProductIndex = prevAddProduct.findIndex(item => item.id === orderedInformation.id);
-
-                // Create an array of product information based on the stockist data.
-                const productInformation = OrderData.map(stockistId => ({
-                    ordered_quantity: orderedQuantity[stockistId]?.quantity || "",
-                    select_the_stockist: stockistId,
-                }));
-
-                if (existingProductIndex !== -1) {
-                    // If the product exists, create a new array with the updated product information.
-                    const updatedAddProduct = [...prevAddProduct];
-                    updatedAddProduct[existingProductIndex].product_information = productInformation;
-                    return updatedAddProduct;
-                } else {
-                    // If the product does not exist, add it to the array.
-                    return [
-                        ...prevAddProduct,
-                        {
-                            id: orderedInformation.id,
-                            product_information: productInformation,
-                        },
-                    ];
-                }
-            });
-        }
-    }, [orderedInformation.id, OrderData, orderedQuantity]);
-
-    return (
-        <>
-            <Box marginBottom={2}>
-                <FormControl sx={{ m: 1, width: 300 }}>
-                    <InputLabel>{"Select the Stockist With*"}</InputLabel>
-                    <Select
-                        labelId="demo-multiple-name-label"
-                        id="demo-multiple-name"
-                        multiple
-                        value={OrderData}
-                        onChange={handleStockistChange}
-                        input={<OutlinedInput label="Select the Stockist With*" />}
-                        sx={{ width: '100%' }}
-                        style={{
-                            borderBlockColor: "white",
-                            width: "100%",
-                            textAlign: 'start'
-                        }}
-                    >
-                        {chemistList.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>
-                                {item.title}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Box>
-            {OrderData.map((stockistId) => (
-                <Box marginBottom={2} key={stockistId}>
-                    <Controls.Input
-                        name="quantity"
-                        label="Order Quantity*"
-                        value={orderedQuantity[stockistId]?.quantity || ""}
-                        onChange={(event) => handleInputChange(event, stockistId)}
-                    />
-                </Box>
-            ))}
-        </>
-    );
-};
 
 
 

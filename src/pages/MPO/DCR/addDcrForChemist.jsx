@@ -24,6 +24,9 @@ import ChemistOrderProduct from "./orderProduct/chemistOrderProduct";
 import { useSelector } from 'react-redux';
 import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
+import { BSDate } from "nepali-datepicker-react";
+import moment from "moment";
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: ' Name', alignRight: false },
@@ -42,9 +45,14 @@ const AddDCRforChemist = () => {
 
     const location = useLocation();
     const id = new URLSearchParams(window.location.search).get('id');
+
+    const now = new BSDate().now();
+
+    const monthData = getNepaliMonthName(now._date.month);
+    const yearData = now._date.year;
     // 
 
-    const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_role_id);
+    const { data: tourplanData } = usePostToGetTheTourPlanQuery({ mpo_name: company_user_role_id, year: yearData, month: monthData });
     const [updateDcr] = useUpdateDcrForChemistValuesMutation();
     const [createMpoDcr] = useCreateMpoShiftWiseDcrForChemistMutation();
     const [DcrForChemist] = useCreateDcrForChemistWithNullValuesMutation();
@@ -68,6 +76,8 @@ const AddDCRforChemist = () => {
     const [CompanyChemist, setCompanyChemist] = useState([]);
     const [ChemistData, setChemistData] = useState([]);
 
+    console.log('ChemistData', ChemistData)
+
     useEffect(() => {
         setChemistData([]);
 
@@ -76,27 +86,19 @@ const AddDCRforChemist = () => {
         });
     }, [CompanyChemist]);
 
-    const createNullValuesForChemist = async (chemistId) => {
-        if (chemistId) {
+    const createNullValuesForChemist = async (ChemistId) => {
+        if (ChemistId) {
             try {
                 const response = await DcrForChemist();
                 if (response.data) {
-                    const newData = { chemist_id: chemistId, dcr_id: response.data.id };
+                    const newData = { chemist_id: ChemistId, dcr_id: response.data.data.id };
                     const isDuplicate = ChemistData.some(item => item.chemist_id === newData.chemist_id && item.dcr_id === newData.dcr_id);
                     if (!isDuplicate) {
                         setChemistData(prevData => [...prevData, newData]);
                     }
-                } else if (response?.error) {
-                    setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
-                    setLoading(false);
-                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                }
-                else {
-                    setErrorMessage({ show: true, message: "Error" });
-                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                 }
             } catch (error) {
-                console.error('Error creating null values for chemist:', error);
+                console.error('Error creating null values for Chemist:', error);
             }
         }
     }
@@ -151,6 +153,7 @@ const AddDCRforChemist = () => {
         skip: !id
     });
 
+
     const [NewTourPlanData, setNewTourPlanData] = useState('');
 
     const selectTourPlanById = (key) => {
@@ -159,7 +162,7 @@ const AddDCRforChemist = () => {
 
     const areaOptions = useMemo(() => {
         if (NewTourPlanData !== undefined) {
-            return NewTourPlanData?.mpo_area_read?.map(key => ({ id: key.company_mpo_area_id.id, title: key.company_mpo_area_id.area_name }))
+            return NewTourPlanData?.mpo_area_read?.map(key => ({ id: key.id, title: key.area_name }))
         }
         return [];
     }, [NewTourPlanData])
@@ -270,123 +273,140 @@ const AddDCRforChemist = () => {
 
 
     const handlePostDcr = () => {
-        setLoading(true)
+        // setLoading(true)
 
-        if (AllMutipleData.length !== 0) {
-            for (const allData of AllMutipleData) {
-                let sendingData = { ...allData };
-                sendingData['id'] = allData.id;
-                if (sendingData['company_product']) {
-                    let companyProduct = allData.company_product;
-                    sendingData['company_product'] = [];
-                    companyProduct.map(key => {
-                        sendingData['company_product'].push({ id: key });
-                    });
-                } else {
-                    sendingData['company_product'] = [];
-                }
-                let ordered_products = sendingData?.Formdata?.ordered_products;
-                if (ordered_products.length !== 0) {
-                    sendingData['ordered_products'] = ordered_products;
-                } else {
-                    sendingData['ordered_products'] = [];
-                }
-                if (sendingData['rewards']) {
-                    let rewards = allData.rewards;
+        for (const allData of AllMutipleData) {
+            console.log('yes ma xa tw')
+            console.log('allData', allData);
+            let sendingData = { ...allData };
+            sendingData['id'] = allData.id;
+            if (sendingData['promoted_product']) {
+                let companyProduct = allData.company_product;
+                sendingData['promoted_product'] = [];
+                companyProduct.map(key => {
+                    sendingData['promoted_product'].push({ id: key });
+                });
+            } else {
+                sendingData['promoted_product'] = [];
+            }
 
-                    sendingData['rewards'] = [];
-                    rewards.map(key => {
-                        sendingData['rewards'].push({ id: key });
-                    });
-                } else {
-                    sendingData['rewards'] = [];
-                }
-                // if (sendingData['company_roles']) {
-                //     let companyRoles = allData.visited_with;
-                //     sendingData['company_roles'] = [];
-                //     companyRoles.map(key => {
-                //         sendingData['company_roles'].push({ id: key });
-                //     });
-                // } else {
-                //     sendingData['company_roles'] = [];
-                // }
+            if (sendingData['ordered_products']) {
+                let orderedProduct = sendingData?.Formdata?.ordered_products;
+                sendingData['ordered_products'] = [];
+                orderedProduct.map(key => {
+                    sendingData['ordered_products'].push({ id: key });
+                });
+            } else {
+                sendingData['ordered_products'] = [];
+            }
+            // let ordered_products = sendingData?.Formdata?.ordered_products;
+            // if (ordered_products.length !== 0) {
+            //     sendingData['ordered_products'] = ordered_products;
+            // } else {
+            //     sendingData['ordered_products'] = [];
+            // }
+            if (sendingData['rewards']) {
+                let rewards = allData.rewards;
+
+                sendingData['rewards'] = [];
+                rewards.map(key => {
+                    sendingData['rewards'].push({ id: key });
+                });
+            } else {
+                sendingData['rewards'] = [];
+            }
+            if (sendingData['company_roles']) {
+                let companyRoles = allData.company_roles;
                 sendingData['company_roles'] = [];
-                if (
-                    sendingData['visited_area'] ||
-                    sendingData['shift'] ||
-                    sendingData['visited_chemist'] ||
-                    sendingData['date']
-                ) {
-                    sendingData['visited_area'] = sendingData['visited_area'];
-                    sendingData['shift'] = allData.shift;
-                    sendingData['visited_chemist'] = sendingData['visited_chemist'];
-                    sendingData['expenses'] = sendingData?.Formdata?.expenses;
-                    sendingData['expenses_name'] = sendingData?.Formdata?.expenses_name;
-                    sendingData['expenses_reasoning'] = sendingData?.Formdata?.expenses_reasoning;
-                    sendingData['date'] = allData.date;
-                } else {
-                    sendingData['visited_area'] = null;
-                    sendingData['visited_chemist'] = null;
-                    sendingData['shift'] = null;
-                }
-                const mpoShiftData = {
-                    mpo_name: company_user_role_id,
-                    shift: allData.shift,
-                    dcr_id: allData.id,
-                };
-                updateDcr({ id: allData.id, value: sendingData }, {
-                    skip: !allData?.id || !sendingData
-                })
-                    .then(res => {
+                companyRoles.map(key => {
+                    sendingData['company_roles'].push({ id: key });
+                });
+            } else {
+                sendingData['company_roles'] = [];
+            }
+            sendingData['company_roles'] = [];
+            if (
+                sendingData['visited_area'] ||
+                sendingData['shift'] ||
+                sendingData['visited_chemist'] ||
+                sendingData['date']
+            ) {
+                sendingData['visited_area'] = sendingData['visited_area'];
+                sendingData['shift'] = allData.shift;
+                sendingData['visited_chemist'] = sendingData['visited_chemist'];
+                sendingData['expenses'] = sendingData?.Formdata?.expenses;
+                sendingData['expenses_name'] = sendingData?.Formdata?.expenses_name;
+                sendingData['expenses_reasoning'] = sendingData?.Formdata?.expenses_reasoning;
+                sendingData['date'] = allData.date;
+                sendingData['month'] = getNepaliMonthName(moment(sendingData.date).month() + 1);
+                sendingData['year'] = moment(sendingData.date).year();
+                sendingData['mpo_name'] = company_user_role_id;
+                sendingData['company_name'] = company_id;
+            } else {
+                sendingData['visited_area'] = null;
+                sendingData['visited_chemist'] = null;
+                sendingData['shift'] = null;
+            }
+            const mpoShiftData = {
+                mpo_name: company_user_role_id,
+                shift: allData.shift,
+                dcr_id: allData.id,
+            };
+            updateDcr({ id: sendingData['id'], value: sendingData })
+                .then(res => {
+                    setLoading(false);
+                    if (res.data) {
+                        setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
+                        setTimeout(() => {
+                            setSuccessMessage({ show: false, message: '' });
+                            navigate('/dashboard/admin/dcr');
+                        }, 2000);
+                        // createMpoDcr(mpoShiftData)
+                        //     .then(res => {
+                        //         if (res.data) {
+                        //             if (LastData === true) {
+                        //                 setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
+                        //                 setTimeout(() => {
+                        //                     setSuccessMessage({ show: false, message: '' });
+                        //                     navigate('/dashboard/admin/dcr');
+                        //                 }, 2000);
+                        //             } else {
+                        //                 setSuccessMessage({ show: true, message: 'DCR Added Successfully Added.' });
+                        //                 setTimeout(() => {
+                        //                     setSuccessMessage({ show: false, message: '' });
+                        //                 }, 2000);
+                        //             }
+                        //         }
+                        //     })
+                        //     .catch(err => {
+
+                        //     })
+                        //     .finally(() => {
+                        //         setLoading(false)
+                        //     })
+
+                    }
+                    else if (res?.error) {
+                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                         setLoading(false);
-                        if (res.data) {
-                            createMpoDcr(mpoShiftData)
-                                .then(res => {
-                                    if (res.data) {
-                                        if (LastData === true) {
-                                            setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
-                                            setTimeout(() => {
-                                                setSuccessMessage({ show: false, message: '' });
-                                                navigate('/dashboard/admin/dcr');
-                                            }, 2000);
-                                        } else {
-                                            setSuccessMessage({ show: true, message: 'DCR Added Successfully Added.' });
-                                            setTimeout(() => {
-                                                setSuccessMessage({ show: false, message: '' });
-                                            }, 2000);
-                                        }
-                                    }
-                                })
-                                .catch(err => {
-
-                                })
-                                .finally(() => {
-                                    setLoading(false)
-                                })
-
-                        }
-                        else if (res?.error) {
-                            setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
-                            setLoading(false);
-                            setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                        }
-                        else {
-                            setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
-                            setTimeout(() => {
-                                setErrorMessage({ show: false, message: '' });
-                            }, 2000);
-                        }
-                    })
-                    .catch(err => {
-                        setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                    }
+                    else {
+                        setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
                         setTimeout(() => {
                             setErrorMessage({ show: false, message: '' });
                         }, 2000);
-                    })
-                    .finally(() => {
-                        setLoading(false)
-                    })
-            }
+                    }
+                })
+                .catch(err => {
+                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                    setTimeout(() => {
+                        setErrorMessage({ show: false, message: '' });
+                    }, 2000);
+                })
+                .finally(() => {
+                    setLoading(false)
+                })
         }
     }
 
@@ -425,7 +445,7 @@ const AddDCRforChemist = () => {
                                                                                             <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
                                                                                                 {key.tour_plan.tour_plan.select_the_month}
                                                                                             </span>
-                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.company_mpo_area_id.area_name)
+                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.area_name)
                                                                                                 .join(', ')}</Typography>
                                                                                         </Box>
                                                                                     </Grid>
