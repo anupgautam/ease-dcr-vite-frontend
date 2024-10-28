@@ -76,7 +76,6 @@ const AddDCRforChemist = () => {
     const [CompanyChemist, setCompanyChemist] = useState([]);
     const [ChemistData, setChemistData] = useState([]);
 
-    console.log('ChemistData', ChemistData)
 
     useEffect(() => {
         setChemistData([]);

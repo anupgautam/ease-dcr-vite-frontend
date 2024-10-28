@@ -90,7 +90,6 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
         }),
         updateDcrForChemistValues: builder.mutation({
             query: (value) => {
-                console.log('values', value);
                 return {
                     url: `/dcr/dcr-for-chemist-product-rewards-roles/${value.id}/`,
                     method: 'PATCH',
@@ -98,6 +97,16 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                 }
             },
             invalidatesTags: ['PostTourplan', 'ChemistDCR']
+        }),
+        updateDcrForStockistValues: builder.mutation({
+            query: (value) => {
+                return {
+                    url: `/dcr/dcr-for-stockist-product-rewards-roles/${value.id}/`,
+                    method: 'PATCH',
+                    body: value.value,
+                }
+            },
+            invalidatesTags: ['PostTourplan','StockistDCR']
         }),
         createMpoShiftWiseDcrForDoctor: builder.mutation({
             query: value => ({
@@ -134,7 +143,16 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: value
             }),
-            invalidatesTags: ['PostTourplan', 'ChemistDCR']
+            invalidatesTags: ['PostTourplan', 'ChemistDCR','ChemistOrderedProduct']
+        }),
+        postStockistOrderedProduct: builder.mutation({
+            query: (value) =>
+            ({
+                url: '/dcr/stockist-ordered-products-map/',
+                method: 'POST',
+                body: value
+            }),
+            invalidatesTags: ['PostTourplan', 'StockistDCR','ChemistOrderedProduct']
         }),
         createDcrForChemistwithShiftMpo: builder.mutation({
             query: (value) => ({
@@ -201,6 +219,7 @@ export const {
 
     useUpdateDcrForDoctorValuesMutation,
     useUpdateDcrForChemistValuesMutation,
+    useUpdateDcrForStockistValuesMutation,
     useUpdateDcrForStockistMutation,
 
     useCreateMpoShiftWiseDcrForDoctorMutation,
@@ -215,4 +234,5 @@ export const {
     useGetStatDataofDcrByUserMutation,
     useGetStatDataofDcrByHigherUserMutation,
     usePostChemistOrderedProductMutation,
+    usePostStockistOrderedProductMutation,
 } = NewTourplanSlice;

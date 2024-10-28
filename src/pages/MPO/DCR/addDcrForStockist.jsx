@@ -19,6 +19,9 @@ import { useForm } from "@/reusable/forms/useForm";
 import StockistOrderedProduct from "./orderProduct/stockistOrderProduct";
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
+import { BSDate } from "nepali-datepicker-react";
+import moment from "moment";
 
 const AddDCRForStockist = () => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -26,8 +29,13 @@ const AddDCRForStockist = () => {
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('id');
 
-    const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_role_id);
+    const now = new BSDate().now();
 
+    const monthData = getNepaliMonthName(now._date.month);
+    const yearData = now._date.year;
+
+    // const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_role_id);
+    const { data: tourplanData } = usePostToGetTheTourPlanQuery({ mpo_name: company_user_role_id, year: yearData, month: monthData });
 
     const [PromotedProduct, setPromotedProduct] = useState([]);
 
@@ -108,9 +116,16 @@ const AddDCRForStockist = () => {
         setNewTourPlanData(key);
     }
 
+    // const areaOptions = useMemo(() => {
+    //     if (NewTourPlanData !== undefined) {
+    //         return NewTourPlanData?.mpo_area_read?.map(key => ({ id: key.company_mpo_area_id.id, title: key.company_mpo_area_id.area_name }))
+    //     }
+    //     return [];
+    // }, [NewTourPlanData])
+
     const areaOptions = useMemo(() => {
         if (NewTourPlanData !== undefined) {
-            return NewTourPlanData?.mpo_area_read?.map(key => ({ id: key.company_mpo_area_id.id, title: key.company_mpo_area_id.area_name }))
+            return NewTourPlanData?.mpo_area_read?.map(key => ({ id: key.id, title: key.area_name }))
         }
         return [];
     }, [NewTourPlanData])
@@ -207,7 +222,6 @@ const AddDCRForStockist = () => {
         return [];
     }, [companyProduct])
 
-    const [updateDcr] = useUpdateDcrForStockistMutation();
     const [createMpoDcr] = useAddDcrForStockistWithShiftMpoMutation();
     const [DcrForStockist] = useCreateDcrForStockistWithNullValuesMutation()
     const [updateTourplan] = useUpdateTourPlansMutation();
@@ -374,7 +388,6 @@ const AddDCRForStockist = () => {
                                                                                     <Grid item xs={3.5}>
                                                                                         <Box style={{ padding: '5px', textAlign: 'center', border: '1.2px solid #2d8960', borderRadius: "5px", marginTop: '11px', marginBottom: "11px" }}>
                                                                                             <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{key.tour_plan.tour_plan.select_the_date_id.slice(8)}</Typography>
-                                                                                            {/* <Typography style={{ fontSize: '13px', color: "black", marginTop: "-5px" }}>{key.tour_plan.tour_plan.select_the_month}</Typography> */}
                                                                                         </Box>
                                                                                     </Grid>
                                                                                     <Grid item xs={8.5}>
@@ -382,7 +395,7 @@ const AddDCRForStockist = () => {
                                                                                             <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
                                                                                                 {key.tour_plan.tour_plan.select_the_month}
                                                                                             </span>
-                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.company_mpo_area_id.area_name)
+                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.area_name)
                                                                                                 .join(', ')}</Typography>
                                                                                         </Box>
                                                                                     </Grid>

@@ -40,6 +40,59 @@ export const ChemistOrderedProductSlice = apiSlice.injectEndpoints({
             providesTags: ['ChemistOrderedProduct']
         }),
 
+        // //! Get all Dcotor DCRs by DCRId
+        // getStockistOrderedProductByDCRId: builder.query({
+        //     query: (id) => ({
+        //         url: `/dcr/dcr-for-stockist-ordered-product-information/?dcr_id=${id}`,
+        //         method: 'GET'
+        //     }),
+        //     providesTags: ['ChemistOrderedProduct', 'StockistOrderedProduct']
+        // }),
+
+        //! Get Chemist Ordered Products by DCRId
+        getChemistOrderedProductsByDCRId: builder.query({
+            query: (id) => {
+                return {
+                    url: `/dcr/chemist-ordered-products-map/?dcr_id=${id}`,
+                    method: 'GET'
+                }
+            },
+            providesTags: ['ChemistOrderedProduct']
+        }),
+
+        //! Get Stockist Ordered Products DCRId
+        getStockistOrderedProductsByDCRId: builder.query({
+            query: (id) => {
+                return {
+                    url: `/dcr/stockist-ordered-products-map/?dcr_id=${id}`,
+                    method: 'GET',
+                }
+            },
+            providesTags: ['ChemistOrderedProduct']
+        }),
+
+        //! DELETE chemist ordered products DCR by id
+        deleteChemistOrderedProductByDCRId: builder.mutation({
+            query: (id) => ({
+                url: `/dcr/chemist-ordered-products-map/${id['id']}/`,
+                method: 'DELETE',
+                body: id
+            }),
+            invalidatesTags: ['ChemistOrderedProduct']
+        }),
+
+        //! DELETE stockist DCR by id
+        deleteStockistOrderedProductById: builder.mutation({
+            query: (id) => {
+                return {
+                    url: `/dcr/stockist-ordered-products-map/${id['id']}/`,
+                    method: 'DELETE',
+                    body: id
+                }
+            },
+            invalidatesTags: ['ChemistOrderedProduct', 'StockistOrderedProduct']
+        }),
+
         //! CREATE chemist DCR by id
         addChemistOrderedProduct: builder.mutation({
             query: (add) => {
@@ -59,13 +112,17 @@ export const ChemistOrderedProductSlice = apiSlice.injectEndpoints({
 
         //! DELETE chemist DCR by id
         deleteChemistOrderedProductById: builder.mutation({
-            query: (id) => ({
-                url: `/dcr/dcr-for-chemist-ordered-product-information/${id['id']}/`,
-                method: 'DELETE',
-                body: id
-            }),
+            query: (id) => {
+                return {
+                    url: `/dcr/dcr-for-chemist-ordered-product-information/${id['id']}/`,
+                    method: 'DELETE',
+                    body: id
+                }
+            },
             invalidatesTags: ['ChemistOrderedProduct']
         }),
+
+
 
         //! Update Chemists DCR By ID 
         updateChemistOrderedProduct: builder.mutation({
@@ -133,6 +190,11 @@ export const {
     useGetChemistOrderedProductByDCRIdQuery,
     useAddChemistOrderedProductByIdMutation,
     useGetChemistOrderProductDataQuery,
+    useGetChemistOrderedProductsByDCRIdQuery,
+    useGetStockistOrderedProductsByDCRIdQuery,
+    useDeleteChemistOrderedProductByDCRIdMutation,
+    useDeleteStockistOrderedProductByIdMutation,
+    useGetStockistOrderedProductsByDCRIdMutation,
 } = ChemistOrderedProductSlice
 
 //! returns the query result object
