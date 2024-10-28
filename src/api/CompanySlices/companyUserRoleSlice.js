@@ -157,7 +157,7 @@ export const CompanyUserRoleSlice = apiSlice.injectEndpoints({
                     body: id,
                 }
             },
-            invalidatesTags: ['CompanyUserRoles']
+            invalidatesTags: ['CompanyUserRoles,ChemistOrderedProduct']
 
         }),
 

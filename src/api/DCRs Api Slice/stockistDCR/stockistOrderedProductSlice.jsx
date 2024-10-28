@@ -51,7 +51,7 @@ export const StockistOrderedProductSlice = apiSlice.injectEndpoints({
                     // }
                 }
             },
-            invalidatesTags: ['StockistOrderedProduct']
+            invalidatesTags: ['StockistOrderedProduct','ChemistOrderedProduct']
         }),
 
 

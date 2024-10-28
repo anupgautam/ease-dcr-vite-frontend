@@ -17,7 +17,7 @@ import Close from "@mui/icons-material/Close";
 import { useSelector } from 'react-redux';
 import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
-import { useGetChemistOrderProductDataQuery } from '@/api/DCRs Api Slice/chemistDCR/chemistOrderedProductInformation';
+import { useGetChemistOrderProductDataQuery, useGetChemistOrderedProductsByDCRIdQuery, useDeleteChemistOrderedProductByDCRIdMutation } from '@/api/DCRs Api Slice/chemistDCR/chemistOrderedProductInformation';
 import { useGetAllCompanyProductsWithoutPaginationQuery } from '@/api/productSlices/companyProductSlice';
 import { useAddOrderedProductInformationChemistMutation, usePostChemistOrderedProductMutation } from '@/api/MPOSlices/tourPlan&Dcr';
 import {
@@ -31,7 +31,6 @@ import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) => {
     const { company_id, company_area_id, company_user_role_id, company_division_name } = useSelector((state) => state.cookie);
 
-
     const newId = allData?.id;
     const [OrderedProductState, setOrderedProductState] = useState({
         dcr_id: newId,
@@ -42,7 +41,13 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
     });
 
 
+    const { data: chemistOrderedProducts } = useGetChemistOrderedProductsByDCRIdQuery(newId)
 
+    const [deleteOrderedProducts] = useDeleteChemistOrderedProductByDCRIdMutation()
+
+    const deleteProduct = (id) => {
+        deleteOrderedProducts({ id })
+    }
 
     const handleOrderedProductChange = (e) => {
         const { name, value } = e.target;
@@ -262,6 +267,183 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
                             options={companyProducts}
                         />
                     </Box> */}
+                    {/* <Box style={{ marginTop: "15px" }}>
+                        {chemistOrderedProducts?.length > 0 ? (
+                            <Box style={{ marginBottom: '20px' }}>
+                                <Box
+                                    style={{
+                                        display: "flex",
+                                        gap: "10px", // Spacing between cards
+                                        overflowX: "auto",
+                                        padding: "10px 0",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    {chemistOrderedProducts.map((key, index) => (
+                                        <Box
+                                            key={index}
+                                            onClick={() => selectTourPlanById(key)}
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                alignItems: "center",
+                                                width: '200px',
+                                                padding: "15px",
+                                                borderRadius: "8px",
+                                                border: '1.2px solid #dbe0e4',
+                                                backgroundColor: "#f7f8fa",
+                                                // boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)"
+                                            }}
+                                        >
+                                            <Box
+                                                style={{
+                                                    padding: "10px",
+                                                    textAlign: 'center',
+                                                    border: '1.2px solid #2d8960',
+                                                    borderRadius: "5px",
+                                                    width: '100%',
+                                                    marginBottom: "10px",
+                                                }}
+                                            >
+                                                <Typography
+                                                    style={{
+                                                        fontSize: "16px",
+                                                        fontWeight: '600',
+                                                        color: '#2d8960'
+                                                    }}
+                                                >
+                                                    {key?.product_id?.product_name?.product_name || 'N/A'}
+                                                </Typography>
+                                            </Box>
+
+                                            <Box
+                                                style={{
+                                                    backgroundColor: "#2d8960",
+                                                    padding: "8px 12px",
+                                                    borderRadius: "20px",
+                                                    textAlign: "center",
+                                                    color: "white",
+                                                    fontWeight: '700',
+                                                    fontSize: "14px",
+                                                    width: 'fit-content'
+                                                }}
+                                            >
+                                                Quantity: {key?.ordered_quantity || 0}
+                                            </Box>
+                                        </Box>
+                                    ))}
+                                </Box>
+                            </Box>
+                        ) : (
+                            <Typography>No chemist ordered products found.</Typography>
+                        )}
+                    </Box> */}
+
+
+                    <Box style={{ marginTop: "15px" }}>
+                        {chemistOrderedProducts?.length > 0 ? (
+                            <Box style={{ marginBottom: '20px' }}>
+                                <Box
+                                    style={{
+                                        display: "flex",
+                                        gap: "10px",
+                                        overflowX: "auto",
+                                        padding: "10px 0",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    {chemistOrderedProducts.map((key, index) => (
+                                        <Box
+                                            key={index}
+                                            onClick={() => selectTourPlanById(key)}
+                                            style={{
+                                                position: "relative", // Allow positioning of the delete icon
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                alignItems: "center",
+                                                width: '200px',
+                                                padding: "15px",
+                                                borderRadius: "8px",
+                                                border: '1.2px solid #dbe0e4',
+                                                backgroundColor: "#f7f8fa",
+                                            }}
+                                        >
+                                            {/* Delete Icon */}
+                                            <Box
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevent parent onClick from firing
+                                                    deleteProduct(key.id);
+                                                }}
+                                                style={{
+                                                    position: "absolute",
+                                                    top: "10px",
+                                                    right: "10px",
+                                                    width: "20px",
+                                                    height: "20px",
+                                                    borderRadius: "50%",
+                                                    backgroundColor: "red",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    color: "white",
+                                                    fontWeight: "bold",
+                                                    cursor: "pointer",
+                                                    fontSize: "14px",
+                                                }}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                                    <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clipRule="evenodd" />
+                                                </svg>
+
+                                            </Box>
+
+                                            {/* Product Name */}
+                                            <Box
+                                                style={{
+                                                    padding: "10px",
+                                                    textAlign: 'center',
+                                                    border: '1.2px solid #2d8960',
+                                                    borderRadius: "5px",
+                                                    width: '100%',
+                                                    marginBottom: "10px",
+                                                }}
+                                            >
+                                                <Typography
+                                                    style={{
+                                                        fontSize: "16px",
+                                                        fontWeight: '600',
+                                                        color: '#2d8960'
+                                                    }}
+                                                >
+                                                    {key?.product_id?.product_name?.product_name || 'N/A'}
+                                                </Typography>
+                                            </Box>
+
+                                            {/* Quantity */}
+                                            <Box
+                                                style={{
+                                                    backgroundColor: "#2d8960",
+                                                    padding: "8px 12px",
+                                                    borderRadius: "20px",
+                                                    textAlign: "center",
+                                                    color: "white",
+                                                    fontWeight: '700',
+                                                    fontSize: "14px",
+                                                    width: 'fit-content'
+                                                }}
+                                            >
+                                                Quantity: {key?.ordered_quantity || 0}
+                                            </Box>
+                                        </Box>
+                                    ))}
+                                </Box>
+                            </Box>
+                        ) : (
+                            <Typography>No chemist ordered products found.</Typography>
+                        )}
+                    </Box>
+
+
                     <Box marginBottom={2}>
                         <FormControl sx={{ m: 1, width: 300 }}>
                             <InputLabel>{"Select the Product*"}</InputLabel>
