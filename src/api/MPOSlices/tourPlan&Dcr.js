@@ -26,7 +26,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
         getHigherOrderTourPlanUsingId: builder.query({
             query: (value) => {
                 return {
-                    url: `/other-roles/higher-order-tour-plan/get_tour_plan/?user_id=${value}`,
+                    url: `/other-roles/higher-order-tour-plan/get_tour_plan/?user_id=${value.user_id}&year=${value.year}&month=${value.month}`,
                     method: 'GET',
                 };
             },

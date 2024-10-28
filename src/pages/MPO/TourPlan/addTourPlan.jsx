@@ -83,8 +83,8 @@ const AddTourPlan = () => {
     const [executiveLevelOptions, setExecutiveLevelOptions] = useState([]);
 
     useEffect(() => {
-        if (company_user_role_id) {
-            LowerExecutive({ id: company_user_role_id })
+        if (company_user_id) {
+            LowerExecutive({ id: company_user_id })
                 .then((res) => {
                     if (res.data) {
                         const data = res.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
@@ -92,7 +92,7 @@ const AddTourPlan = () => {
                     }
                 })
         }
-    }, [company_user_role_id])
+    }, [company_user_id])
 
 
     const today = NepaliDateConverter.getNepaliDate();
@@ -308,18 +308,23 @@ const AddTourPlan = () => {
         return [];
     }, [MpoTpArea])
 
-
     //! Others TP
     const handleSave = () => {
         setLoading(true)
-        let sending_data = { ...values };
-        sending_data['dates'] = [selectedDates];
-        sending_data['shift'] = 1;
-        sending_data['visit_data'] = MpoAreaData;
-        sending_data['hulting_station'] = values['hulting_station'];
-        sending_data['is_admin_opened'] = false;
-        sending_data['user_id'] = company_user_role_id;
-        AddHigherOrder(sending_data)
+        const data = {
+            date: selectedDates,
+            shift: 1,
+            visited_data: MpoAreaData,
+            hulting_station: values.hulting_station,
+            is_admin_opened: false,
+            user_id: company_user_role_id,
+            company_id: company_id,
+            month: getNepaliMonthName(moment(selectedDates).month() + 1),
+            year: moment(selectedDates).year(),
+            is_dcr_added: false,
+            is_unplanned: false,
+        }
+        AddHigherOrder(data)
             .then(res => {
                 if (res.data) {
                     initialStates()
@@ -334,19 +339,10 @@ const AddTourPlan = () => {
                         user_id: company_user_role_id,
                     })
                 }
-                else if (response?.error) {
-                    setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                else {
+                    setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
                     setLoading(false);
                     setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                    toggleDrawer()
-                }
-                else {
-                    initialStates()
-                    setErrorMessage({ show: true, message: res.error.data[0] });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                        toggleDrawer()
-                    }, 5000);
                 }
             })
             .catch(err => {

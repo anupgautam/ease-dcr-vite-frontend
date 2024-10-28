@@ -334,7 +334,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
         bulkUpdateTourplanByHo: builder.mutation({
             query: value => {
                 return {
-                    url: '/other-roles/higher-order-tour-plan-bulk-update',
+                    url: '/other-roles/higher-order-tour-plan-bulk-update/',
                     method: 'POST',
                     body: value,
                 };

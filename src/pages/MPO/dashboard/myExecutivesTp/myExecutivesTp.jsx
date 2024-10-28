@@ -110,7 +110,7 @@ const MyExecutiveTp = () => {
 
 
     useEffect(() => {
-        LowerData({ id: company_user_role_id })
+        LowerData({ id: company_user_id })
             .then((res) => {
                 const data = res.data.map((key) => {
                     return {
@@ -121,7 +121,7 @@ const MyExecutiveTp = () => {
                 })
                 setLowerList(data);
             })
-    }, [company_user_role_id])
+    }, [company_user_id])
 
     // const lowerList = useMemo(() => {
     //     if (myHigherData !== undefined) {

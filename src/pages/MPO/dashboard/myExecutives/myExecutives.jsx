@@ -89,8 +89,8 @@ const MyExecutives = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        if (company_user_role_id) {
-            LowerLevel({ id: company_user_role_id })
+        if (company_user_id) {
+            LowerLevel({ id: company_user_id })
                 .then((res) => {
                     if (res.data) {
                         setData(res.data)
@@ -99,7 +99,7 @@ const MyExecutives = () => {
                 .catch((err) => {
                 })
         }
-    }, [company_user_role_id])
+    }, [company_user_id])
 
     // !on search
     const onSearch = (e) => {
@@ -153,7 +153,7 @@ const MyExecutives = () => {
                     My Executives
                 </Typography>
             </Box>
-            
+
             <Card>
                 <Scrollbar>
                     <TableContainer sx={{ minWidth: 800 }}>

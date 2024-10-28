@@ -27,11 +27,20 @@ import { useNavigate } from 'react-router-dom';
 import { useGetcompanyUserRolesByIdQuery } from '@/api/CompanySlices/companyUserRoleSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import moment from 'moment';
+import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
+import { BSDate } from "nepali-datepicker-react";
 
 
 const AddDcrForHo = () => {
 
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+
+
+    const now = new BSDate().now();
+
+    const monthData = getNepaliMonthName(now._date.month);
+    const yearData = now._date.year;
 
     const chemistcategories = [
         { id: "A", title: "A" },
@@ -54,8 +63,8 @@ const AddDcrForHo = () => {
     const [executiveLevelOptions, setExecutiveLevelOptions] = useState([]);
 
     useEffect(() => {
-        if (company_user_role_id) {
-            LowerExecutive({ id: company_user_role_id })
+        if (company_user_id) {
+            LowerExecutive({ id: company_user_id })
                 .then((res) => {
                     if (res.data) {
                         const data = res.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
@@ -63,11 +72,11 @@ const AddDcrForHo = () => {
                     }
                 })
         }
-    }, [company_user_role_id])
+    }, [company_user_id])
 
     // const [higherOrderTourplans, setHigherOrderTourplans] = useState([]);
 
-    const { data: higherOrderTourplans } = useGetHigherOrderTourPlanUsingIdQuery(company_user_role_id);
+    const { data: higherOrderTourplans } = useGetHigherOrderTourPlanUsingIdQuery({ user_id: company_user_role_id, year: yearData, month: monthData });
 
     // useEffect(() => {
     //     GethingherOrder({ user_id: company_user_role_id })
@@ -188,13 +197,15 @@ const AddDcrForHo = () => {
 
     //!Modal wala ko click event
     const onAddDcr = async (e) => {
-        setLoading(true)
+        setLoading(true);
         const data = {
             date: values.date,
             visited_with: values.visited_with,
             shift: values.shift,
             user_id: company_user_role_id,
-            company_id: company_id
+            company_id: company_id,
+            year: moment(values.date).year(),
+            month: getNepaliMonthName(moment(values.date).month() + 1)
         }
         await createDCR(data)
             .then((res) => {
@@ -204,13 +215,9 @@ const AddDcrForHo = () => {
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
                     }, 2000);
-                } else if (res?.error) {
-                    setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
-                    setLoading(false);
-                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                 }
                 else {
-                    setErrorMessage({ show: true, message: response.error.data[0] });
+                    setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
                     setTimeout(() => {
                         setErrorMessage({ show: false, message: '' });
                     }, 2000);
@@ -222,9 +229,9 @@ const AddDcrForHo = () => {
                     setErrorMessage({ show: false, message: '' });
                 }, 2000);
             })
-            .finally(() => {
-                setLoading(false)
-            })
+        // .finally(() => {
+        //     setLoading(false)
+        // })
 
         setIsDrawerOpen(false)
     }
@@ -294,7 +301,8 @@ const AddDcrForHo = () => {
                                                                                 <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
                                                                                     {key.month}
                                                                                 </span>
-
+                                                                                <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.visited_data.map((key) => key.user_name.first_name + " " + " " + key.user_name.middle_name + key.user_name.last_name)
+                                                                                    .join(', ')}</Typography>
                                                                             </Box>
                                                                         </Grid>
                                                                     </Grid>

@@ -156,13 +156,16 @@ const AddUnplannedTp = () => {
                 const data = {
                     company_id: company_id,
                     user_id: company_user_role_id,
-                    dates: [selectedDates],
+                    dates: selectedDates,
                     shift: 1,
-                    visit_data: [{ 'visited_with': values.visited_with }],
+                    visit_data: [{ visited_with: values.visited_with }],
                     hulting_station: values.hulting_station,
                     is_admin_opened: false,
                     is_unplanned: true,
                     is_approved: true,
+                    is_dcr_added: false,
+                    month: getNepaliMonthName(moment(selectedDates).month() + 1),
+                    year: moment(selectedDates).year(),
                 }
                 AddHigherOrder(data)
                     .then((res) => {
