@@ -24,6 +24,7 @@ import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import moment from "moment";
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
+import { BSDate } from "nepali-datepicker-react";
 
 const TABLE_HEAD = [
     { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
@@ -41,7 +42,12 @@ const AddDcrForDoctor = () => {
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('id');
 
-    const { data: tourplanData } = usePostToGetTheTourPlanQuery(company_user_role_id);
+    const now = new BSDate().now();
+
+    const monthData = getNepaliMonthName(now._date.month);
+    const yearData = now._date.year;
+
+    const { data: tourplanData } = usePostToGetTheTourPlanQuery({ mpo_name: company_user_role_id, year: yearData, month: monthData });
     const [updateDcr] = useUpdateDcrForDoctorValuesMutation();
     const [createMpoDcr] = useCreateMpoShiftWiseDcrForDoctorMutation();
     const [DcrForDoctor] = useCreateDcrWithNullValuesForDoctorMutation();
@@ -56,7 +62,6 @@ const AddDcrForDoctor = () => {
     }
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
-    //! Autocomplete
 
     const handleRolesChange = (event, value) => {
         const mpotparea = value.map(option => option.id)
@@ -80,7 +85,6 @@ const AddDcrForDoctor = () => {
                 const response = await DcrForDoctor();
                 if (response.data) {
                     const newData = { doctor_id: doctorId, dcr_id: response.data.data.id };
-                    // Check if the entry already exists in DoctorData before adding it
                     const isDuplicate = DoctorData.some(item => item.doctor_id === newData.doctor_id && item.dcr_id === newData.dcr_id);
                     if (!isDuplicate) {
                         setDoctorData(prevData => [...prevData, newData]);

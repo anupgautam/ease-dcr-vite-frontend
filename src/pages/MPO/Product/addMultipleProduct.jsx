@@ -239,7 +239,7 @@ const MultipleDoctor = ({ sn, setAllMutipleData, AllMutipleData }) => {
         bonus: "",
         product_type: "",
         image: [],
-        // company_name: company_id,
+        company_name: company_id,
     })
 
     const {

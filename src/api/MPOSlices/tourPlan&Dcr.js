@@ -45,7 +45,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
         postToGetTheTourPlan: builder.query({
             query: value => {
                 return {
-                    url: `/mpo/company-mpo-tour-plan-get-tour-plan-mpo/?mpo_name=${value}&year=2081&month=Ashwin`,
+                    url: `/mpo/company-mpo-tour-plan-get-tour-plan-mpo/?mpo_name=${value.mpo_name}&year=${value.year}&month=${value.month}`,
                     method: 'GET',
                 };
             },
@@ -90,6 +90,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
         }),
         updateDcrForChemistValues: builder.mutation({
             query: (value) => {
+                console.log('values', value);
                 return {
                     url: `/dcr/dcr-for-chemist-product-rewards-roles/${value.id}/`,
                     method: 'PATCH',
@@ -121,6 +122,15 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
             query: (value) =>
             ({
                 url: '/dcr/dcr-for-chemist-ordered-product-information/',
+                method: 'POST',
+                body: value
+            }),
+            invalidatesTags: ['PostTourplan', 'ChemistDCR']
+        }),
+        postChemistOrderedProduct: builder.mutation({
+            query: (value) =>
+            ({
+                url: '/dcr/chemist-ordered-products-map/',
                 method: 'POST',
                 body: value
             }),
@@ -203,5 +213,6 @@ export const {
     usePostToGetTheTourPlanQuery,
 
     useGetStatDataofDcrByUserMutation,
-    useGetStatDataofDcrByHigherUserMutation
+    useGetStatDataofDcrByHigherUserMutation,
+    usePostChemistOrderedProductMutation,
 } = NewTourplanSlice;

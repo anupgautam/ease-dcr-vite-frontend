@@ -135,7 +135,7 @@ const ChemistSearch = () => {
 
     //! Search Logic
     const { data: chemistData } = useGetChemistsByMpoAreaAndIdQuery({ company_name: company_id, mpo_area: mpoArea, mpo_name: user_role === "admin" ? mpoName : company_user_role_id, page: page }, {
-        skip: !company_id || !mpoArea || !user_role || !company_user_role_id || !page
+        skip: !company_id || !user_role || !company_user_role_id || !page
     })
 
     const [searchResults, setSearchResults] = useState({ search: "" });
