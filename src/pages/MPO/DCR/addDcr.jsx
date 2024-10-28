@@ -175,7 +175,7 @@ const AddDcrForHo = () => {
     const handleDCRForStockist = useCallback(() => {
         DcrForStockist().then((res) => {
             if (res.data) {
-                navigation(`/dashboard/admin/dcr/for/stockist?id=${res.data.id}`)
+                navigation(`/dashboard/admin/dcr/for/stockist?id=${res.data.data.id}`)
             }
         }).catch((err) => {
         })
