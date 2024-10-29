@@ -15,7 +15,7 @@ export const CompanyUserRoleSlice = apiSlice.injectEndpoints({
         //! GET all the users
         getAllcompanyUserRoles: builder.query({
             query: (page) => ({
-                url: `/user/company-user-role/?company_name__company_id=${page.company_name}&page=${page.page}&user_name__is_active=${page.is_active}`,
+                url: `/user/company-user-role/?company_name__company_id=${page.company_name}&page=${page.page}`,
                 method: 'GET'
             }),
             providesTags: (result, error, arg) =>

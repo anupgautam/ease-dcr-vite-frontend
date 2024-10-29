@@ -48,6 +48,7 @@ import { useSelector } from 'react-redux';
 
 
 const TABLE_HEAD = [
+    { id: 'user_id', label: 'User Name', alignRight: false },
     { id: 'leave_type', label: 'Leave Type', alignRight: false },
     { id: 'leave_cause', label: 'Leave Cause', alignRight: false },
     { id: 'leave_from', label: 'Leave From', alignRight: false },
@@ -187,129 +188,133 @@ const FilteredApplication = () => {
                     </Grid>
                 </Box>
 
-                {results.data ?
-                    <>
-                        <Card>
-                            <Scrollbar>
-                                <TableContainer sx={{ minWidth: 1000 }}>
-                                    <Table>
-                                        <UserListHead
-                                            headLabel={TABLE_HEAD}
-                                        />
-                                        <TableBody>
-                                            <>
-                                                {
-                                                    results.data === undefined ? <>
-                                                        {
-                                                            eightArrays.map((key) => (
-                                                                <TableRow key={key} >
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                    <TableCell><Skeleton /></TableCell>
-                                                                </TableRow>
-                                                            ))}
-                                                    </> :
-                                                        <>
-                                                            {results?.data && results?.data?.length == 0 ?
-                                                                <TableRow>
-                                                                    <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
-                                                                        <Paper
-                                                                            sx={{
-                                                                                textAlign: 'center',
-                                                                            }}
-                                                                        >
-                                                                            <Typography variant="h6" paragraph>
-                                                                                Not found
-                                                                            </Typography>
-                                                                            <Typography variant="body2">
-                                                                                <strong>Requested Data Not found</strong>.
-                                                                                <br /> Try checking for typos or using complete words.
-                                                                                <br />
-                                                                                <br />
-                                                                                <br />
-                                                                                <br />
-                                                                                <br />
-                                                                            </Typography>
-                                                                        </Paper>
-                                                                    </TableCell>
-                                                                </TableRow>
-                                                                :
-                                                                results?.data && results?.data?.map((application, index) => (
-                                                                    <TableRow hover tabIndex={-1} role="checkbox" key={application.id}>
-                                                                        <TableCell>{index + 1}</TableCell>
-                                                                        <TableCell component="th" scope="row" align="left">
-                                                                            <Typography variant="subtitle2" noWrap>
-                                                                                {application.application_id.leave_type}
-                                                                            </Typography>
-                                                                            {/* </Stack> */}
-                                                                        </TableCell>
-                                                                        <TableCell align="left">{application.application_id.leave_cause}</TableCell>
-                                                                        <TableCell align="left">{application.application_id.leave_from}</TableCell>
-                                                                        <TableCell align="left">{application.application_id.leave_to}</TableCell>
-                                                                        <TableCell align="left">{application.application_id.is_approved === true ? "Approved" : "Pending"}</TableCell>
-                                                                        <TableCell align="left">{actualDate}</TableCell>
-                                                                        <TableCell align="left">
-                                                                            <Label color={(application.application_id.is_approved === true ? 'green' : 'red')}>
-                                                                                {sentenceCase(application.application_id.is_approved.toString())}</Label>
-                                                                        </TableCell>
-                                                                        <TableCell align="left">
-                                                                            {
-                                                                                user_role === 'admin' &&
-                                                                                <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application.id, application.mpo_name.id)} >
-                                                                                    <Badge>
-                                                                                        <Iconify icon="eva:edit-fill" />
-                                                                                    </Badge>
-                                                                                </IconButton>
-                                                                            }
-                                                                            {
-                                                                                user_role === 'admin' &&
-                                                                                <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(application.id); handleClickOpen() }}>
-                                                                                    <Badge>
-                                                                                        <Iconify icon="eva:trash-2-outline" />
-                                                                                    </Badge>
-                                                                                </IconButton>
-                                                                            }
-                                                                        </TableCell>
-                                                                        <Dialog
-                                                                            fullScreen={fullScreen}
-                                                                            open={openDialogue}
-                                                                            onClose={handleClose}
-                                                                            aria-labelledby="responsive-dialog-title"
-                                                                        >
-                                                                            <DialogTitle id="responsive-dialog-title">
-                                                                                {"Are you sure want to delete?"}
-                                                                            </DialogTitle>
-                                                                            <DialogActions>
-                                                                                <Button autoFocus onClick={() => { deleteApplication(selectedId); handleClose() }}>
-                                                                                    Yes{selectedId}
-                                                                                </Button>
-                                                                                <Button
-                                                                                    onClick={handleClose}
-                                                                                    autoFocus>
-                                                                                    No
-                                                                                </Button>
-                                                                            </DialogActions>
-                                                                        </Dialog>
-                                                                    </TableRow>
-                                                                ))
+                <Scrollbar>
+                    <TableContainer sx={{ minWidth: 1200 }}>
+                        <Table>
+                            <UserListHead
+                                headLabel={TABLE_HEAD}
+                            />
+                            <TableBody>
+                                {results.data ?
+                                    <>
 
-                                                            }
-                                                        </>}
-                                            </>
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                                {isDrawerOpen && <EditApplication
-                                    idharu={selectedUpdateId} onClose={onCloseDrawer} mpoId={mpoId}
-                                />
+                                        <>
+                                            {
+                                                results.data === undefined ? <>
+                                                    {
+                                                        eightArrays.map((key) => (
+                                                            <TableRow key={key} >
+                                                                <TableCell><Skeleton /></TableCell>
+                                                                <TableCell><Skeleton /></TableCell>
+                                                                <TableCell><Skeleton /></TableCell>
+                                                                <TableCell><Skeleton /></TableCell>
+                                                                <TableCell><Skeleton /></TableCell>
+                                                                <TableCell><Skeleton /></TableCell>
+                                                                <TableCell><Skeleton /></TableCell>
+                                                            </TableRow>
+                                                        ))}
+                                                </> :
+                                                    <>
+                                                        {results?.data && results?.data?.length == 0 ?
+                                                            <TableRow>
+                                                                <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
+                                                                    <Paper
+                                                                        sx={{
+                                                                            textAlign: 'center',
+                                                                        }}
+                                                                    >
+                                                                        <Typography variant="h6" paragraph>
+                                                                            Not found
+                                                                        </Typography>
+                                                                        <Typography variant="body2">
+                                                                            <strong>Requested Data Not found</strong>.
+                                                                            <br /> Try checking for typos or using complete words.
+                                                                            <br />
+                                                                            <br />
+                                                                            <br />
+                                                                            <br />
+                                                                            <br />
+                                                                        </Typography>
+                                                                    </Paper>
+                                                                </TableCell>
+                                                            </TableRow>
+                                                            :
+                                                            results?.data && results?.data?.map((application, index) => (
+                                                                <TableRow hover tabIndex={-1} role="checkbox" key={application.id}>
+                                                                    <TableCell>{index + 1}</TableCell>
+                                                                    <TableCell component="th" scope="row" align="left">
+                                                                        <Typography variant="subtitle2" noWrap>
+                                                                            {application.application_id.leave_type}
+                                                                        </Typography>
+                                                                        {/* </Stack> */}
+                                                                    </TableCell>
+                                                                    <TableCell align="left">{application.application_id.leave_cause}</TableCell>
+                                                                    <TableCell align="left">{application.application_id.leave_from}</TableCell>
+                                                                    <TableCell align="left">{application.application_id.leave_to}</TableCell>
+                                                                    <TableCell align="left">{application.application_id.is_approved === true ? "Approved" : "Pending"}</TableCell>
+                                                                    <TableCell align="left">{actualDate}</TableCell>
+                                                                    <TableCell align="left">
+                                                                        <Label color={(application.application_id.is_approved === true ? 'green' : 'red')}>
+                                                                            {sentenceCase(application.application_id.is_approved.toString())}</Label>
+                                                                    </TableCell>
+                                                                    <TableCell align="left">
+                                                                        {
+                                                                            user_role === 'admin' &&
+                                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application.id, application.mpo_name.id)} >
+                                                                                <Badge>
+                                                                                    <Iconify icon="eva:edit-fill" />
+                                                                                </Badge>
+                                                                            </IconButton>
+                                                                        }
+                                                                        {
+                                                                            user_role === 'admin' &&
+                                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(application.id); handleClickOpen() }}>
+                                                                                <Badge>
+                                                                                    <Iconify icon="eva:trash-2-outline" />
+                                                                                </Badge>
+                                                                            </IconButton>
+                                                                        }
+                                                                    </TableCell>
+                                                                    <Dialog
+                                                                        fullScreen={fullScreen}
+                                                                        open={openDialogue}
+                                                                        onClose={handleClose}
+                                                                        aria-labelledby="responsive-dialog-title"
+                                                                    >
+                                                                        <DialogTitle id="responsive-dialog-title">
+                                                                            {"Are you sure want to delete?"}
+                                                                        </DialogTitle>
+                                                                        <DialogActions>
+                                                                            <Button autoFocus onClick={() => { deleteApplication(selectedId); handleClose() }}>
+                                                                                Yes{selectedId}
+                                                                            </Button>
+                                                                            <Button
+                                                                                onClick={handleClose}
+                                                                                autoFocus>
+                                                                                No
+                                                                            </Button>
+                                                                        </DialogActions>
+                                                                    </Dialog>
+                                                                </TableRow>
+                                                            ))
+
+                                                        }
+                                                    </>}
+                                        </>
+
+                                        {isDrawerOpen && <EditApplication
+                                            idharu={selectedUpdateId} onClose={onCloseDrawer} mpoId={mpoId}
+                                        />
+                                        }
+                                    </>
+
+                                    :
+                                    <DefaultApplication />
                                 }
-                            </Scrollbar>
-                        </Card>
-                    </> : <DefaultApplication />}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Scrollbar>
             </Card>
         </>
     )
