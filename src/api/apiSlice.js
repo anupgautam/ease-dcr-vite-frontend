@@ -94,7 +94,8 @@ export const apiSlice = createApi({
         'PrimarySale',
         'SecondarySale',
         'TourPlanValidity',
-        'PostTourplan'
+        'PostTourplan',
+        'DoctorCall'
     ],
     endpoints: (builder) => ({}),
 });

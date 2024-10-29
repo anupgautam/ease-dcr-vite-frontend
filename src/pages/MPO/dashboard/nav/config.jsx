@@ -43,9 +43,14 @@ const navConfig = [
         icon: <Icon icon="fa6-solid:suitcase-medical" style={{ fontSize: '20px' }} />,
       },
       {
-        title: 'product',
+        title: 'Product',
         path: 'admin/listofproduct',
         icon: <Icon icon="icon-park-solid:medicine-bottle" style={{ fontSize: '20px' }} />,
+      },
+      {
+        title: 'Doctor Call Folder',
+        path: 'admin/doctorcallfolder',
+        icon: <Icon icon="lucide:image" style={{ fontSize: '20px' }} />,
       },
     ],
   },

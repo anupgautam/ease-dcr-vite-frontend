@@ -73,6 +73,7 @@ import AddMultipleUser from './pages/MPO/User/addMultipleUser';
 import FilterTravelAllowances from './pages/MPO/Travel Allowances/FilterTravelAllowances';
 import ListOfCompanyController from './pages/MPO/Company/ListOfCompanyController';
 import ListOfCompanyUsersController from './pages/MPO/CompanyUsers/ListOfCompanyUsersController';
+import ListOfDoctorCallFolderController from './pages/MPO/DoctorCallFolder/ListOfDoctorCallFolderController';
 
 export default function Router() {
   const routes = useRoutes([
@@ -148,6 +149,10 @@ export default function Router() {
         {
           path: 'admin/listofstockist',
           element: <Authentication component={ListofStockistController} allowRoles={['admin', 'MPO', 'ASM']} />,
+        },
+        {
+          path: 'admin/doctorcallfolder',
+          element: <Authentication component={ListOfDoctorCallFolderController} allowRoles={['admin']} />,
         },
         {
           path: 'admin/add/mutiple/product',
