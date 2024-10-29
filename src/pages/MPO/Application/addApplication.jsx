@@ -25,7 +25,7 @@ import { useCreateApplicationsMutation } from '../../../api/ApplicationSlices/Ap
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const AddApplication = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id,company_user_role_id } = useSelector((state) => state.cookie);
 
     //! Format Date
     const today = NepaliDateConverter.getNepaliDate();
@@ -83,16 +83,16 @@ const AddApplication = () => {
     const onAddDoctors = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("leave_cause", values.leave_cause);
-        formData.append("leave_type", values.leave_type);
-        formData.append("leave_from", selectedDates);
-        formData.append("leave_to", selectedDatesTo);
-        formData.append("user_id", company_user_id);
-        // formData.append("mpo_name", user_role);
-        formData.append('company_name', company_id)
-        formData.append('is_submitted', true);
-        formData.append('leave_status', 'pending');
+        const formData = {
+            leave_cause: values.leave_cause,
+            leave_type: values.leave_type,
+            leave_from: selectedDates,
+            leave_to: selectedDatesTo,
+            user_id: company_user_role_id,
+            company_name: company_id,
+            is_submitted: true,
+            leave_status: 'pending'
+        };
         try {
             const response = await createDoctors(formData)
             if (response.data) {
