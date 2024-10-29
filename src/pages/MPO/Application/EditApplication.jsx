@@ -165,28 +165,23 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
             id: idharu,
             company_name: company_id,
             user_id: values.user_id,
-            is_submitted: values.is_submitted
+            is_submitted: values.is_submitted,
         };
         try {
             const response = await updateApplications(formData).unwrap();
 
-            if (response) {
+            if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Application' });
+                setLoading(false);
                 setTimeout(() => {
                     history("/dashboard/admin/application")
                     setSuccessMessage({ show: false, message: '' });
                 }, 2000);
             }
-            else if (response?.error) {
+            else {
                 setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                 setLoading(false);
                 setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-            }
-            else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
             }
         }
         catch (error) {

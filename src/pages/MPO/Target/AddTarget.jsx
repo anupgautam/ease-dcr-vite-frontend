@@ -65,7 +65,7 @@ const AddTarget = () => {
     const users = useMemo(() => {
         if (Data?.data !== undefined) {
             return Data?.data?.results?.map((key) => ({
-                id: key.user_name.id,
+                id: key.id,
                 title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
             }))
         }
@@ -130,8 +130,7 @@ const AddTarget = () => {
         setLoading(true)
         const jsonObject = {
             target_from: company_user_role_id,
-            target_to: values.target_to.toString(),
-            // sales: values.sales,  // Uncomment if needed
+            target_to: values.target_to,
             year: selectedYear,
             target_amount: values.target_amount,
             company_name: company_id
