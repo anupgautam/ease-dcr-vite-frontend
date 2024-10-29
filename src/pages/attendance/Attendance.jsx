@@ -27,8 +27,7 @@ import { usePostingAllUserAttendanceMutation } from "../../api/CompanySlices/com
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import ExportToExcel from '@/reusable/utils/exportSheet';
 import { useSelector } from 'react-redux';
-
-
+import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 
 const bsMonthDays = {
     2080: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30],
@@ -114,9 +113,9 @@ const ListofAttendance = () => {
 
     const now = new BSDate().now();
     const year = now._date.year;
-    const month = now._date.month;
+    const month = getNepaliMonthName(now._date.month);
 
-    const months = [
+    const monthsCalendar = [
         { value: 1, label: "Baisakh" },
         { value: 2, label: "Jestha" },
         { value: 3, label: "Asadh" },
@@ -130,6 +129,22 @@ const ListofAttendance = () => {
         { value: 11, label: "Falgun" },
         { value: 12, label: "Chaitra" }
     ];
+
+    const months = [
+        { value: 'Baisakh', label: 'Baisakh' },
+        { value: 'Jesth', label: 'Jestha' },
+        { value: 'Asadh', label: 'Asadh' },
+        { value: 'Shrawan', label: 'Shrawan' },
+        { value: 'Bhadra', label: 'Bhadra' },
+        { value: 'Ashwin', label: 'Ashwin' },
+        { value: 'Kartik', label: 'Kartik' },
+        { value: 'Mangsir', label: 'Mangsir' },
+        { value: 'Poush', label: 'Poush' },
+        { value: 'Magh', label: 'Magh' },
+        { value: 'Falgun', label: 'Falgun' },
+        { value: 'Chaitra', label: 'Chaitra' },
+    ]
+
 
     const [selectedMonth, setSelectedMonth] = useState(month);
     const handleNepaliMonthChange = (event) => {
@@ -145,6 +160,8 @@ const ListofAttendance = () => {
     const handleYearChange = (event) => {
         setSelectedYear(event.target.value);
     };
+
+    // const getMonthIndex = (monthName) => months.findIndex(m => m.label === monthName) + 1;
 
     //! Handle Next and Previous functionality
     const handlePrevMonth = () => {
@@ -165,6 +182,26 @@ const ListofAttendance = () => {
         }
     };
 
+
+    // const handlePrevMonth = () => {
+    //     let currentMonthIndex = getMonthIndex(selectedMonth);
+    //     if (currentMonthIndex === 1) {
+    //         setSelectedMonth("Chaitra");
+    //         setSelectedYear((prevYear) => prevYear - 1);
+    //     } else {
+    //         setSelectedMonth(months[currentMonthIndex - 2].label);
+    //     }
+    // };
+
+    // const handleNextMonth = () => {
+    //     let currentMonthIndex = getMonthIndex(selectedMonth);
+    //     if (currentMonthIndex === 12) {
+    //         setSelectedMonth("Baisakh");
+    //         setSelectedYear((prevYear) => prevYear + 1);
+    //     } else {
+    //         setSelectedMonth(months[currentMonthIndex].label);
+    //     }
+    // };
 
     const allDaysInMonth = getAllDaysInMonth(selectedYear, selectedMonth);
     const userList = useGetUsersByCompanyRoleIdQuery({
@@ -339,7 +376,39 @@ const ListofAttendance = () => {
 };
 
 //! Original
-const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, selectedYear, setAttendanceDateData, userNameValue }) => {
+const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, selectedYear, setAttendanceDateData, userNameValue, attendanceData }) => {
+
+    // const monthMapping = {
+    //     'Baisakh': 1,
+    //     'Jestha': 2,
+    //     'Ashad': 3,
+    //     'Shrawan': 4,
+    //     'Bhadau': 5,
+    //     'Ashwin': 6,
+    //     'Kartik': 7,
+    //     'Mangsir': 8,
+    //     'Poush': 9,
+    //     'Magh': 10,
+    //     'Falgun': 11,
+    //     'Chaitra': 12,
+    // };
+
+    // const calendar = {};
+
+    // data.forEach(({ date, month }) => {
+    //     const monthNumber = monthMapping[month];
+    //     if (monthNumber) {
+    //         const dateKey = `${monthNumber}-${date}`;
+    //         if (!calendar[monthNumber]) {
+    //             calendar[monthNumber] = [];
+    //         }
+    //         calendar[monthNumber].push(date);
+    //     }
+    // });
+
+    // console.log(calendar)
+
+
     const [AttendanceData] = usePostingAllUserAttendanceMutation();
     const [AttendData, setAttendData] = useState();
 
@@ -365,6 +434,7 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
     // Calculate total days and number of rows needed
     const totalDays = paddedDays.length + allDaysInMonth.length;
     const rows = Math.ceil(totalDays / daysInWeek);
+
 
     return (
         <Grid container spacing={1} sx={{ padding: '8px' }}>

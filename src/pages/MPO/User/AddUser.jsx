@@ -120,7 +120,6 @@ const AddUser = () => {
     const higherUserList = useGetAllcompanyUserRolesQuery({ company_name: company_id }, {
         skip: !company_id
     });
-    console.log(higherUserList)
 
 
     //! Format Date
@@ -242,7 +241,6 @@ const AddUser = () => {
             is_active: true,
             date_of_joining: formattedDate,
         };
-        console.log(jsonData)
         try {
             const response = await createUsers(jsonData)
             if (response?.data) {

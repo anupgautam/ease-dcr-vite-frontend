@@ -98,7 +98,6 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
         // values.latitude,
     ])
 
-    console.log('values', values);
 
     //! Edit user
     const [updateCompanyAreas] = useUpdateCompanyAreasMutation();

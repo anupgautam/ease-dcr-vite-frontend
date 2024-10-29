@@ -252,7 +252,6 @@ const AttendanceList = ({ data = [], userId, month, year, setAttendanceDateData,
                 setAttendanceDateData(res.data);
             })
             .catch((err) => {
-                console.log(err);
             });
     }, [year, month, userId]);
 

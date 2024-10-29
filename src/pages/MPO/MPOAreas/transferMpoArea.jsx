@@ -85,7 +85,6 @@ const TransferMpoArea = () => {
         }
         MpoTransferArea(data)
             .then((res) => {
-                console.log(res)
                 if (res?.data) {
                     setSuccessMessage({ show: true, message: 'Successfully Transfered Area.' });
                     setLoading(false)

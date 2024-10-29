@@ -70,7 +70,6 @@ const DefaultList = () => {
         setIsDrawerOpen(false);
     }, []);
 
-    console.log(data)
 
     return (
         <>

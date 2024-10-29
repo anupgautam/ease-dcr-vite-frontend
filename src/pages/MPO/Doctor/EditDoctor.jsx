@@ -30,7 +30,6 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
 
     //! Getting doctor by ID
     const Doctor = useGetDoctorsByIdQuery(id);
-    // console.log(Doctor.data)
 
     //! Get doctor categories
     const DoctorSpecialization = useGetDoctorsSpecializationQuery(company_id, {
@@ -168,7 +167,6 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
             company_name: company_id,
             id: id,
         };
-        console.log(values)
         try {
             const response = await updateDoctors(data).unwrap();
             if (response) {

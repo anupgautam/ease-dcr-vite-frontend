@@ -241,12 +241,12 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
                                 </> : <></>}
 
                                 {/* //!Edit */}
-                                <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(user?.id)} >
+                                {/* <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(user?.id)} >
                                     <Badge>
                                         <Iconify icon="eva:edit-fill" />
                                     </Badge>
-                                </IconButton>
-                                {/* <Dialog
+                                </IconButton> */}
+                                <Dialog
                                     fullScreen={fullScreen}
                                     open={openDialogue}
                                     onClose={handleClose}
@@ -265,7 +265,7 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
                                             No
                                         </Button>
                                     </DialogActions>
-                                </Dialog> */}
+                                </Dialog>
                                 {isDrawerOpen && <EditUser
                                     idharu={selectedUpdateId} onClose={onCloseDrawer}
                                 />

@@ -101,7 +101,6 @@ const DefaultList = () => {
     // });
 
     const DoctorCall = useGetDoctorCallQuery({ id: company_id })
-    // console.log(DoctorCalls.data)
 
 
     // !Delete product

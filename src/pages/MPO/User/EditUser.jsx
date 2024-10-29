@@ -40,7 +40,6 @@ const EditUser = ({ idharu, onClose }) => {
 
     //! Getting User by ID
     const User = useGetcompanyUserRolesByIdQuery(idharu);
-    // console.log(User)
 
     //! Get user roles
     const data = useGetAllCompanyRolesQuery(company_id, {
@@ -79,7 +78,6 @@ const EditUser = ({ idharu, onClose }) => {
     const higherUserList = useGetAllcompanyUserRolesQuery({ company_name: company_id }, {
         skip: !company_id
     });
-    console.log(higherUserList)
     // const higherUserList
 
     // useEffect(() => {

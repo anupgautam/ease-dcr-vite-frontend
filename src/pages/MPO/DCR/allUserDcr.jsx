@@ -88,7 +88,6 @@ const AllUserDcr = () => {
         skip: !company_id || !page
     });
 
-    console.log('userList', userList);
 
     useEffect(() => {
         let dataList = []

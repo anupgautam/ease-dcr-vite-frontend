@@ -275,8 +275,6 @@ const AddDCRforChemist = () => {
         // setLoading(true)
 
         for (const allData of AllMutipleData) {
-            console.log('yes ma xa tw')
-            console.log('allData', allData);
             let sendingData = { ...allData };
             sendingData['id'] = allData.id;
             if (sendingData['promoted_product']) {
