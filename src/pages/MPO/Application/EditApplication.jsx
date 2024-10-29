@@ -154,18 +154,18 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true);
-        const formData = new FormData();
-        formData.append("leave_type", values.leave_type);
-        formData.append("leave_cause", values.leave_cause);
-        formData.append("leave_from", dateData);
-        formData.append("leave_to", dateDataAnother);
-        formData.append("leave_status", 'approved');
-        formData.append("is_approved", values.is_approved);
-        formData.append("company_name", values.company_name);
-        formData.append('id', idharu)
-        formData.append('company_name', company_id)
-        formData.append('user_id', mpoId);
-        formData.append('is_submitted', values.is_submitted);
+        const formData = {
+            leave_type: values.leave_type,
+            leave_cause: values.leave_cause,
+            leave_from: dateData,
+            leave_to: dateDataAnother,
+            leave_status: 'approved',
+            is_approved: values.is_approved,
+            id: idharu,
+            company_name: company_id,
+            user_id: mpoId,
+            is_submitted: values.is_submitted
+        };
         try {
             const response = await updateApplications(formData).unwrap();
 
