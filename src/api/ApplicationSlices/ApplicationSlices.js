@@ -83,7 +83,7 @@ export const ApplicationSlices = apiSlice.injectEndpoints({
         updateApplications: builder.mutation({
             query: (updateApplication) => {
                 return {
-                    url: `expenses/mpo-leave-application/${updateApplication.get('id')}/`,
+                    url: `expenses/mpo-leave-application/${updateApplication.id}/`,
                     method: 'PATCH',
                     body: updateApplication,
                 }

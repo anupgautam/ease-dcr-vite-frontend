@@ -111,20 +111,21 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
     useEffect(() => {
         if (Application.data) {
             setInitialFValues({
-                leave_type: Application?.data?.application_id?.leave_type,
-                leave_cause: Application?.data?.application_id?.leave_cause,
-                leave_from: Application?.data?.application_id?.leave_from,
-                leave_to: Application?.data?.application_id?.leave_to,
-                leave_status: Application?.data?.application_id?.leave_status,
-                is_submitted: Application?.data?.application_id?.is_submitted,
-                submission_date: Application?.data?.application_id?.submission_date,
-                is_approved: Application?.data?.application_id?.is_approved,
-                company_name: Application?.data?.application_id?.company_name,
-                approved_by: Application?.data?.application_id?.approved_by,
-                submit_to: Application?.data?.application_id?.submit_to,
+                leave_type: Application?.data?.leave_type,
+                leave_cause: Application?.data?.leave_cause,
+                leave_from: Application?.data?.leave_from,
+                leave_to: Application?.data?.leave_to,
+                leave_status: Application?.data?.leave_status,
+                is_submitted: Application?.data?.is_submitted,
+                submission_date: Application?.data?.submission_date,
+                is_approved: Application?.data?.is_approved,
+                company_name: Application?.data?.company_name,
+                approved_by: Application?.data?.approved_by,
+                submit_to: Application?.data?.submit_to,
+                user_id: Application?.data?.user_id,
             });
-            setDateDataAnother(Application?.data?.application_id?.leave_to);
-            setDateData(Application?.data?.application_id?.leave_from);
+            setDateDataAnother(Application?.data?.leave_to);
+            setDateData(Application?.data?.leave_from);
         }
     }, [Application.data])
 
@@ -163,7 +164,7 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
             is_approved: values.is_approved,
             id: idharu,
             company_name: company_id,
-            user_id: mpoId,
+            user_id: values.user_id,
             is_submitted: values.is_submitted
         };
         try {
