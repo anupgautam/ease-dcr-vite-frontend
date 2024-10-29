@@ -34,13 +34,12 @@ import EditLeaves from './EditLeaves'
 import { useSelector } from 'react-redux';
 
 const TABLE_HEAD = [
-    { id: 'mpo_name', label: 'MPO Name', alignRight: false },
+    { id: 'mpo_name', label: 'User', alignRight: false },
     { id: 'phone', label: 'Phone', alignRight: false },
     { id: 'leave_type', label: 'Leave Type', alignRight: false },
     { id: 'leave_cause', label: 'Leave Cause', alignRight: false },
     { id: 'leave_from', label: 'Leave From', alignRight: false },
     { id: 'leave_to', label: 'Leave To', alignRight: false },
-    { id: '' },
 ];
 
 const FilteredLeaves = () => {
@@ -89,13 +88,13 @@ const FilteredLeaves = () => {
     const [dateData, setDateData] = useState()
 
     //! onSearch
-    const FilteredData = { company_name: companyId, date: dateData, role_name: selectedOption }
+    const FilteredData = { company_name: company_id }
 
     useEffect(() => {
-        if (dateData || selectedOption) {
+        if (company_id) {
             searchApplicationFilter(FilteredData)
         }
-    }, [dateData, selectedOption])
+    }, [company_id])
 
 
     //! Dialogue 
@@ -133,10 +132,10 @@ const FilteredLeaves = () => {
 
     return (
         <>
-            <Card>
+            <Card style={{ marginTop: "30px" }}>
                 <Box style={{ padding: "20px" }}>
                     <Grid container spacing={2}>
-                        <Grid item xs={2}>
+                        {/* <Grid item xs={2}>
                             <Autocomplete
                                 options={rolesOptions}
                                 getOptionLabel={(option) => option.title}
@@ -150,7 +149,7 @@ const FilteredLeaves = () => {
                                     </li>
                                 )}
                             />
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs={2.85}>
                             <NepaliDatePicker
                                 inputClassName="form-control-design"
@@ -220,21 +219,21 @@ const FilteredLeaves = () => {
                                                                         <TableCell component="th" scope="row" align="left">
                                                                             {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                                             <Typography variant="subtitle2" noWrap>
-                                                                                {application.mpo_name.user_name.first_name + " " + application.mpo_name.user_name.last_name}
+                                                                                {application.user_id.user_name.first_name + " " + application.user_id.user_name.last_name}
                                                                             </Typography>
                                                                             {/* </Stack> */}
                                                                         </TableCell>
-                                                                        <TableCell align="left">{application.mpo_name.user_name.phone_number}</TableCell>
-                                                                        <TableCell align="left">{application.application_id.leave_type}</TableCell>
-                                                                        <TableCell align="left">{application.application_id.leave_cause}</TableCell>
-                                                                        <TableCell align="left">{application.application_id.leave_from}</TableCell>
-                                                                        <TableCell align="left">{application.application_id.leave_to}</TableCell>
+                                                                        <TableCell align="left">{application.user_id.user_name.phone_number}</TableCell>
+                                                                        <TableCell align="left">{application.leave_type}</TableCell>
+                                                                        <TableCell align="left">{application.leave_cause}</TableCell>
+                                                                        <TableCell align="left">{application.leave_from}</TableCell>
+                                                                        <TableCell align="left">{application.leave_to}</TableCell>
                                                                         {/* //! Edit  */}
-                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application.id)} >
+                                                                        {/* <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application.id)} >
                                                                             <Badge>
                                                                                 <Iconify icon="eva:edit-fill" />
                                                                             </Badge>
-                                                                        </IconButton>
+                                                                        </IconButton> */}
                                                                     </TableRow>
                                                                 ))
                                                             }
