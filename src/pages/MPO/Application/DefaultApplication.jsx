@@ -124,123 +124,110 @@ const DefaultApplication = () => {
 
     return (
         <>
-            <Card>
-                <Scrollbar>
-                    <TableContainer sx={{ minWidth: 1200 }}>
-                        <Table>
-                            <UserListHead
-                                headLabel={TABLE_HEAD}
-                            />
-                            <TableBody>
-                                <>
+            <>
+                {
+                    data === undefined ? <>
+                        {
+                            eightArrays.map((key) => (
+                                <TableRow key={key} >
+                                    <TableCell><Skeleton /></TableCell>
+                                    <TableCell><Skeleton /></TableCell>
+                                    <TableCell><Skeleton /></TableCell>
+                                    <TableCell><Skeleton /></TableCell>
+                                    <TableCell><Skeleton /></TableCell>
+                                    <TableCell><Skeleton /></TableCell>
+                                    <TableCell><Skeleton /></TableCell>
+                                    <TableCell><Skeleton /></TableCell>
+                                </TableRow>
+                            ))}
+                    </> :
+                        <>{data && data.map((application, index) => (
+                            <TableRow hover tabIndex={-1} role="checkbox" key={application.id}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell component="th" scope="row" align="left">
+                                    <Typography variant="subtitle2" noWrap>
+                                        {application?.user_id?.user_name?.first_name + " " + application?.user_id?.user_name?.middle_name + " " + application?.user_id?.user_name?.last_name}
+                                    </Typography>
+                                </TableCell>
+                                <TableCell component="th" scope="row" align="left">
+                                    <Typography variant="subtitle2" noWrap>
+                                        {application?.leave_type}
+                                    </Typography>
+                                </TableCell>
+                                <TableCell align="left">{application?.leave_cause}</TableCell>
+                                <TableCell align="left">{application?.leave_from}</TableCell>
+                                <TableCell align="left">{application?.leave_to}</TableCell>
+                                <TableCell align="left">{application?.is_approved === true ? "Approved" : "Pending"}</TableCell>
+                                <TableCell align="left">{moment(application.created_at).format('DD MMM YYYY')}</TableCell>
+                                <TableCell align="left">
+                                    <Label color={(application?.is_approved === true ? 'green' : 'red')}>
+                                        {sentenceCase(application?.is_approved.toString())}</Label>
+                                </TableCell>
+                                <TableCell align="left">
+                                    {/*//! Edit  */}
                                     {
-                                        data === undefined ? <>
-                                            {
-                                                eightArrays.map((key) => (
-                                                    <TableRow key={key} >
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                        <TableCell><Skeleton /></TableCell>
-                                                    </TableRow>
-                                                ))}
-                                        </> :
-                                            <>{data && data.map((application, index) => (
-                                                <TableRow hover tabIndex={-1} role="checkbox" key={application.id}>
-                                                    <TableCell>{index + 1}</TableCell>
-                                                    <TableCell component="th" scope="row" align="left">
-                                                        <Typography variant="subtitle2" noWrap>
-                                                            {application?.user_id?.user_name?.first_name + " " + application?.user_id?.user_name?.middle_name + " " + application?.user_id?.user_name?.last_name}
-                                                        </Typography>
-                                                    </TableCell>
-                                                    <TableCell component="th" scope="row" align="left">
-                                                        <Typography variant="subtitle2" noWrap>
-                                                            {application?.leave_type}
-                                                        </Typography>
-                                                    </TableCell>
-                                                    <TableCell align="left">{application?.leave_cause}</TableCell>
-                                                    <TableCell align="left">{application?.leave_from}</TableCell>
-                                                    <TableCell align="left">{application?.leave_to}</TableCell>
-                                                    <TableCell align="left">{application?.is_approved === true ? "Approved" : "Pending"}</TableCell>
-                                                    <TableCell align="left">{moment(application.created_at).format('DD MMM YYYY')}</TableCell>
-                                                    <TableCell align="left">
-                                                        <Label color={(application?.is_approved === true ? 'green' : 'red')}>
-                                                            {sentenceCase(application?.is_approved.toString())}</Label>
-                                                    </TableCell>
-                                                    <TableCell align="left">
-                                                        {/*//! Edit  */}
-                                                        {
-                                                            user_role === 'admin' &&
-                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application?.id, application?.mpo_name?.id)}>
-                                                                <Badge>
-                                                                    <Iconify icon="eva:edit-fill" />
-                                                                </Badge>
-                                                            </IconButton>
-                                                        }
-                                                        {/*//! Delete  */}
-                                                        {
-                                                            user_role === 'admin' &&
-                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(application?.id); handleClickOpen() }}>
-                                                                <Badge>
-                                                                    <Iconify icon="eva:trash-2-outline" />
-                                                                </Badge>
-                                                            </IconButton>
-                                                        }
-                                                    </TableCell>
-                                                    <Dialog
-                                                        fullScreen={fullScreen}
-                                                        open={openDialogue}
-                                                        onClose={handleClose}
-                                                        aria-labelledby="responsive-dialog-title"
-                                                    >
-                                                        <DialogTitle id="responsive-dialog-title">
-                                                            {"Are you sure want to delete?"}
-                                                        </DialogTitle>
-                                                        <DialogActions>
-                                                            <Button autoFocus onClick={() => {
-                                                                deleteApplication(selectedId)
-                                                                    .then((res) => {
-                                                                        handleClose()
-                                                                    })
-                                                            }}>
-                                                                Yes
-                                                            </Button>
-                                                            <Button
-                                                                onClick={handleClose}
-                                                                autoFocus>
-                                                                No
-                                                            </Button>
-                                                        </DialogActions>
-                                                    </Dialog>
-                                                </TableRow>
-                                            ))
-                                            }
-                                            </>}
-                                </>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    {isDrawerOpen && <EditApplication
-                        idharu={selectedUpdateId} onClose={onCloseDrawer} mpoId={mpoId}
-                    />
-                    }
+                                        user_role === 'admin' &&
+                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application?.id, application?.mpo_name?.id)}>
+                                            <Badge>
+                                                <Iconify icon="eva:edit-fill" />
+                                            </Badge>
+                                        </IconButton>
+                                    }
+                                    {/*//! Delete  */}
+                                    {
+                                        user_role === 'admin' &&
+                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(application?.id); handleClickOpen() }}>
+                                            <Badge>
+                                                <Iconify icon="eva:trash-2-outline" />
+                                            </Badge>
+                                        </IconButton>
+                                    }
+                                </TableCell>
+                                <Dialog
+                                    fullScreen={fullScreen}
+                                    open={openDialogue}
+                                    onClose={handleClose}
+                                    aria-labelledby="responsive-dialog-title"
+                                >
+                                    <DialogTitle id="responsive-dialog-title">
+                                        {"Are you sure want to delete?"}
+                                    </DialogTitle>
+                                    <DialogActions>
+                                        <Button autoFocus onClick={() => {
+                                            deleteApplication(selectedId)
+                                                .then((res) => {
+                                                    handleClose()
+                                                })
+                                        }}>
+                                            Yes
+                                        </Button>
+                                        <Button
+                                            onClick={handleClose}
+                                            autoFocus>
+                                            No
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>
+                            </TableRow>
+                        ))
+                        }
+                        </>}
+            </>
+            {isDrawerOpen && <EditApplication
+                idharu={selectedUpdateId} onClose={onCloseDrawer} mpoId={mpoId}
+            />
+            }
 
-                </Scrollbar>
 
-                {/* //!pagination */}
-                <Box justifyContent={'center'} alignItems='center' display={'flex'}
-                    sx={{ margin: "20px 0px" }} >
-                    {/* {data ?
+            {/* //!pagination */}
+            <Box justifyContent={'center'} alignItems='center' display={'flex'}
+                sx={{ margin: "20px 0px" }} >
+                {/* {data ?
                         <Pagination
                             count={parseInt(data.count / 8) + 1}
                             onChange={handleChangePage}
                         /> : <></>} */}
-                </Box>
-            </Card>
+            </Box>
         </>
     )
 }
