@@ -101,7 +101,6 @@ const UserSearch = () => {
     skip: !company_id
   });
 
-  // console.log(userList)
   useEffect(() => {
     let dataList = [{ id: "", title: "None" }];
     if (roleList?.data) {
@@ -115,7 +114,6 @@ const UserSearch = () => {
   const [searchResults, setSearchResults] = useState({ search: "" });
   const [searchUser, results] = useSearchCompanyUserRolesMutation();
 
-  console.log(results)
 
   // !on search
   const onSearch = (e) => {

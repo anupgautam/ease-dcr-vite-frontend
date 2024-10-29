@@ -245,7 +245,6 @@ const AddTourPlan = () => {
                 }
             })
             .catch(err => {
-                console.log('err', err);
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
@@ -623,7 +622,6 @@ const AddTourPlan = () => {
 //         // }
 //     );
 
-//     console.log('MpoAreaData', MpoAreaData);
 
 //     const [MpoTpArea, setMpoTpArea] = useState([]);
 //     const [TPAreaName, setTPAreaName] = useState([])
@@ -676,7 +674,6 @@ const AddTourPlan = () => {
 //         const newVisitData = [{ visited_with: id, area: selectedAreaId }];
 //         setMpoAreaData(newVisitData);
 //         setVisitData(selectedAreaId);
-//         console.log(MpoAreaData)
 //     }
 
 //     useEffect(() => {
@@ -694,7 +691,6 @@ const AddTourPlan = () => {
 //     //     setSelectedAreas(value)
 
 //     //     const selectedAreaId = value.map(option => option.id)
-//     //     console.log(selectedAreaId)
 //     //     // const newVisitData = [...MpoAreaData, { visited_with: id, area: selectedAreaId }];
 //     //     // const newVisitData = [{ visited_with: id, area: selectedAreaId }];
 //     //     const newVisitData = id.map(id => ({
@@ -707,10 +703,8 @@ const AddTourPlan = () => {
 //     //         return updatedVisitData;
 //     //     });
 //     //     setVisitData(selectedAreaId);
-//     //     console.log(MpoAreaData)
 //     // }
 //     // useEffect(() => {
-//     //     console.log(MpoAreaData)
 //     // }, [(MpoAreaData || id)]);
 
 //     return (

@@ -46,7 +46,6 @@ const AddMultipleProduct = () => {
         //     const { company_name, ...rest } = data;
         //     return rest;
         // });
-        // console.log(filteredData)
         for (const addData of AllMutipleData) {
             try {
                 const response = await createProduct(addData)

@@ -58,7 +58,6 @@ const StockistOrderedProduct = ({ id, allData }) => {
 
     // const stockistOrderedProducts = useGetStockistOrderedProductsByDCRIdQuery(id)
 
-    console.log(stockistOrderedProducts)
 
     const [PostStockistOrderProduct] = usePostStockistOrderedProductMutation();
 
@@ -83,6 +82,7 @@ const StockistOrderedProduct = ({ id, allData }) => {
                         ordered_quantity: "",
                         company_name: company_id,
                         select_the_stockist: "",
+                        mpo_name:company_user_role_id,
                     });
                 } else {
                     setErrorMessage({ show: true, message: extractErrorMessage(res.error) });

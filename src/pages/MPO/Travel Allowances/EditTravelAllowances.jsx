@@ -220,7 +220,6 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
         }
     }, [updateTravelAllowances, values, idharu, dateData, selectedMonth, selectedYear])
 
-    console.log(TravelAllowance?.data)
     return (
         <>
             <Drawer

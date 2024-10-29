@@ -38,7 +38,6 @@ const EditStockist = ({ idharu, onClose }) => {
 
     //! Getting Stockist by ID
     const Stockist = useGetStockistsByIdQuery(idharu);
-    console.log(Stockist.data)
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
@@ -122,10 +121,8 @@ const EditStockist = ({ idharu, onClose }) => {
             company_name: company_id,
             stockist_category: values.stockist_category
         };
-        console.log(stockistData)
         try {
             const response = await updateStockists(stockistData)
-            console.log(response)
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Stockist' });
                 setTimeout(() => {

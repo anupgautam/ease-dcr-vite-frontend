@@ -221,7 +221,6 @@ const FilterTravelAllowances = () => {
         ? useSearchMPOExpensesQuery({ company_name: company_id, user_id: id || "", year: selectedYear || "", month: selectedMonth || "" })
         : useSearchHigherExpensesQuery({ company_name: company_id, user_id: id || "", year: selectedYear || "", month: selectedMonth || "" });
 
-    console.log(results)
 
     return (
         <>

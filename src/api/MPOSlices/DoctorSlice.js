@@ -269,7 +269,6 @@ export const DoctorSlice = apiSlice.injectEndpoints({
         //! Update doctors data by id
         updateDoctors: builder.mutation({
             query: (updateDoctor) => {
-                console.log(updateDoctor)
                 return {
                     // url: `doctor/doctor/${updateDoctor.get('id')}/`,
                     url: `doctor/doctor/${updateDoctor.id}/`,

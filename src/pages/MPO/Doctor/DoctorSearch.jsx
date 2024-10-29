@@ -81,7 +81,6 @@ const DoctorSearch = () => {
     const [mpoName, setMPOName] = useState('');
     const [MpoList, setMpoList] = useState([]);
 
-    console.log('mpoName', mpoName);
 
     const mpoNames = useMemo(() => {
         if (MpoList) {
@@ -161,7 +160,6 @@ const DoctorSearch = () => {
         skip: !company_id || !user_role || !company_user_role_id || !page
     })
 
-    console.log('DoctorData', DoctorData);
 
     const [SearchData, setSearchData] = useState([]);
     const [SearchDataCondition, setSearchDataCondition] = useState(false);
@@ -185,7 +183,6 @@ const DoctorSearch = () => {
                     }
                 })
                 .catch((err) => {
-                    console.log(err)
                 })
         }
     }

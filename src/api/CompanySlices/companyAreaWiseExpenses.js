@@ -127,7 +127,6 @@ export const CompanyAreaWiseExpenses = apiSlice.injectEndpoints({
         //! POST Expenses for Higher Order
         postHigherExpenses: builder.mutation({
             query: (createHigherExpenses) => {
-                console.log("For Higher")
                 return {
                     url: "expenses/higher-expenses/",
                     method: 'POST',
