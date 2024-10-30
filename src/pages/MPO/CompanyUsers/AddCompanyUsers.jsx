@@ -4,7 +4,7 @@ import {
     Typography,
     Button,
     Grid,
-    CircularProgress
+    CircularProgress,
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -15,49 +15,52 @@ import Iconify from '../../../components/iconify';
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
-
-import {
-    useCreateCompanyRolesMutation,
-    useGetAllRolesQuery
-} from '@/api/MPOSlices/companyRolesSlice';
-import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { useCreateCompanyUserMutation, useGetAllCompanyRoleQuery, useGetAllCompanyQuery } from '../../../api/MPOSlices/SuperAdminSlice';
 
 const AddCompanyUsers = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
-    //! Create Chemist
-    const [createCompanyRoles] = useCreateCompanyRolesMutation()
+    //! Get Companies
+    const { data } = useGetAllCompanyQuery()
 
-    //! Get other roles
-    const Roles = useGetAllRolesQuery(company_id);
-
-    const roles = useMemo(() => {
-        if (Roles.data) {
-            return Roles.data.map((key) => ({ id: key.id, title: key.role_name }))
+    const companies = useMemo(() => {
+        if (data) {
+            return data.map((key) => ({ id: key.id, title: key.company_name }))
         }
         return [];
-    }, [Roles])
+    }, [data])
+
+
+
+    //! Create Chemist
+    const [createCompanyUser] = useCreateCompanyUserMutation()
+
+    const initialFValues = {
+        middle_name: "",
+    };
+
 
     const validate = (fieldValues = values) => {
+        // 
         let temp = { ...errors }
+        if ('first_name' in fieldValues)
+            temp.first_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.first_name);
+        temp.middle_name = returnValidation(['number', 'lessThan50', 'specialcharacter'], values.middle_name);
+        if ('last_name' in fieldValues)
+            temp.last_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.last_name);
+        if ('address' in fieldValues)
+            temp.address = returnValidation(['null'], values.address);
         if ('role_name' in fieldValues)
-            temp.role_name = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.role_name)
-        temp.role_name_value = returnValidation(['null'], values.role_name_value)
-        temp.priority_value = returnValidation(['null', 'lessThan50'], values.priority_value)
-        temp.is_highest_priority = returnValidation(['null', 'lessThan50'], values.is_highest_priority)
-
+            temp.role_name = returnValidation(['null'], values.role_name);
+        if ('phone_number' in fieldValues)
+            temp.phone_number = returnValidation(['null', 'phonenumber', 'specialchracter'], values.phone_number);
+        if ('email' in fieldValues)
+            temp.email = returnValidation(['null', 'email'], values.email);
         setErrors({
             ...temp
         })
-
         if (fieldValues === values)
             return Object.values(temp).every(x => x == "")
-    }
-
-
-    const initialFValues = {
-        is_highest_priority: false
     }
 
     const {
@@ -72,92 +75,181 @@ const AddCompanyUsers = () => {
     useEffect(() => {
         validate();
 
-    }, [values.role_name, values.priority_value])
+    }, [values])
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
+    //! Get other roles 
+    const Roles = useGetAllCompanyRoleQuery({ company_name: values.company_name });
+
+    const roles = useMemo(() => {
+        if (Roles.data) {
+            return Roles.data.map((key) => ({ id: key.id, title: key.role_name.role_name }))
+        }
+        return [];
+    }, [Roles])
+
 
     //!Modal wala ko click event
-    const onAddRoles = useCallback(async (e) => {
+    const onAddCompanyUsers = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
         const jsonData = {
+            first_name: values.first_name,
+            middle_name: values.middle_name,
+            last_name: values.last_name,
+            address: values.address,
+            phone_number: values.phone_number,
+            email: values.email,
             role_name: values.role_name,
-            priority_value: values.priority_value,
-            role_name_value: values.roles_name_value,
-            is_highest_priority: values.is_highest_priority,
-            company_name: company_id
+            company_name:values.company_name
+            // executive_level: values.executive_level,
+            // company_name: company_id,
+            // is_tp_locked: false,
+            // company_area: areaOptions,
+            // division_name: divisionOptions,
+            // station_type: values.station_type,
+            // is_active: true,
+            // date_of_joining: formattedDate,
         };
+        console.log(jsonData)
         try {
-            const response = await createCompanyRoles(jsonData).unwrap();
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Roles' });
+            const response = await createCompanyUser(jsonData)
+            if (response?.data) {
+                setSuccessMessage({ show: true, message: 'Successfully Added User' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
-                setIsDrawerOpen(false)
-            }
-            else if (response?.error) {
+                setIsDrawerOpen(false);
+            } else if (response?.error) {
                 setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                 setLoading(false);
                 setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            } else {
+                setErrorMessage({ show: true, message: response?.error?.data[0] || response?.error?.data?.user_name?.email[0] });
+                setTimeout(() => {
+                    setIsDrawerOpen(false);
+                    setErrorMessage({ show: false, message: '' });
+                }, 3000);
             }
-            else {
-                setErrorMessage({ show: true, message: "Error" });
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-            }
-        } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+        } catch (err) {
+            setErrorMessage({ show: true, message: 'Backend error' });
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
             }, 3000);
-        } finally {
+        }
+        finally {
             setLoading(false)
         }
 
-    }, [createCompanyRoles, values]);
+    }, [createCompanyUser, values]);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     return (
         <>
-            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsDrawerOpen(true)} >
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsDrawerOpen(true)}>
                 Add
             </Button>
             <Drawer
                 anchor="right"
                 open={isDrawerOpen}
                 onClose={() => setIsDrawerOpen(false)}
-                padding="16px"
                 sx={{
-                    width: 400, // Set the desired width of the Drawer
+                    width: 400,
                     flexShrink: 0,
                     boxSizing: "border-box",
                     '& .MuiDrawer-paper': {
-                        width: 400 // Set the same width for the paper inside the Drawer
+                        width: 400
                     }
                 }}
             >
-                <Box style={{ padding: "20px" }}>
+                <Box padding="20px">
                     <Box
                         p={1}
                         textAlign="center"
                         role="presentation"
-                        className="drawer-box"
                         style={{ marginBottom: "40px" }}
                     >
-                        <IconButton
-                            className="close-button"
-                            onClick={() => setIsDrawerOpen(false)}
-                        >
+                        <IconButton onClick={() => setIsDrawerOpen(false)}>
                             <Close />
                         </IconButton>
-                        <Typography variant="h6" >
-                            Add CompanyUser
-                        </Typography>
+                        <Typography variant="h6">Add CompanyUser</Typography>
                     </Box>
+
+                    <Grid container spacing={2}>
+                        <Grid item xs={6} marginBottom={2}>
+                            <Controls.Input
+                                id="autoFocus"
+                                autoFocus
+                                name="first_name"
+                                label="First name*"
+                                value={values.first_name}
+                                onChange={handleInputChange}
+                                error={errors.first_name}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Controls.Input
+                                name="middle_name"
+                                label="Middle name"
+                                value={values.middle_name}
+                                onChange={handleInputChange}
+                                error={errors.middle_name}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Box marginBottom={2}>
+                        <Controls.Input
+                            name="last_name"
+                            label="Last name*"
+                            value={values.last_name}
+                            onChange={handleInputChange}
+                            error={errors.last_name}
+                        />
+                    </Box>
+                    <Box marginBottom={2}>
+                        <Controls.Input
+                            name="email"
+                            label="Email*"
+                            value={values.email}
+                            onChange={handleInputChange}
+                            error={errors.email}
+                        />
+                    </Box>
+                    <Box marginBottom={2}>
+                        <Controls.Select
+                            name="company_name"
+                            label="Company Name*"
+                            value={values.name}
+                            onChange={handleInputChange}
+                            error={errors.company_name}
+                            options={companies}
+                        />
+                    </Box>
+                    <Grid container spacing={2} marginBottom={2}>
+                        <Grid item xs={6}>
+                            <Controls.Input
+                                name="address"
+                                label="Address*"
+                                value={values.address}
+                                onChange={handleInputChange}
+                                error={errors.address}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Controls.Input
+                                name="phone_number"
+                                label="Contact Number*"
+                                value={values.phone_number}
+                                onChange={handleInputChange}
+                                error={errors.phone_number}
+                            />
+                        </Grid>
+                    </Grid>
+
                     <Box marginBottom={2}>
                         <Controls.Select
                             name="role_name"
@@ -168,72 +260,39 @@ const AddCompanyUsers = () => {
                             options={roles}
                         />
                     </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Input
-                            id="autoFocus"
-                            autoFocus
-                            name="roles_name_value"
-                            label="Roles Name*"
-                            value={values.role_name_value}
-                            onChange={handleInputChange}
-                            error={errors.role_name_value}
-                        />
-                    </Box>
-
-                    <Box marginBottom={2}>
-                        <Controls.Input
-                            name="priority_value"
-                            label="Priority Value*"
-                            value={values.name}
-                            onChange={handleInputChange}
-                            error={errors.priority_value}
-                        />
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Checkbox
-                            name="is_highest_priority"
-                            label="Is Highest Priority"
-                            value={values.is_highest_priority}
-                            onChange={handleInputChange}
-                        />
-                    </Box>
                     <Stack spacing={1} direction="row">
                         <Controls.SubmitButton
                             variant="contained"
-                            className="submit-button"
-                            onClick={(e) => onAddRoles(e)}
+                            onClick={(e) => onAddCompanyUsers(e)}
                             text="Submit"
                         />
                         <Button
                             variant="outlined"
-                            className="cancel-button"
                             onClick={() => setIsDrawerOpen(false)}
                         >
                             Cancel
                         </Button>
                     </Stack>
-                </Box>
-                {loading && (
-                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
-                        <CircularProgress />
-                    </Grid>
-                )}
-                {ErrorMessage.show && (
-                    <Grid>
-                        <Box className="messageContainer errorMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                )}
-                {SuccessMessage.show && (
-                    <Grid>
-                        <Box className="messageContainer successMessage">
-                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                        </Box>
-                    </Grid>
-                )}
-            </Drawer>
 
+                    {loading && (
+                        <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                            <CircularProgress />
+                        </Grid>
+                    )}
+
+                    {ErrorMessage.show && (
+                        <Box className="messageContainer errorMessage">
+                            <Typography style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</Typography>
+                        </Box>
+                    )}
+
+                    {SuccessMessage.show && (
+                        <Box className="messageContainer successMessage">
+                            <Typography style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</Typography>
+                        </Box>
+                    )}
+                </Box>
+            </Drawer>
         </>
     )
 }

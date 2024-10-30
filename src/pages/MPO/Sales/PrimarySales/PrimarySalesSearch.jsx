@@ -19,55 +19,50 @@ import {
     Select,
     Autocomplete,
     InputLabel,
-    FormControl,
-    Stack,
-    useTheme
+    FormControl, Stack
 } from '@mui/material';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import EditPrimarySales from './EditPrimarySales'
-import AddPrimarySales from './AddPrimarySales';
+import { useTheme } from "@mui/material/styles";
+import SecondarySalesCount from './PrimarySalesCount';
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
-import {
-    useSearchPrimarySalesMutation,
-    useDeletePrimarySalesByIdMutation
-} from '../../../../api/MPOSlices/PrimarySalesApiSlice';
+// import {
+//     useSearchPrimarySalesMutation,
+//     useDeletePrimarySalesByIdMutation
+// } from '../../../../api/MPOSlices/SecondarySalesApiSlice';
+// import {
+//     useGetAllStockistsWithoutPaginationQuery,
+// } from "../../../../api/MPOSlices/StockistSlice";
 import { useGetStockistsWithoutPaginationQuery } from '@/api/MPOSlices/stockistApiSlice';
-import { useGetUsersByCompanyUserByIdQuery } from "@/api/MPOSlices/UserSlice";
-import ExcelCSVPrimarySales from './ExcelCSVPrimarySales';
+import ExcelCSVSecondarySales from './ExcelCSVPrimarySales';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
+import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
 import { useSelector } from 'react-redux';
+import DefaultList from './DefaultList';
+import { useDeletePrimarySalesByIdMutation, useSearchPrimarySalesMutation } from '../../../../api/MPOSlices/PrimarySalesApiSlice';
 
 const TABLE_HEAD = [
-    { id: 'product_name', label: 'Product Name', alignRight: false },
-    { id: 'opening_stock', label: 'Op.St.', alignRight: false },
-    { id: 'purchase', label: 'Purchase', alignRight: false },
+    { id: 'product', label: 'Product Name', alignRight: false },
     { id: 'stockist_name', label: 'Stockist Name', alignRight: false },
+    { id: 'quantity', label: 'Quantity', alignRight: false },
     { id: 'year', label: 'Year', alignRight: false },
     { id: 'month', label: 'Month', alignRight: false },
-    { id: 'sales_return', label: 'Sales Return', alignRight: false },
-    { id: 'total', label: 'Total', alignRight: false },
-    { id: 'sales', label: 'Sales', alignRight: false },
-    { id: 'free', label: 'Free', alignRight: false },
-    { id: 'expiry_breakage', label: 'Ex/Br', alignRight: false },
-    { id: 'closing_stock', label: 'Cl.St.', alignRight: false },
-    { id: 'l_rate', label: 'L.Rate', alignRight: false },
-    { id: 'st_value', label: 'St.Value', alignRight: false },
-    { id: 'sl_value', label: 'Sl.Value', alignRight: false },
-    // { id: 'status', label: 'Status', alignRight: false },
     { id: '' },
+];
+
+const BS_MONTHS = [
+    "Baisakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
+    "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"
 ];
 
 const PrimarySalesSearch = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
-    const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -95,14 +90,13 @@ const PrimarySalesSearch = () => {
     const [searchResults, setSearchResults] = useState({ search: "" });
 
     //! Get Stockist
+    const mpo_id = useSelector(state => state.dcrData.selected_user);
 
-    const companyUserArea = useGetUsersByCompanyUserByIdQuery(company_user_id, {
-        skip: !company_user_id
+    const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
+        skip: !mpo_id
     });
-
-    const Stockist = useGetStockistsWithoutPaginationQuery(company_id, {
-        skip: !company_id
-    });
+    // const { Stockist } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id })
+    const Stockist = useGetStockistsWithoutPaginationQuery(company_id);
 
     const rolesOptions = useMemo(() => {
         if (Stockist?.data) {
@@ -123,13 +117,14 @@ const PrimarySalesSearch = () => {
     }, []);
 
     // const handleOptionChange = useCallback((event, value) => {
-    //     setSelectedOption(value.id === null ? "" : value.id);
+    //     setSelectedOption(value?.id);
     //     setCompanyId(company_id)
     // }, []);
 
 
     //! Search results
-    const [searchPrimarySales, results] = useSearchPrimarySalesMutation()
+    const [searchSecondarySales, results] = useSearchPrimarySalesMutation()
+
 
     const [mpoName, setMPOName] = useState('');
 
@@ -141,8 +136,9 @@ const PrimarySalesSearch = () => {
 
     const now = new BSDate().now();
 
-    const monthData = getNepaliMonthName(now._date.month);
-    const yearData = now._date.year;
+    const monthNumber = now._date.month;
+    const month = BS_MONTHS[monthNumber - 1];
+    const year = now._date.year;
 
     //! Months
     const months = [
@@ -160,12 +156,28 @@ const PrimarySalesSearch = () => {
         { value: 'Chaitra', label: 'Chaitra' },
     ]
 
-    const [selectedMonth, setSelectedMonth] = useState(monthData)
+    // const months = [
+    //     { value: 1, label: "Baisakh" },
+    //     { value: 2, label: "Jestha" },
+    //     { value: 3, label: "Asadh" },
+    //     { value: 4, label: "Shrawan" },
+    //     { value: 5, label: "Bhadra" },
+    //     { value: 6, label: "Ashwin" },
+    //     { value: 7, label: "Kartik" },
+    //     { value: 8, label: "Mangsir" },
+    //     { value: 9, label: "Poush" },
+    //     { value: 10, label: "Magh" },
+    //     { value: 11, label: "Falgun" },
+    //     { value: 12, label: "Chaitra" }
+    // ];
+
+    const [selectedMonth, setSelectedMonth] = useState(month)
 
     const handleNepaliMonthChange = useCallback((event) => {
         setSelectedMonth(event.target.value);
         setCompanyId(company_id);
     }, []);
+
 
     //! Year
     const years = [
@@ -186,7 +198,8 @@ const PrimarySalesSearch = () => {
         { value: 2089, label: "2089" },
         { value: 2090, label: "2090" },
     ]
-    const [selectedYear, setSelectedYear] = useState(yearData);
+    const [dateData, setDateData] = useState('')
+    const [selectedYear, setSelectedYear] = useState(year);
 
     const handleYearChange = useCallback((event) => {
         setSelectedYear(event.target.value);
@@ -198,8 +211,8 @@ const PrimarySalesSearch = () => {
 
     useEffect(() => {
         if (selectedOption || selectedMonth || selectedYear) {
-            searchPrimarySales(FilteredData, {
-                skip: !company_id || !selectedOption || !selectedYear || !selectedMonth
+            searchSecondarySales(FilteredData, {
+                skip: !selectedOption || !company_id || !selectedYear || !selectedMonth
             })
                 .then((res) => {
                 })
@@ -207,10 +220,12 @@ const PrimarySalesSearch = () => {
     }, [selectedOption, selectedMonth, selectedYear])
 
     // !Delete chemists
-    const [deletePrimarySales] = useDeletePrimarySalesByIdMutation()
+    const [deleteSecondarySales] = useDeletePrimarySalesByIdMutation()
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     const handleClickOpen = useCallback(() => {
         setOpenDialogue(true)
@@ -232,18 +247,14 @@ const PrimarySalesSearch = () => {
                                 alignItems="center"
                                 justifyContent="flex-end"
                             >
-                                <Box>
-                                    <ExcelCSVPrimarySales selectedOption={selectedOption} />
-                                </Box>
-                                {selectedOption && selectedMonth && selectedYear && (
-                                    <Box>
-                                        <AddPrimarySales
-                                            selectedOption={selectedOption}
-                                            selectedMonth={selectedMonth}
-                                            selectedYear={selectedYear}
-                                        />
-                                    </Box>
-                                )}
+                                <ExcelCSVSecondarySales selectedOption={selectedOption} />
+                                {/* {selectedOption && selectedMonth && selectedYear && ( */}
+                                {/* <AddSecondarySales
+                                    selectedOption={selectedOption}
+                                    selectedMonth={selectedMonth}
+                                    selectedYear={selectedYear}
+                                /> */}
+                                {/* )} */}
                             </Stack>
                         </Grid>
                     </Grid>
@@ -253,21 +264,19 @@ const PrimarySalesSearch = () => {
                     <Box style={{ padding: "20px" }}>
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
-                                <FormControl>
-                                    <Autocomplete
-                                        options={rolesOptions}
-                                        getOptionLabel={(option) => option.title}
-                                        onChange={handleOptionChange}
-                                        renderInput={(params) => (
-                                            <TextField {...params} label="Stockist" />
-                                        )}
-                                        renderOption={(props, option) => (
-                                            <li {...props} key={option.id}>
-                                                {option.title}
-                                            </li>
-                                        )}
-                                    />
-                                </FormControl>
+                                <Autocomplete
+                                    options={rolesOptions}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleOptionChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Stockist" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                />
                             </Grid>
                             <Grid item xs={2}>
                                 <FormControl fullWidth>
@@ -305,30 +314,15 @@ const PrimarySalesSearch = () => {
                     </Box>
 
                     <Scrollbar>
-                        <TableContainer sx={{ minWidth: 1800 }}>
+                        <TableContainer sx={{ minWidth: 800 }}>
                             <Table>
                                 <UserListHead
                                     headLabel={TABLE_HEAD}
                                 />
                                 <TableBody>
-                                    {(!selectedOption && !selectedMonth && !selectedYear) ?
-                                        <TableRow>
-                                            <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
-                                                <Paper
-                                                    sx={{
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    {/* <Typography variant="h6" paragraph>
-                                                    Select stockist, month and year to view data
-                                                </Typography> */}
-                                                    <Typography variant="body2">
-                                                        <strong>Requested Data Not found</strong>.
-                                                        <br /> Select stockist, month and year to view data
-                                                    </Typography>
-                                                </Paper>
-                                            </TableCell>
-                                        </TableRow> :
+                                    {(!selectedOption || !selectedMonth || !selectedYear) ?
+                                        <DefaultList />
+                                        :
                                         <>
                                             {
                                                 results && results?.data?.length == 0 ?
@@ -353,40 +347,32 @@ const PrimarySalesSearch = () => {
                                                     </> :
                                                     <>
                                                         {
-                                                            results?.data && results?.data?.map((primarysales, index) => (
-                                                                <TableRow hover tabIndex={-1} key={primarysales.id}>
+                                                            results?.data && results?.data?.map((secondarysales, index) => (
+                                                                <TableRow hover tabIndex={-1} key={secondarysales.id}>
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell TableCell component="th" scope="row" align="left">
                                                                         {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                                         <Typography variant="subtitle2" noWrap>
-                                                                            {primarysales.product}
+                                                                            {secondarysales.product_id.product_name.product_name}
                                                                         </Typography>
                                                                         {/* </Stack> */}
                                                                     </TableCell>
-                                                                    <TableCell align="left">{primarysales.opening_stock}</TableCell>
-                                                                    <TableCell align="left">{primarysales.purchase}</TableCell>
-                                                                    <TableCell align="left">{primarysales.stockist}</TableCell>
-                                                                    <TableCell align="left">{primarysales.year}</TableCell>
-                                                                    <TableCell align="left">{primarysales.month}</TableCell>
-                                                                    <TableCell align="left">{primarysales.sales_return}</TableCell>
-                                                                    <TableCell align="left">{primarysales.total}</TableCell>
-                                                                    <TableCell align="left">{primarysales.sales}</TableCell>
-                                                                    <TableCell align="left">{primarysales.free}</TableCell>
-                                                                    <TableCell align="left">{primarysales.exchange_breakage}</TableCell>
-                                                                    <TableCell align="left">{primarysales.l_rate}</TableCell>
-                                                                    <TableCell align="left">{primarysales.st_value}</TableCell>
-                                                                    <TableCell align="left">{primarysales.sl_value}</TableCell>
+                                                                    <TableCell align="left">{secondarysales.stockist_name.stockist_name.stockist_name}</TableCell>
+                                                                    <TableCell align="left">{secondarysales.quantity}</TableCell>
+                                                                    <TableCell align="left">{secondarysales.year}</TableCell>
+                                                                    <TableCell align="left">{secondarysales.month}</TableCell>
+
                                                                     <TableCell align="left">
                                                                         {/* //! Edit  */}
                                                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => {
-                                                                            onEdit(primarysales.id)
+                                                                            onEdit(secondarysales.id)
                                                                         }}>
                                                                             <Badge>
                                                                                 <Iconify icon="eva:edit-fill" />
                                                                             </Badge>
                                                                         </IconButton>
                                                                         {/* //! Delete  */}
-                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(primarysales.id); handleClickOpen() }}>
+                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(secondarysales.id); handleClickOpen() }}>
                                                                             <Badge>
                                                                                 <Iconify icon="eva:trash-2-outline" />
                                                                             </Badge>
@@ -402,7 +388,7 @@ const PrimarySalesSearch = () => {
                                                                             {"Are you sure want to delete?"}
                                                                         </DialogTitle>
                                                                         <DialogActions>
-                                                                            <Button autoFocus onClick={() => { deletePrimarySales(selectedId); handleClose() }}>
+                                                                            <Button autoFocus onClick={() => { deleteSecondarySales(selectedId); handleClose() }}>
                                                                                 Yes
                                                                             </Button>
                                                                             <Button
@@ -422,7 +408,7 @@ const PrimarySalesSearch = () => {
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                        {isDrawerOpen && <EditPrimarySales
+                        {isDrawerOpen && <EditSecondarySales
                             idharu={selectedUpdateId} selectedOption={selectedOption} selectedMonth={selectedMonth} selectedYear={selectedYear} onClose={onCloseDrawer}
                         />
                         }

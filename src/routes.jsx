@@ -74,6 +74,8 @@ import FilterTravelAllowances from './pages/MPO/Travel Allowances/FilterTravelAl
 import ListOfCompanyController from './pages/MPO/Company/ListOfCompanyController';
 import ListOfCompanyUsersController from './pages/MPO/CompanyUsers/ListOfCompanyUsersController';
 import ListOfDoctorCallFolderController from './pages/MPO/DoctorCallFolder/ListOfDoctorCallFolderController';
+import ListOfRolesController from './pages/MPO/Roles/ListOfRolesController';
+import ListOfRolesSuperAdminController from './pages/MPO/RolesSuperAdmin/ListOfCompanyRolesController';
 
 export default function Router() {
   const routes = useRoutes([
@@ -102,24 +104,16 @@ export default function Router() {
       path: '/uploadnewtab/:id',
       element: <UploadsDetail />,
     },
-    {
-      path: '/superadmin/company',
-      element: <ListOfCompanyController />,
-    },
-    {
-      path: '/superadmin/companyroles',
-      element: <ListOfCompanyRolesController />,
-    },
-    {
-      path: '/superadmin/companyusers',
-      element: <ListOfCompanyUsersController />,
-    },
+
     {
       path: '/dashboard',
-      element: <Authentication component={MPODashboardLayout} allowRoles={['admin', 'MPO', 'other-roles']} />,
+      element: <Authentication component={MPODashboardLayout} allowRoles={['admin', 'MPO', 'other-roles', 'SuperAdmin']} />,
       children: [
         {
           path: 'admin', element: <Authentication component={DashboardAppPage} allowRoles={['admin']} />
+        },
+        {
+          path: 'superadmin', element: <Authentication component={DashboardAppPage} allowRoles={['SuperAdmin']} />
         },
         {
           path: 'admin/listofuser',
@@ -243,6 +237,8 @@ export default function Router() {
           element: <Authentication component={ListOfMPOAreasController} allowRoles={['admin', 'MPO']} />,
         },
 
+
+
         //! Sales
         {
           path: 'admin/sales',
@@ -328,6 +324,24 @@ export default function Router() {
           path: 'admin/profile',
           element: <Profile />,
         },
+
+        //! SuperAdmin 
+        {
+          path: 'superadmin/company',
+          element: <Authentication component={ListOfCompanyController} allowRoles={['SuperAdmin']} />,
+        },
+        {
+          path: 'superadmin/roles',
+          element: <Authentication component={ListOfRolesSuperAdminController} allowRoles={['SuperAdmin']} />,
+        },
+        {
+          path: 'superadmin/companyroles',
+          element: <Authentication component={ListOfCompanyRolesController} allowRoles={['SuperAdmin']} />,
+        },
+        {
+          path: 'superadmin/companyusers',
+          element: <Authentication component={ListOfCompanyUsersController} allowRoles={['SuperAdmin']} />,
+        },
       ],
     },
 
@@ -359,7 +373,7 @@ export default function Router() {
         },
         {
           path: 'admin/roles',
-          element: <Authentication component={ListOfCompanyRolesController} allowRoles={['admin']} />,
+          element: <Authentication component={ListOfRolesController} allowRoles={['admin']} />,
         },
         {
           path: 'admin/holiday',

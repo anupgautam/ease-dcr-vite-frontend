@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
     Badge,
     Button,
@@ -19,18 +19,9 @@ import {
 } from "../../../../api/MPOSlices/PrimarySalesApiSlice";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import EditPrimarySales from './EditPrimarySales';
+import EditSecondarySales from './EditPrimarySales';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-
-const TABLE_HEAD = [
-    { id: 'name', label: 'Name', alignRight: false },
-    { id: 'company', label: 'Company', alignRight: false },
-    { id: 'role', label: 'Role', alignRight: false },
-    { id: 'isVerified', label: 'Verified', alignRight: false },
-    { id: 'status', label: 'Status', alignRight: false },
-    { id: '' },
-];
 
 const DefaultList = () => {
 
@@ -73,10 +64,9 @@ const DefaultList = () => {
 
     // ! Get all chemist wala
     const { data } = useGetAllPrimarySalesQuery(page);
-    // 
 
     // !Delete chemists
-    const [deleteChemist] = useDeletePrimarySalesByIdMutation()
+    const [deleteSecondarySale] = useDeletePrimarySalesByIdMutation()
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     return (
@@ -98,22 +88,23 @@ const DefaultList = () => {
                     </>
                     :
                     <>
-                        {data && data.results.map((chem, index) => (
+                        {data && data?.map((chem, index) => (
                             <>
                                 <TableRow hover tabIndex={-1} key={chem.id}>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell component="th" scope="row" align="left">
                                         <Typography variant="subtitle2" noWrap>
-                                            {chem.chemist_name.chemist_name}
+                                            {chem.product_id.product_name.product_name}
                                         </Typography>
                                     </TableCell>
-                                    <TableCell align="left">{chem.chemist_name.chemist_phone_number}</TableCell>
-                                    <TableCell align="left">{chem.chemist_name.chemist_address}</TableCell>
-                                    <TableCell align="left">{chem.chemist_name.chemist_gender}</TableCell>
+                                    <TableCell align="left">{chem.stockist_name.stockist_name.stockist_name}</TableCell>
+                                    <TableCell align="left">{chem.quantity}</TableCell>
+                                    <TableCell align="left">{chem.year}</TableCell>
+                                    <TableCell align="left">{chem.month}</TableCell>
                                     <TableCell align="left">
                                         {/* {
                                     {/* //!Edit */}
-                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(chem.chemist_name.id)}>
+                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(chem.id)}>
                                             <Badge>
                                                 <Iconify icon="eva:edit-fill" />
                                             </Badge>
@@ -135,7 +126,7 @@ const DefaultList = () => {
                                             {"Are you sure want to delete?"}
                                         </DialogTitle>
                                         <DialogActions>
-                                            <Button autoFocus onClick={() => { deleteChemist(selectedId); handleClose() }}>
+                                            <Button autoFocus onClick={() => { deleteSecondarySale(selectedId); handleClose() }}>
                                                 Yes
                                             </Button>
                                             <Button
@@ -145,7 +136,7 @@ const DefaultList = () => {
                                             </Button>
                                         </DialogActions>
                                     </Dialog>
-                                    {isDrawerOpen && <EditPrimarySales
+                                    {isDrawerOpen && <EditSecondarySales
                                         idharu={selectedUpdateId} onClose={onCloseDrawer}
                                     />
                                     }

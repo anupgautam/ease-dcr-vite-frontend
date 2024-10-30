@@ -107,15 +107,13 @@ const ListofAttendance = () => {
         first_name: "lemon",
         middle_name: "wala",
         last_name: "Gautam",
-
     }
-
-
+    
     const now = new BSDate().now();
     const year = now._date.year;
     const month = getNepaliMonthName(now._date.month);
 
-    const monthsCalendar = [
+    const months = [
         { value: 1, label: "Baisakh" },
         { value: 2, label: "Jestha" },
         { value: 3, label: "Asadh" },
@@ -130,20 +128,20 @@ const ListofAttendance = () => {
         { value: 12, label: "Chaitra" }
     ];
 
-    const months = [
-        { value: 'Baisakh', label: 'Baisakh' },
-        { value: 'Jesth', label: 'Jestha' },
-        { value: 'Asadh', label: 'Asadh' },
-        { value: 'Shrawan', label: 'Shrawan' },
-        { value: 'Bhadra', label: 'Bhadra' },
-        { value: 'Ashwin', label: 'Ashwin' },
-        { value: 'Kartik', label: 'Kartik' },
-        { value: 'Mangsir', label: 'Mangsir' },
-        { value: 'Poush', label: 'Poush' },
-        { value: 'Magh', label: 'Magh' },
-        { value: 'Falgun', label: 'Falgun' },
-        { value: 'Chaitra', label: 'Chaitra' },
-    ]
+    // const months = [
+    //     { value: 'Baisakh', label: 'Baisakh' },
+    //     { value: 'Jesth', label: 'Jestha' },
+    //     { value: 'Asadh', label: 'Asadh' },
+    //     { value: 'Shrawan', label: 'Shrawan' },
+    //     { value: 'Bhadra', label: 'Bhadra' },
+    //     { value: 'Ashwin', label: 'Ashwin' },
+    //     { value: 'Kartik', label: 'Kartik' },
+    //     { value: 'Mangsir', label: 'Mangsir' },
+    //     { value: 'Poush', label: 'Poush' },
+    //     { value: 'Magh', label: 'Magh' },
+    //     { value: 'Falgun', label: 'Falgun' },
+    //     { value: 'Chaitra', label: 'Chaitra' },
+    // ]
 
 
     const [selectedMonth, setSelectedMonth] = useState(month);

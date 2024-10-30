@@ -5,7 +5,6 @@ import {
 } from '@mui/material';
 import DefaultList from './DefaultList'
 import AddCompanyRoles from './AddCompanyRoles';
-import FilteredCompanyRoles from './FilteredCompanyRoles';
 
 const ListOfCompanyRoles = () => {
     return (
@@ -29,8 +28,7 @@ const ListOfCompanyRoles = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-                {/* <DefaultList /> */}
-                <FilteredCompanyRoles/>
+                <DefaultList />
             </Container>
         </>
     )

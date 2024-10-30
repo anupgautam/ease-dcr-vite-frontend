@@ -1,10 +1,14 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import {
     Box,
     Typography,
     Button,
     Grid,
-    CircularProgress
+    CircularProgress,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -15,20 +19,47 @@ import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from '../../../../reusable/components/forms/controls/Controls';
 import { returnValidation } from '../../../../validation';
 import { useSelector } from 'react-redux';
-import { extractErrorMessage } from '@/reusable/extractErrorMessage';
-
+import { useGetStockistsWithoutPaginationQuery } from '@/api/MPOSlices/stockistApiSlice';
 import {
     useCreatePrimarySalesMutation
-} from '@/api/MPOSlices/PrimarySalesApiSlice';
+} from '../../../../api/MPOSlices/PrimarySalesApiSlice';
 
+import {
+    NepaliDateConverter
+} from "react-nepali-date-picker-lite";
 import {
     useGetAllProductsOptionsQuery
 } from '@/api/MPOSlices/productApiSlice'
+import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
-const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
+const BS_MONTHS = [
+    "Baisakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
+    "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"
+];
+
+// const AddSecondarySales = ({ selectedOption, monthData, selectedYear }) => {
+const AddPrimarySales = ({ selectedOption }) => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
-    //! Get doctor categories
+
+    //! Get Stockist
+    const mpo_id = useSelector(state => state.dcrData.selected_user);
+
+    // const { Stockist } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id })
+    const Stockist = useGetStockistsWithoutPaginationQuery(company_id);
+
+    const rolesOptions = useMemo(() => {
+        if (Stockist?.data) {
+            return Stockist?.data?.map((key) => ({
+                id: key.id,
+                title: key.stockist_name.stockist_name
+            }))
+        }
+        return [];
+    }, [Stockist])
+
+    //! Get Company Division Product
     const Products = useGetAllProductsOptionsQuery(company_id)
 
     const products = useMemo(() => {
@@ -38,27 +69,92 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
         return [];
     }, [Products])
 
-    //! Create Primary Sales
+    //! Create Secondary Sales
     const [createPrimarySales] = useCreatePrimarySalesMutation()
 
+    const now = new BSDate().now();
+    const [companyId, setCompanyId] = useState(parseInt(company_id));
+
+    const monthNumber = now._date.month;
+    const month = BS_MONTHS[monthNumber - 1];
+    const yearData = now._date.year;
+
+    //! Months
+    // const months = [
+    //     { value: 1, label: "Baisakh" },
+    //     { value: 2, label: "Jestha" },
+    //     { value: 3, label: "Asadh" },
+    //     { value: 4, label: "Shrawan" },
+    //     { value: 5, label: "Bhadra" },
+    //     { value: 6, label: "Ashwin" },
+    //     { value: 7, label: "Kartik" },
+    //     { value: 8, label: "Mangsir" },
+    //     { value: 9, label: "Poush" },
+    //     { value: 10, label: "Magh" },
+    //     { value: 11, label: "Falgun" },
+    //     { value: 12, label: "Chaitra" }
+    // ];
+
+    const months = [
+        { value: "Baisakh", label: "Baisakh" },
+        { value: "Jestha", label: "Jestha" },
+        { value: "Asadh", label: "Asadh" },
+        { value: "Shrawan", label: "Shrawan" },
+        { value: "Bhadra", label: "Bhadra" },
+        { value: "Ashwin", label: "Ashwin" },
+        { value: "Kartik", label: "Kartik" },
+        { value: "Mangsir", label: "Mangsir" },
+        { value: "Poush", label: "Poush" },
+        { value: "Magh", label: "Magh" },
+        { value: "Falgun", label: "Falgun" },
+        { value: "Chaitra", label: "Chaitra" }
+    ]
+
+    const [selectedMonth, setSelectedMonth] = useState(month)
+
+    const handleNepaliMonthChange = useCallback((event) => {
+        setSelectedMonth(event.target.value);
+        setCompanyId(company_id);
+    }, []);
+
+    //! Year
+    const years = [
+        { value: 2079, label: "2079" },
+        { value: 2080, label: "2080" },
+        { value: 2081, label: "2081" },
+        { value: 2082, label: "2082" },
+        { value: 2083, label: "2083" },
+        { value: 2084, label: "2084" },
+        { value: 2085, label: "2085" },
+        { value: 2086, label: "2086" },
+        { value: 2087, label: "2087" },
+        { value: 2088, label: "2088" },
+        { value: 2089, label: "2089" },
+        { value: 2090, label: "2090" },
+    ]
+    const [dateData, setDateData] = useState('')
+    const [selectedYear, setSelectedYear] = useState(yearData);
+
+    const handleYearChange = useCallback((event) => {
+        setSelectedYear(event.target.value);
+        setCompanyId(company_id);
+    }, []);
+
+
+    //! Format Date
+    const today = NepaliDateConverter.getNepaliDate();
+    const [selectedDates, setSelectedDates] = useState(today);
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
-        if ('product' in fieldValues)
-            temp.product = returnValidation(['null'], values.product)
-        temp.opening_stock = returnValidation(['null'], values.opening_stock)
-        temp.closing_stock = returnValidation(['null'], values.closing_stock)
-        temp.purchase = returnValidation(['null'], values.purchase)
-        temp.sales_return = returnValidation(['null'], values.sales_return)
-        temp.total = returnValidation(['null'], values.total)
-        temp.sales = returnValidation(['null'], values.sales)
-        temp.free = returnValidation(['null'], values.free)
-        temp.exchange_breakage = returnValidation(['null'], values.exchange_breakage)
-        temp.l_rate = returnValidation(['null'], values.l_rate)
-        temp.st_value = returnValidation(['null'], values.st_value)
-        temp.sl_value = returnValidation(['null'], values.sl_value)
+        if ('product_id' in fieldValues)
+            temp.product_id = returnValidation(['null'], values.product_id)
+        temp.stockist_name = returnValidation(['null'], values.stockist_name)
+        temp.year = returnValidation(['null'], values.year)
+        temp.month = returnValidation(['null'], values.month)
+        temp.quantity = returnValidation(['null'], values.quantity)
 
         setErrors({
             ...temp
@@ -87,18 +183,9 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
         validate();
 
     }, [
-        values.product,
-        values.opening_stock,
-        values.closing_stock,
-        values.purchase,
-        values.sales_return,
-        values.total,
-        values.sales,
-        values.free,
-        values.exchange_breakage,
-        values.l_rate,
-        values.st_value,
-        values.sl_value
+        values.product_id,
+        values.stockist_name,
+        values.quantity,
     ])
 
     const [loading, setLoading] = useState(false);
@@ -106,30 +193,21 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     //!Modal wala ko click event
-    const onAddPrimarySales = useCallback(async (e) => {
+    const onAddChemists = async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("stockist", selectedOption);
-        formData.append("year", selectedYear);
-        formData.append("month", monthData);
-        formData.append("product", values.product);
-        formData.append("opening_stock", values.opening_stock);
-        formData.append("closing_stock", values.closing_stock);
-        formData.append("purchase", values.purchase);
-        formData.append("sales_return", values.sales_return);
-        formData.append("total", values.total);
-        formData.append("sales", values.sales);
-        formData.append("free", values.free);
-        formData.append("exchange_breakage", values.exchange_breakage);
-        formData.append("l_rate", values.l_rate);
-        formData.append("st_value", values.st_value);
-        formData.append("sl_value", values.sl_value);
-        formData.append('company_name', company_id)
+        const jsonData = {
+            year: selectedYear,
+            month: selectedMonth,
+            product_id: values.product_id,
+            company_name: company_id,
+            quantity: values.quantity,
+            stockist_name: values.stockist_name
+        }
         try {
-            const response = await createPrimarySales(formData).unwrap();
+            const response = await createPrimarySales(jsonData).unwrap();
             if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Primary Sales' });
+                setSuccessMessage({ show: true, message: 'Successfully Added Secondary Sales' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
@@ -152,9 +230,7 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
         } finally {
             setLoading(false)
         }
-
-    }, [createPrimarySales, values]);
-
+    };
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     return (
@@ -184,42 +260,44 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Add Primary Sales
+                            Add Secondary Sales
                         </Typography>
                     </Box>
-
-                    <Box marginBottom={2}>
-                        <Controls.Select
-                            name="product"
-                            label="Product Name*"
-                            value={values.name}
-                            options={products}
-                            onChange={handleInputChange}
-                            error={errors.doctorDCRId}
-                        />
-                    </Box>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <Box marginBottom={2}>
-                                <Controls.Input
-                                    id="autoFocus"
-                                    autoFocus
-                                    name="opening_stock"
-                                    label="Opening Stock*"
+                                <Controls.Select
+                                    name="product_id"
+                                    label="product Name*"
                                     value={values.name}
+                                    options={products}
                                     onChange={handleInputChange}
-                                    error={errors.opening_stock}
+                                    error={errors.doctorDCRId}
                                 />
                             </Box>
                         </Grid>
                         <Grid item xs={6}>
                             <Box marginBottom={2}>
-                                <Controls.Input
-                                    name="closing_stock"
-                                    label="Closing Stock*"
+                                {/* <Autocomplete
+                                    options={rolesOptions}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleOptionChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Stockist" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                /> */}
+                                <Controls.Select
+                                    name="stockist_name"
+                                    label="Stockist Name*"
                                     value={values.name}
+                                    options={rolesOptions}
                                     onChange={handleInputChange}
-                                    error={errors.closing_stock}
+                                    error={errors.doctorDCRId}
                                 />
                             </Box>
                         </Grid>
@@ -227,48 +305,38 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <Box marginBottom={2}>
-                                <Controls.Input
-                                    name="total"
-                                    label="Total*"
-                                    value={values.name}
-                                    onChange={handleInputChange}
-                                    error={errors.total}
-                                />
+                                <FormControl fullWidth>
+                                    <InputLabel>Year</InputLabel>
+                                    <Select
+                                        value={selectedYear}
+                                        onChange={handleYearChange}
+                                        label="Year"
+                                    >
+                                        {years.map((month) => (
+                                            <MenuItem key={month.value} value={month.value}>
+                                                {month.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Box>
                         </Grid>
                         <Grid item xs={6}>
                             <Box marginBottom={2}>
-                                <Controls.Input
-                                    name="purchase"
-                                    label="Purchase*"
-                                    value={values.name}
-                                    onChange={handleInputChange}
-                                    error={errors.purchase}
-                                />
-                            </Box>
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <Box marginBottom={2}>
-                                <Controls.Input
-                                    name="sales_return"
-                                    label="Sales Return*"
-                                    value={values.name}
-                                    onChange={handleInputChange}
-                                    error={errors.sales_return}
-                                />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box marginBottom={2}>
-                                <Controls.Input
-                                    name="sales"
-                                    label="Sales*"
-                                    value={values.name}
-                                    onChange={handleInputChange}
-                                    error={errors.sales}
-                                />
+                                <FormControl fullWidth>
+                                    <InputLabel>Month</InputLabel>
+                                    <Select
+                                        value={selectedMonth}
+                                        onChange={handleNepaliMonthChange}
+                                        label="Month"
+                                    >
+                                        {months.map((month) => (
+                                            <MenuItem key={month.value} value={month.value}>
+                                                {month.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Box>
                         </Grid>
                     </Grid>
@@ -276,60 +344,11 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
                         <Grid item xs={6}>
                             <Box marginBottom={2}>
                                 <Controls.Input
-                                    name="free"
-                                    label="Free*"
+                                    name="quantity"
+                                    label="Quantity*"
                                     value={values.name}
                                     onChange={handleInputChange}
-                                    error={errors.free}
-                                />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box marginBottom={2}>
-                                <Controls.Input
-                                    name="exchange_breakage"
-                                    label="Exchange Breakage*"
-                                    value={values.name}
-                                    onChange={handleInputChange}
-                                    error={errors.exchange_breakage}
-                                />
-                            </Box>
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <Box marginBottom={2}>
-                                <Controls.Input
-                                    name="l_rate"
-                                    label="L. Rate*"
-                                    value={values.name}
-                                    onChange={handleInputChange}
-                                    error={errors.l_rate}
-                                />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box marginBottom={2}>
-                                <Controls.Input
-                                    name="st_value"
-                                    label="St. Value*"
-                                    value={values.name}
-                                    onChange={handleInputChange}
-                                    error={errors.st_value}
-                                />
-                            </Box>
-                        </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <Box marginBottom={2}>
-                                <Controls.Input
-                                    name="sl_value"
-                                    label="Sl. Rate*"
-                                    value={values.name}
-                                    onChange={handleInputChange}
-                                    error={errors.sl_value}
+                                    error={errors.quantity}
                                 />
                             </Box>
                         </Grid>
@@ -339,7 +358,7 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
-                            onClick={(e) => onAddPrimarySales(e)}
+                            onClick={(e) => onAddChemists(e)}
                             text="Submit"
                         />
                         <Button
@@ -351,28 +370,29 @@ const AddPrimarySales = ({ selectedOption, monthData, selectedYear }) => {
                         </Button>
                     </Stack>
                 </Box>
+                {loading && (
+                    <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                        <CircularProgress />
+                    </Grid>
+                )}
+                {ErrorMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer errorMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )}
+                {SuccessMessage.show && (
+                    <Grid>
+                        <Box className="messageContainer successMessage">
+                            <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
+                        </Box>
+                    </Grid>
+                )}
             </Drawer>
-            {loading && (
-                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
-                    <CircularProgress />
-                </Grid>
-            )}
-            {ErrorMessage.show && (
-                <Grid>
-                    <Box className="messageContainer errorMessage">
-                        <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                    </Box>
-                </Grid>
-            )}
-            {SuccessMessage.show && (
-                <Grid>
-                    <Box className="messageContainer successMessage">
-                        <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                    </Box>
-                </Grid>
-            )}
+
         </>
     )
 }
 
-export default React.memo(AddPrimarySales)
+export default AddPrimarySales

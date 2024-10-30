@@ -1,18 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import {
+    Card,
     Badge,
+    Table,
     Button,
     TableRow,
+    TableBody,
     TableCell,
     Typography,
     IconButton,
-    Pagination,
-    Box,
-    Grid,
-    Card,
     TableContainer,
-    Table,
-    TableBody,
+    Box,
 } from '@mui/material';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -27,28 +25,16 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useSelector } from 'react-redux';
 
-import {
-    useGetAllCompanyRolesQuery,
-    useDeleteCompanyRolesByIdMutation
-} from '../../../api/MPOSlices/companyRolesSlice'
-import {
-    useGetAllCompanyUserQuery
-} from '../../../api/MPOSlices/SuperAdminSlice'
-import EditCompanyUsers from './EditCompanyUsers';
+import EditCompanyRoles from './EditCompanyRoles';
+import { useGetAllRoleQuery } from '../../../api/MPOSlices/SuperAdminSlice';
 
 const TABLE_HEAD = [
-    { id: 'username', label: 'User Name', alignRight: false },
-    { id: 'email', label: 'Email', alignRight: false },
-    { id: 'phone_number', label: 'Phone Number', alignRight: false },
-    { id: 'company_name', label: 'Company', alignRight: false },
-    { id: 'role_name_value', label: 'Role', alignRight: false },
+    { id: 'role_name', label: 'Role Name', alignRight: false },
     { id: '' },
 ];
 
 const DefaultList = () => {
-
-    //! Get Categories
-    const { data } = useGetAllCompanyUserQuery();
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -88,10 +74,9 @@ const DefaultList = () => {
         setPage(thisArray[3]);
     }, [])
 
+    //! Get Categories
+    const { data } = useGetAllRoleQuery();
 
-
-    // !Delete TourPlan
-    const [deleteCompanyRoles] = useDeleteCompanyRolesByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     return (
@@ -120,21 +105,16 @@ const DefaultList = () => {
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {companyroles.user_name.first_name + " " + companyroles.user_name.middle_name + " " + companyroles.user_name.last_name}
+                                                            {companyroles.role_name}
                                                         </Typography>
                                                     </TableCell>
-                                                    <TableCell align="left">{companyroles?.user_name.email}</TableCell>
-                                                    <TableCell align="left">{companyroles?.user_name.phone_number}</TableCell>
-                                                    <TableCell align="left">{companyroles?.company_name?.company_name}</TableCell>
-                                                    <TableCell align="left">{companyroles?.role_name?.role_name_value}</TableCell>
-                                                    <TableCell align="right">
-                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => handleClickOpen()}>
+                                                    <TableCell align="left">
+                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(companyroles.id)} >
                                                             <Badge>
-                                                                <Iconify icon="eva:trash-2-outline" />
+                                                                <Iconify icon="eva:edit-fill" />
                                                             </Badge>
                                                         </IconButton>
                                                     </TableCell>
-
                                                 </TableRow>
                                             ))
                                             }
@@ -160,7 +140,7 @@ const DefaultList = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            {isDrawerOpen && <EditCompanyUsers
+            {isDrawerOpen && <EditCompanyRoles
                 idharu={selectedUpdateId} onClose={onCloseDrawer}
             />
             }

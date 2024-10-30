@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import {
     Box,
     Grid,
-    Typography, Button, CircularProgress
+    Typography, Button, CircularProgress, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -24,10 +24,16 @@ import {
 } from '@/api/MPOSlices/productApiSlice'
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { useGetStockistsWithoutPaginationQuery } from '@/api/MPOSlices/stockistApiSlice';
+import {
+    NepaliDateConverter
+} from "react-nepali-date-picker-lite";
+import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 
 
-const EditPrimarySales = ({ idharu, onClose, selectedOption, monthData, selectedYear }) => {
-    const { company_id, user_role, company_user_id, refresh, access } = useSelector((state) => state.cookie);
+const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
+
+    const { company_id, refresh, access } = useSelector((state) => state.cookie);
 
     //! Get doctor categories
     const Products = useGetAllProductsOptionsQuery(company_id)
@@ -39,27 +45,102 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption, monthData, selected
         return [];
     }, [Products])
 
-    //! Getting chemist by ID
-    const PrimarySales = useGetPrimarySalesByIdQuery(idharu);
+    const Stockist = useGetStockistsWithoutPaginationQuery(company_id);
 
+    const rolesOptions = useMemo(() => {
+        if (Stockist?.data) {
+            return Stockist?.data?.map((key) => ({
+                id: key.id,
+                title: key.stockist_name.stockist_name
+            }))
+        }
+        return [];
+    }, [Stockist])
+
+    //! Getting chemist by ID
+    const SecondarySales = useGetPrimarySalesByIdQuery(idharu);
+
+    const now = new BSDate().now();
+    const [companyId, setCompanyId] = useState(parseInt(company_id));
+
+    //! Months
+    // const months = [
+    //     { value: 1, label: "Baisakh" },
+    //     { value: 2, label: "Jestha" },
+    //     { value: 3, label: "Asadh" },
+    //     { value: 4, label: "Shrawan" },
+    //     { value: 5, label: "Bhadra" },
+    //     { value: 6, label: "Ashwin" },
+    //     { value: 7, label: "Kartik" },
+    //     { value: 8, label: "Mangsir" },
+    //     { value: 9, label: "Poush" },
+    //     { value: 10, label: "Magh" },
+    //     { value: 11, label: "Falgun" },
+    //     { value: 12, label: "Chaitra" }
+    // ];
+
+    const months = [
+        { value: "Baisakh", label: "Baisakh" },
+        { value: "Jestha", label: "Jestha" },
+        { value: "Asadh", label: "Asadh" },
+        { value: "Shrawan", label: "Shrawan" },
+        { value: "Bhadra", label: "Bhadra" },
+        { value: "Ashwin", label: "Ashwin" },
+        { value: "Kartik", label: "Kartik" },
+        { value: "Mangsir", label: "Mangsir" },
+        { value: "Poush", label: "Poush" },
+        { value: "Magh", label: "Magh" },
+        { value: "Falgun", label: "Falgun" },
+        { value: "Chaitra", label: "Chaitra" }
+    ]
+
+
+
+    //! Year
+    const years = [
+        { value: 2079, label: "2079" },
+        { value: 2080, label: "2080" },
+        { value: 2081, label: "2081" },
+        { value: 2082, label: "2082" },
+        { value: 2083, label: "2083" },
+        { value: 2084, label: "2084" },
+        { value: 2085, label: "2085" },
+        { value: 2086, label: "2086" },
+        { value: 2087, label: "2087" },
+        { value: 2088, label: "2088" },
+        { value: 2089, label: "2089" },
+        { value: 2090, label: "2090" },
+    ]
+    // const [dateData, setDateData] = useState('')
+
+    const [updatedMonth, setUpdatedMonth] = useState()
+
+    const handleNepaliMonthChange = useCallback((event) => {
+        setUpdatedMonth(event.target.value);
+        setCompanyId(company_id);
+    }, []);
+
+    const [updatedYear, setUpdatedYear] = useState();
+
+    const handleYearChange = useCallback((event) => {
+        setUpdatedYear(event.target.value);
+        setCompanyId(company_id);
+    }, []);
+
+    //! Format Date
+    const today = NepaliDateConverter.getNepaliDate();
+    const [selectedDates, setSelectedDates] = useState(today);
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
-        if ('product' in fieldValues)
-            temp.product = returnValidation(['null'], values.product)
-        temp.opening_stock = returnValidation(['null'], values.opening_stock)
-        temp.closing_stock = returnValidation(['null'], values.closing_stock)
-        temp.purchase = returnValidation(['null'], values.purchase)
-        temp.sales_return = returnValidation(['null'], values.sales_return)
-        temp.total = returnValidation(['null'], values.total)
-        temp.sales = returnValidation(['null'], values.sales)
-        temp.free = returnValidation(['null'], values.free)
-        temp.exchange_breakage = returnValidation(['null'], values.exchange_breakage)
-        temp.l_rate = returnValidation(['null'], values.l_rate)
-        temp.st_value = returnValidation(['null'], values.st_value)
-        temp.sl_value = returnValidation(['null'], values.sl_value)
+        if ('product_id' in fieldValues)
+            temp.product_id = returnValidation(['null'], values.product_id)
+        temp.stockist_name = returnValidation(['null'], values.stockist_name)
+        temp.year = returnValidation(['null'], values.year)
+        temp.month = returnValidation(['null'], values.month)
+        temp.quantity = returnValidation(['null'], values.quantity)
 
         setErrors({
             ...temp
@@ -72,38 +153,24 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption, monthData, selected
 
 
     const [initialFValues, setInitialFValues] = useState({
-        product: "",
-        opening_stock: "",
-        closing_stock: "",
-        purchase: "",
-        sales_return: "",
-        sales: "",
-        total: "",
-        free: "",
-        exchange_breakage: "",
-        l_rate: "",
-        st_value: "",
-        sl_value: "",
+        product_id: "",
+        stockist_name: "",
+        quantity: "",
     })
 
     useEffect(() => {
-        if (PrimarySales.data) {
+        if (SecondarySales.data) {
             setInitialFValues({
-                'product': PrimarySales?.data?.product,
-                'opening_stock': PrimarySales?.data?.opening_stock,
-                'closing_stock': PrimarySales?.data?.closing_stock,
-                'purchase': PrimarySales?.data?.purchase,
-                'sales_return': PrimarySales?.data?.sales_return,
-                'sales': PrimarySales?.data?.sales,
-                'total': PrimarySales?.data?.total,
-                'free': PrimarySales?.data?.free,
-                'exchange_breakage': PrimarySales?.data?.exchange_breakage,
-                'l_rate': PrimarySales?.data?.l_rate,
-                'st_value': PrimarySales?.data?.st_value,
-                'sl_value': PrimarySales?.data?.sl_value,
+                'product_id': SecondarySales?.data?.product_id.id,
+                'stockist_name': SecondarySales?.data?.stockist_name.id,
+                'quantity': SecondarySales?.data?.quantity,
+                // 'year': parseInt(SecondarySales?.data?.year),
+                // 'month': SecondarySales?.data?.month,
             });
+            setUpdatedMonth(SecondarySales?.data?.month)
+            setUpdatedYear(parseInt(SecondarySales?.data?.year))
         }
-    }, [PrimarySales.data])
+    }, [SecondarySales.data])
 
     const { values,
         errors,
@@ -121,66 +188,47 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption, monthData, selected
         validate();
 
     }, [
-        values.product,
-        values.opening_stock,
-        values.closing_stock,
-        values.purchase,
-        values.sales_return,
-        values.total,
-        values.sales,
-        values.free,
-        values.exchange_breakage,
-        values.l_rate,
-        values.st_value,
-        values.sl_value
+        values.product_id,
+        values.quantity,
+        values.stockist_name,
+        values.year,
+        values.month,
+
     ])
 
     //! Edit user
-    const [updatePrimarySaless] = useUpdatePrimarySalesMutation();
+    const [updateSecondarySaless] = useUpdatePrimarySalesMutation();
     const history = useNavigate();
-
-    const [isLoading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false)
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true)
-        const formData = new FormData();
-        formData.append("stockist", selectedOption);
-        formData.append("year", selectedYear);
-        formData.append("month", monthData);
-        formData.append("product", values.product);
-        formData.append("opening_stock", values.opening_stock);
-        formData.append("closing_stock", values.closing_stock);
-        formData.append("purchase", values.purchase);
-        formData.append("sales_return", values.sales_return);
-        formData.append("total", values.total);
-        formData.append("sales", values.sales);
-        formData.append("free", values.free);
-        formData.append("exchange_breakage", values.exchange_breakage);
-        formData.append("l_rate", values.l_rate);
-        formData.append("st_value", values.st_value);
-        formData.append("sl_value", values.sl_value);
-        formData.append("company_name", company_id);
-        formData.append('refresh', refresh);
-        formData.append('access', access);
-        formData.append('id', idharu);
+        setLoading(true);
+        const jsonData = {
+            year: updatedYear,
+            month: updatedMonth,
+            product_id: values.product_id,
+            company_name: company_id,
+            quantity: values.quantity,
+            stockist_name: selectedOption,
+            id:idharu,
+        }
         try {
-
-            const response = await updatePrimarySaless(formData).unwrap();
+            const response = await updateSecondarySaless(jsonData).unwrap();
             if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Primary Sales' });
+                setSuccessMessage({ show: true, message: 'Successfully Edited Secondary Sales' });
                 setTimeout(() => {
                     onClose();
                     setSuccessMessage({ show: false, message: '' });
                 }, 2000);
-            }
-            else if (response?.error) {
+            } else if (response?.error) {
                 setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                 setLoading(false);
                 setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-            } else {
+            }
+            else {
                 setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
@@ -192,10 +240,14 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption, monthData, selected
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
             }, 2000);
-        } finally {
+        }
+        finally {
             setLoading(false)
         }
     }
+
+
+
     return (
         <>
             <Drawer
@@ -221,138 +273,35 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption, monthData, selected
                             <Close />
                         </IconButton>
                         <Typography variant="h6">
-                            Edit Primary Sales
+                            Edit Secondary Sales
                         </Typography>
                     </Box>
 
 
                     <Form onSubmit={handleSubmit}>
-                        <Box marginBottom={2}>
-                            <Controls.Select
-                                name="product"
-                                label="Product Name*"
-                                value={values.product}
-                                options={products}
-                                onChange={handleInputChange}
-                                error={errors.doctorDCRId}
-                            />
-                        </Box>
+
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="opening_stock"
-                                        label="Opening Stock*"
-                                        value={values.opening_stock}
+                                    <Controls.Select
+                                        name="product_id"
+                                        label="Product Name*"
+                                        value={values.product_id}
+                                        options={products}
                                         onChange={handleInputChange}
-                                        error={errors.opening_stock}
+                                        error={errors.product_id}
                                     />
                                 </Box>
                             </Grid>
                             <Grid item xs={6}>
                                 <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="closing_stock"
-                                        label="Closing Stock*"
-                                        value={values.closing_stock}
+                                    <Controls.Select
+                                        name="stockist_name"
+                                        label="Stockist Name*"
+                                        value={values.stockist_name}
+                                        options={rolesOptions}
                                         onChange={handleInputChange}
-                                        error={errors.closing_stock}
-                                    />
-                                </Box>
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="total"
-                                        label="Total*"
-                                        value={values.total}
-                                        onChange={handleInputChange}
-                                        error={errors.total}
-                                    />
-                                </Box>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="purchase"
-                                        label="Purchase*"
-                                        value={values.purchase}
-                                        onChange={handleInputChange}
-                                        error={errors.purchase}
-                                    />
-                                </Box>
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="sales_return"
-                                        label="Sales Return*"
-                                        value={values.sales_return}
-                                        onChange={handleInputChange}
-                                        error={errors.sales_return}
-                                    />
-                                </Box>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="sales"
-                                        label="Sales*"
-                                        value={values.sales}
-                                        onChange={handleInputChange}
-                                        error={errors.sales}
-                                    />
-                                </Box>
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="free"
-                                        label="Free*"
-                                        value={values.free}
-                                        onChange={handleInputChange}
-                                        error={errors.free}
-                                    />
-                                </Box>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="exchange_breakage"
-                                        label="Exchange Breakage*"
-                                        value={values.exchange_breakage}
-                                        onChange={handleInputChange}
-                                        error={errors.exchange_breakage}
-                                    />
-                                </Box>
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="l_rate"
-                                        label="L. Rate*"
-                                        value={values.l_rate}
-                                        onChange={handleInputChange}
-                                        error={errors.l_rate}
-                                    />
-                                </Box>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name="st_value"
-                                        label="St. Value*"
-                                        value={values.st_value}
-                                        onChange={handleInputChange}
-                                        error={errors.st_value}
+                                        error={errors.doctorDCRId}
                                     />
                                 </Box>
                             </Grid>
@@ -361,12 +310,51 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption, monthData, selected
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <Box marginBottom={2}>
+                                    <FormControl fullWidth>
+                                        <InputLabel>Year</InputLabel>
+                                        <Select
+                                            value={updatedYear}
+                                            onChange={handleYearChange}
+                                            label="Year"
+                                        >
+                                            {years.map((month) => (
+                                                <MenuItem key={month.value} value={month.value}>
+                                                    {month.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Box marginBottom={2}>
+                                    <FormControl fullWidth>
+                                        <InputLabel>Month</InputLabel>
+                                        <Select
+                                            value={updatedMonth}
+                                            onChange={handleNepaliMonthChange}
+                                            label="Month"
+                                        >
+                                            {months.map((month) => (
+                                                <MenuItem key={month.value} value={month.value}>
+                                                    {month.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <Box marginBottom={2}>
                                     <Controls.Input
-                                        name="sl_value"
-                                        label="Sl. Rate*"
-                                        value={values.sl_value}
+                                        name="quantity"
+                                        label="Quantity*"
+                                        value={values.quantity}
                                         onChange={handleInputChange}
-                                        error={errors.sl_value}
+                                        error={errors.quantity}
                                     />
                                 </Box>
                             </Grid>
@@ -412,4 +400,4 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption, monthData, selected
     );
 };
 
-export default React.memo(EditPrimarySales);
+export default EditPrimarySales;

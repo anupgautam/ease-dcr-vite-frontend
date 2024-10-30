@@ -6,13 +6,11 @@ import {
     Grid,
     Box
 } from '@mui/material';
+import PrimarySalesCount from './PrimarySalesCount'
+import SecondarySalesSearch from './PrimarySalesSearch';
 
-import PrimarySalesCount from './PrimarySalesCount';
-import PrimarySalesSearch from './PrimarySalesSearch';
-import AddPrimarySales from './AddPrimarySales';
 
 const ListOfPrimarySales = () => {
-
     return (
         <>
             <Container>
@@ -24,7 +22,7 @@ const ListOfPrimarySales = () => {
                     </Grid>
                 </Box>
             </Container>
-            <PrimarySalesSearch />
+            <SecondarySalesSearch />
         </>
     )
 }

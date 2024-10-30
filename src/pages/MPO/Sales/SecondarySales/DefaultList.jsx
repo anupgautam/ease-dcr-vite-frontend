@@ -19,9 +19,13 @@ import {
 } from "../../../../api/MPOSlices/SecondarySalesApiSlice";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import EditSecondarySales from './EditSecondarySales';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { useSelector } from 'react-redux';
+
+import{
+    useGetChemistOrderedProductsByIdQuery
+} from '../../../../api/OrderedProductslices/chemistOrderedProductSlice'
 
 const TABLE_HEAD = [
     { id: 'product_name', label: 'Product Name', alignRight: false },
@@ -44,6 +48,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = () => {
+    const { company_id } = useSelector((state) => state.cookie);;
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -83,10 +88,9 @@ const DefaultList = () => {
     }, [])
 
     // ! Get all chemist wala
-    const { data } = useGetAllSecondarySalesQuery(page);
+    const { data } = useGetChemistOrderedProductsByIdQuery({company_name:company_id});
+    console.log(data)
 
-    // !Delete chemists
-    const [deleteSecondarySale] = useDeleteSecondarySalesByIdMutation()
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     return (
@@ -128,45 +132,6 @@ const DefaultList = () => {
                                     <TableCell align="left">{chem.l_rate}</TableCell>
                                     <TableCell align="left">{chem.st_value}</TableCell>
                                     <TableCell align="left">{chem.sl_value}</TableCell>
-                                    <TableCell align="left">
-                                        {/* {
-                                    {/* //!Edit */}
-                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(chem.id)}>
-                                            <Badge>
-                                                <Iconify icon="eva:edit-fill" />
-                                            </Badge>
-                                        </IconButton>
-                                        {/*//! Delete  */}
-                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(chem.id); handleClickOpen() }}>
-                                            <Badge>
-                                                <Iconify icon="eva:trash-2-outline" />
-                                            </Badge>
-                                        </IconButton>
-                                    </TableCell>
-                                    <Dialog
-                                        fullScreen={fullScreen}
-                                        open={openDialogue}
-                                        onClose={handleClose}
-                                        aria-labelledby="responsive-dialog-title"
-                                    >
-                                        <DialogTitle id="responsive-dialog-title">
-                                            {"Are you sure want to delete?"}
-                                        </DialogTitle>
-                                        <DialogActions>
-                                            <Button autoFocus onClick={() => { deleteSecondarySale(selectedId); handleClose() }}>
-                                                Yes
-                                            </Button>
-                                            <Button
-                                                onClick={handleClose}
-                                                autoFocus>
-                                                No
-                                            </Button>
-                                        </DialogActions>
-                                    </Dialog>
-                                    {isDrawerOpen && <EditSecondarySales
-                                        idharu={selectedUpdateId} onClose={onCloseDrawer}
-                                    />
-                                    }
                                 </TableRow>
                             </>
                         ))

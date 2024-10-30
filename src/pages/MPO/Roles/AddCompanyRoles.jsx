@@ -15,17 +15,22 @@ import Iconify from '../../../components/iconify';
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
+
+import {
+    useCreateCompanyRolesMutation,
+    useGetAllRolesQuery
+} from '@/api/MPOSlices/companyRolesSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
-import { useGetAllCompanyQuery, useGetAllRoleQuery, useCreateCompanyRoleMutation } from '../../../api/MPOSlices/SuperAdminSlice';
 
 const AddCompanyRoles = () => {
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Create Chemist
-    const [createCompanyRoles] = useCreateCompanyRoleMutation()
+    const [createCompanyRoles] = useCreateCompanyRolesMutation()
 
-    //! Get other roles 
-    const Roles = useGetAllRoleQuery();
+    //! Get other roles
+    const Roles = useGetAllRolesQuery(company_id);
 
     const roles = useMemo(() => {
         if (Roles.data) {
@@ -34,22 +39,11 @@ const AddCompanyRoles = () => {
         return [];
     }, [Roles])
 
-    //! Get Companies
-    const { data } = useGetAllCompanyQuery()
-
-    const companies = useMemo(() => {
-        if (data) {
-            return data.map((key) => ({ id: key.id, title: key.company_name }))
-        }
-        return [];
-    }, [data])
-
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
-        if ('role_name_value' in fieldValues)
-            temp.role_name_value = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.role_name_value)
-        temp.role_name = returnValidation(['null'], values.role_name)
-        temp.company_name = returnValidation(['null'], values.company_name)
+        if ('role_name' in fieldValues)
+            temp.role_name = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.role_name)
+        temp.role_name_value = returnValidation(['null'], values.role_name_value)
         temp.priority_value = returnValidation(['null', 'lessThan50'], values.priority_value)
         temp.is_highest_priority = returnValidation(['null', 'lessThan50'], values.is_highest_priority)
 
@@ -94,12 +88,12 @@ const AddCompanyRoles = () => {
             priority_value: values.priority_value,
             role_name_value: values.roles_name_value,
             is_highest_priority: values.is_highest_priority,
-            company_name: values.company_name
+            company_name: company_id
         };
         try {
             const response = await createCompanyRoles(jsonData).unwrap();
             if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Company Roles' });
+                setSuccessMessage({ show: true, message: 'Successfully Added Roles' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
@@ -161,24 +155,14 @@ const AddCompanyRoles = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Add Company Roles
+                            Add CompanyRoles
                         </Typography>
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Select
-                            name="company_name"
-                            label="Company Name*"
-                            value={values.name}
-                            onChange={handleInputChange}
-                            error={errors.company_name}
-                            options={companies}
-                        />
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Select
                             name="role_name"
                             label="Role Name*"
-                            value={values.name}
+                            value={values.role_name}
                             onChange={handleInputChange}
                             error={errors.role_name}
                             options={roles}
@@ -190,7 +174,7 @@ const AddCompanyRoles = () => {
                             autoFocus
                             name="roles_name_value"
                             label="Roles Name*"
-                            value={values.name}
+                            value={values.role_name_value}
                             onChange={handleInputChange}
                             error={errors.role_name_value}
                         />
@@ -209,7 +193,7 @@ const AddCompanyRoles = () => {
                         <Controls.Checkbox
                             name="is_highest_priority"
                             label="Is Highest Priority"
-                            value={values.name}
+                            value={values.is_highest_priority}
                             onChange={handleInputChange}
                         />
                     </Box>

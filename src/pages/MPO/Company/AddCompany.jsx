@@ -20,30 +20,28 @@ import {
     useCreateCompanyRolesMutation,
     useGetAllRolesQuery
 } from '@/api/MPOSlices/companyRolesSlice';
+import {
+    useCreateCompanyMutation
+} from '../../../api/MPOSlices/SuperAdminSlice'
+
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const AddCompany = () => {
-    const { company_id } = useSelector((state) => state.cookie);
 
     //! Create Chemist
-    const [createCompany] = useCreateCompanyRolesMutation()
-
-    //! Get other roles
-    // const Roles = useGetAllRolesQuery(company_id);
-
-    // const roles = useMemo(() => {
-    //     if (Roles.data) {
-    //         return Roles.data.map((key) => ({ id: key.id, title: key.role_name }))
-    //     }
-    //     return [];
-    // }, [Roles])
+    const [createCompany] = useCreateCompanyMutation()
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
         if ('company_name' in fieldValues)
             temp.company_name = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.company_name)
-
+        if ('company_contact_number' in fieldValues)
+            temp.company_contact_number = returnValidation(['null', 'phonenumber', 'specialchracter'], values.company_contact_number);
+        if ('company_email_address' in fieldValues)
+            temp.company_email_address = returnValidation(['null'], values.company_email_address);
+        if ('company_address' in fieldValues)
+            temp.company_address = returnValidation(['null'], values.company_address);
         setErrors({
             ...temp
         })
@@ -82,10 +80,9 @@ const AddCompany = () => {
         setLoading(true)
         const jsonData = {
             company_name: values.company_name,
-            // priority_value: values.priority_value,
-            // role_name_value: values.roles_name_value,
-            // is_highest_priority: values.is_highest_priority,
-            // company_name: company_id
+            company_phone_number: values.company_phone_number,
+            company_email_address: values.company_email_address,
+            company_address: values.company_address,
         };
         try {
             const response = await createCompany(jsonData).unwrap();
@@ -161,9 +158,36 @@ const AddCompany = () => {
                             autoFocus
                             name="company_name"
                             label="Company Name*"
-                            value={values.company_name}
+                            value={values.name}
                             onChange={handleInputChange}
                             error={errors.company_name}
+                        />
+                    </Box>
+                    <Box marginBottom={2}>
+                        <Controls.Input
+                            name="company_phone_number"
+                            label="Phone Number*"
+                            value={values.name}
+                            onChange={handleInputChange}
+                            error={errors.company_phone_number}
+                        />
+                    </Box>
+                    <Box marginBottom={2}>
+                        <Controls.Input
+                            name="company_email_address"
+                            label="Email*"
+                            value={values.name}
+                            onChange={handleInputChange}
+                            error={errors.company_email_address}
+                        />
+                    </Box>
+                    <Box marginBottom={2}>
+                        <Controls.Input
+                            name="company_address"
+                            label="Address*"
+                            value={values.name}
+                            onChange={handleInputChange}
+                            error={errors.company_address}
                         />
                     </Box>
                     <Stack spacing={1} direction="row">

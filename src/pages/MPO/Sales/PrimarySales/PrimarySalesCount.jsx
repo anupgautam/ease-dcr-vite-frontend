@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react'
 import { Typography } from '@mui/material';
-import { useGetAllPrimarySalesQuery } from '@/api/MPOSlices/PrimarySalesApiSlice';
+import { useGetAllPrimarySalesQuery } from '../../../../api/MPOSlices/PrimarySalesApiSlice';
 
 const PrimarySalesCount = () => {
     const [page, setPage] = useState(1)
+
     const handleChangePage = useCallback((e) => {
         const data = e.target.ariaLabel
         let thisArray = data.split(" ")
@@ -18,7 +19,7 @@ const PrimarySalesCount = () => {
                 data ?
                     <Typography style={{ fontSize: '18px', fontWeight: '600' }}>
                         Total Primary Sales: {data.count}
-                    </Typography> : <Typography style={{ fontSize: '18px', fontWeight: '600' }}>Primary Sales</Typography>}
+                    </Typography> : <Typography style={{ fontSize: '18px', fontWeight: '600' }}>Primary Sales Count</Typography>}
         </>
     )
 }
