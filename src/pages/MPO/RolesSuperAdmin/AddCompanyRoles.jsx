@@ -15,17 +15,23 @@ import Iconify from '../../../components/iconify';
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
+
+import {
+    useCreateCompanyRolesMutation,
+    useGetAllRolesQuery
+} from '@/api/MPOSlices/companyRolesSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
-import { useGetAllCompanyQuery, useGetAllRoleQuery, useCreateCompanyRoleMutation } from '../../../api/MPOSlices/SuperAdminSlice';
+import { useGetAllCompanyQuery } from '../../../api/MPOSlices/SuperAdminSlice';
 
 const AddCompanyRoles = () => {
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Create Chemist
-    const [createCompanyRoles] = useCreateCompanyRoleMutation()
+    const [createCompanyRoles] = useCreateCompanyRolesMutation()
 
-    //! Get other roles 
-    const Roles = useGetAllRoleQuery();
+    //! Get other roles
+    const Roles = useGetAllRolesQuery(company_id);
 
     const roles = useMemo(() => {
         if (Roles.data) {
@@ -40,16 +46,15 @@ const AddCompanyRoles = () => {
     const companies = useMemo(() => {
         if (data) {
             return data.map((key) => ({ id: key.id, title: key.company_name }))
+            return [];
         }
-        return [];
     }, [data])
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
-        if ('role_name_value' in fieldValues)
-            temp.role_name_value = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.role_name_value)
-        temp.role_name = returnValidation(['null'], values.role_name)
-        temp.company_name = returnValidation(['null'], values.company_name)
+        if ('role_name' in fieldValues)
+            temp.role_name = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.role_name)
+        temp.role_name_value = returnValidation(['null'], values.role_name_value)
         temp.priority_value = returnValidation(['null', 'lessThan50'], values.priority_value)
         temp.is_highest_priority = returnValidation(['null', 'lessThan50'], values.is_highest_priority)
 
@@ -99,7 +104,7 @@ const AddCompanyRoles = () => {
         try {
             const response = await createCompanyRoles(jsonData).unwrap();
             if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Company Roles' });
+                setSuccessMessage({ show: true, message: 'Successfully Added Roles' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
@@ -161,17 +166,18 @@ const AddCompanyRoles = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Add Company Roles
+                            Add CompanyRoles
                         </Typography>
                     </Box>
                     <Box marginBottom={2}>
-                        <Controls.Select
-                            name="company_name"
-                            label="Company Name*"
+                        <Controls.Input
+                            id="autoFocus"
+                            autoFocus
+                            name="roles_name_value"
+                            label="Roles Name*"
                             value={values.name}
                             onChange={handleInputChange}
-                            error={errors.company_name}
-                            options={companies}
+                            error={errors.role_name_value}
                         />
                     </Box>
                     <Box marginBottom={2}>
@@ -185,17 +191,15 @@ const AddCompanyRoles = () => {
                         />
                     </Box>
                     <Box marginBottom={2}>
-                        <Controls.Input
-                            id="autoFocus"
-                            autoFocus
-                            name="roles_name_value"
-                            label="Roles Name*"
+                        <Controls.Select
+                            name="company_name"
+                            label="Company Name*"
                             value={values.name}
                             onChange={handleInputChange}
-                            error={errors.role_name_value}
+                            error={errors.company_name}
+                            options={companies}
                         />
                     </Box>
-
                     <Box marginBottom={2}>
                         <Controls.Input
                             name="priority_value"

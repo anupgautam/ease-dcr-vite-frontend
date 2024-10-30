@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import {
     Box,
-    Typography, Button, Grid
+    Typography, Button, Grid, CircularProgress
 } from '@mui/material'
 import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
@@ -13,44 +13,20 @@ import { useForm, Form } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 //! Api Slices 
-import { useGetAllCompanyQuery, useGetAllRoleQuery, useGetCompanyRoleByIdQuery, useUpdateCompanyRoleMutation } from '../../../api/MPOSlices/SuperAdminSlice';
+import { useGetRoleByIdQuery, useUpdateRolesMutation } from '../../../api/MPOSlices/SuperAdminSlice';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const EditCompanyRoles = ({ idharu, onClose }) => {
 
-    //! Get other roles 
-    const Roles = useGetAllRoleQuery();
-
-    const roles = useMemo(() => {
-        if (Roles.data) {
-            return Roles.data.map((key) => ({ id: key.id, title: key.role_name }))
-        }
-        return [];
-    }, [Roles])
-
-
     //! Getting CompanyRoles by ID
-    const CompanyRoles = useGetCompanyRoleByIdQuery(idharu);
-
-    const { data } = useGetAllCompanyQuery()
-
-    const companies = useMemo(() => {
-        if (data) {
-            return data.map((key) => ({ id: key.id, title: key.company_name }))
-        }
-        return [];
-    }, [data])
-
+    const CompanyRoles = useGetRoleByIdQuery(idharu);
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
-        if ('role_name_value' in fieldValues)
-            temp.role_name_value = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.role_name_value)
-        temp.is_highest_priority = returnValidation(['null', 'lessThan50'], values.is_highest_priority)
-        temp.role_name = returnValidation(['null'], values.role_name)
-        temp.company_name = returnValidation(['null'], values.company_name)
-        temp.priority_value = returnValidation(['null', 'lessThan50'], values.priority_value)
+        if ('role_name' in fieldValues)
+            temp.role_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.role_name)
         setErrors({
             ...temp
         })
@@ -63,20 +39,12 @@ const EditCompanyRoles = ({ idharu, onClose }) => {
 
     const [initialFValues, setInitialFValues] = useState({
         role_name: "",
-        is_highest_priority: '',
-        company_name: '',
-        role_name_value: "",
-        priority_value: ""
     })
 
     useEffect(() => {
         if (CompanyRoles.data) {
             setInitialFValues({
                 role_name: CompanyRoles.data.role_name,
-                is_highest_priority: CompanyRoles.data.is_highest_priority,
-                role_name_value: CompanyRoles.data.role_name_value,
-                company_name: CompanyRoles.data.company_name,
-                priority_value: CompanyRoles.data.priority_value
 
             });
         }
@@ -94,15 +62,15 @@ const EditCompanyRoles = ({ idharu, onClose }) => {
         true
     )
 
-
     useEffect(() => {
         validate();
     }, [
         values.role_name])
 
     //! Edit user
-    const [updateCompanyRoles] = useUpdateCompanyRoleMutation();
+    const [updateRoles] = useUpdateRolesMutation();
     const history = useNavigate()
+    const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
@@ -111,25 +79,35 @@ const EditCompanyRoles = ({ idharu, onClose }) => {
         const jsonData = {
             id: idharu,
             role_name: values.role_name,
-            priority_value: values.priority_value,
-            role_name_value: values.role_name_value,
-            is_highest_priority: values.is_highest_priority,
-            company_name: values.company_name
         };
         try {
-            const response = await updateCompanyRoles(jsonData).unwrap();
-            setSuccessMessage({ show: true, message: 'Successfully Edited Company Roles' });
-            setTimeout(() => {
-                setSuccessMessage({ show: false, message: '' });
-            }, 3000);
+            const response = await updateRoles(jsonData).unwrap();
+            // const response = await updateUsers({ id: idharu, value: data }).unwrap();
+            if (response) {
+                setSuccessMessage({ show: true, message: 'Successfully Edited User' });
+                setTimeout(() => {
+                    onClose(); setSuccessMessage({ show: false, message: '' });
+                }, 2000);
+            } else if (response?.error) {
+                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                setLoading(false);
+                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            } else {
+                setErrorMessage({ show: true, message: 'Data failed to add.' });
+                setTimeout(() => {
+                    setErrorMessage({ show: false, message: '' });
+                }, 2000);
+            }
         }
         catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            }, 2000);
+        } finally {
+            setLoading(false)
         }
-    }, [updateCompanyRoles, values])
+    }, [updateRoles, values])
 
     return (
         <>
@@ -155,64 +133,25 @@ const EditCompanyRoles = ({ idharu, onClose }) => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Edit CompanyRoles
+                            Edit Roles
                         </Typography>
                     </Box>
 
                     <Form onSubmit={handleSubmit}>
                         <Box marginBottom={2}>
-                            <Box marginBottom={2}>
-                                <Controls.Select
-                                    name="company_name"
-                                    label="Company Name*"
-                                    value={values.company_name}
-                                    onChange={handleInputChange}
-                                    error={errors.company_name}
-                                    options={companies}
-                                />
-                            </Box>
-                            <Box marginBottom={2}>
-                                <Controls.Select
-                                    name="role_name"
-                                    label="Role Name*"
-                                    value={values.role_name}
-                                    onChange={handleInputChange}
-                                    error={errors.role_name}
-                                    options={roles}
-                                />
-                            </Box>
                             <Controls.Input
-                                id="autoFocus"
-                                autoFocus
-                                name="role_name_value"
-                                label="Roles Name Value*"
-                                value={values.role_name_value}
+                                name="role_name"
+                                label="Roles Name*"
+                                value={values.role_name}
                                 onChange={handleInputChange}
-                                error={errors.role_name_value}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
-                            <Controls.Input
-                                name="priority_value"
-                                label="Priority Value*"
-                                value={values.priority_value}
-                                onChange={handleInputChange}
-                                error={errors.priority_value}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
-                            <Controls.Checkbox
-                                name="is_highest_priority"
-                                label="Is Highest Priority"
-                                value={values.is_highest_priority}
-                                onChange={handleInputChange}
+                                error={errors.role_name}
                             />
                         </Box>
                         <Stack spacing={1} direction="row">
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
-                                onClick={(e) => { handleSubmit(e); onClose() }}
+                                onClick={(e) => {handleSubmit(e); onClose()}}
                                 text="Submit"
                             />
                             <Button
@@ -227,6 +166,11 @@ const EditCompanyRoles = ({ idharu, onClose }) => {
 
                 </Box>
             </Drawer>
+            {loading && (
+                <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
+                    <CircularProgress />
+                </Grid>
+            )}
             {
                 ErrorMessage.show === true ? (
                     <Grid>

@@ -14,21 +14,48 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 //! Api Slices 
 import {
-    useGetCompanyByIdQuery,
-    useUpdateCompanyMutation
-} from '../../../api/MPOSlices/SuperAdminSlice'
+    useGetCompanyRolesByIdQuery,
+    useUpdateCompanyRolesMutation
+} from '@/api/MPOSlices/companyRolesSlice';
+import { useSelector } from 'react-redux';
 
-const EditCompany = ({ idharu, onClose }) => {
+const EditCompanyRoles = ({ idharu, onClose }) => {
+    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
-    //! Getting Company by ID
-    const Company = useGetCompanyByIdQuery(idharu);
+    //! Getting CompanyRoles by ID
+    const CompanyRoles = useGetCompanyRolesByIdQuery(idharu);
+
+    //! Validation wala  
+    const validate = (fieldValues = values) => {
+        // 
+        let temp = { ...errors }
+        if ('role_name' in fieldValues)
+            temp.role_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.role_name)
+        temp.is_highest_value = returnValidation(['null', 'lessThan50'], values.is_highest_value)
+        setErrors({
+            ...temp
+        })
+        // 
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x == "")
+    }
+
 
     const [initialFValues, setInitialFValues] = useState({
-        company_name: "",
-        company_phone_number: "",
-        company_email_address: "",
-        company_address: "",
+        role_name: "",
+        is_highest_priority: '',
     })
+
+    useEffect(() => {
+        if (CompanyRoles.data) {
+            setInitialFValues({
+                role_name: CompanyRoles.data.role_name.role_name,
+                is_highest_priority: CompanyRoles.data.role_name.is_highest_priority,
+            });
+        }
+    }, [CompanyRoles.data])
+
 
     const { values,
         errors,
@@ -41,47 +68,14 @@ const EditCompany = ({ idharu, onClose }) => {
         true
     )
 
-    //! Validation wala  
-    const validate = (fieldValues = values) => {
-        // 
-        let temp = { ...errors }
-        if ('company_name' in fieldValues)
-            temp.company_name = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.company_name)
-        if ('company_contact_number' in fieldValues)
-            temp.company_contact_number = returnValidation(['null', 'phonenumber', 'specialchracter'], values.company_contact_number);
-        if ('company_email_address' in fieldValues)
-            temp.company_email_address = returnValidation(['null'], values.company_email_address);
-        if ('company_address' in fieldValues)
-            temp.company_address = returnValidation(['null'], values.company_address);
-
-        setErrors({
-            ...temp
-        })
-        // 
-
-        if (fieldValues === values)
-            return Object.values(temp).every(x => x == "")
-    }
 
     useEffect(() => {
         validate();
     }, [
-        values.company_address, values.company_email_address, values.company_name, values.company_phone_number])
-
-    useEffect(() => {
-        if (Company.data) {
-            setInitialFValues({
-                company_name: Company.data.company_name,
-                company_phone_number: Company.data.company_phone_number,
-                company_email_address: Company.data.company_email_address,
-                company_address: Company.data.company_address,
-            });
-        }
-    }, [Company.data])
-
+        values.role_name])
 
     //! Edit user
-    const [updateCompany] = useUpdateCompanyMutation();
+    const [updateCompanyRoles] = useUpdateCompanyRolesMutation();
     const history = useNavigate()
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
@@ -90,15 +84,15 @@ const EditCompany = ({ idharu, onClose }) => {
         e.preventDefault();
         const jsonData = {
             id: idharu,
-            company_name: values.company_name,
-            company_phone_number: values.company_phone_number,
-            company_email_address: values.company_email_address,
-            company_address: values.company_address,
+            role_name: values.role_name,
+            priority_value: values.priority_value,
+            role_name_value: values.role_name_value,
+            is_highest_priority: values.is_highest_priority,
+            company_name: company_id
         };
-        console.log(jsonData)
         try {
-            const response = await updateCompany(jsonData)
-            setSuccessMessage({ show: true, message: 'Successfully Edited Company' });
+            const response = await updateCompanyRoles(jsonData).unwrap();
+            setSuccessMessage({ show: true, message: 'Successfully Edited CompanyRoles' });
             setTimeout(() => {
                 setSuccessMessage({ show: false, message: '' });
             }, 3000);
@@ -109,7 +103,7 @@ const EditCompany = ({ idharu, onClose }) => {
                 setErrorMessage({ show: false, message: '' });
             }, 3000);
         }
-    }, [updateCompany, values])
+    }, [updateCompanyRoles, values])
 
     return (
         <>
@@ -135,7 +129,7 @@ const EditCompany = ({ idharu, onClose }) => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Edit Company
+                            Edit CompanyRoles
                         </Typography>
                     </Box>
 
@@ -144,38 +138,19 @@ const EditCompany = ({ idharu, onClose }) => {
                             <Controls.Input
                                 id="autoFocus"
                                 autoFocus
-                                name="company_name"
-                                label="Company Name*"
-                                value={values.company_name}
+                                name="role_name"
+                                label="Role Name*"
+                                value={values.role_name}
                                 onChange={handleInputChange}
-                                error={errors.company_name}
+                                error={errors.role_name}
                             />
                         </Box>
                         <Box marginBottom={2}>
-                            <Controls.Input
-                                name="company_phone_number"
-                                label="Phone Number*"
-                                value={values.company_phone_number}
+                            <Controls.Checkbox
+                                name="is_highest_priority"
+                                label="Is Highest Priority"
+                                value={values.is_highest_priority}
                                 onChange={handleInputChange}
-                                error={errors.company_phone_number}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
-                            <Controls.Input
-                                name="company_email_address"
-                                label="Email*"
-                                value={values.company_email_address}
-                                onChange={handleInputChange}
-                                error={errors.company_email_address}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
-                            <Controls.Input
-                                name="company_address"
-                                label="Address*"
-                                value={values.company_address}
-                                onChange={handleInputChange}
-                                error={errors.company_address}
                             />
                         </Box>
                         <Stack spacing={1} direction="row">
@@ -226,4 +201,4 @@ const EditCompany = ({ idharu, onClose }) => {
     );
 };
 
-export default React.memo(EditCompany);
+export default React.memo(EditCompanyRoles);

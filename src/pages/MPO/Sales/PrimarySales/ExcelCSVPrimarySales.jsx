@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import {
     Box,
     Typography,
@@ -7,25 +7,26 @@ import {
     FormControl,
     InputLabel,
     Select,
-    MenuItem,
+    MenuItem
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Iconify from '../../../../components/iconify';
-import {
-    useSearchPrimarySalesCSVMutation,
-} from '../../../../api/MPOSlices/PrimarySalesApiSlice';
-import ExportToExcel from "@/reusable/utils/exportSheet";
-
+import { CSVLink } from "react-csv";
+import DatePicker from 'react-datepicker';
 import {
     useGetTourPlansWithoutPaginateQuery
 } from '../../../../api/MPOSlices/TourPlanSlice'
+import {
+    useSearchSecondarySalesCSVMutation
+} from '../../../../api/MPOSlices/SecondarySalesApiSlice'
+import ExportToExcel from "@/reusable/utils/exportSheet";
 import { useSelector } from 'react-redux';
+import { BSDate } from "nepali-datepicker-react";
 
-
-const ExcelCSVPrimarySales = ({ selectedOption }) => {
+const ExcelCSVPrimarySales = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Month Format 
@@ -37,26 +38,45 @@ const ExcelCSVPrimarySales = ({ selectedOption }) => {
     //     if (date) {
     //         const MonthData = date.toLocaleString('default', { month: "short" }).toLowerCase();
     //         setMonthData(MonthData)
+    //         setCompanyId(company_id)
     //     }
     // }
 
-    //! Months
-    const months = [
-        { value: 'baisakh', label: 'Baisakh' },
-        { value: 'jesth', label: 'Jestha' },
-        { value: 'asadh', label: 'Asadh' },
-        { value: 'shrawn', label: 'Shrawan' },
-        { value: 'bhadra', label: 'Bhadra' },
-        { value: 'ashwin', label: 'Ashwin' },
-        { value: 'kartik', label: 'Kartik' },
-        { value: 'mangsir', label: 'Mangsir' },
-        { value: 'poush', label: 'Poush' },
-        { value: 'magh', label: 'Magh' },
-        { value: 'falgun', label: 'Falgun' },
-        { value: 'chaitra', label: 'Chaitra' },
-    ]
+    const now = new BSDate().now();
+    const year = now._date.year;
+    const month = now._date.month;
 
-    const [selectedMonth, setSelectedMonth] = useState()
+    //! Months
+    // const months = [
+    //     { value: 'baisakh', label: 'Baisakh' },
+    //     { value: 'jesth', label: 'Jestha' },
+    //     { value: 'Asadh', label: 'Asadh' },
+    //     { value: 'shrawn', label: 'Shrawan' },
+    //     { value: 'bhadra', label: 'Bhadra' },
+    //     { value: 'ashwin', label: 'Ashwin' },
+    //     { value: 'kartik', label: 'Kartik' },
+    //     { value: 'mangsir', label: 'Mangsir' },
+    //     { value: 'poush', label: 'Poush' },
+    //     { value: 'magh', label: 'Magh' },
+    //     { value: 'falgun', label: 'Falgun' },
+    //     { value: 'chaitra', label: 'Chaitra' },
+    // ]
+    const months = [
+        { value: 1, label: "Baisakh" },
+        { value: 2, label: "Jestha" },
+        { value: 3, label: "Asadh" },
+        { value: 4, label: "Shrawan" },
+        { value: 5, label: "Bhadra" },
+        { value: 6, label: "Ashwin" },
+        { value: 7, label: "Kartik" },
+        { value: 8, label: "Mangsir" },
+        { value: 9, label: "Poush" },
+        { value: 10, label: "Magh" },
+        { value: 11, label: "Falgun" },
+        { value: 12, label: "Chaitra" }
+    ];
+
+    const [selectedMonth, setSelectedMonth] = useState(month)
 
     const handleNepaliMonthChange = useCallback((event) => {
         setSelectedMonth(event.target.value);
@@ -83,27 +103,28 @@ const ExcelCSVPrimarySales = ({ selectedOption }) => {
         { value: 2090, label: "2090" },
     ]
     const [dateData, setDateData] = useState('')
-    const [selectedYear, setSelectedYear] = useState(2024);
+    const [selectedYear, setSelectedYear] = useState(year);
     const [companyId, setCompanyId] = useState()
 
-    const handleYearChange = (event) => {
+    const handleYearChange = useCallback((event) => {
         setSelectedYear(event.target.value);
         setCompanyId(company_id);
-    };
+    }, []);
 
     //! Search results
-    const [searchPrimarySales, results] = useSearchPrimarySalesCSVMutation()
+    const [searchSecondarySales, results] = useSearchSecondarySalesCSVMutation()
 
     //! onSearch
-    const FilteredData = { companyId: companyId, selectedMonth: selectedMonth, dateData: selectedYear }
+    const FilteredData = { companyId: company_id, selectedMonth: selectedMonth, dateData: selectedYear }
 
     useEffect(() => {
         if (selectedMonth || selectedYear) {
-            searchPrimarySales(FilteredData)
+            searchSecondarySales(FilteredData)
                 .then((res) => {
                 })
         }
     }, [selectedMonth, selectedYear])
+
 
     const [MPOData, setMPOData] = useState()
     const { data } = useGetTourPlansWithoutPaginateQuery();
@@ -120,7 +141,7 @@ const ExcelCSVPrimarySales = ({ selectedOption }) => {
     //! CSV Data 
 
     const headers = [
-        { label: 'Product Name', key: 'product' },
+        { label: 'Product', key: 'product' },
         { label: 'Opening Stock', key: 'opening_stock' },
         { label: 'Purchase', key: 'purchase' },
         { label: 'Stockist', key: 'stockist' },
@@ -159,16 +180,21 @@ const ExcelCSVPrimarySales = ({ selectedOption }) => {
         sl_value: values?.sl_value,
     }))
 
-    const handleChange = (event) => {
+    const csvData = [
+        { details: { firstName: 'Ahmed', lastName: 'Tomi' }, job: 'manager' },
+        { details: { firstName: 'John', lastName: 'Jones' }, job: 'developer' },
+    ];
+
+    const handleChange = useCallback((event) => {
         setDuration(event.target.value);
-    };
+    }, []);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     return (
         <>
             <Button color="success" variant="contained" startIcon={<Iconify icon="mdi:microsoft-excel" />} onClick={() => setIsDrawerOpen(true)} >
-                Export Data
+                Export
             </Button>
             <Drawer
                 anchor="right"
@@ -252,9 +278,8 @@ const ExcelCSVPrimarySales = ({ selectedOption }) => {
                         } */}
                         {results?.data ?
                             <>
-                                <ExportToExcel headers={headers} fileName={`Doctors`} data={templateData} onClick={() => setIsDrawerOpen(false)} />
+                                <ExportToExcel headers={headers} fileName={`Secondary Sales`} data={templateData} onClick={() => setIsDrawerOpen(false)} />
                             </> : <></>}
-
                     </Stack>
                 </Box>
             </Drawer>
@@ -262,4 +287,4 @@ const ExcelCSVPrimarySales = ({ selectedOption }) => {
     )
 }
 
-export default React.memo(ExcelCSVPrimarySales);
+export default ExcelCSVPrimarySales;

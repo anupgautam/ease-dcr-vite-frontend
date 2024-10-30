@@ -26,8 +26,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import EditSecondarySales from './EditSecondarySales'
-import AddSecondarySales from './AddSecondarySales';
 import SecondarySalesCount from './SecondarySalesCount';
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
@@ -252,11 +250,11 @@ const SecondarySalesSearch = () => {
                             >
                                 <ExcelCSVSecondarySales selectedOption={selectedOption} />
                                 {/* {selectedOption && selectedMonth && selectedYear && ( */}
-                                <AddSecondarySales
+                                {/* <AddSecondarySales
                                     selectedOption={selectedOption}
                                     selectedMonth={selectedMonth}
                                     selectedYear={selectedYear}
-                                />
+                                /> */}
                                 {/* )} */}
                             </Stack>
                         </Grid>

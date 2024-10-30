@@ -89,8 +89,8 @@ export const PrimarySalesApiSlice = apiSlice.injectEndpoints({
         updatePrimarySales: builder.mutation({
             query: (updatePrimarySale) => {
                 return {
-                    url: `sales/primary-sales/${updatePrimarySale.get('id')}/`,
-                    method: 'PUT',
+                    url: `sales/primary-sales/${updatePrimarySale.id}/`,
+                    method: 'PATCH',
                     body: updatePrimarySale
                 }
             },

@@ -94,8 +94,12 @@ const LoginFormInputs = () => {
                         dispatch(setUserRole({ role: res.data.role }))
                         setSuccessMessage({ show: true, message: 'Successfully Logged In' });
                         setLoading(true);
-
+                        console.log(res)
                         setTimeout(() => {
+                            // if(!res?.data?.is_admin){
+                            //     Cookies.set('user_role','SuperAdmin')
+                            //     navigate('/dashboard/superadmin/company')
+                            // }
                             if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                 Cookies.set('user_role', 'admin');
                                 navigate('/dashboard/admin');

@@ -1,12 +1,12 @@
 import React from 'react'
-import ListOfPrimarySales from './ListOfPrimarySales'
+import ListOfSecondarySales from './ListOfPrimarySales'
 
-const ListOfPrimarySalesController = () => {
+const ListOfPrimarySalescontroller = () => {
     return (
         <>
-            <ListOfPrimarySales />
+            <ListOfSecondarySales />
         </>
     )
 }
 
-export default ListOfPrimarySalesController
+export default ListOfPrimarySalescontroller

@@ -102,7 +102,7 @@ export default function Nav({ openNav, onCloseNav }) {
         {/* <Typography style={{ fontSize: "20px", color: "black", fontWeight: '700', letterSpacing: '.7px', marginTop: '7px' }}>Ease SFA</Typography> */}
       </Box>
       {
-        user_role === "admin" &&
+        user_role === "SuperAdmin" &&
         <NavSection data={SuperAdminConfig} />
       }
       {

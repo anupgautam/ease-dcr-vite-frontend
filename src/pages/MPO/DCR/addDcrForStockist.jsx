@@ -77,11 +77,12 @@ const AddDCRForStockist = () => {
         skip: !company_user_id
     });
 
-    const doctors = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: companyUserArea?.data?.company_area?.id ? companyUserArea?.data?.company_area?.id : "" },
-        {
-            skip: !company_id || !companyUserArea?.data?.company_area?.id
-        }
-    );
+    const doctors = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: companyUserArea?.data?.company_area?.id ? companyUserArea?.data?.company_area?.id : "" })
+    // const doctors = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: companyUserArea?.data?.company_area?.id ? companyUserArea?.data?.company_area?.id : "" },
+    //     {
+    //         skip: !company_id || !companyUserArea?.data?.company_area?.id
+    //     }
+    // );
 
     const doctorOptions = useMemo(() => {
         if (doctors !== undefined) {
@@ -450,7 +451,7 @@ const AddDCRForStockist = () => {
                     <Grid item md={4} xs={12}>
                         <Card style={{ height: "393px" }}>
                             <Box style={{ padding: "15px" }}>
-                                <Typography style={{ color: "black", fontSize: '15px', fontWeight: "600" }}>Visited Stcokist & Product Promotion*</Typography>
+                                <Typography style={{ color: "black", fontSize: '15px', fontWeight: "600" }}>Visited Stockist & Product Promotion*</Typography>
                                 <Box style={{ marginTop: "15px" }}>
                                     <Box marginBottom={2}>
                                         <Controls.Select

@@ -31,8 +31,16 @@ import {
 } from '../../../api/MPOSlices/companyRolesSlice'
 import EditCompany from './EditCompany';
 
+import {
+    useGetAllCompanyQuery,
+    useDeleteCompanyByIdMutation,
+} from '../../../api/MPOSlices/SuperAdminSlice'
+
 const TABLE_HEAD = [
-    { id: 'role_name', label: 'Role Name', alignRight: false },
+    { id: 'company_name', label: 'Company Name', alignRight: false },
+    { id: 'company_phone_number', label: 'Phone Number', alignRight: false },
+    { id: 'company_email_address', label: 'Email', alignRight: false },
+    { id: 'company_address', label: 'Address', alignRight: false },
     { id: '' },
 ];
 
@@ -78,12 +86,11 @@ const DefaultList = () => {
     }, [])
 
     //! Get Categories
-    const { data } = useGetAllCompanyRolesQuery(company_id, {
-        skip: !company_id
-    });
+    const { data } = useGetAllCompanyQuery();
+    console.log(data)
 
     // !Delete TourPlan
-    const [deleteCompanyRoles] = useDeleteCompanyRolesByIdMutation();
+    const [deleteCompany] = useDeleteCompanyByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     return (
@@ -103,6 +110,9 @@ const DefaultList = () => {
                                                 <TableRow key={key} >
                                                     <TableCell><Skeleton /></TableCell>
                                                     <TableCell><Skeleton /></TableCell>
+                                                    <TableCell><Skeleton /></TableCell>
+                                                    <TableCell><Skeleton /></TableCell>
+                                                    <TableCell><Skeleton /></TableCell>
                                                 </TableRow>
                                             ))}
                                     </> :
@@ -112,11 +122,20 @@ const DefaultList = () => {
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {companyroles.role_name_value}
+                                                            {companyroles.company_name}
                                                         </Typography>
                                                     </TableCell>
+                                                    <TableCell align="left">{companyroles?.company_phone_number}</TableCell>
+                                                    <TableCell align="left">{companyroles?.company_email_address}</TableCell>
+                                                    <TableCell align="left">{companyroles?.company_address}</TableCell>
+
                                                     <TableCell align="right">
-                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => handleClickOpen()}>
+                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(companyroles.id)}>
+                                                            <Badge>
+                                                                <Iconify icon="eva:edit-fill" />
+                                                            </Badge>
+                                                        </IconButton>
+                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(companyroles.id); handleClickOpen() }}>
                                                             <Badge>
                                                                 <Iconify icon="eva:trash-2-outline" />
                                                             </Badge>
@@ -140,11 +159,14 @@ const DefaultList = () => {
                 aria-labelledby="responsive-dialog-title"
             >
                 <DialogTitle id="responsive-dialog-title">
-                    {"Contact With Super Admin for Roles Deletion"}
+                    {"Are you sure want to delete?"}
                 </DialogTitle>
                 <DialogActions>
-                    <Button autoFocus onClick={() => handleClose()}>
-                        OK
+                    <Button autoFocus onClick={() => { deleteCompany(selectedId); handleClose() }}>
+                        Yes
+                    </Button>
+                    <Button onClick={handleClose} autoFocus>
+                        No
                     </Button>
                 </DialogActions>
             </Dialog>

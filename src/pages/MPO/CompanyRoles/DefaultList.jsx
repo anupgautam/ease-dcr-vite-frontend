@@ -25,16 +25,13 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useSelector } from 'react-redux';
 
-import {
-    useGetAllCompanyRolesQuery,
-    useDeleteCompanyRolesByIdMutation
-} from '../../../api/MPOSlices/companyRolesSlice'
 import EditCompanyRoles from './EditCompanyRoles';
+import { useGetAllCompanyRoleQuery } from '../../../api/MPOSlices/SuperAdminSlice';
 
-const TABLE_HEAD = [
-    { id: 'role_name', label: 'Role Name', alignRight: false },
-    { id: '' },
-];
+// const TABLE_HEAD = [
+//     { id: 'role_name', label: 'Role Name', alignRight: false },
+//     { id: '' },
+// ];
 
 const DefaultList = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -78,61 +75,57 @@ const DefaultList = () => {
     }, [])
 
     //! Get Categories
-    const { data } = useGetAllCompanyRolesQuery(company_id, {
-        skip: !company_id
-    });
+    const { data } = useGetAllCompanyRoleQuery();
 
-    // !Delete TourPlan
-    const [deleteCompanyRoles] = useDeleteCompanyRolesByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     return (
         <>
-            <Card>
+            {/* <Card>
                 <Scrollbar>
                     <TableContainer sx={{ minWidth: 800 }}>
                         <Table>
                             <UserListHead
                                 headLabel={TABLE_HEAD}
                             />
-                            <TableBody>
-                                {
-                                    data === undefined ? <>
-                                        {
-                                            eightArrays.map((key) => (
-                                                <TableRow key={key} >
-                                                    <TableCell><Skeleton /></TableCell>
-                                                    <TableCell><Skeleton /></TableCell>
-                                                </TableRow>
-                                            ))}
-                                    </> :
-                                        <>
-                                            {data && data.map((companyroles, index) => (
-                                                <TableRow hover tabIndex={-1} role="checkbox" key={companyroles.id}>
-                                                    <TableCell>{index + 1}</TableCell>
-                                                    <TableCell component="th" scope="row" align="left">
-                                                        <Typography variant="subtitle2" noWrap>
-                                                            {companyroles.role_name_value}
-                                                        </Typography>
-                                                    </TableCell>
-                                                    <TableCell align="right">
-                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => handleClickOpen()}>
-                                                            <Badge>
-                                                                <Iconify icon="eva:trash-2-outline" />
-                                                            </Badge>
-                                                        </IconButton>
-                                                    </TableCell>
-
-                                                </TableRow>
-                                            ))
-                                            }
-                                        </>
-                                }
-                            </TableBody>
+                            <TableBody> */}
+            {
+                data === undefined ? <>
+                    {
+                        eightArrays.map((key) => (
+                            <TableRow key={key} >
+                                <TableCell><Skeleton /></TableCell>
+                                <TableCell><Skeleton /></TableCell>
+                            </TableRow>
+                        ))}
+                </> :
+                    <>
+                        {data && data.map((companyroles, index) => (
+                            <TableRow hover tabIndex={-1} role="checkbox" key={companyroles.id}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell component="th" scope="row" align="left">
+                                    <Typography variant="subtitle2" noWrap>
+                                        {companyroles.role_name.role_name}
+                                    </Typography>
+                                </TableCell>
+                                <TableCell align="left">{companyroles?.role_name_value}</TableCell>
+                                <TableCell align="left">
+                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(companyroles.id)} >
+                                        <Badge>
+                                            <Iconify icon="eva:edit-fill" />
+                                        </Badge>
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                        }
+                    </>
+            }
+            {/* </TableBody>
                         </Table>
                     </TableContainer>
                 </Scrollbar>
-            </Card>
+            </Card> */}
             <Dialog
                 fullScreen={fullScreen}
                 open={openDialogue}

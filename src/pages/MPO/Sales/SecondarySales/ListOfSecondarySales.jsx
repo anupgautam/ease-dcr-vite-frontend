@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import SecondarySalesCount from './SecondarySalesCount'
 import SecondarySalesSearch from './SecondarySalesSearch';
-import AddSecondarySales from './AddSecondarySales';
 
 
 const ListOfSecondarySales = () => {
