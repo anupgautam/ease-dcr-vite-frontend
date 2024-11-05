@@ -10,7 +10,7 @@ const SuperAdminConfig = [
         icon: <Icon icon="mdi:company" style={{ fontSize: '20px' }} />,
     },
     {
-        title: 'Roles',
+        title: 'Admin Roles',
         path: 'superadmin/roles',
         icon: <Icon icon="heroicons:users-solid" style={{ fontSize: '20px' }} />,
     },

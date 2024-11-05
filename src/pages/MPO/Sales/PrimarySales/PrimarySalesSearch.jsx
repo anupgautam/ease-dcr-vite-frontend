@@ -44,6 +44,7 @@ import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
 import { useSelector } from 'react-redux';
 import DefaultList from './DefaultList';
+import AddPrimarySales from './AddPrimarySales'
 import { useDeletePrimarySalesByIdMutation, useSearchPrimarySalesMutation } from '../../../../api/MPOSlices/PrimarySalesApiSlice';
 
 const TABLE_HEAD = [
@@ -249,11 +250,11 @@ const PrimarySalesSearch = () => {
                             >
                                 <ExcelCSVSecondarySales selectedOption={selectedOption} />
                                 {/* {selectedOption && selectedMonth && selectedYear && ( */}
-                                {/* <AddSecondarySales
+                                <AddPrimarySales
                                     selectedOption={selectedOption}
                                     selectedMonth={selectedMonth}
                                     selectedYear={selectedYear}
-                                /> */}
+                                />
                                 {/* )} */}
                             </Stack>
                         </Grid>

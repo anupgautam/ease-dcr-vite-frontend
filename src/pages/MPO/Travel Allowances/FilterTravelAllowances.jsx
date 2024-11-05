@@ -294,27 +294,17 @@ const FilterTravelAllowances = () => {
                             </FormControl>
                         </Grid>
 
-                        {/* <Grid item xs={3} container justifyContent="flex-end">
-                            <ExcelCSVTravelAllowances data={results} userName={selectedUser.title} />
-                        </Grid> */}
-
-                        <Grid item xs={12} md={3}>
-                            <Stack
-                                direction={isSmallScreen ? 'column' : 'row'}
+                        <Grid item xs></Grid>
+                        <Grid item xs="auto">
+                            <Stack direction="row"
                                 spacing={2}
                                 alignItems="center"
                                 justifyContent="flex-end"
                             >
-
                                 {user_role === 'admin' &&
                                     <ExcelCSVTravelAllowances />
                                 }
-                                {/* {(user_role !== 'admin' && role === "MPO") &&
-                                    <AddTravelAllowancesMPO />
-                                }
-                                {(user_role !== 'admin' && role !== "MPO") &&
-                                    <AddTravelAllowancesHigher />
-                                } */}
+
                                 {user_role === "MPO" ?
                                     <AddTravelAllowancesMPO />
                                     :
@@ -322,6 +312,7 @@ const FilterTravelAllowances = () => {
                                 }
                             </Stack>
                         </Grid>
+
                     </Grid>
                 </Box>
 

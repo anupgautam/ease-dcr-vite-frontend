@@ -96,6 +96,7 @@ const DefaultList = () => {
                                                 <TableRow key={key} >
                                                     <TableCell><Skeleton /></TableCell>
                                                     <TableCell><Skeleton /></TableCell>
+                                                    <TableCell><Skeleton /></TableCell>
                                                 </TableRow>
                                             ))}
                                     </> :

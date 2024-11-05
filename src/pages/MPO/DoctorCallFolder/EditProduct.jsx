@@ -14,13 +14,6 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 //! Api Slices 
 import {
-    useGetCompDivisionByIdQuery,
-    useGetProductsByIdQuery,
-    useUpdateProductsMutation,
-    useGetCompanyDivisionByCompanyIdQuery
-} from "@/api/MPOSlices/ProductSlice";
-
-import {
     useGetDoctorCallByIdQuery,
     useGetCompanyDivisionProductQuery,
     useUpdateDoctorCallMutation
@@ -45,9 +38,8 @@ const EditProduct = ({ idharu, onClose }) => {
         return [];
     }, [CompanyDivisionProduct])
 
-
     const [initialFValues, setInitialFValues] = useState({
-        product_name: "",
+        product_id: "",
         product_image: "",
 
     })
@@ -97,6 +89,7 @@ const EditProduct = ({ idharu, onClose }) => {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
+    console.log(values.product_id)
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true);

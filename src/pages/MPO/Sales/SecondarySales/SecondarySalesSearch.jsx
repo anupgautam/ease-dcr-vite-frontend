@@ -46,18 +46,11 @@ import { useSelector } from 'react-redux';
 import DefaultList from './DefaultList';
 
 const TABLE_HEAD = [
-    { id: 'product', label: 'Product Name', alignRight: false },
-    { id: 'stockist', label: 'Stockist Name', alignRight: false },
-    { id: 'purchase', label: 'Purchase', alignRight: false },
-    { id: 'year', label: 'Year', alignRight: false },
-    { id: 'month', label: 'Month', alignRight: false },
-    { id: 'sales_return', label: 'Sales Return', alignRight: false },
-    { id: 'total', label: 'Total', alignRight: false },
-    { id: 'expiry_breakage', label: 'Ex/Br', alignRight: false },
-    { id: 'closing_stock', label: 'Cl.St.', alignRight: false },
-    { id: 'l_rate', label: 'L.Rate', alignRight: false },
-    { id: 'st_value', label: 'St.Value', alignRight: false },
-    { id: 'sl_value', label: 'Sl.Value', alignRight: false },
+    { id: 'product_name', label: 'Product Name', alignRight: false },
+    { id: 'stockist_name', label: 'Stockist Name', alignRight: false },
+    { id: 'chemist_name', label: 'Chemist Name', alignRight: false },
+    { id: 'price', label: 'Total Price', alignRight: false },
+    { id: 'ordered_quantity', label: 'Quantity', alignRight: false },
     // { id: 'status', label: 'Status', alignRight: false },
     { id: '' },
 ];
@@ -315,7 +308,7 @@ const SecondarySalesSearch = () => {
                     </Box>
 
                     <Scrollbar>
-                        <TableContainer sx={{ minWidth: 1800 }}>
+                        <TableContainer sx={{ minWidth: 800 }}>
                             <Table>
                                 <UserListHead
                                     headLabel={TABLE_HEAD}
@@ -354,25 +347,15 @@ const SecondarySalesSearch = () => {
                                                                     <TableCell TableCell component="th" scope="row" align="left">
                                                                         {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                                         <Typography variant="subtitle2" noWrap>
-                                                                            {secondarysales.product}
+                                                                            {secondarysales.product_id.product_name.product_name}
                                                                         </Typography>
                                                                         {/* </Stack> */}
                                                                     </TableCell>
-                                                                    <TableCell align="left">{secondarysales.opening_stock}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.purchase}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.stockist}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.year}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.month}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.sales_return}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.total}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.sales}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.free}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.exchange_breakage}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.l_rate}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.st_value}</TableCell>
-                                                                    <TableCell align="left">{secondarysales.sl_value}</TableCell>
-                                                                    <TableCell align="left">
-                                                                        {/* //! Edit  */}
+                                                                    <TableCell align="left">{secondarysales.dcr_id.dcr.visited_chemist.chemist_name.chemist_name}</TableCell>
+                                                                    <TableCell align="left">{secondarysales.select_the_stockist.stockist_name.stockist_name}</TableCell>
+                                                                    <TableCell align="left">Rs. {parseInt(secondarysales.ordered_quantity) * parseInt(secondarysales.product_id.product_name.product_price_per_strip_in_mrp)}</TableCell>
+                                                                    <TableCell align="left">{secondarysales.ordered_quantity}</TableCell>
+                                                                    {/* <TableCell align="left">
                                                                         <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => {
                                                                             onEdit(secondarysales.id)
                                                                         }}>
@@ -380,13 +363,12 @@ const SecondarySalesSearch = () => {
                                                                                 <Iconify icon="eva:edit-fill" />
                                                                             </Badge>
                                                                         </IconButton>
-                                                                        {/* //! Delete  */}
                                                                         <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(secondarysales.id); handleClickOpen() }}>
                                                                             <Badge>
                                                                                 <Iconify icon="eva:trash-2-outline" />
                                                                             </Badge>
                                                                         </IconButton>
-                                                                    </TableCell>
+                                                                    </TableCell> */}
                                                                     <Dialog
                                                                         fullScreen={fullScreen}
                                                                         open={openDialogue}
@@ -417,10 +399,10 @@ const SecondarySalesSearch = () => {
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                        {isDrawerOpen && <EditSecondarySales
+                        {/* {isDrawerOpen && <EditSecondarySales
                             idharu={selectedUpdateId} selectedOption={selectedOption} selectedMonth={selectedMonth} selectedYear={selectedYear} onClose={onCloseDrawer}
                         />
-                        }
+                        } */}
                     </Scrollbar>
                 </Card>
             </Container>

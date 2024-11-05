@@ -260,7 +260,7 @@ const AddPrimarySales = ({ selectedOption }) => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Add Secondary Sales
+                            Add Primary Sales
                         </Typography>
                     </Box>
                     <Grid container spacing={2}>
@@ -268,7 +268,7 @@ const AddPrimarySales = ({ selectedOption }) => {
                             <Box marginBottom={2}>
                                 <Controls.Select
                                     name="product_id"
-                                    label="product Name*"
+                                    label="Product Name*"
                                     value={values.name}
                                     options={products}
                                     onChange={handleInputChange}

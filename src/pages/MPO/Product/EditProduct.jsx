@@ -58,29 +58,29 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
 
 
     const prod_category = [
-        { id: "tab", title: "Tablet" },
-        { id: "liquid", title: "Liquid" },
-        { id: "cap", title: "Capsules" },
-        { id: "tm", title: "Topical Medicines" },
-        { id: "sup", title: "Suppositories" },
-        { id: "drop", title: "Drops" },
-        { id: "inhaler", title: "Inhalers" },
-        { id: "implant", title: "Implants" },
-        { id: "buccal", title: "Buccal" },
-        { id: "ointment", title: "Ointment" },
-        { id: "powder", title: "Powder" },
-        { id: "syrup", title: "Syrup" },
-        { id: "cream", title: "Cream" },
-        { id: "gel", title: "Gel" },
-        { id: "patch", title: "Transdermal Patch" },
-        { id: "granules", title: "Granules" },
-        { id: "lozenge", title: "Lozenge" },
-        { id: "spray", title: "Spray" },
-        { id: "injectable", title: "Injectable" },
-        { id: "foam", title: "Foam" },
-        { id: "tube", title: "Tube" },
-        { id: "strip", title: "Strip" },
-        { id: "sachet", title: "Sachet" },
+        { id: "Tablet", title: "Tablet" },
+        { id: "Liquid", title: "Liquid" },
+        { id: "Capsules", title: "Capsules" },
+        { id: "Topical Medicines", title: "Topical Medicines" },
+        { id: "Suppositories", title: "Suppositories" },
+        { id: "Drops", title: "Drops" },
+        { id: "Inhalers", title: "Inhalers" },
+        { id: "Implants", title: "Implants" },
+        { id: "Buccal", title: "Buccal" },
+        { id: "Ointment", title: "Ointment" },
+        { id: "Powder", title: "Powder" },
+        { id: "Syrup", title: "Syrup" },
+        { id: "Cream", title: "Cream" },
+        { id: "Gel", title: "Gel" },
+        { id: "Transdermal Patch", title: "Transdermal Patch" },
+        { id: "Granules", title: "Granules" },
+        { id: "Lozenge", title: "Lozenge" },
+        { id: "Spray", title: "Spray" },
+        { id: "Injectable", title: "Injectable" },
+        { id: "Foam", title: "Foam" },
+        { id: "Tube", title: "Tube" },
+        { id: "Strip", title: "Strip" },
+        { id: "Sachet", title: "Sachet" },
         { id: "1X6", title: "1X6" },
     ];
 
@@ -203,6 +203,7 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
             setLoading(false)
         }
     }, [updateProducts, idharu, values, mpoGet])
+
 
     return (
         <>
