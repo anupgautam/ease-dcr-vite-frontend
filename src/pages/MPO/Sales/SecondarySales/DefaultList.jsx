@@ -23,29 +23,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from 'react-redux';
 
-import{
-    useGetChemistOrderedProductsByIdQuery
+import {
+    useGetSecondarySalesByCompanyIdQuery
 } from '../../../../api/OrderedProductslices/chemistOrderedProductSlice'
 
-const TABLE_HEAD = [
-    { id: 'product_name', label: 'Product Name', alignRight: false },
-    { id: 'opening_stock', label: 'Op.St.', alignRight: false },
-    { id: 'purchase', label: 'Purchase', alignRight: false },
-    { id: 'sales_return', label: 'Sales Return', alignRight: false },
-    { id: 'stockist_name', label: 'Stockist Name', alignRight: false },
-    { id: 'year', label: 'Year', alignRight: false },
-    { id: 'month', label: 'Month', alignRight: false },
-    { id: 'total', label: 'Total', alignRight: false },
-    { id: 'sales', label: 'Sales', alignRight: false },
-    { id: 'free', label: 'Free', alignRight: false },
-    { id: 'expiry_breakage', label: 'Ex/Br', alignRight: false },
-    { id: 'closing_stock', label: 'Cl.St.', alignRight: false },
-    { id: 'l_rate', label: 'L.Rate', alignRight: false },
-    { id: 'st_value', label: 'St.Value', alignRight: false },
-    { id: 'sl_value', label: 'Sl.Value', alignRight: false },
-    // { id: 'status', label: 'Status', alignRight: false },
-    { id: '' },
-];
 
 const DefaultList = () => {
     const { company_id } = useSelector((state) => state.cookie);;
@@ -88,7 +69,8 @@ const DefaultList = () => {
     }, [])
 
     // ! Get all chemist wala
-    const { data } = useGetChemistOrderedProductsByIdQuery({company_name:company_id});
+    const { data } = useGetSecondarySalesByCompanyIdQuery(company_id);
+
     console.log(data)
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -118,20 +100,13 @@ const DefaultList = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell component="th" scope="row" align="left">
                                         <Typography variant="subtitle2" noWrap>
-                                            {chem.product}
+                                            {chem.product_id.product_name.product_name}
                                         </Typography>
                                     </TableCell>
-                                    <TableCell align="left">{chem.stockist}</TableCell>
-                                    <TableCell align="left">{chem.purchase}</TableCell>
-                                    <TableCell align="left">{chem.year}</TableCell>
-                                    <TableCell align="left">{chem.month}</TableCell>
-                                    <TableCell align="left">{chem.sales_return}</TableCell>
-                                    <TableCell align="left">{chem.total}</TableCell>
-                                    <TableCell align="left">{chem.exchange_breakage}</TableCell>
-                                    <TableCell align="left">{chem.closing_stock}</TableCell>
-                                    <TableCell align="left">{chem.l_rate}</TableCell>
-                                    <TableCell align="left">{chem.st_value}</TableCell>
-                                    <TableCell align="left">{chem.sl_value}</TableCell>
+                                    <TableCell align="left">{chem.dcr_id.dcr.visited_chemist.chemist_name.chemist_name}</TableCell>
+                                    <TableCell align="left">{chem.select_the_stockist.stockist_name.stockist_name}</TableCell>
+                                    <TableCell align="left">Rs. {parseInt(chem.ordered_quantity) * parseInt(chem.product_id.product_name.product_price_per_strip_in_mrp)}</TableCell>
+                                    <TableCell align="left">{chem.ordered_quantity}</TableCell>
                                 </TableRow>
                             </>
                         ))

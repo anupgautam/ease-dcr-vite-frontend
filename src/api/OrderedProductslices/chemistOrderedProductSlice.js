@@ -30,13 +30,22 @@ export const ChemistOrderedProductSlices = apiSlice.injectEndpoints({
             providesTags: ['ChemistOrderedProduct']
         }),
 
+        //! Get Secondary Sales by Company Id
+        getSecondarySalesByCompanyId: builder.query({
+            query: (id) => ({
+                url: `dcr/chemist-ordered-products-map/?company_name=${id}`,
+                method: 'GET'
+            }),
+            providesTags: ['ChemistOrderedProduct']
+        }),
+
         getChemistOrderedProductsByChemistId: builder.mutation({
             query: (id) =>
-                    ({
-                        url: `product/get-chemist-ordered-product/`,
-                        method: 'POST',
-                        body: { 'chemist_id': id }
-                    }),
+            ({
+                url: `product/get-chemist-ordered-product/`,
+                method: 'POST',
+                body: { 'chemist_id': id }
+            }),
             providesTag: ['ChemistOrderedProduct'],
         }),
 
@@ -90,7 +99,8 @@ export const {
     useGetChemistOrderedProductsByIdQuery,
     useUpdateChemistOrderedProductsMutation,
     useDeleteChemistOrderedProductsByIdMutation,
-    useGetChemistOrderedProductsByChemistIdMutation
+    useGetChemistOrderedProductsByChemistIdMutation,
+    useGetSecondarySalesByCompanyIdQuery
 } = ChemistOrderedProductSlices
 
 //! returns the query result object

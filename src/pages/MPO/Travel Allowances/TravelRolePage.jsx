@@ -31,7 +31,6 @@ const TravelRolePage = () => {
 
     const userList = useGetAllCompanyUsersWithoutPaginationQuery({ id: company_id })
 
-
     return (
         <>
             <Scrollbar>

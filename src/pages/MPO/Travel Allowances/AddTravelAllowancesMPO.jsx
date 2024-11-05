@@ -30,30 +30,51 @@ import { usePostMPOExpensesMutation } from '../../../api/CompanySlices/companyAr
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
+const BS_MONTHS = [
+    "Baisakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
+    "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"
+];
+
 const AddTravelAllowancesMPO = () => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new BSDate().now();
     const [companyId, setCompanyId] = useState(parseInt(company_id));
 
-    const month = now._date.month;
+    const monthNumber = now._date.month;
+    const month = BS_MONTHS[monthNumber - 1];
     const yearData = now._date.year;
 
     //! Months
+    // const months = [
+    //     { value: 1, label: "Baisakh" },
+    //     { value: 2, label: "Jestha" },
+    //     { value: 3, label: "Asadh" },
+    //     { value: 4, label: "Shrawan" },
+    //     { value: 5, label: "Bhadra" },
+    //     { value: 6, label: "Ashwin" },
+    //     { value: 7, label: "Kartik" },
+    //     { value: 8, label: "Mangsir" },
+    //     { value: 9, label: "Poush" },
+    //     { value: 10, label: "Magh" },
+    //     { value: 11, label: "Falgun" },
+    //     { value: 12, label: "Chaitra" }
+    // ];
+
     const months = [
-        { value: 1, label: "Baisakh" },
-        { value: 2, label: "Jestha" },
-        { value: 3, label: "Asadh" },
-        { value: 4, label: "Shrawan" },
-        { value: 5, label: "Bhadra" },
-        { value: 6, label: "Ashwin" },
-        { value: 7, label: "Kartik" },
-        { value: 8, label: "Mangsir" },
-        { value: 9, label: "Poush" },
-        { value: 10, label: "Magh" },
-        { value: 11, label: "Falgun" },
-        { value: 12, label: "Chaitra" }
-    ];
+        { value: "Baisakh", label: "Baisakh" },
+        { value: "Jestha", label: "Jestha" },
+        { value: "Asadh", label: "Asadh" },
+        { value: "Shrawan", label: "Shrawan" },
+        { value: "Bhadra", label: "Bhadra" },
+        { value: "Ashwin", label: "Ashwin" },
+        { value: "Kartik", label: "Kartik" },
+        { value: "Mangsir", label: "Mangsir" },
+        { value: "Poush", label: "Poush" },
+        { value: "Magh", label: "Magh" },
+        { value: "Falgun", label: "Falgun" },
+        { value: "Chaitra", label: "Chaitra" }
+    ]
 
     const [selectedMonth, setSelectedMonth] = useState(month)
 
@@ -147,6 +168,7 @@ const AddTravelAllowancesMPO = () => {
             user_id: company_user_role_id,
             company_name: company_id,
         };
+        console.log(jsonData)
 
         try {
             const response = await createTravelAllowances(jsonData)

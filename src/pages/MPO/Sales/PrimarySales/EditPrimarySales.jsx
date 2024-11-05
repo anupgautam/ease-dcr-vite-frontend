@@ -98,29 +98,30 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
 
     //! Year
     const years = [
-        { value: 2079, label: "2079" },
-        { value: 2080, label: "2080" },
-        { value: 2081, label: "2081" },
-        { value: 2082, label: "2082" },
-        { value: 2083, label: "2083" },
-        { value: 2084, label: "2084" },
-        { value: 2085, label: "2085" },
-        { value: 2086, label: "2086" },
-        { value: 2087, label: "2087" },
-        { value: 2088, label: "2088" },
-        { value: 2089, label: "2089" },
-        { value: 2090, label: "2090" },
-    ]
+        { value: "2079", label: "2079" },
+        { value: "2080", label: "2080" },
+        { value: "2081", label: "2081" },
+        { value: "2082", label: "2082" },
+        { value: "2083", label: "2083" },
+        { value: "2084", label: "2084" },
+        { value: "2085", label: "2085" },
+        { value: "2086", label: "2086" },
+        { value: "2087", label: "2087" },
+        { value: "2088", label: "2088" },
+        { value: "2089", label: "2089" },
+        { value: "2090", label: "2090" },
+    ];
     // const [dateData, setDateData] = useState('')
 
-    const [updatedMonth, setUpdatedMonth] = useState()
+    const [updatedMonth, setUpdatedMonth] = useState("")
 
     const handleNepaliMonthChange = useCallback((event) => {
         setUpdatedMonth(event.target.value);
         setCompanyId(company_id);
     }, []);
 
-    const [updatedYear, setUpdatedYear] = useState();
+    const [updatedYear, setUpdatedYear] = useState("");
+    console.log(updatedMonth, updatedYear)
 
     const handleYearChange = useCallback((event) => {
         setUpdatedYear(event.target.value);
@@ -167,8 +168,8 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
                 // 'year': parseInt(SecondarySales?.data?.year),
                 // 'month': SecondarySales?.data?.month,
             });
-            setUpdatedMonth(SecondarySales?.data?.month)
-            setUpdatedYear(parseInt(SecondarySales?.data?.year))
+            setUpdatedMonth(String(SecondarySales?.data?.month))
+            setUpdatedYear(String(SecondarySales?.data?.year))
         }
     }, [SecondarySales.data])
 
@@ -213,7 +214,7 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
             company_name: company_id,
             quantity: values.quantity,
             stockist_name: selectedOption,
-            id:idharu,
+            id: idharu,
         }
         try {
             const response = await updateSecondarySaless(jsonData).unwrap();
