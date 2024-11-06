@@ -38,67 +38,25 @@ const EditUser = ({ idharu, onClose }) => {
 
     const now = new BSDate().now();
 
-    //! Getting User by ID
     const User = useGetcompanyUserRolesByIdQuery(idharu);
+    const data = useGetAllCompanyRolesQuery(company_id, { skip: !company_id });
+    const Divisions = useGetCompanyDivisionsByCompanyIdQuery(company_id, { skip: !company_id });
+    const CompanyAreas = useGetAllCompanyAreasQuery(company_id, { skip: !company_id });
 
-    //! Get user roles
-    const data = useGetAllCompanyRolesQuery(company_id, {
-        skip: !company_id
-    });
-    const rolesharu = useMemo(() => {
-        if (data?.data) {
-            return data?.data.map(key => ({ id: key.id, title: key.role_name_value }))
-        }
-        return [];
-    }, [data])
-
-    //! Get Divisions
-    const Divisions = useGetCompanyDivisionsByCompanyIdQuery(company_id, {
-        skip: !company_id
-    });
-    const divisions = useMemo(() => {
-        if (Divisions?.data) {
-            return Divisions.data.map(key => ({ id: key.id, title: key.division_name }))
-        }
-        return [];
-    }, [Divisions])
-
-    //! Get company wise area
-    const CompanyAreas = useGetAllCompanyAreasQuery(company_id, {
-        skip: !company_id
-    })
-    const companyAreas = useMemo(() => {
-        if (CompanyAreas?.data) {
-            return CompanyAreas.data.map(key => ({ id: key.id, title: key.company_area }))
-        }
-    }, [CompanyAreas])
+    const rolesharu = useMemo(() => data?.data?.map(key => ({ id: key.id, title: key.role_name_value })) || [], [data]);
+    const divisions = useMemo(() => Divisions?.data?.map(key => ({ id: key.id, title: key.division_name })) || [], [Divisions]);
+    const companyAreas = useMemo(() => CompanyAreas?.data?.map(key => ({ id: key.id, title: key.company_area })) || [], [CompanyAreas]);
 
     const [higherUserOptions, setHigherUserOptions] = useState([]);
     // const [higherUserList] = useGetAllExecutiveLevelsMutation();
     const higherUserList = useGetAllcompanyUserRolesQuery({ company_name: company_id }, {
         skip: !company_id
     });
-    // const higherUserList
-
-    // useEffect(() => {
-    //     if (User?.data?.company_name?.company_id) {
-    //         higherUserList(User?.data.company_name.company_id, {
-    //             skip: !User?.data?.company_name?.company_id
-    //         }).unwrap().then(res => {
-    //             const higherList = res.map(key => ({
-    //                 id: key.id,
-    //                 title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`,
-    //             }));
-    //             setHigherUserOptions(higherList);
-    //         }).catch(() => setHigherUserOptions([]));
-    //     }
-    // }, [User?.data?.company_name?.company_id, higherUserList])
 
     const [initialFValues, setInitialFValues] = useState({
         first_name: "",
         middle_name: "",
         last_name: "",
-        // address: "",
         role_name: "",
         email: "",
         phone_number: "",
@@ -133,60 +91,31 @@ const EditUser = ({ idharu, onClose }) => {
 
     //! Validation wala  
     const validate = useCallback((fieldValues = values) => {
-        // 
-        let temp = { ...errors }
-        if ('first_name' in fieldValues)
-            temp.first_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.first_name)
-        temp.middle_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.middle_name)
-        temp.last_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.last_name)
-        temp.address = returnValidation(['null'], values.address)
-        temp.role_name = returnValidation(['null'], values.role_name)
-        temp.priority_value = returnValidation(['null', 'alphaNumeric'], values.role_name)
-        temp.phone_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.phone_number)
-        temp.email = returnValidation(['email'], values.email)
-        temp.executive_level = returnValidation(['null', values.executive_level])
-        temp.division_name = returnValidation(['null'], values.division_name)
-        temp.company_area = returnValidation(['null'], values.company_area)
-        temp.station_type = returnValidation(['null'], values.station_type)
-        setErrors({
-            ...temp
-        })
-        // 
+        let temp = {};
+        temp.first_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.first_name);
+        temp.middle_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.middle_name);
+        temp.last_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.last_name);
+        temp.role_name = returnValidation(['null'], values.role_name);
+        temp.phone_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.phone_number);
+        temp.email = returnValidation(['email'], values.email);
+        temp.executive_level = returnValidation(['null'], values.executive_level);
+        temp.division_name = returnValidation(['null'], values.division_name);
+        temp.company_area = returnValidation(['null'], values.company_area);
+        temp.station_type = returnValidation(['null'], values.station_type);
 
-        if (fieldValues === values)
-            return Object.values(temp).every(x => x == "")
-
-    }, [values, errors])
-
-    const [dateData, setDateData] = useState();
+        setErrors(temp);
+        return Object.values(temp).every(x => x === "");
+    }, [values]);
 
     useEffect(() => {
         validate();
-    }, [
-        values.first_name,
-        values.last_name,
-        values.middle_name,
-        // values.address,
-        values.phone_number,
-        values.email,
-        values.role_name,
-        values.division_name,
-        values.executive_level,
-        values.company_area,
-        values.station_type,
-        values.middle_name
-    ])
+    }, [values, validate]);
+
 
     useEffect(() => {
         if (User?.data) {
-            const selectedDivisions = User?.data?.division_name?.map(division => ({
-                id: division.id,
-                title: division.division_name
-            }))
-            const selectedCompanyAreas = User?.data?.company_area?.map(area => ({
-                id: area.id,
-                title: area.company_area
-            }))
+            const selectedDivisions = User.data.division_name?.map(division => ({ id: division.id, title: division.division_name })) || [];
+            const selectedCompanyAreas = User.data.company_area?.map(area => ({ id: area.id, title: area.company_area })) || [];
             setInitialFValues({
                 first_name: User?.data?.user_name?.first_name,
                 middle_name: User?.data?.user_name?.middle_name,
@@ -196,15 +125,14 @@ const EditUser = ({ idharu, onClose }) => {
                 role_name: User?.data?.role_name?.id,
                 executive_level: User?.data?.executive_level?.id,
                 station_type: User?.data?.station_type,
-                // division_name: User?.data?.division_name?.id,
-                // company_area: User?.data?.company_area?.id
-                division_name: selectedDivisions,
-                company_area: selectedCompanyAreas
+
+                division_name: selectedDivisions[0] || null, // Select a default value
+                company_area: selectedCompanyAreas[0] || null
             });
             setDateData(User?.data?.user_name.date_of_joining ? User?.data?.user_name.date_of_joining : now)
 
-            setMultipleDivisions(selectedDivisions || [])
-            setMultipleCompanyAreas(selectedCompanyAreas || [])
+            setMultipleDivisions(selectedDivisions)
+            setMultipleCompanyAreas(selectedCompanyAreas)
         }
     }, [User])
 
@@ -236,27 +164,8 @@ const EditUser = ({ idharu, onClose }) => {
         formData.append('access', access);
         formData.append("date_of_joining", dateData);
         formData.append("is_active", true);
-
-        // const data = {
-        //     first_name: values.first_name,
-        //     middle_name: values.middle_name,
-        //     last_name: values.last_name,
-        //     phone_number: values.phone_number,
-        //     email: values.email,
-        //     role_name: values.role_name,
-        //     executive_level: values.executive_level,
-        //     station_type: values.station_type,
-        //     company_id: company_id,
-        //     refresh: refresh,
-        //     access: access,
-        //     data_of_joining: dateData,
-        //     is_active: true,
-        //     division_name: multipleDivisions.map(division => ({ company_mpo_area_id: area.id }))
-        //     company_area: multipleCompanyAreas.map(areas => ({}))
-        // }
         try {
             const response = await updateUsers(formData).unwrap();
-            // const response = await updateUsers({ id: idharu, value: data }).unwrap();
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited User' });
                 setTimeout(() => {
@@ -396,7 +305,9 @@ const EditUser = ({ idharu, onClose }) => {
                             options={divisions}
                             getOptionLabel={(option) => option.title}
                             value={multipleDivisions}
+                            // value={initialFValues.division_name}
                             onChange={handleMultipleDivsions}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
                             renderInput={(params) => (
                                 <TextField {...params} label="Division Name*" error={Boolean(errors.division_name)} helperText={errors.division_name} />
                             )}
@@ -406,15 +317,6 @@ const EditUser = ({ idharu, onClose }) => {
                                 </li>
                             )}
                         />
-                        {/* <Controls.Select
-                            name="division_name"
-                            label="Division Name*"
-                            className={"drawer-role-name-select"}
-                            value={values.division_name}
-                            onChange={handleInputChange}
-                            error={errors.division_name}
-                            options={divisions}
-                        /> */}
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Select
@@ -433,7 +335,9 @@ const EditUser = ({ idharu, onClose }) => {
                             options={companyAreas}
                             getOptionLabel={(option) => option.title}
                             value={multipleCompanyAreas}
+                            // value={initialFValues.company_area}
                             onChange={handleMultpleCompanyAreas}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
                             renderInput={(params) => (
                                 <TextField {...params} label="Select the Areas" error={Boolean(errors.company_area)} helperText={errors.company_area} />
                             )}
@@ -443,15 +347,6 @@ const EditUser = ({ idharu, onClose }) => {
                                 </li>
                             )}
                         />
-                        {/* <Controls.Select
-                            name="company_area"
-                            label="Company Wise Area*"
-                            className={"drawer-role-name-select"}
-                            value={values.company_area}
-                            onChange={handleInputChange}
-                            error={errors.company_area}
-                            options={companyAreas}
-                        /> */}
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Input

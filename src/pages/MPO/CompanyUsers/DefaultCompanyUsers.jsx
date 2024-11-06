@@ -25,7 +25,6 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import {
@@ -36,6 +35,7 @@ import {
     useGetAllCompanyUserQuery
 } from '../../../api/MPOSlices/SuperAdminSlice'
 import EditCompanyUsers from './EditCompanyUsers';
+import { useParams } from 'react-router-dom';
 
 const TABLE_HEAD = [
     { id: 'username', label: 'User Name', alignRight: false },
@@ -46,7 +46,7 @@ const TABLE_HEAD = [
     { id: '' },
 ];
 
-const DefaultList = () => {
+const DefaultCompanyUsers = () => {
 
     //! Get Categories
     const { data } = useGetAllCompanyUserQuery();
@@ -95,6 +95,8 @@ const DefaultList = () => {
     const [deleteCompanyRoles] = useDeleteCompanyRolesByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
+    const {id} = useParams()
+
     return (
         <>
             <Card>
@@ -134,15 +136,8 @@ const DefaultList = () => {
                                                                 <Iconify icon="eva:trash-2-outline" />
                                                             </Badge>
                                                         </IconButton>
-                                                        {/* <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(doc.id, doc.doctor_name.id)} > */}
-                                                        <Link to={`/dashboard/superadmin/companywiseusers?id=${companyroles?.id}`}>
-                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }}>
-                                                                <Badge>
-                                                                    <Iconify icon="material-symbols:info" />
-                                                                </Badge>
-                                                            </IconButton>
-                                                        </Link>
                                                     </TableCell>
+
                                                 </TableRow>
                                             ))
                                             }
@@ -176,4 +171,4 @@ const DefaultList = () => {
     )
 }
 
-export default React.memo(DefaultList);
+export default React.memo(DefaultCompanyUsers);

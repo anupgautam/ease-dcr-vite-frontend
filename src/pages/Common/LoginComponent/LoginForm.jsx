@@ -96,11 +96,11 @@ const LoginFormInputs = () => {
                         setLoading(true);
                         console.log(res)
                         setTimeout(() => {
-                            // if(!res?.data?.is_admin){
-                            //     Cookies.set('user_role','SuperAdmin')
-                            //     navigate('/dashboard/superadmin/company')
-                            // }
-                            if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
+                            if(!res?.data?.is_admin){
+                                Cookies.set('user_role','SuperAdmin')
+                                navigate('/dashboard/superadmin/company')
+                            }
+                            else if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                 Cookies.set('user_role', 'admin');
                                 navigate('/dashboard/admin');
                                 dispatch(setCredentials({ ...res, email }));
