@@ -11,6 +11,10 @@ import React, { useState, createContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCookie } from './reducers/cookieReducer';
 
+import io from 'socket.io-client';
+import { BASE_URL } from './baseURL';
+
+
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -61,6 +65,27 @@ export default function App() {
       dispatch(setCookie(cookieData));
     }
   }, [cookieData, dispatch, roles]);
+
+
+  const socket = io(BASE_URL);
+
+
+
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Connected to Socket.io server');
+    });
+
+    socket.on('Notification', (notification) => {
+      console.log('Notification received:', notification.message);
+    });
+
+    return () => {
+      socket.disconnect();
+      console.log('Disconnected from Socket.io server');
+    };
+  }, [socket]);
+
 
   return (
     <HelmetProvider>
