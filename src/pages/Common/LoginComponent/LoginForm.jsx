@@ -96,7 +96,7 @@ const LoginFormInputs = () => {
                         setLoading(true);
                         console.log(res)
                         setTimeout(() => {
-                            if(!res?.data?.is_admin){
+                            if(res?.data?.is_admin){
                                 Cookies.set('user_role','SuperAdmin')
                                 navigate('/dashboard/superadmin/company')
                             }
