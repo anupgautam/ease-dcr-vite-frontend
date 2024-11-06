@@ -29,6 +29,11 @@ import ExportToExcel from '@/reusable/utils/exportSheet';
 import { useSelector } from 'react-redux';
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 
+const BS_MONTHS = [
+    "Baisakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
+    "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"
+];
+
 const bsMonthDays = {
     2080: [31, 32, 31, 32, 31, 30, 30, 30, 29, 29, 30, 30],
     2081: [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 29, 31],
@@ -110,38 +115,40 @@ const ListofAttendance = () => {
     }
     
     const now = new BSDate().now();
+    const monthNumber = now._date.month;
+    const month = BS_MONTHS[monthNumber - 1];
     const year = now._date.year;
-    const month = getNepaliMonthName(now._date.month);
-
-    const months = [
-        { value: 1, label: "Baisakh" },
-        { value: 2, label: "Jestha" },
-        { value: 3, label: "Asadh" },
-        { value: 4, label: "Shrawan" },
-        { value: 5, label: "Bhadra" },
-        { value: 6, label: "Ashwin" },
-        { value: 7, label: "Kartik" },
-        { value: 8, label: "Mangsir" },
-        { value: 9, label: "Poush" },
-        { value: 10, label: "Magh" },
-        { value: 11, label: "Falgun" },
-        { value: 12, label: "Chaitra" }
-    ];
+    // const month = getNepaliMonthName(now._date.month);
 
     // const months = [
-    //     { value: 'Baisakh', label: 'Baisakh' },
-    //     { value: 'Jesth', label: 'Jestha' },
-    //     { value: 'Asadh', label: 'Asadh' },
-    //     { value: 'Shrawan', label: 'Shrawan' },
-    //     { value: 'Bhadra', label: 'Bhadra' },
-    //     { value: 'Ashwin', label: 'Ashwin' },
-    //     { value: 'Kartik', label: 'Kartik' },
-    //     { value: 'Mangsir', label: 'Mangsir' },
-    //     { value: 'Poush', label: 'Poush' },
-    //     { value: 'Magh', label: 'Magh' },
-    //     { value: 'Falgun', label: 'Falgun' },
-    //     { value: 'Chaitra', label: 'Chaitra' },
-    // ]
+    //     { value: 1, label: "Baisakh" },
+    //     { value: 2, label: "Jestha" },
+    //     { value: 3, label: "Asadh" },
+    //     { value: 4, label: "Shrawan" },
+    //     { value: 5, label: "Bhadra" },
+    //     { value: 6, label: "Ashwin" },
+    //     { value: 7, label: "Kartik" },
+    //     { value: 8, label: "Mangsir" },
+    //     { value: 9, label: "Poush" },
+    //     { value: 10, label: "Magh" },
+    //     { value: 11, label: "Falgun" },
+    //     { value: 12, label: "Chaitra" }
+    // ];
+
+    const months = [
+        { value: 'Baisakh', label: 'Baisakh' },
+        { value: 'Jesth', label: 'Jestha' },
+        { value: 'Asadh', label: 'Asadh' },
+        { value: 'Shrawan', label: 'Shrawan' },
+        { value: 'Bhadra', label: 'Bhadra' },
+        { value: 'Ashwin', label: 'Ashwin' },
+        { value: 'Kartik', label: 'Kartik' },
+        { value: 'Mangsir', label: 'Mangsir' },
+        { value: 'Poush', label: 'Poush' },
+        { value: 'Magh', label: 'Magh' },
+        { value: 'Falgun', label: 'Falgun' },
+        { value: 'Chaitra', label: 'Chaitra' },
+    ]
 
 
     const [selectedMonth, setSelectedMonth] = useState(month);
