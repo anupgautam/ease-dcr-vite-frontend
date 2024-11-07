@@ -67,13 +67,17 @@ export default function App() {
   }, [cookieData, dispatch, roles]);
 
 
-  const socket = io(BASE_URL);
+  const socket = io(BASE_URL, {
+    withCredentials: true,
+  });
+
 
 
 
   useEffect(() => {
     socket.on('connect', () => {
       console.log('Connected to Socket.io server');
+      socket.emit('registerAdmin', Cookies.get('company_user_role_id'));
     });
 
     socket.on('Notification', (notification) => {
@@ -81,10 +85,11 @@ export default function App() {
     });
 
     return () => {
+      socket.off('Notification');
       socket.disconnect();
       console.log('Disconnected from Socket.io server');
     };
-  }, [socket]);
+  }, [socket, Cookies.get('company_user_role_id')]);
 
 
   return (
