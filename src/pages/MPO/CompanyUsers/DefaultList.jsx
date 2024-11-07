@@ -50,6 +50,7 @@ const DefaultList = () => {
 
     //! Get Categories
     const { data } = useGetAllCompanyUserQuery();
+    console.log(data)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -135,7 +136,7 @@ const DefaultList = () => {
                                                             </Badge>
                                                         </IconButton>
                                                         {/* <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(doc.id, doc.doctor_name.id)} > */}
-                                                        <Link to={`/dashboard/superadmin/companywiseusers?id=${companyroles?.id}`}>
+                                                        <Link to={`/dashboard/superadmin/companywiseusers?id=${companyroles?.company_name?.id}`}>
                                                             <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }}>
                                                                 <Badge>
                                                                     <Iconify icon="material-symbols:info" />

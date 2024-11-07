@@ -13,6 +13,7 @@ import {
     TableContainer,
     Table,
     TableBody,
+    Container
 } from '@mui/material';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -32,10 +33,10 @@ import {
     useDeleteCompanyRolesByIdMutation
 } from '../../../api/MPOSlices/companyRolesSlice'
 import {
-    useGetAllCompanyUserQuery
+    useGetAllCompanyUserNoAdminsQuery
 } from '../../../api/MPOSlices/SuperAdminSlice'
-import EditCompanyUsers from './EditCompanyUsers';
-import { useParams } from 'react-router-dom';
+import EditCompanyWiseUsers from './EditCompanyWiseUsers';
+import { useLocation, useParams } from 'react-router-dom';
 
 const TABLE_HEAD = [
     { id: 'username', label: 'User Name', alignRight: false },
@@ -48,8 +49,14 @@ const TABLE_HEAD = [
 
 const DefaultCompanyUsers = () => {
 
+    const location = useLocation();
+    const params = new URLSearchParams(location.search)
+    const id = params.get('id')
+
     //! Get Categories
-    const { data } = useGetAllCompanyUserQuery();
+    const { data } = useGetAllCompanyUserNoAdminsQuery(id);
+
+    console.log(data)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -95,60 +102,70 @@ const DefaultCompanyUsers = () => {
     const [deleteCompanyRoles] = useDeleteCompanyRolesByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
-    const id = useParams()
-    console.log(id)
-
     return (
         <>
-            <Card>
-                <Scrollbar>
-                    <TableContainer sx={{ minWidth: 800 }}>
-                        <Table>
-                            <UserListHead
-                                headLabel={TABLE_HEAD}
-                            />
-                            <TableBody>
-                                {
-                                    data === undefined ? <>
-                                        {
-                                            eightArrays.map((key) => (
-                                                <TableRow key={key} >
-                                                    <TableCell><Skeleton /></TableCell>
-                                                    <TableCell><Skeleton /></TableCell>
-                                                </TableRow>
-                                            ))}
-                                    </> :
-                                        <>
-                                            {data && data.map((companyroles, index) => (
-                                                <TableRow hover tabIndex={-1} role="checkbox" key={companyroles.id}>
-                                                    <TableCell>{index + 1}</TableCell>
-                                                    <TableCell component="th" scope="row" align="left">
-                                                        <Typography variant="subtitle2" noWrap>
-                                                            {companyroles.user_name.first_name + " " + companyroles.user_name.middle_name + " " + companyroles.user_name.last_name}
-                                                        </Typography>
-                                                    </TableCell>
-                                                    <TableCell align="left">{companyroles?.user_name.email}</TableCell>
-                                                    <TableCell align="left">{companyroles?.user_name.phone_number}</TableCell>
-                                                    <TableCell align="left">{companyroles?.company_name?.company_name}</TableCell>
-                                                    <TableCell align="left">{companyroles?.role_name?.role_name_value}</TableCell>
-                                                    <TableCell align="right">
-                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => handleClickOpen()}>
-                                                            <Badge>
-                                                                <Iconify icon="eva:trash-2-outline" />
-                                                            </Badge>
-                                                        </IconButton>
-                                                    </TableCell>
+        <Container>
+            <Grid container>
+            <Grid item xs={9}>
+                        <Typography style={{ fontSize: '18px', fontWeight: '600', paddingBottom:'4px' }}>
+                            {/* {data?.results[0]} */}
+                        </Typography>
+                    </Grid>
+                <Card>
+                    <Scrollbar>
+                        <TableContainer sx={{ minWidth: 900 }}>
+                            <Table>
+                                <UserListHead
+                                    headLabel={TABLE_HEAD}
+                                />
+                                <TableBody>
+                                    {
+                                        data === undefined ? <>
+                                            {
+                                                eightArrays.map((key) => (
+                                                    <TableRow key={key} >
+                                                        <TableCell><Skeleton /></TableCell>
+                                                        <TableCell><Skeleton /></TableCell>
+                                                        <TableCell><Skeleton /></TableCell>
+                                                        <TableCell><Skeleton /></TableCell>
+                                                        <TableCell><Skeleton /></TableCell>
+                                                        <TableCell><Skeleton /></TableCell>
+                                                    </TableRow>
+                                                ))}
+                                        </> :
+                                            <>
+                                                {data && data?.results?.map((companyroles, index) => (
+                                                    <TableRow hover tabIndex={-1} role="checkbox" key={companyroles.id}>
+                                                        <TableCell>{index + 1}</TableCell>
+                                                        <TableCell component="th" scope="row" align="left">
+                                                            <Typography variant="subtitle2" noWrap>
+                                                                {companyroles.user_name.first_name + " " + companyroles.user_name.middle_name + " " + companyroles.user_name.last_name}
+                                                            </Typography>
+                                                        </TableCell>
+                                                        <TableCell align="left">{companyroles?.user_name.email}</TableCell>
+                                                        <TableCell align="left">{companyroles?.user_name.phone_number}</TableCell>
+                                                        <TableCell align="left">{companyroles?.company_name?.company_name}</TableCell>
+                                                        <TableCell align="left">{companyroles?.role_name?.role_name_value}</TableCell>
+                                                        <TableCell align="right">
+                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => handleClickOpen()}>
+                                                                <Badge>
+                                                                    <Iconify icon="eva:trash-2-outline" />
+                                                                </Badge>
+                                                            </IconButton>
+                                                        </TableCell>
 
-                                                </TableRow>
-                                            ))
-                                            }
-                                        </>
-                                }
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Scrollbar>
-            </Card>
+                                                    </TableRow>
+                                                ))
+                                                }
+                                            </>
+                                    }
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Scrollbar>
+                </Card>
+            </Grid>
+            </Container>
             <Dialog
                 fullScreen={fullScreen}
                 open={openDialogue}
@@ -164,7 +181,7 @@ const DefaultCompanyUsers = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            {isDrawerOpen && <EditCompanyUsers
+            {isDrawerOpen && <EditCompanyWiseUsers
                 idharu={selectedUpdateId} onClose={onCloseDrawer}
             />
             }

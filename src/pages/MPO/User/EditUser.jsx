@@ -39,12 +39,17 @@ const EditUser = ({ idharu, onClose }) => {
     const now = new BSDate().now();
 
     const User = useGetcompanyUserRolesByIdQuery(idharu);
+
     const data = useGetAllCompanyRolesQuery(company_id, { skip: !company_id });
+
     const Divisions = useGetCompanyDivisionsByCompanyIdQuery(company_id, { skip: !company_id });
+
     const CompanyAreas = useGetAllCompanyAreasQuery(company_id, { skip: !company_id });
 
     const rolesharu = useMemo(() => data?.data?.map(key => ({ id: key.id, title: key.role_name_value })) || [], [data]);
+
     const divisions = useMemo(() => Divisions?.data?.map(key => ({ id: key.id, title: key.division_name })) || [], [Divisions]);
+
     const companyAreas = useMemo(() => CompanyAreas?.data?.map(key => ({ id: key.id, title: key.company_area })) || [], [CompanyAreas]);
 
     const [higherUserOptions, setHigherUserOptions] = useState([]);
@@ -52,6 +57,8 @@ const EditUser = ({ idharu, onClose }) => {
     const higherUserList = useGetAllcompanyUserRolesQuery({ company_name: company_id }, {
         skip: !company_id
     });
+
+    const [dateData, setDateData] = useState(now)
 
     const [initialFValues, setInitialFValues] = useState({
         first_name: "",
@@ -109,7 +116,7 @@ const EditUser = ({ idharu, onClose }) => {
 
     useEffect(() => {
         validate();
-    }, [values, validate]);
+    }, [values]);
 
 
     useEffect(() => {

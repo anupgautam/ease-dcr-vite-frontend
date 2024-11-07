@@ -77,6 +77,7 @@ import ListOfDoctorCallFolderController from './pages/MPO/DoctorCallFolder/ListO
 import ListOfRolesController from './pages/MPO/Roles/ListOfRolesController';
 import ListOfRolesSuperAdminController from './pages/MPO/RolesSuperAdmin/ListOfCompanyRolesController';
 import ListOfCompanyWiseUsers from './pages/MPO/CompanyUsers/ListOfCompanyWiseUsers';
+import DefaultCompanyUsers from './pages/MPO/CompanyUsers/DefaultCompanyUsers';
 
 export default function Router() {
   const routes = useRoutes([
@@ -347,6 +348,10 @@ export default function Router() {
           path: 'superadmin/companywiseusers',
           element: <Authentication component={ListOfCompanyWiseUsers} allowRoles={['SuperAdmin']} />,
         },
+        // {
+        //   path: 'superadmin/companywiseusers',
+        //   element: <Authentication component={DefaultCompanyUsers} allowRoles={['SuperAdmin']} />,
+        // },
       ],
     },
 
