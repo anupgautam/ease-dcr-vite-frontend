@@ -31,6 +31,18 @@ export const SuperAdminSlice = apiSlice.injectEndpoints({
             providesTags: ['SuperAdmin']
         }),
 
+        //! GET All Company Users No Admins
+        getAllCompanyUserNoAdmins: builder.query({
+            query: (id) => {
+                return {
+                    // url: `user/company-user-role/?company_name=${id}`,
+                    url: `user/company-user-role/?company_name=${id}`,
+                    method: 'GET'
+                }
+            },
+            providesTags: ['SuperAdmin']
+        }),
+
         //! GET All Roles
         getAllRole: builder.query({
             query: () => ({
@@ -238,6 +250,8 @@ export const
         useDeleteCompanyUserByIdMutation,
         useUpdateCompanyUserMutation,
         useCreateCompanyUserMutation,
+
+        useGetAllCompanyUserNoAdminsQuery,
 
         useGetAllRoleQuery,
         useGetRoleByIdQuery,
