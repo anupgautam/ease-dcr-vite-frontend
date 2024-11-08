@@ -15,6 +15,7 @@ import '../../../styles/muiTextBox.css'
 import "../../../styles/styles.css";
 import { setCookie, setUserRole } from '../../../reducers/cookieReducer';
 import { extractErrorMessage } from '../../../reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const LoginFormInputs = () => {
 
@@ -97,6 +98,7 @@ const LoginFormInputs = () => {
                         console.log(res)
                         setTimeout(() => {
                             if(res?.data?.is_admin){
+                                toast.success("Super Admin Logged In")
                                 Cookies.set('user_role','SuperAdmin')
                                 navigate('/dashboard/superadmin/company')
                             }

@@ -29,7 +29,7 @@ const EditCompanyWiseUsers = ({ idharu, onClose }) => {
 
     //! Company Wise Users By Id 
     const User = useGetcompanyUserRolesByIdQuery(idharu);
-    // console.log(User?.data)
+    console.log(User?.data)
 
     //! User Roles wala  
     const data = useGetAllCompanyRolesQuery(company_id, { skip: !company_id });
