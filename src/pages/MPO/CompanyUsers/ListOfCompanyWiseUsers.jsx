@@ -39,6 +39,7 @@ import EditCompanyWiseUsers from './EditCompanyWiseUsers';
 import { useLocation, useParams } from 'react-router-dom';
 
 import DefaultCompanyUsers from './DefaultCompanyUsers';
+import { useDeletecompanyUserRolesByIdMutation } from '../../../api/CompanySlices/companyUserRoleSlice';
 
 
 const TABLE_HEAD = [
@@ -58,7 +59,6 @@ const ListOfCompanyWiseUsers = () => {
 
     //! Get Categories
     const { data } = useGetAllCompanyUserNoAdminsQuery(id);
-    console.log(data)
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -101,14 +101,14 @@ const ListOfCompanyWiseUsers = () => {
 
 
     // !Delete TourPlan
-    const [deleteCompanyRoles] = useDeleteCompanyRolesByIdMutation();
+    const [deleteCompanyWiseUser] = useDeletecompanyUserRolesByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
     return (
         <>
             <Container>
                 <Grid container>
                     <Grid item xs={9}>
-                        <Typography style={{ fontSize: '22px', fontWeight: '600', marginBottom:'10px' }}>
+                        <Typography style={{ fontSize: '22px', fontWeight: '600', marginBottom: '10px' }}>
                             {data?.results[0]?.company_name?.company_name}
                         </Typography>
                     </Grid>
@@ -162,13 +162,13 @@ const ListOfCompanyWiseUsers = () => {
                                                                     <Iconify icon="eva:edit-fill" />
                                                                 </Badge>
                                                             </IconButton>
-                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => handleClickOpen()}>
+                                                            {/*//! Delete  */}
+                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(companyroles.id); handleClickOpen() }}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:trash-2-outline" />
                                                                 </Badge>
                                                             </IconButton>
                                                         </TableCell>
-
                                                     </TableRow>
                                                 ))
                                                 }
@@ -187,11 +187,14 @@ const ListOfCompanyWiseUsers = () => {
                 aria-labelledby="responsive-dialog-title"
             >
                 <DialogTitle id="responsive-dialog-title">
-                    {"Contact With Super Admin for Roles Deletion"}
+                    {"Are you sure want to delete?"}
                 </DialogTitle>
                 <DialogActions>
-                    <Button autoFocus onClick={() => handleClose()}>
-                        OK
+                    <Button autoFocus onClick={() => { deleteCompanyWiseUser(selectedId); handleClose() }}>
+                        Yes{selectedId}
+                    </Button>
+                    <Button onClick={handleClose} autoFocus>
+                        No
                     </Button>
                 </DialogActions>
             </Dialog>

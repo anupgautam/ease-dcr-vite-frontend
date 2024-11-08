@@ -13,6 +13,7 @@ import { setCookie } from './reducers/cookieReducer';
 
 import io from 'socket.io-client';
 import { BASE_URL } from './baseURL';
+import { toast } from 'react-toastify';
 
 
 // ----------------------------------------------------------------------
@@ -82,6 +83,7 @@ export default function App() {
 
     socket.on('Notification', (notification) => {
       console.log('Notification received:', notification.message);
+      toast.success(notification.message);
     });
 
     return () => {
