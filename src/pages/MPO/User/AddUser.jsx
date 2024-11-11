@@ -5,7 +5,7 @@ import {
     Typography,
     Button,
     Grid,
-    CircularProgress, Autocomplete, TextField, InputLabel
+    CircularProgress, Autocomplete, TextField
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -26,14 +26,8 @@ import {
 import {
     useGetAllCompanyAreasQuery
 } from '@/api/CompanySlices/companyAreaSlice'
-import {
-    NepaliDateConverter
-} from "react-nepali-date-picker-lite";
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
-import {
-    useGetAllcompanyUserRolesQuery
-} from '@/api/CompanySlices/companyUserRoleSlice';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 
 const AddUser = () => {
@@ -115,12 +109,7 @@ const AddUser = () => {
         };
 
         if (company_id) fetchExecutiveLevels();
-    }, [company_id, getExecLevel]);
-
-    const higherUserList = useGetAllcompanyUserRolesQuery({ company_name: company_id }, {
-        skip: !company_id
-    });
-
+    }, [company_id]);
 
     //! Format Date
     const now = new BSDate().now();

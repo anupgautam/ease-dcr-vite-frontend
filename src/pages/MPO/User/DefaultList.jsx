@@ -26,6 +26,7 @@ import { useTheme } from "@mui/material/styles";
 import { Link } from 'react-router-dom';
 import { useUnlockUsersMutation } from '../../../api/MPOSlices/UserSlice'
 import { useSelector } from 'react-redux';
+import EditUserAdmin from './EditUserAdmin';
 
 const TABLE_HEAD = [
     { id: 'name', label: 'Name', alignRight: false },
@@ -48,13 +49,16 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
     const [openDialogues, setOpenDialogues] = useState({});
 
     const onEdit = useCallback((id) => {
-        setSelectedUpdateId(id);
-        setIsDrawerOpen(true);
-    }, []);
+        if (selectedUpdateId !== id) {
+            setSelectedUpdateId(id);
+            setIsDrawerOpen(true);
+        }
+    }, [selectedUpdateId]);
 
-    const onCloseDrawer = useCallback(() => {
+    const onCloseDrawer = () => {
         setIsDrawerOpen(false);
-    }, []);
+        setSelectedUpdateId(null);
+    };
 
     //! Dialogue
 
@@ -266,10 +270,14 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
                                         </Button>
                                     </DialogActions>
                                 </Dialog> */}
-                                {isDrawerOpen && <EditUser
+                                {isDrawerOpen && selectedUpdateId && (<EditUserAdmin
                                     idharu={selectedUpdateId} onClose={onCloseDrawer}
                                 />
-                                }
+                                )}
+                                {/* {isDrawerOpen && <EditUser
+                                    idharu={selectedUpdateId} onClose={onCloseDrawer}
+                                />
+                                } */}
                             </TableCell>
                         </TableRow>
                     ))

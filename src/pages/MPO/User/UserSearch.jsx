@@ -44,6 +44,7 @@ import { useSelector } from 'react-redux';
 import { useLoginUserByAdminMutation } from "../../../api/MPOSlices/UserSlice";
 import { useDispatch } from "react-redux";
 import { encryptData } from "./excryption";
+import DefaultUser from "./DefaultUser";
 
 const TABLE_HEAD = [
   { id: "user_name", label: "User Name", alignRight: false },
@@ -502,7 +503,7 @@ const UserSearch = () => {
                         ) : null}
                       </>
                     ) : (
-                      <Test
+                      <DefaultUser
                         filterValue={filterValue}
                         handleChangeStatus={handleChangeStatus}
                         UserLogin={UserLogin}
