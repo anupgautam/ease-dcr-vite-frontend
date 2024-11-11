@@ -134,7 +134,7 @@ export const notificationSlice = apiSlice.injectEndpoints({
         //! Get Notification List by id 
         getNotificationListById: builder.query({
             query: (id) => ({
-                url: `/chat/general-notification/?general_notification_receiver=${id}`,
+                url: `/chat/general-notification/?notification_to=${id}`,
                 method: "GET"
             }),
             providesTags: ['Notifications']

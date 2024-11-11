@@ -162,10 +162,10 @@ NotificationItem.propTypes = {
         created_date: PropTypes.instanceOf(Date),
         id: PropTypes.string,
         // isUnRead: PropTypes.bool,
-        general_notification_title: PropTypes.string,
-        general_notification_description: PropTypes.string,
+        notification_title: PropTypes.string,
+        notification_description: PropTypes.string,
         // type: PropTypes.string,
-        general_notification_image: PropTypes.any,
+        // general_notification_image: PropTypes.any,
     }),
 };
 
@@ -209,7 +209,7 @@ function NotificationItem({ notification }) {
                         }}
                     >
                         <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
-                        {fToNow(notification.created_date)}
+                        {fToNow(notification.created_at)}
                     </Typography>
                 }
             />
@@ -222,9 +222,9 @@ function NotificationItem({ notification }) {
 function renderContent(notification) {
     const title = (
         <Typography variant="subtitle2">
-            {notification.general_notification_title}
+            {notification.notification_title}
             <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-                &nbsp; {noCase(notification.general_notification_description)}
+                &nbsp; {noCase(notification.notification_description)}
             </Typography>
         </Typography>
     );
@@ -254,7 +254,7 @@ function renderContent(notification) {
     //     };
     // }
     return {
-        avatar: notification.general_notification_image ? <img alt={notification.general_notification_title} src={notification.general_notification_image} /> : null,
+        avatar: notification.notification_image ? <img alt={notification.notification_title} src={notification.notification_image} /> : null,
         title,
     };
 }
