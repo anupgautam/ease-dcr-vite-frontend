@@ -30,7 +30,7 @@ import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 
-const EditUser = ({ idharu, onClose }) => {
+const EditUserAdmin = ({ idharu, onClose }) => {
 
     const { company_id, refresh, access } = useSelector((state) => state.cookie);
 
@@ -433,4 +433,4 @@ const EditUser = ({ idharu, onClose }) => {
     );
 };
 
-export default React.memo(EditUser);
+export default React.memo(EditUserAdmin);

@@ -15,7 +15,7 @@ root.render(
         <App />
       </Provider>
     </AuthProvider>
-    <ToastContainer />
+    <ToastContainer position="top-right" hideProgressBar theme="colored" />
   </React.StrictMode>
 );
 
