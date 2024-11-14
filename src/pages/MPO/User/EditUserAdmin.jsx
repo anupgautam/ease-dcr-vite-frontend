@@ -52,33 +52,33 @@ const EditUserAdmin = ({ idharu, onClose }) => {
 
 
     //! Executive level
-    // const [executiveLevels, setExecutiveLevels] = useState([]);
+    const [executiveLevels, setExecutiveLevels] = useState([]);
     const [getExecLevel] = useGetAllExecutiveLevelsMutation();
     const [execLoading, setExecLoading] = useState(false);
 
-    // const fetchExecutiveLevels = useCallback(async (companyId) => {
-    //     if (!companyId) return;
+    const fetchExecutiveLevels = useCallback(async (companyId) => {
+        if (!companyId) return;
 
-    //     try {
-    //         setExecLoading(true);
-    //         const response = await getExecLevel(companyId).unwrap();
-    //         const levels = response.map(key => ({
-    //             id: key.id,
-    //             title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`
-    //         }));
-    //         setExecutiveLevels(levels);
-    //     } catch (error) {
-    //         console.error('Failed to fetch executive levels:', error);
-    //     } finally {
-    //         setExecLoading(false);
-    //     }
-    // }, [company_id]);
+        try {
+            setExecLoading(true);
+            const response = await getExecLevel(companyId).unwrap();
+            const levels = response.map(key => ({
+                id: key.id,
+                title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`
+            }));
+            setExecutiveLevels(levels);
+        } catch (error) {
+            console.error('Failed to fetch executive levels:', error);
+        } finally {
+            setExecLoading(false);
+        }
+    }, [company_id]);
 
-    // useEffect(() => {
-    //     if (!executiveLevels.length && company_id) {
-    //         fetchExecutiveLevels(company_id);
-    //     }
-    // }, [company_id, executiveLevels.length, fetchExecutiveLevels]);
+    useEffect(() => {
+        if (!executiveLevels.length && company_id) {
+            fetchExecutiveLevels(company_id);
+        }
+    }, [company_id]);
 
     const [dateData, setDateData] = useState(now)
 
@@ -139,8 +139,6 @@ const EditUserAdmin = ({ idharu, onClose }) => {
             temp.email = returnValidation(['null', 'email'], values.email);
         if ('company_area' in fieldValues)
             temp.company_area = returnValidation(['null'], values.company_area);
-        if ('station_type' in fieldValues)
-            temp.station_type = returnValidation(['null'], values.station_type);
 
         setErrors(temp);
         return Object.values(temp).every(x => x === "");
@@ -183,26 +181,29 @@ const EditUserAdmin = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("first_name", values.first_name);
-        formData.append("middle_name", values.middle_name);
-        formData.append("last_name", values.last_name);
-        formData.append("phone_number", values.phone_number);
-        formData.append("email", values.email);
-        formData.append("role_name", values.role_name);
-        formData.append("division_name", values.division_name);
-        formData.append("executive_level", values.executive_level);
-        formData.append("station_type", values.station_type);
-        formData.append("company_area", values.company_area);
-        formData.append('id', idharu);
-        formData.append("company_name", company_id);
-        formData.append('refresh', refresh)
-        formData.append('access', access);
-        formData.append("date_of_joining", dateData);
-        formData.append("is_active", true);
+        const jsonData = {
+            first_name: values.first_name,
+            middle_name: values.middle_name,
+            last_name: values.last_name,
+            phone_number: values.phone_number,
+            email: values.email,
+            role_name: values.role_name,
+            division_name: values.division_name,
+            executive_level: values.executive_level,
+            station_type: values.station_type,
+            company_area: values.company_area,
+            id: idharu,
+            company_name: company_id,
+            refresh: refresh,
+            access: access,
+            date_of_joining: dateData?._date,
+            is_active: true
+        };
+
+        console.log('jsonData', jsonData);
         try {
-            const response = await updateUsers(formData).unwrap();
-            if (response) {
+            const response = await updateUsers(jsonData)
+            if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited User' });
                 setTimeout(() => {
                     onClose(); setSuccessMessage({ show: false, message: '' });
@@ -346,14 +347,14 @@ const EditUserAdmin = ({ idharu, onClose }) => {
                             renderInput={(params) => (
                                 <TextField {...params} label="Division Name*" error={Boolean(errors.division_name)} helperText={errors.division_name} />
                             )}
-                            // renderOption={(props, option) => (
-                            //     <li {...props} key={option.id}>
-                            //         {option.title}
-                            //     </li>
-                            // )}
+                        // renderOption={(props, option) => (
+                        //     <li {...props} key={option.id}>
+                        //         {option.title}
+                        //     </li>
+                        // )}
                         />
                     </Box>
-                    {/* <Box marginBottom={2}>
+                    <Box marginBottom={2}>
                         <Controls.Select
                             name="executive_level"
                             label="Executive Level*"
@@ -363,7 +364,7 @@ const EditUserAdmin = ({ idharu, onClose }) => {
                             error={errors.executive_level}
                             options={executiveLevels}
                         />
-                    </Box> */}
+                    </Box>
                     <Box marginBottom={2}>
                         <Autocomplete
                             multiple

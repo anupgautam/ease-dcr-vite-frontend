@@ -246,7 +246,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         updateUsers: builder.mutation({
             query: (updateUser) => {
                 return {
-                    url: `user/company-user-role/${updateUser.get('id')}/`,
+                    url: `user/company-user-role/${updateUser.id}/`,
                     method: 'PATCH',
                     body: updateUser
                 }
