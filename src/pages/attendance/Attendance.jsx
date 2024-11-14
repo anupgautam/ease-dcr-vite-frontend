@@ -18,7 +18,6 @@ import {
     TableHead,
     TableRow,
     IconButton,
-    Stack
 } from "@mui/material";
 import { BSDate } from "nepali-datepicker-react";
 import Scrollbar from "../../components/scrollbar/Scrollbar";
@@ -82,7 +81,6 @@ function getAllDaysInMonth(year, month) {
 const ListofAttendance = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
-    //! Export To excel wala
     const headers = [
         { label: 'S.No.', key: 'sno' },
         { label: 'First Name', key: 'first_name' },
@@ -95,45 +93,10 @@ const ListofAttendance = () => {
         { label: 'Role', key: 'role_name' },
     ];
 
-    // const templateData = data?.map((values, index) => ({
-    //     sno: index + 1,
-    //     first_name: values?.user_name?.first_name,
-    //     middle_name: values?.user_name?.middle_name,
-    //     last_name: values?.user_name?.last_name,
-    //     company_name: values?.company_name?.company_name,
-    //     email: values?.user_name?.email,
-    //     head_quarter: values?.company_area?.company_area,
-    //     phone_number: values?.user_name?.phone_number,
-    //     role_name: values?.role_name?.role_name_value
-    // }));
-
-    const templateData = {
-        sno: "1",
-        first_name: "lemon",
-        middle_name: "wala",
-        last_name: "Gautam",
-    }
-    
     const now = new BSDate().now();
     const monthNumber = now._date.month;
     const month = BS_MONTHS[monthNumber - 1];
     const year = now._date.year;
-    // const month = getNepaliMonthName(now._date.month);
-
-    // const months = [
-    //     { value: 1, label: "Baisakh" },
-    //     { value: 2, label: "Jestha" },
-    //     { value: 3, label: "Asadh" },
-    //     { value: 4, label: "Shrawan" },
-    //     { value: 5, label: "Bhadra" },
-    //     { value: 6, label: "Ashwin" },
-    //     { value: 7, label: "Kartik" },
-    //     { value: 8, label: "Mangsir" },
-    //     { value: 9, label: "Poush" },
-    //     { value: 10, label: "Magh" },
-    //     { value: 11, label: "Falgun" },
-    //     { value: 12, label: "Chaitra" }
-    // ];
 
     const months = [
         { value: 'Baisakh', label: 'Baisakh' },
@@ -156,6 +119,31 @@ const ListofAttendance = () => {
         setSelectedMonth(event.target.value);
     };
 
+    const monthFindByLabel = [
+        { value: 1, label: 'Baisakh' },
+        { value: 2, label: 'Jestha' },
+        { value: 3, label: 'Asadh' },
+        { value: 4, label: 'Shrawan' },
+        { value: 5, label: 'Bhadra' },
+        { value: 6, label: 'Ashwin' },
+        { value: 7, label: 'Kartik' },
+        { value: 8, label: 'Mangsir' },
+        { value: 9, label: 'Poush' },
+        { value: 10, label: 'Magh' },
+        { value: 11, label: 'Falgun' },
+        { value: 12, label: 'Chaitra' },
+    ]
+
+    const [MonthValue, setMonthValue] = useState(1);
+
+    useEffect(() => {
+        if (selectedMonth) {
+            const data = monthFindByLabel.find(data => data.label === selectedMonth)
+            setMonthValue(data);
+        }
+    }, [selectedMonth])
+
+
     const years = Array.from({ length: 20 }, (_, index) => ({
         value: 2080 + index,
         label: (2080 + index).toString()
@@ -166,15 +154,13 @@ const ListofAttendance = () => {
         setSelectedYear(event.target.value);
     };
 
-    // const getMonthIndex = (monthName) => months.findIndex(m => m.label === monthName) + 1;
 
-    //! Handle Next and Previous functionality
     const handlePrevMonth = () => {
         if (selectedMonth === 1) {
             setSelectedMonth(12);
             setSelectedYear(prevYear => prevYear - 1);
         } else {
-            setSelectedMonth(prevMonth => prevMonth - 1);
+            setSelectedMonth(BS_MONTHS[monthNumber - 2]);
         }
     };
 
@@ -183,38 +169,18 @@ const ListofAttendance = () => {
             setSelectedMonth(1);
             setSelectedYear(prevYear => prevYear + 1);
         } else {
-            setSelectedMonth(prevMonth => prevMonth + 1);
+            setSelectedMonth(BS_MONTHS[monthNumber]);
         }
     };
 
-
-    // const handlePrevMonth = () => {
-    //     let currentMonthIndex = getMonthIndex(selectedMonth);
-    //     if (currentMonthIndex === 1) {
-    //         setSelectedMonth("Chaitra");
-    //         setSelectedYear((prevYear) => prevYear - 1);
-    //     } else {
-    //         setSelectedMonth(months[currentMonthIndex - 2].label);
-    //     }
-    // };
-
-    // const handleNextMonth = () => {
-    //     let currentMonthIndex = getMonthIndex(selectedMonth);
-    //     if (currentMonthIndex === 12) {
-    //         setSelectedMonth("Baisakh");
-    //         setSelectedYear((prevYear) => prevYear + 1);
-    //     } else {
-    //         setSelectedMonth(months[currentMonthIndex].label);
-    //     }
-    // };
-
-    const allDaysInMonth = getAllDaysInMonth(selectedYear, selectedMonth);
+    const allDaysInMonth = getAllDaysInMonth(selectedYear, MonthValue.value);
     const userList = useGetUsersByCompanyRoleIdQuery({
         id: company_id,
         page: ""
     }, {
         skip: !company_id
     });
+
 
     const companyUserList = useMemo(() => {
         if (userList) {
@@ -255,7 +221,7 @@ const ListofAttendance = () => {
             {/* //! Export to Excel */}
             {userName && (
                 <Box sx={{ display: 'flex', justifyContent: 'right' }}>
-                    <ExportToExcel headers={headers} fileName={'Attendance'} data={templateData} />
+                    <ExportToExcel headers={headers} fileName={'Attendance'}  />
                 </Box>
             )}
             <Box style={{ marginTop: "20px" }}>
@@ -315,7 +281,6 @@ const ListofAttendance = () => {
                     </Box>
 
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'left', gap: 2, marginLeft: '20px' }}>
-                        {/* Previous Button */}
                         <IconButton
                             onClick={handlePrevMonth}
                             sx={{
@@ -452,7 +417,7 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
                     <Grid item xs={12}>
                         <TableContainer component={Paper}>
                             <Table>
-                                <TableHead>
+                                {/* <TableHead>
                                     <TableRow>
                                         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                                             <TableCell key={day} sx={{ textAlign: "center", fontSize: "20px", fontWeight: "bold", color: "#0d0d0d", border: '1px solid #ddd' }}>
@@ -460,7 +425,7 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
                                             </TableCell>
                                         ))}
                                     </TableRow>
-                                </TableHead>
+                                </TableHead> */}
                                 <TableBody>
                                     {Array.from({ length: rows }).map((_, rowIndex) => (
                                         <TableRow key={rowIndex}>
@@ -510,14 +475,14 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
                                 <Typography color="#637381" variant="h6">PL: {AttendData.paid_leave}</Typography>
                             </Grid>
                             <Grid item>
-                                <Typography color="#637381" variant="h6">LWP: {AttendData.leave_without_pay_leave}</Typography>
+                                <Typography color="#637381" variant="h6">LWP: {AttendData.leave_without_pay}</Typography>
                             </Grid>
-                            <Grid item>
+                            {/* <Grid item>
                                 <Typography color="#637381" variant="h6">H: {AttendData.holiday_leave}</Typography>
                             </Grid>
                             <Grid item>
                                 <Typography color="#637381" variant="h6">S: {AttendData.saturday}</Typography>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </Grid>
                 </>
