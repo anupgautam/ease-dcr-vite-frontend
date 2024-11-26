@@ -271,6 +271,9 @@ const AddDCRforChemist = () => {
     const navigate = useNavigate();
 
 
+    console.log('AllMutipleData', AllMutipleData);
+
+
     const handlePostDcr = () => {
         // setLoading(true)
 
@@ -296,24 +299,8 @@ const AddDCRforChemist = () => {
             } else {
                 sendingData['ordered_products'] = [];
             }
-            // let ordered_products = sendingData?.Formdata?.ordered_products;
-            // if (ordered_products.length !== 0) {
-            //     sendingData['ordered_products'] = ordered_products;
-            // } else {
-            //     sendingData['ordered_products'] = [];
-            // }
-            if (sendingData['rewards']) {
-                let rewards = allData.rewards;
-
-                sendingData['rewards'] = [];
-                rewards.map(key => {
-                    sendingData['rewards'].push({ id: key });
-                });
-            } else {
-                sendingData['rewards'] = [];
-            }
-            if (sendingData['company_roles']) {
-                let companyRoles = allData.company_roles;
+            if (allData.visited_with) {
+                let companyRoles = allData.visited_with;
                 sendingData['company_roles'] = [];
                 companyRoles.map(key => {
                     sendingData['company_roles'].push({ id: key });
@@ -321,7 +308,16 @@ const AddDCRforChemist = () => {
             } else {
                 sendingData['company_roles'] = [];
             }
-            sendingData['company_roles'] = [];
+            if (sendingData['company_roles']) {
+                let companyRole = allData.rewards;
+
+                sendingData['company_roles'] = [];
+                companyRole.map(key => {
+                    sendingData['company_roles'].push({ id: key });
+                });
+            } else {
+                sendingData['company_roles'] = [];
+            }
             if (
                 sendingData['visited_area'] ||
                 sendingData['shift'] ||
@@ -577,6 +573,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
     const Chemist = useGetChemistsByIdQuery(data.chemist_id);
     const [executiveOptions, setExecutiveOptions] = useState([]);
     const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
+
     useEffect(() => {
         executiveUsers({ id: company_user_role_id }, {
             skip: !company_user_role_id
@@ -596,13 +593,14 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
             .catch(err => {
 
             });
-    }, [company_user_id]);
+    }, [company_user_role_id]);
 
     const [CompanyRoles, setCompanyRoles] = useState([]);
     const handleRolesChange = (event, value) => {
         const mpotparea = value.map(option => option.id)
         setCompanyRoles(mpotparea)
     }
+
 
     const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
         company_id, {
@@ -678,14 +676,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
                 Formdata,
                 rewards: RewardOptions,
                 company_roles: CompanyRoles,
-                company_product: PromotedProduct,
-                context: {
-                    request: 'PATCH',
-                    company_product: 'select',
-                    company_roles: 'select',
-                    ordered_products: 'normal',
-                    rewards: 'select',
-                },
+                company_product: PromotedProduct
             };
             return updatedData;
         });

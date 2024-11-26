@@ -221,7 +221,7 @@ const ListofAttendance = () => {
             {/* //! Export to Excel */}
             {userName && (
                 <Box sx={{ display: 'flex', justifyContent: 'right' }}>
-                    <ExportToExcel headers={headers} fileName={'Attendance'}  />
+                    <ExportToExcel headers={headers} fileName={'Attendance'} />
                 </Box>
             )}
             <Box style={{ marginTop: "20px" }}>
@@ -382,6 +382,8 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
     const [AttendanceData] = usePostingAllUserAttendanceMutation();
     const [AttendData, setAttendData] = useState();
 
+    console.log('AttendData', AttendData);
+
     useEffect(() => {
         if (userList) {
             AttendanceData({ year: selectedYear, month: selectedMonth, user_id: userList }, {
@@ -397,11 +399,11 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
         }
     }, [selectedYear, selectedMonth, userList]);
 
+
     const daysInWeek = 7;
     const firstDay = new Date(`${selectedYear}-${String(selectedMonth).padStart(2, "0")}-01`).getDay();
     const paddedDays = Array.from({ length: firstDay }, () => null);
 
-    // Calculate total days and number of rows needed
     const totalDays = paddedDays.length + allDaysInMonth.length;
     const rows = Math.ceil(totalDays / daysInWeek);
 
@@ -433,7 +435,23 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
                                                 const index = rowIndex * daysInWeek + colIndex;
                                                 const date = paddedDays[index] || allDaysInMonth[index - paddedDays.length];
                                                 const day = date ? parseInt(date.split("-").pop()) : null;
-                                                const isPresent = AttendData[userList[0]?.id]?.includes(date);
+
+                                                const isPresent = AttendData.attendance_data?.some(
+                                                    data => data.date === date && data.is_present
+                                                );
+                                                const isSickLeave = AttendData.attendance_data?.some(
+                                                    data => data.date === date && data.sick_leave || data.casual_leave || data.paid_leave || data.leave_without_pay
+                                                );
+                                                const isLeaveWithoutPay = AttendData.attendance_data?.some(
+                                                    data => data.date === date && data.leave_without_pay
+                                                );
+                                                const isCasualLeave = AttendData.attendance_data?.some(
+                                                    data => data.date === date && data.casual_leave
+                                                );
+
+                                                const paidLeave = AttendData.attendance_data?.some(
+                                                    data => data.date === date && data.paid_leave
+                                                );
 
                                                 return (
                                                     <TableCell
@@ -443,12 +461,10 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
                                                             height: "60px",
                                                             width: "60px",
                                                             lineHeight: "60px",
-                                                            fontSize: "22px", // Increased font size
-                                                            color: isPresent ? "#2e7d32" : "#c62828",
-                                                            // color: isPresent ? "#2e7d32" : "#c62828", 
-
+                                                            fontSize: "22px",
+                                                            color: isPresent ? "#2e7d32" : isSickLeave ? "#2f59d8" : paidLeave ? "#2f59d8" : isLeaveWithoutPay ? "#2f59d8" : isCasualLeave ? "#2f59d8" : "#c62828",
                                                             fontWeight: "bold",
-                                                            border: '1px solid #ddd', // Soft border
+                                                            border: '1px solid #ddd',
                                                         }}
                                                     >
                                                         {day}
@@ -458,6 +474,7 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
                                         </TableRow>
                                     ))}
                                 </TableBody>
+
                             </Table>
                         </TableContainer>
                     </Grid>
@@ -466,16 +483,16 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
                     <Grid item xs={12} sx={{ marginTop: "20px" }}>
                         <Grid container spacing={2} justifyContent="center">
                             <Grid item>
-                                <Typography color="#637381" variant="h6">SL: {AttendData.sick_leave}</Typography>
+                                <Typography color="#2f59d8" variant="h6">SL: {AttendData.sick_leave}</Typography>
                             </Grid>
                             <Grid item>
-                                <Typography color="#637381" variant="h6">CL: {AttendData.casual_leave}</Typography>
+                                <Typography color="#2f59d8" variant="h6">CL: {AttendData.casual_leave}</Typography>
                             </Grid>
                             <Grid item>
-                                <Typography color="#637381" variant="h6">PL: {AttendData.paid_leave}</Typography>
+                                <Typography color="#2f59d8" variant="h6">PL: {AttendData.paid_leave}</Typography>
                             </Grid>
                             <Grid item>
-                                <Typography color="#637381" variant="h6">LWP: {AttendData.leave_without_pay}</Typography>
+                                <Typography color="#2f59d8" variant="h6">LWP: {AttendData.leave_without_pay}</Typography>
                             </Grid>
                             {/* <Grid item>
                                 <Typography color="#637381" variant="h6">H: {AttendData.holiday_leave}</Typography>

@@ -76,21 +76,23 @@ export default function App() {
 
 
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Connected to Socket.io server');
-      socket.emit('registerAdmin', Cookies.get('company_user_role_id'));
-    });
+    if (Cookies.get('company_user_role_id')) {
+      socket.on('connect', () => {
+        console.log('Connected to Socket.io server');
+        socket.emit('registerAdmin', Cookies.get('company_user_role_id'));
+      });
 
-    socket.on('Notification', (notification) => {
-      console.log('Notification received:', notification.message);
-      toast.success(notification.message);
-    });
+      socket.on('Notification', (notification) => {
+        console.log('Notification received:', notification.message);
+        toast.success(notification.message);
+      });
 
-    return () => {
-      socket.off('Notification');
-      socket.disconnect();
-      console.log('Disconnected from Socket.io server');
-    };
+      return () => {
+        socket.off('Notification');
+        socket.disconnect();
+        console.log('Disconnected from Socket.io server');
+      };
+    }
   }, [socket, Cookies.get('company_user_role_id')]);
 
 

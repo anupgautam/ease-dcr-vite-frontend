@@ -24,7 +24,7 @@ import { BSDate } from "nepali-datepicker-react";
 import moment from "moment";
 
 const AddDCRForStockist = () => {
-    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id, company_area_id } = useSelector((state) => state.cookie);
 
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('id');
@@ -232,6 +232,8 @@ const AddDCRForStockist = () => {
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
     const navigate = useNavigate();
 
+    const [updateDcr] = useUpdateDcrForStockistMutation();
+
     const handlePostDcr = () => {
         setLoading(true)
         let sendingData = { ...values };
@@ -266,13 +268,17 @@ const AddDCRForStockist = () => {
                 sendingData['company_roles'] = [];
             }
             if (
-                sendingData['visited_area'] ||
                 sendingData['shift'] ||
                 sendingData['visited_stockist']
             ) {
-                sendingData['visited_area'] = sendingData['visited_area'];
+                sendingData['visited_area'] = company_area_id;
                 sendingData['shift'] = values.shift;
                 sendingData['visited_stockist'] = sendingData['visited_stockist'];
+                sendingData['date'] = sendingData.date;
+                sendingData['month'] = getNepaliMonthName(moment(sendingData.date).month() + 1);
+                sendingData['year'] = moment(sendingData.date).year();
+                sendingData['mpo_name'] = company_user_role_id;
+                sendingData['company_name'] = company_id;
             } else {
                 sendingData['visited_area'] = null;
                 sendingData['visited_doctor'] = null;
@@ -280,39 +286,46 @@ const AddDCRForStockist = () => {
             }
             updateDcr({ id: id, value: sendingData })
                 .then((res) => {
+                    console.log('resssss', res);
+                    setLoading(false)
                     if (res.data) {
-                        if (LastData === true) {
-                            updateTourplan({
-                                id: values.tour_id,
-                                value: { is_stockist_dcr_added: true },
-                            })
-                                .then(res => {
-                                    if (res.data) {
-                                        setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
-                                        setTimeout(() => {
-                                            setSuccessMessage({ show: false, message: '' });
-                                            navigate('/dashboard/admin/dcr');
-                                        }, 2000);
-                                    }
-                                })
-                                .catch(err => {
+                        setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
+                        setTimeout(() => {
+                            setSuccessMessage({ show: false, message: '' });
+                            navigate('/dashboard/admin/dcr');
+                        }, 2000);
+                        // if (LastData === true) {
+                        //     updateTourplan({
+                        //         id: values.tour_id,
+                        //         value: { is_stockist_dcr_added: true },
+                        //     })
+                        //         .then(res => {
+                        //             if (res.data) {
+                        //                 setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
+                        //                 setTimeout(() => {
+                        //                     setSuccessMessage({ show: false, message: '' });
+                        //                     navigate('/dashboard/admin/dcr');
+                        //                 }, 2000);
+                        //             }
+                        //         })
+                        //         .catch(err => {
 
-                                })
-                                .finally(() => {
-                                    setLoading(false)
-                                })
-                        } else {
-                            DcrForStockist()
-                                .then((res) => {
-                                    if (res.data) {
-                                        setSuccessMessage({ show: true, message: 'Dcr Added Successfully. Add Another Dcr.' });
-                                        setTimeout(() => {
-                                            setSuccessMessage({ show: false, message: '' });
-                                            navigate(`/dashboard/admin/dcr/for/stockist?id=${res.data.id}`)
-                                        }, 2000);
-                                    }
-                                })
-                        }
+                        //         })
+                        //         .finally(() => {
+                        //             setLoading(false)
+                        //         })
+                        // } else {
+                        //     DcrForStockist()
+                        //         .then((res) => {
+                        //             if (res.data) {
+                        //                 setSuccessMessage({ show: true, message: 'Dcr Added Successfully. Add Another Dcr.' });
+                        //                 setTimeout(() => {
+                        //                     setSuccessMessage({ show: false, message: '' });
+                        //                     navigate(`/dashboard/admin/dcr/for/stockist?id=${res.data.id}`)
+                        //                 }, 2000);
+                        //             }
+                        //         })
+                        // }
                         // createMpoDcr({
                         //     mpo_name: company_user_id,
                         //     dcr_id: id,
@@ -434,7 +447,7 @@ const AddDCRForStockist = () => {
                                             options={shiftAllData}
                                         />
                                     </Box>
-                                    <Box marginBottom={2}>
+                                    {/* <Box marginBottom={2}>
                                         <Controls.Select
                                             name={`visited_area`}
                                             disable={false}
@@ -443,7 +456,7 @@ const AddDCRForStockist = () => {
                                             onChange={handleInputChange}
                                             options={areaOptions}
                                         />
-                                    </Box>
+                                    </Box> */}
                                 </Box>
                             </Box>
                         </Card>
@@ -597,7 +610,7 @@ const AddDCRForStockist = () => {
                                     <Box marginBottom={2}>
                                         <Controls.Input
                                             name="expenses"
-                                            label="Expenses"
+                                            label="Expenses Cost"
                                             value={values.expenses}
                                             onChange={handleInputChange}
                                             // error={errors.select_the_date}

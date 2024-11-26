@@ -53,7 +53,7 @@ export const ChemistOrderedProductSlice = apiSlice.injectEndpoints({
         getChemistOrderedProductsByDCRId: builder.query({
             query: (id) => {
                 return {
-                    url: `/dcr/chemist-ordered-products-map/?dcr_id=${id}`,
+                    url: `/dcr/chemist-ordered-products-map/?dcr_id=${id.dcr_id}&company_name=${id.company_name}`,
                     method: 'GET'
                 }
             },
