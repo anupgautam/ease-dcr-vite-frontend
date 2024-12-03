@@ -42,8 +42,8 @@ const TABLE_HEAD = [
     { id: 'head_quarter', label: 'Head Quarter', alignRight: false },
     { id: 'role_name', label: 'Role Name', alignRight: false },
     { id: 'date_of_joining', label: 'Date of Joining', alignRight: false },
-    { id: 'dcr_feeded', label: 'DCR Feeded', alignRight: false },
-    { id: 'dcr_pending', label: 'DCR Pending', alignRight: false },
+    // { id: 'dcr_feeded', label: 'DCR Feeded', alignRight: false },
+    // { id: 'dcr_pending', label: 'DCR Pending', alignRight: false },
     { id: 'summary', label: 'Remark', alignRight: false },
 ];
 
@@ -222,7 +222,13 @@ const AllUserDcr = () => {
                                                                         </Typography>
                                                                         {/* </Stack> */}
                                                                     </TableCell>
-                                                                    <TableCell align="left">{usersearch.company_area.company_area}</TableCell>
+                                                                    <TableCell align="left">
+                                                                        {usersearch?.company_area?.map((area, index) => (
+                                                                            <span key={index}>
+                                                                                {area.company_area + ',' + " "}
+                                                                            </span>
+                                                                        ))}
+                                                                    </TableCell>
                                                                     <TableCell align="left">{usersearch.role_name.role_name_value}</TableCell>
                                                                     <TableCell align="left">
                                                                         {new Date(usersearch.user_name.date_of_joining).toLocaleDateString('en-US', {
@@ -231,8 +237,8 @@ const AllUserDcr = () => {
                                                                             day: 'numeric',
                                                                         })}
                                                                     </TableCell>
-                                                                    <TableCell align="left">{usersearch.dcr_feeded}</TableCell>
-                                                                    <TableCell align="left">{usersearch.dcr_pending}</TableCell>
+                                                                    {/* <TableCell align="left">{usersearch.dcr_feeded}</TableCell>
+                                                                    <TableCell align="left">{usersearch.dcr_pending}</TableCell> */}
                                                                     <TableCell align="left">
                                                                         <Link to={`/dashboard/admin/user/wise/dcr?id=${usersearch.id}&role=${usersearch.role_name.role_name.role_name}`}>
                                                                             <Button>Summary</Button>

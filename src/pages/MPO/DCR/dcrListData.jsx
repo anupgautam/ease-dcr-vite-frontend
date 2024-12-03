@@ -197,7 +197,13 @@ const DcrListData = () => {
                                                         <TableCell>{index + 1}</TableCell>
                                                         <TableCell align="left">{singleUser?.data?.user_name?.first_name + " " + singleUser?.data?.user_name?.middle_name + " " + singleUser?.data?.user_name?.last_name}</TableCell>
                                                         <TableCell align="left">{getNepaliMonthName(moment(key.date).month() + 1)} {moment(key.date).format('DD')}</TableCell>
-                                                        <TableCell align="left">{singleUser?.data?.company_area?.company_area}</TableCell>
+                                                        <TableCell align="left">
+                                                            {singleUser?.data?.company_area?.map((area, index) => (
+                                                                <div key={index}>
+                                                                    {area.company_area}
+                                                                </div>
+                                                            ))}
+                                                        </TableCell>
                                                         <TableCell align="center" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600' }}>{key.doctor_call}</TableCell>
                                                         <TableCell align="center" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600' }}>{key.chemist_call}</TableCell>
                                                         <TableCell align="center" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600' }}>{key.stockist_call}</TableCell>
@@ -234,7 +240,13 @@ const DcrListData = () => {
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell align="left">{singleUser?.data?.user_name?.first_name + " " + singleUser?.data?.user_name?.middle_name + " " + singleUser?.data?.user_name?.last_name}</TableCell>
                                                     <TableCell align="left">{getNepaliMonthName(moment(key.date).month() + 1)} {moment(key.date).format('DD')}</TableCell>
-                                                    <TableCell align="left">{singleUser?.data?.company_area?.company_area}</TableCell>
+                                                    <TableCell align="left">
+                                                        {singleUser?.data?.company_area?.map((area, index) => (
+                                                            <div key={index}>
+                                                                {area.company_area}
+                                                            </div>
+                                                        ))}
+                                                    </TableCell>
                                                     <TableCell align="left" style={{ color: '#2e8960', fontSize: '16px', fontWeight: '600', marginLeft: "10px" }}>{key.call_data}</TableCell>
                                                     <TableCell align="left">
                                                         <Link to={`/dashboard/admin/dcr?id=${id}&role=${role}&date=${key.date}`}>
