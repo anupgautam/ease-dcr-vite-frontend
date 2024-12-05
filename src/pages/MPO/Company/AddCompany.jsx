@@ -32,6 +32,7 @@ const AddCompany = () => {
     //! Create Chemist
     const [createCompany] = useCreateCompanyMutation()
 
+
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
         if ('company_name' in fieldValues)
@@ -68,6 +69,7 @@ const AddCompany = () => {
         validate();
 
     }, [values.company_name])
+    console.log('calues', values);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -83,6 +85,7 @@ const AddCompany = () => {
             company_phone_number: values.company_phone_number,
             company_email_address: values.company_email_address,
             company_address: values.company_address,
+            exprired_at: values.exprired_at
         };
         try {
             const response = await createCompany(jsonData).unwrap();
@@ -188,6 +191,14 @@ const AddCompany = () => {
                             value={values.name}
                             onChange={handleInputChange}
                             error={errors.company_address}
+                        />
+                    </Box>
+                    <Box marginBottom={2}>
+                        <Controls.DateTimePicker
+                            name="exprired_at"
+                            label="Exprired Time*"
+                            value={values.exprired_at}
+                            onChange={handleInputChange}
                         />
                     </Box>
                     <Stack spacing={1} direction="row">

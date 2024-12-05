@@ -4,20 +4,19 @@ import { TextField } from "@mui/material";
 export default function DateTimePicker(props) {
   const { name, label, value, onChange } = props;
 
-  const convertToDefEventPara = (name, e) => {
-
+  const convertToDefEventPara = (name, value) => {
     onChange({ target: { name, value } });
+    console.log('yes ma k xa', value)
   };
 
   return (
     <TextField
-      id="datetime-local"
+      id="date"
       label={label}
-      type="datetime-local"
+      type="date"
       name={name}
-      //   value={value}
-      onChange={(e) => convertToDefEventPara(name, e)}
-      defaultValue={value}
+      value={value}
+      onChange={(e) => convertToDefEventPara(name, e.target.value)}
       InputLabelProps={{
         shrink: true,
       }}
@@ -25,15 +24,5 @@ export default function DateTimePicker(props) {
         width: "100%",
       }}
     />
-    // <MuiPickersUtilsProvider utils={DateFnsUtils}>
-    //     <KeyboardDateTimePicker disableToolbar variant="inline" inputVariant="outlined"
-    //         label={label}
-    //         format="MMM/dd/yyyy"
-    //         name={name}
-    //         value={value}
-    //         onChange={date =>onChange(convertToDefEventPara(name,date))}
-
-    //     />
-    // </MuiPickersUtilsProvider>
   );
 }
