@@ -5,7 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 import { useUnlockUsersMutation } from '../../../api/MPOSlices/UserSlice';
 import EditUserAdmin from './EditUserAdmin';
 
-const UserRow = ({ user, index, handleChangeStatus, handleClickOpen, openDialogues, handleClose, UserLocks }) => {
+const UserRow = ({ user, index, handleChangeStatus, handleClickOpen, openDialogues, handleClose, UserLocks, UserLogin }) => {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

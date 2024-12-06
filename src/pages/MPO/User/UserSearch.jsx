@@ -38,7 +38,7 @@ import Test from "./DefaultList";
 import { useGetCompanyRolesByCompanyQuery } from "@/api/CompanySlices/companyRolesSlice";
 import { useGetUsersByCompanyRoleIdQuery } from "@/api/MPOSlices/UserSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
-import { useUpdateUsersMutation } from "@/api/DemoUserSlice";
+import { useUpdateUsersMutation } from '@/api/MPOSlices/UserSlice'
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { useLoginUserByAdminMutation } from "../../../api/MPOSlices/UserSlice";
@@ -160,25 +160,23 @@ const UserSearch = () => {
 
 
   const handleChangeStatus = (e, user) => {
-    const formData = new FormData();
-    formData.append("first_name", user.user_name.first_name);
-    formData.append("middle_name", user.user_name.middle_name);
-    formData.append("last_name", user.user_name.last_name);
-    formData.append("is_active", e.target.value);
-    // formData.append("address", values.address);
-    formData.append("phone_number", user.user_name.phone_number);
-    formData.append("email", user.user_name.email);
-    formData.append("role_name", user.role_name.id);
-    formData.append("division_name", user.division_name.id);
-    formData.append("executive_level", user.executive_level.id);
-    formData.append("station_type", user.station_type);
-    formData.append("company_area", user.company_area.id);
-    formData.append("id", user.id);
-    formData.append("company_id", company_id);
-    formData.append("refresh", refresh);
-    formData.append("access", access);
-    formData.append("date_of_joining", user.user_name.date_of_joining);
-    UserStatus(formData).then((res) => {
+    const data = {
+      first_name: user.user_name.first_name,
+      middle_name: user.user_name.middle_name,
+      last_name: user.user_name.last_name,
+      phone_number: user.user_name.phone_number,
+      email: user.user_name.email,
+      role_name: user.role_name.id,
+      division_name: user.division_name.id,
+      company_name: company_id,
+      station_type: user.station_type,
+      date_of_joining: user.user_name.date_of_joining,
+      executive_level: user.executive_level.id,
+      is_active: JSON.parse(e.target.value),
+      company_id: company_id,
+    }
+    console.log('data', data);
+    UserStatus({ id: user.id, data: data }).then((res) => {
       if (res.data) {
       }
     });
@@ -444,7 +442,7 @@ const UserSearch = () => {
                                   )}
                                 </TableCell>
                                 <TableCell align="left">
-                                  {usersearch?.user_name?.is_admin === false ? <>
+                                  {usersearch?.role_name.role_name === "admin" ? <>
                                     <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => UserLogin(usersearch)}>
                                       <Badge>
                                         <Iconify icon="ic:sharp-login" />

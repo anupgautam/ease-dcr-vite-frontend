@@ -107,7 +107,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 query: (id) => (
                     {
                         // url: `user/company-user-role-without-pagination/?company_name__company_id=${id.id}&executive_level=${id.page}&user_name__is_active=true`,
-                        url: `user/get-all-lower-level-users-from-company-user-role-id/?company_name__company_id=${id.id}&executive_level=${id.page}&user_name__is_active=true`,
+                        url: `user/get-all-lower-level-users-from-company-user-role-id/?company_name__company_id=${id.id}&executive_level=${id.page}&is_active=true`,
                         method: 'GET'
                     }),
                 providesTags: ['User']
@@ -116,7 +116,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
             {
                 query: (id) => (
                     {
-                        url: `user/company-user-role-without-pagination/?company_name=${id.id}&role_name=${id.page}&user_name__is_active=true`,
+                        url: `user/company-user-role-without-pagination/?company_name=${id.id}&role_name=${id.page}&is_active=true`,
                         method: 'GET'
                     }),
                 providesTags: ['User']
@@ -248,7 +248,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 return {
                     url: `user/company-user-role/${updateUser.id}/`,
                     method: 'PATCH',
-                    body: updateUser
+                    body: updateUser.data
                 }
             },
             invalidatesTags: ['CompanyUserRoles'],

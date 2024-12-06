@@ -96,12 +96,14 @@ const EditUser = ({ idharu, onClose }) => {
 
     })
 
+
     const [multipleDivisions, setMultipleDivisions] = useState([])
     const handleMultipleDivsions = (e, value) => {
         setMultipleDivisions(value);
     }
 
     const [multipleCompanyAreas, setMultipleCompanyAreas] = useState([])
+
     const handleMultpleCompanyAreas = (e, value) => {
         setMultipleCompanyAreas(value);
     }
@@ -163,12 +165,12 @@ const EditUser = ({ idharu, onClose }) => {
                 role_name: User.data.role_name?.id || '',
                 executive_level: User.data.executive_level?.user_name?.id || '',
                 station_type: User.data.station_type || '',
-                division_name: selectedDivisions[0] || null,
-                company_area: selectedCompanyAreas[0] || null
+                division_name: selectedDivisions || null,
+                company_area: selectedCompanyAreas || null
             });
             setDateData(User.data.user_name?.date_of_joining || now);
             setMultipleDivisions(selectedDivisions);
-            setMultipleCompanyAreas(selectedCompanyAreas);
+            setMultipleCompanyAreas();
         }
     }, [User])
 
@@ -346,11 +348,11 @@ const EditUser = ({ idharu, onClose }) => {
                             renderInput={(params) => (
                                 <TextField {...params} label="Division Name*" error={Boolean(errors.division_name)} helperText={errors.division_name} />
                             )}
-                            // renderOption={(props, option) => (
-                            //     <li {...props} key={option.id}>
-                            //         {option.title}
-                            //     </li>
-                            // )}
+                        // renderOption={(props, option) => (
+                        //     <li {...props} key={option.id}>
+                        //         {option.title}
+                        //     </li>
+                        // )}
                         />
                     </Box>
                     {/* <Box marginBottom={2}>

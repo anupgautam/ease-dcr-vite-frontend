@@ -47,13 +47,13 @@ const AddMultipleUser = () => {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
-    const [createUsers] = useCreateUsersMutation()
+    const [createUsers] = useCreateUsersMutation();
+    console.log('AllMutipleData', AllMutipleData);
 
     const [isLoading, setIsLoading] = useState(false);
     const onAddUsers = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-
         for (const addData of AllMutipleData) {
             try {
                 const response = await createUsers(addData)
@@ -104,7 +104,7 @@ const AddMultipleUser = () => {
                     <>
                         <Card style={{ paddingTop: "15px", paddingBottom: "15px" }}>
                             <Scrollbar>
-                                <TableContainer sx={{ minWidth: 3000 }}>
+                                <TableContainer sx={{ minWidth: 5000 }}>
                                     <Table>
                                         <UserListHead
                                             headLabel={TABLE_HEAD}
@@ -203,6 +203,7 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
 
     //! Multiple Company Divsion
     const [divisionOptions, setDivisionOptions] = useState([])
+    console.log('divisionOptions', divisionOptions);
 
     const handleMultipleDivision = (event, value) => {
         const selectedIds = value.map(option => option.id);
@@ -348,9 +349,9 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
         email: "",
         role_name: "",
         executive_level: "",
-        company_id: company_id,
-        company_area: "",
-        division_name: "",
+        company_name: company_id,
+        company_area: areaOptions,
+        division_name: divisionOptions,
         station_type: "",
         is_active: "true",
         date_of_joining: formattedDate,
@@ -426,8 +427,6 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
             </TableCell>
             <TableCell align="left">
                 <Box marginBottom={2}>
-                    <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Date of Joining*</label><br />
-
                     <NepaliDatePicker
                         value={dateData}
                         format="YYYY-MM-DD"
@@ -454,7 +453,7 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 />
             </TableCell>
 
-            <TableCell align="left" style={{ width: "200px" }}>
+            <TableCell align="left" style={{ width: "400px" }}>
                 <Controls.Select
                     name="role_name"
                     label="Role Name*"
@@ -464,7 +463,7 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 // error={errors.doctorDCRId}
                 />
             </TableCell>
-            <TableCell align="left" style={{ width: "200px" }}>
+            <TableCell align="left" style={{ width: "400px" }}>
                 <Controls.Select
                     name="executive_level"
                     label="Executive Level*"
@@ -474,16 +473,16 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
                     error={errors.executive_level}
                 />
             </TableCell>
-            <TableCell align="left" style={{ width: "200px" }}>
-                <Controls.Select
+            <TableCell align="left" style={{ width: "500px" }}>
+                {/* <Controls.Select
                     name="division_name"
                     label="Division*"
                     value={values.name}
                     onChange={handleInputChange}
                     error={errors.division_name}
                     options={divisionList}
-                />
-                {/* <Autocomplete
+                /> */}
+                <Autocomplete
                     multiple
                     options={divisionList}
                     getOptionLabel={(option) => option.title}
@@ -496,18 +495,18 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
                             {option.title}
                         </li>
                     )}
-                /> */}
+                />
             </TableCell>
-            <TableCell align="left" style={{ width: "200px" }}>
-                <Controls.Select
+            <TableCell align="left" style={{ width: "500px" }}>
+                {/* <Controls.Select
                     name="company_area"
                     label="Company Wise Area*"
                     value={values.name}
                     onChange={handleInputChange}
                     error={errors.company_area}
                     options={companyAreas}
-                />
-                {/* <Autocomplete
+                /> */}
+                <Autocomplete
                     multiple
                     options={companyAreas}
                     getOptionLabel={(option) => option.title}
@@ -520,10 +519,10 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
                             {option.title}
                         </li>
                     )}
-                /> */}
+                />
             </TableCell>
 
-            <TableCell align="left" style={{ width: "170px" }}>
+            <TableCell align="left" style={{ width: "300px" }}>
                 <Controls.Input
                     name="station_type"
                     label="Station Type*"

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { TableRow, TableCell, Typography } from '@mui/material';
 import { useGetAllcompanyUserRolesQuery } from '@/api/CompanySlices/companyUserRoleSlice';
 import Skeleton from 'react-loading-skeleton';
@@ -15,17 +15,23 @@ const DefaultUser = ({ filterValue, handleChangeStatus, UserLogin }) => {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
+
     const handleChangePage = useCallback((e) => {
         const data = e.target.ariaLabel;
         let thisArray = data.split(" ");
         setPage(thisArray[3]);
     }, []);
 
-    const { data, refetch } = useGetAllcompanyUserRolesQuery({ company_name: company_id, page: page, is_active: filterValue }, {
-        skip: !company_id || !page
-    });
+    const { data, refetch, isFetching, isLoading, error } = useGetAllcompanyUserRolesQuery(
+        { company_name: company_id, page: page, is_active: filterValue },
+        {
+            skip: !company_id || !page
+        }
+    );
 
-    const totalPages = useMemo(() => Math.ceil((data?.count || 0) / 30), [data]);
+
+
+    const totalPages = useMemo(() => Math.ceil((data?.count || 0) / 200), [data]);
 
     return (
         <>
@@ -35,6 +41,7 @@ const DefaultUser = ({ filterValue, handleChangeStatus, UserLogin }) => {
                         <UserRow
                             key={user.id}
                             user={user}
+                            UserLogin={UserLogin}
                             index={index}
                             handleChangeStatus={handleChangeStatus}
                             handleClickOpen={(userId) => setOpenDialogues((prev) => ({ ...prev, [userId]: true }))}

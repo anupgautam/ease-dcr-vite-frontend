@@ -15,7 +15,7 @@ export const CompanyUserRoleSlice = apiSlice.injectEndpoints({
         //! GET all the users
         getAllcompanyUserRoles: builder.query({
             query: (page) => ({
-                url: `/user/company-user-role/?company_name__company_id=${page.company_name}&page=${page.page}`,
+                url: `/user/company-user-role/?company_name=${page.company_name}&page=${page.page}&is_active=${page.is_active}`,
                 method: 'GET'
             }),
             providesTags: (result, error, arg) =>
@@ -39,7 +39,7 @@ export const CompanyUserRoleSlice = apiSlice.injectEndpoints({
         //! GET all the users without pagination
         getAllCompanyUsersWithoutPagination: builder.query({
             query: (page) => ({
-                url: `/user/company-user-role/?company_name__company_id=${page.company_name}`,
+                url: `/user/company-user-role/?company_name=${page.company_name}`,
                 method: 'GET'
             }),
             providesTags: (result, error, arg) =>
@@ -105,7 +105,7 @@ export const CompanyUserRoleSlice = apiSlice.injectEndpoints({
 
         getAllCompanyUserRoleByRoleName: builder.query({
             query: (id) => ({
-                url: `/user/company-user-role-without-pagination/?role_name__role_name__role_name=${id}`,
+                url: `/user/company-user-role-without-pagination/?role_name=${id}`,
                 method: 'GET'
             }),
             providesTags: (result, error, arg) =>

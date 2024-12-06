@@ -62,6 +62,7 @@ const EditUserAdmin = ({ idharu, onClose }) => {
         try {
             setExecLoading(true);
             const response = await getExecLevel(companyId).unwrap();
+            console.log("response", response);
             const levels = response.map(key => ({
                 id: key.id,
                 title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`
@@ -81,6 +82,8 @@ const EditUserAdmin = ({ idharu, onClose }) => {
     }, [company_id]);
 
     const [dateData, setDateData] = useState(now)
+    const [dateFormat, setDateFormat] = useState(dateData?._date)
+    const [nepaliDate, setNepaliDate] = useState(dateFormat)
 
     const [initialFValues, setInitialFValues] = useState({
         first_name: "",
@@ -172,14 +175,23 @@ const EditUserAdmin = ({ idharu, onClose }) => {
 
     //! Edit user
     const [updateUsers] = useUpdateUsersMutation();
-    const history = useNavigate()
+    const history = useNavigate();
+
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
+    const formatDate = (date) => {
+        const year = date.year;
+        const month = String(date.month).padStart(2, '0');
+        const day = String(date.day).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
 
-    const handleSubmit = useCallback(async (e) => {
-        e.preventDefault();
+    const formattedDate = formatDate(nepaliDate);
+
+
+    const handleSubmit = async (e) => {
         setLoading(true)
         const jsonData = {
             first_name: values.first_name,
@@ -188,25 +200,26 @@ const EditUserAdmin = ({ idharu, onClose }) => {
             phone_number: values.phone_number,
             email: values.email,
             role_name: values.role_name,
-            division_name: values.division_name,
+            division_name: multipleDivisions.map(key => key.id),
             executive_level: values.executive_level,
             station_type: values.station_type,
-            company_area: values.company_area,
+            company_area: multipleCompanyAreas.map(key => key.id),
             id: idharu,
             company_name: company_id,
             refresh: refresh,
             access: access,
-            date_of_joining: dateData?._date,
+            date_of_joining: formattedDate,
             is_active: true
         };
 
-        console.log('jsonData', jsonData);
+
         try {
-            const response = await updateUsers(jsonData)
+            const response = await updateUsers({ id: idharu, data: jsonData })
             if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited User' });
                 setTimeout(() => {
-                    onClose(); setSuccessMessage({ show: false, message: '' });
+                    onClose();
+                    setSuccessMessage({ show: false, message: '' });
                 }, 2000);
             } else if (response?.error) {
                 setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
@@ -228,7 +241,7 @@ const EditUserAdmin = ({ idharu, onClose }) => {
             setLoading(false)
         }
 
-    }, [updateUsers, idharu]);
+    };
 
     return (
         <>
