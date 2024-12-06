@@ -121,8 +121,11 @@ const AddProduct = () => {
         // if (file && file.size !== 0) {
         // }
 
+        const file = Array.isArray(File) && File.length > 0 ? File[0] : null;
 
-        formData.append("product_image", File[0]);
+        if (file) {
+            formData.append("product_image", file);
+        }
         formData.append("product_name", values.product_name);
         formData.append("product_molecular_name", values.product_molecular_name);
         formData.append("product_price_per_strip_in_mrp", values.product_price_per_strip_in_mrp);

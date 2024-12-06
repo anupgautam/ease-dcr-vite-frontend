@@ -92,12 +92,8 @@ const DefaultList = () => {
                             <>
                                 <TableRow hover tabIndex={-1} key={chem.id}>
                                     <TableCell>{index + 1}</TableCell>
-                                    <TableCell component="th" scope="row" align="left">
-                                        <Typography variant="subtitle2" noWrap>
-                                            {chem.product_id.product_name.product_name}
-                                        </Typography>
-                                    </TableCell>
                                     <TableCell align="left">{chem.stockist_name.stockist_name.stockist_name}</TableCell>
+                                    <TableCell align="left">Rs. {chem.total_amount}</TableCell>
                                     <TableCell align="left">{chem.quantity}</TableCell>
                                     <TableCell align="left">{chem.year}</TableCell>
                                     <TableCell align="left">{chem.month}</TableCell>

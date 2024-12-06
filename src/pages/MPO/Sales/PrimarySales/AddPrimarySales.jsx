@@ -149,9 +149,8 @@ const AddPrimarySales = ({ selectedOption }) => {
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
-        if ('product_id' in fieldValues)
-            temp.product_id = returnValidation(['null'], values.product_id)
-        temp.stockist_name = returnValidation(['null'], values.stockist_name)
+        if ('stockist_name' in fieldValues)
+            temp.stockist_name = returnValidation(['null'], values.stockist_name)
         temp.year = returnValidation(['null'], values.year)
         temp.month = returnValidation(['null'], values.month)
         temp.quantity = returnValidation(['null'], values.quantity)
@@ -199,10 +198,10 @@ const AddPrimarySales = ({ selectedOption }) => {
         const jsonData = {
             year: selectedYear,
             month: selectedMonth,
-            product_id: values.product_id,
             company_name: company_id,
             quantity: values.quantity,
-            stockist_name: values.stockist_name
+            stockist_name: values.stockist_name,
+            total_amount: values.total_amount
         }
         try {
             const response = await createPrimarySales(jsonData).unwrap();
@@ -266,45 +265,6 @@ const AddPrimarySales = ({ selectedOption }) => {
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <Box marginBottom={2}>
-                                <Controls.Select
-                                    name="product_id"
-                                    label="Product Name*"
-                                    value={values.name}
-                                    options={products}
-                                    onChange={handleInputChange}
-                                    error={errors.doctorDCRId}
-                                />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box marginBottom={2}>
-                                {/* <Autocomplete
-                                    options={rolesOptions}
-                                    getOptionLabel={(option) => option.title}
-                                    onChange={handleOptionChange}
-                                    renderInput={(params) => (
-                                        <TextField {...params} label="Stockist" />
-                                    )}
-                                    renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.title}
-                                        </li>
-                                    )}
-                                /> */}
-                                <Controls.Select
-                                    name="stockist_name"
-                                    label="Stockist Name*"
-                                    value={values.name}
-                                    options={rolesOptions}
-                                    onChange={handleInputChange}
-                                    error={errors.doctorDCRId}
-                                />
-                            </Box>
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <Box marginBottom={2}>
                                 <FormControl fullWidth>
                                     <InputLabel>Year</InputLabel>
                                     <Select
@@ -337,6 +297,43 @@ const AddPrimarySales = ({ selectedOption }) => {
                                         ))}
                                     </Select>
                                 </FormControl>
+                            </Box>
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <Box marginBottom={2}>
+                                <Controls.Select
+                                    name="stockist_name"
+                                    label="Stockist Name*"
+                                    value={values.name}
+                                    options={rolesOptions}
+                                    onChange={handleInputChange}
+                                    error={errors.doctorDCRId}
+                                />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box marginBottom={2}>
+                                {/* <Autocomplete
+                                    options={rolesOptions}
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={handleOptionChange}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Stockist" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>
+                                            {option.title}
+                                        </li>
+                                    )}
+                                /> */}
+                                <Controls.Input
+                                    name="total_amount"
+                                    label="Total Amount*"
+                                    value={values.name}
+                                    onChange={handleInputChange}
+                                />
                             </Box>
                         </Grid>
                     </Grid>

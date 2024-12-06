@@ -48,8 +48,8 @@ import AddPrimarySales from './AddPrimarySales'
 import { useDeletePrimarySalesByIdMutation, useSearchPrimarySalesMutation } from '../../../../api/MPOSlices/PrimarySalesApiSlice';
 
 const TABLE_HEAD = [
-    { id: 'product', label: 'Product Name', alignRight: false },
     { id: 'stockist_name', label: 'Stockist Name', alignRight: false },
+    { id: 'total_amount', label: 'Total Amount', alignRight: false },
     { id: 'quantity', label: 'Quantity', alignRight: false },
     { id: 'year', label: 'Year', alignRight: false },
     { id: 'month', label: 'Month', alignRight: false },
@@ -351,14 +351,8 @@ const PrimarySalesSearch = () => {
                                                             results?.data && results?.data?.map((secondarysales, index) => (
                                                                 <TableRow hover tabIndex={-1} key={secondarysales.id}>
                                                                     <TableCell>{index + 1}</TableCell>
-                                                                    <TableCell TableCell component="th" scope="row" align="left">
-                                                                        {/* <Stack direction="row" alignItems="center" spacing={2}> */}
-                                                                        <Typography variant="subtitle2" noWrap>
-                                                                            {secondarysales.product_id.product_name.product_name}
-                                                                        </Typography>
-                                                                        {/* </Stack> */}
-                                                                    </TableCell>
                                                                     <TableCell align="left">{secondarysales.stockist_name.stockist_name.stockist_name}</TableCell>
+                                                                    <TableCell align="left">Rs. {secondarysales.total_amount}</TableCell>
                                                                     <TableCell align="left">{secondarysales.quantity}</TableCell>
                                                                     <TableCell align="left">{secondarysales.year}</TableCell>
                                                                     <TableCell align="left">{secondarysales.month}</TableCell>

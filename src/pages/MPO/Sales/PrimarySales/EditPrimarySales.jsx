@@ -136,9 +136,8 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
-        if ('product_id' in fieldValues)
-            temp.product_id = returnValidation(['null'], values.product_id)
-        temp.stockist_name = returnValidation(['null'], values.stockist_name)
+        if ('stockist_name' in fieldValues)
+            temp.stockist_name = returnValidation(['null'], values.stockist_name)
         temp.year = returnValidation(['null'], values.year)
         temp.month = returnValidation(['null'], values.month)
         temp.quantity = returnValidation(['null'], values.quantity)
@@ -162,9 +161,9 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
     useEffect(() => {
         if (SecondarySales.data) {
             setInitialFValues({
-                'product_id': SecondarySales?.data?.product_id.id,
                 'stockist_name': SecondarySales?.data?.stockist_name.id,
                 'quantity': SecondarySales?.data?.quantity,
+                total_amount: SecondarySales?.data?.total_amount
                 // 'year': parseInt(SecondarySales?.data?.year),
                 // 'month': SecondarySales?.data?.month,
             });
@@ -189,7 +188,6 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
         validate();
 
     }, [
-        values.product_id,
         values.quantity,
         values.stockist_name,
         values.year,
@@ -210,11 +208,11 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
         const jsonData = {
             year: updatedYear,
             month: updatedMonth,
-            product_id: values.product_id,
             company_name: company_id,
             quantity: values.quantity,
             stockist_name: selectedOption,
             id: idharu,
+            total_amount: values.total_amount,
         }
         try {
             const response = await updateSecondarySaless(jsonData).unwrap();
@@ -280,34 +278,6 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
 
 
                     <Form onSubmit={handleSubmit}>
-
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="product_id"
-                                        label="Product Name*"
-                                        value={values.product_id}
-                                        options={products}
-                                        onChange={handleInputChange}
-                                        error={errors.product_id}
-                                    />
-                                </Box>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Box marginBottom={2}>
-                                    <Controls.Select
-                                        name="stockist_name"
-                                        label="Stockist Name*"
-                                        value={values.stockist_name}
-                                        options={rolesOptions}
-                                        onChange={handleInputChange}
-                                        error={errors.doctorDCRId}
-                                    />
-                                </Box>
-                            </Grid>
-                        </Grid>
-
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <Box marginBottom={2}>
@@ -343,6 +313,30 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
                                             ))}
                                         </Select>
                                     </FormControl>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <Box marginBottom={2}>
+                                    <Controls.Select
+                                        name="stockist_name"
+                                        label="Stockist Name*"
+                                        value={values.stockist_name}
+                                        options={rolesOptions}
+                                        onChange={handleInputChange}
+                                        error={errors.doctorDCRId}
+                                    />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Box marginBottom={2}>
+                                    <Controls.Input
+                                        name="total_amount"
+                                        label="Total Amount*"
+                                        value={values.total_amount}
+                                        onChange={handleInputChange}
+                                    />
                                 </Box>
                             </Grid>
                         </Grid>
