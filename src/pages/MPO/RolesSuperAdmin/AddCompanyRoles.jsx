@@ -17,7 +17,7 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 
 import {
-    useCreateCompanyRolesMutation,
+    useCreateAdminRolesMutation,
     useGetAllRolesQuery
 } from '@/api/MPOSlices/companyRolesSlice';
 import { useSelector } from 'react-redux';
@@ -28,7 +28,7 @@ const AddCompanyRoles = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     //! Create Chemist
-    const [createCompanyRoles] = useCreateCompanyRolesMutation()
+    const [createCompanyRoles] = useCreateAdminRolesMutation()
 
     //! Get other roles
     const Roles = useGetAllRolesQuery(company_id);
