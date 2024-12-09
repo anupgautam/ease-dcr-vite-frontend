@@ -69,6 +69,7 @@ const AddUser = () => {
         setAreaOptions(selectedIds);
     };
 
+
     //! Get division
     const Divisions = useGetFilteredDivisionsQuery(company_id, {
         skip: !company_id
@@ -210,27 +211,27 @@ const AddUser = () => {
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     //!Modal wala ko click event
-    const onAddUsers = useCallback(async (e) => {
+    const onAddUsers = async (e) => {
         e.preventDefault();
         setLoading(true)
-        const jsonData = {
-            first_name: values.first_name,
-            middle_name: values.middle_name,
-            last_name: values.last_name,
-            address: values.address,
-            phone_number: values.phone_number,
-            email: values.email,
-            role_name: values.role_name,
-            executive_level: values.executive_level,
-            company_name: company_id,
-            is_tp_locked: false,
-            company_area: areaOptions,
-            division_name: divisionOptions,
-            station_type: values.station_type,
-            is_active: true,
-            date_of_joining: formattedDate,
-        };
         try {
+            const jsonData = {
+                first_name: values.first_name,
+                middle_name: values.middle_name,
+                last_name: values.last_name,
+                address: values.address,
+                phone_number: values.phone_number,
+                email: values.email,
+                role_name: values.role_name,
+                executive_level: values.executive_level,
+                company_name: company_id,
+                is_tp_locked: false,
+                company_area: areaOptions,
+                division_name: divisionOptions,
+                station_type: values.station_type,
+                is_active: true,
+                date_of_joining: formattedDate,
+            }
             const response = await createUsers(jsonData)
             if (response?.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Added User' });
@@ -258,7 +259,7 @@ const AddUser = () => {
         finally {
             setLoading(false)
         }
-    }, [createUsers, values]);
+    }
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
