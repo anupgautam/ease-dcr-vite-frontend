@@ -54,9 +54,6 @@ const AddCompanyRoles = () => {
         let temp = { ...errors }
         if ('role_name' in fieldValues)
             temp.role_name = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.role_name)
-        temp.role_name_value = returnValidation(['null'], values.role_name_value)
-        temp.priority_value = returnValidation(['null', 'lessThan50'], values.priority_value)
-        temp.is_highest_priority = returnValidation(['null', 'lessThan50'], values.is_highest_priority)
 
         setErrors({
             ...temp
@@ -83,7 +80,7 @@ const AddCompanyRoles = () => {
     useEffect(() => {
         validate();
 
-    }, [values.role_name, values.priority_value])
+    }, [values.role_name])
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -96,10 +93,6 @@ const AddCompanyRoles = () => {
         setLoading(true)
         const jsonData = {
             role_name: values.role_name,
-            priority_value: values.priority_value,
-            role_name_value: values.roles_name_value,
-            is_highest_priority: values.is_highest_priority,
-            company_name: values.company_name
         };
         try {
             const response = await createCompanyRoles(jsonData).unwrap();
@@ -166,55 +159,16 @@ const AddCompanyRoles = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Add CompanyRoles
+                            Add Roles
                         </Typography>
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Input
-                            id="autoFocus"
-                            autoFocus
-                            name="roles_name_value"
-                            label="Roles Name*"
-                            value={values.name}
-                            onChange={handleInputChange}
-                            error={errors.role_name_value}
-                        />
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Select
                             name="role_name"
                             label="Role Name*"
-                            value={values.name}
+                            value={values.role_name}
                             onChange={handleInputChange}
                             error={errors.role_name}
-                            options={roles}
-                        />
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Select
-                            name="company_name"
-                            label="Company Name*"
-                            value={values.name}
-                            onChange={handleInputChange}
-                            error={errors.company_name}
-                            options={companies}
-                        />
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Input
-                            name="priority_value"
-                            label="Priority Value*"
-                            value={values.name}
-                            onChange={handleInputChange}
-                            error={errors.priority_value}
-                        />
-                    </Box>
-                    <Box marginBottom={2}>
-                        <Controls.Checkbox
-                            name="is_highest_priority"
-                            label="Is Highest Priority"
-                            value={values.name}
-                            onChange={handleInputChange}
                         />
                     </Box>
                     <Stack spacing={1} direction="row">

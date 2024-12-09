@@ -17,11 +17,26 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { useCreateCompanyUserMutation, useGetAllCompanyRoleQuery, useGetAllCompanyQuery } from '../../../api/MPOSlices/SuperAdminSlice';
+import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 
 const AddCompanyUsers = () => {
 
     //! Get Companies
     const { data } = useGetAllCompanyQuery()
+
+    const now = new BSDate().now();
+    const [dateData, setDateData] = useState(now);
+    const [dateFormat, setDateFormat] = useState(dateData?._date)
+    const [nepaliDate, setNepaliDate] = useState(dateFormat)
+
+    const formatDate = (date) => {
+        const year = date.year;
+        const month = String(date.month).padStart(2, '0');
+        const day = String(date.day).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const formattedDate = formatDate(nepaliDate);
 
     const companies = useMemo(() => {
         if (data) {
@@ -81,8 +96,10 @@ const AddCompanyUsers = () => {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
+
+
     //! Get other roles 
-    const Roles = useGetAllCompanyRoleQuery({ company_name: values.company_name });
+    const Roles = useGetAllCompanyRoleQuery(values.company_name ? values.company_name : "");
 
     const roles = useMemo(() => {
         if (Roles.data) {
@@ -104,15 +121,14 @@ const AddCompanyUsers = () => {
             phone_number: values.phone_number,
             email: values.email,
             role_name: values.role_name,
-            company_name:values.company_name
-            // executive_level: values.executive_level,
-            // company_name: company_id,
-            // is_tp_locked: false,
-            // company_area: areaOptions,
-            // division_name: divisionOptions,
-            // station_type: values.station_type,
-            // is_active: true,
-            // date_of_joining: formattedDate,
+            company_name: values.company_name ? values.company_name : "",
+            executive_level: "",
+            is_tp_locked: false,
+            company_area: [],
+            division_name: [],
+            station_type: "",
+            is_active: true,
+            date_of_joining: formattedDate,
         };
         console.log(jsonData)
         try {
@@ -228,6 +244,14 @@ const AddCompanyUsers = () => {
                             error={errors.company_name}
                             options={companies}
                         />
+                    </Box>
+                    <Box marginBottom={2}>
+                        <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Date of Joining*</label><br />
+
+                        <NepaliDatePicker
+                            value={dateData}
+                            format="YYYY-MM-DD"
+                            onChange={(value) => setDateData(value)} />
                     </Box>
                     <Grid container spacing={2} marginBottom={2}>
                         <Grid item xs={6}>

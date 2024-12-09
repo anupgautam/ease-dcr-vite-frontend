@@ -34,6 +34,7 @@ import { useGetAllCompanyQuery, useFilterCompanyRolesMutation } from '../../../a
 
 
 const TABLE_HEAD = [
+    { id: 'company_name', label: 'Company Name', alignRight: false },
     { id: 'role_name', label: 'Role Name', alignRight: false },
     { id: 'role_name_value', label: 'Role Name Value', alignRight: false },
     { id: '' },
@@ -130,7 +131,6 @@ const FilteredCompanyRoles = () => {
                         </Grid>
                     </Grid>
                 </Box>
-
                 <Scrollbar>
                     <TableContainer sx={{ minWidth: 600 }}>
                         <Table>
@@ -180,6 +180,11 @@ const FilteredCompanyRoles = () => {
                                                             results?.data && results?.data?.map((application, index) => (
                                                                 <TableRow hover tabIndex={-1} role="checkbox" key={application.id}>
                                                                     <TableCell>{index + 1}</TableCell>
+                                                                    <TableCell component="th" scope="row" align="left">
+                                                                        <Typography variant="subtitle2" noWrap>
+                                                                            {application.company_name.company_name}
+                                                                        </Typography>
+                                                                    </TableCell>
                                                                     <TableCell component="th" scope="row" align="left">
                                                                         <Typography variant="subtitle2" noWrap>
                                                                             {application.role_name.role_name}

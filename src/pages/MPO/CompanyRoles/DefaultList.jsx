@@ -75,9 +75,10 @@ const DefaultList = () => {
     }, [])
 
     //! Get Categories
-    const { data } = useGetAllCompanyRoleQuery();
+    const { data } = useGetAllCompanyRoleQuery({ id: "" });
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+
 
     return (
         <>
@@ -105,9 +106,10 @@ const DefaultList = () => {
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell component="th" scope="row" align="left">
                                     <Typography variant="subtitle2" noWrap>
-                                        {companyroles.role_name.role_name}
+                                        {companyroles.company_name.company_name}
                                     </Typography>
                                 </TableCell>
+                                <TableCell align="left">{companyroles.role_name.role_name}</TableCell>
                                 <TableCell align="left">{companyroles?.role_name_value}</TableCell>
                                 <TableCell align="left">
                                     <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(companyroles.id)} >

@@ -54,8 +54,8 @@ export const SuperAdminSlice = apiSlice.injectEndpoints({
 
         //! GET All Company Roles
         getAllCompanyRole: builder.query({
-            query: ({ company_name }) => ({
-                url: `company/company-roles/?company_name${company_name}`,
+            query: (company_name) => ({
+                url: `company/company-roles/?company_name=${company_name}`,
                 method: 'GET'
             }),
             providesTags: ['SuperAdmin']
@@ -133,9 +133,8 @@ export const SuperAdminSlice = apiSlice.injectEndpoints({
             invalidatesTags: ['SuperAdmin']
         }),
         //! POST company Users
-        createCompanyRole: builder.mutation({
+        createCompanyRoleByAdmin: builder.mutation({
             query: (createcompanyRole) => {
-                console.log("Company Roles wala")
                 return {
                     url: "company/company-roles/",
                     method: 'POST',
@@ -257,12 +256,11 @@ export const
         useGetRoleByIdQuery,
         useCreateRolesMutation,
         useUpdateRolesMutation,
-
         useGetAllCompanyRoleQuery,
         useGetCompanyRoleByIdQuery,
-        useCreateCompanyRoleMutation,
         useUpdateCompanyRoleMutation,
         useFilterCompanyRolesMutation,
+        useCreateCompanyRoleByAdminMutation,
     } = SuperAdminSlice
 
 //! returns the query result object

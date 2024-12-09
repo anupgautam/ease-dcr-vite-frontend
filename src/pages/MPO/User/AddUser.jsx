@@ -440,15 +440,6 @@ const AddUser = () => {
                                 />
                             </Box>
                             <Box marginBottom={2}>
-                                {/* <Controls.Select
-                                    name="division_name"
-                                    label="Division*"
-                                    className={"drawer-role-name-select"}
-                                    value={values.name}
-                                    onChange={handleInputChange}
-                                    error={errors.division_name}
-                                    options={divisionList}
-                                /> */}
                                 <Autocomplete
                                     multiple
                                     options={divisionList}

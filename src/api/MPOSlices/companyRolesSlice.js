@@ -100,11 +100,24 @@ export const CompanyRolesApiSlice = apiSlice.injectEndpoints({
         createCompanyRoles: builder.mutation({
             query: (createCompanyRoles) => {
                 // 
-                createCompanyRoles.company_id = Cookies.get("company_id")
                 return {
                     url: "company/company-roles/",
                     method: 'POST',
                     body: createCompanyRoles,
+                    // headers: {
+                    //     'Content-type': 'application/json; charset = UTF-8',
+                    // }
+                }
+            },
+            invalidatesTags: ['CompanyRoles']
+        }),
+        createAdminRoles:builder.mutation({
+            query: (createAdminRoles) => {
+                // 
+                return {
+                    url: "company/roles/",
+                    method: 'POST',
+                    body: createAdminRoles,
                     // headers: {
                     //     'Content-type': 'application/json; charset = UTF-8',
                     // }
@@ -146,6 +159,7 @@ export const
         useGetChemistVisitedWithByDcrIdQuery,
         useGetStockistVisitedWithByDcrIdQuery,
         useGetHigherOrderVisitedWithByDcrIdQuery,
+        useCreateAdminRolesMutation,
     } = CompanyRolesApiSlice
 
 //! returns the query result object

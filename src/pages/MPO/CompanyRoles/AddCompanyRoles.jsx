@@ -17,12 +17,12 @@ import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
-import { useGetAllCompanyQuery, useGetAllRoleQuery, useCreateCompanyRoleMutation } from '../../../api/MPOSlices/SuperAdminSlice';
+import { useGetAllCompanyQuery, useGetAllRoleQuery, useCreateCompanyRoleByAdminMutation } from '../../../api/MPOSlices/SuperAdminSlice';
 
 const AddCompanyRoles = () => {
 
     //! Create Chemist
-    const [createCompanyRoles] = useCreateCompanyRoleMutation()
+    const [createCompanyRoles] = useCreateCompanyRoleByAdminMutation()
 
     //! Get other roles 
     const Roles = useGetAllRoleQuery();
@@ -98,8 +98,8 @@ const AddCompanyRoles = () => {
         };
         try {
             const response = await createCompanyRoles(jsonData).unwrap();
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Company Roles' });
+            if (response.data) {
+                setSuccessMessage({ show: true, message: 'Successfully added Company Roles' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
