@@ -16,7 +16,7 @@ export const DoctorSlice = apiSlice.injectEndpoints({
         //! GET all the doctors
         getAllDoctors: builder.query({
             query: (page) => ({
-                url: `doctor/company-wise-doctor/?company_user_role_id=${page.id}&page=${page.page}&mpo_name=${page.mpo_name}`,
+                url: `doctor/company-wise-doctor/?company_name=${page.id}&page=${page.page}&mpo_name=${page.mpo_name}`,
                 method: 'GET'
             }),
             providesTags: (result, error, arg) =>

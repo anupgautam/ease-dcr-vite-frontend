@@ -16,7 +16,7 @@ export const StockistSlice = apiSlice.injectEndpoints({
         getAllStockists: builder.query({
             query: (page) => {
                 return {
-                    url: `stockist/company-stockist/?company_name=${page.id}&page=${page.page}&stockist_name__stockist_territory=${page.company_area}`,
+                    url: `stockist/company-stockist/?company_name=${page.id}&page=${page.page}&stockist_territory=${page.company_area}`,
                     method: 'GET',
                 };
             },
@@ -25,7 +25,7 @@ export const StockistSlice = apiSlice.injectEndpoints({
 
         getAllAssignStockists: builder.query({
             query: (page) => ({
-                url: `stockist/company-stockist-mpo/?company_name=${page.id}&page=${page.page}&mpo_name=${page.mpo_name}&stockist_name__stockist_name__stockist_territory=${page.company_area}`,
+                url: `stockist/company-stockist-mpo/?company_name=${page.id}&page=${page.page}&mpo_name=${page.mpo_name}&stockist_territory=${page.company_area}`,
                 method: 'GET'
             }),
             providesTags: (result, error, arg) =>
@@ -49,7 +49,7 @@ export const StockistSlice = apiSlice.injectEndpoints({
         getAllStockistsWithoutPagination: builder.query({
             query: (page) => {
                 return {
-                    url: `stockist/company-stockist-with-out-pagination/?company_name=${page?.company_name}&stockist_name__stockist_territory=${page?.company_area}`,
+                    url: `stockist/company-stockist-with-out-pagination/?company_name=${page?.company_name}&stockist_territory=${page?.company_area}`,
                     method: 'GET',
                 };
             },
@@ -74,7 +74,7 @@ export const StockistSlice = apiSlice.injectEndpoints({
 
         getStockistsByCompanyArea: builder.query({
             query: (id) => ({
-                url: `stockist/company-stockist/?company_name=${id.company_name}&stockist_name__stockist_territory=${id.company_area}`,
+                url: `stockist/company-stockist/?company_name=${id.company_name}&stockist_territory=${id.company_area}`,
                 method: 'GET'
             }),
             providesTags: ['Stockist']

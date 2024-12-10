@@ -51,7 +51,7 @@ const DefaultList = () => {
     }, [])
 
     const { data } = useGetAllChemistsQuery({
-        id: company_user_role_id,
+        id: company_id,
         mpo_name: user_role === 'admin' ? '' : company_user_role_id,
         page: page
     }, {

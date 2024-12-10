@@ -17,6 +17,7 @@ import {
     useGetCompanyByIdQuery,
     useUpdateCompanyMutation
 } from '../../../api/MPOSlices/SuperAdminSlice'
+import { extractErrorMessage } from '../../../reusable/extractErrorMessage';
 
 const EditCompany = ({ idharu, onClose }) => {
 
@@ -95,13 +96,20 @@ const EditCompany = ({ idharu, onClose }) => {
             company_email_address: values.company_email_address,
             company_address: values.company_address,
         };
-        console.log(jsonData)
         try {
             const response = await updateCompany(jsonData)
-            setSuccessMessage({ show: true, message: 'Successfully Edited Company' });
-            setTimeout(() => {
-                setSuccessMessage({ show: false, message: '' });
-            }, 3000);
+            if (response.data) {
+                setSuccessMessage({ show: true, message: 'Successfully Edited Company' });
+                onClose();
+                setTimeout(() => {
+                    setSuccessMessage({ show: false, message: '' });
+                }, 3000);
+            } else {
+                setErrorMessage({ show: true, message: extractErrorMessage(response?.error) });
+                setTimeout(() => {
+                    setErrorMessage({ show: false, message: '' });
+                }, 2000);
+            }
         }
         catch (error) {
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
