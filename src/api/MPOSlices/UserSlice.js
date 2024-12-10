@@ -139,9 +139,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     url: `user/company-user-without-pagination/?company_name=${id}`,
                     method: 'GET',
                 }),
-            invalidatesTags: ['User'],
-            providesTags: ['User'],
-
+            invalidatesTags: ['CompanyUserRoles', 'User', "CompanyUsers"],
         }),
 
         //! DELETE users by id
