@@ -60,7 +60,7 @@ const AddTarget = () => {
     }, [])
 
     // const { data: rolesData } = useGetExecutiveLevelUsersQuery(company_user_id);
-    const Data = useGetAllCompanyUsersWithoutPaginationQuery({ company_name: company_user_role_id });
+    const Data = useGetAllCompanyUsersWithoutPaginationQuery({ company_name: company_id });
 
     const users = useMemo(() => {
         if (Data?.data !== undefined) {

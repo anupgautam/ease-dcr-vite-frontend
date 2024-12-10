@@ -450,7 +450,7 @@ const MyExecutiveTp = () => {
                                                                                     <TableCell align="left">
                                                                                         {
                                                                                             tourplan.mpo_area_read.map((key, index) => (
-                                                                                                <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }} key={index}>{key.company_mpo_area_id.area_name},</Typography>
+                                                                                                <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }} key={index}>{key.area_name},</Typography>
                                                                                             ))
 
                                                                                         }

@@ -7,16 +7,8 @@ import {
     Skeleton
 } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { useGetChemistAllDCRByIdQuery, useGetChemistDcrByIdQuery } from '../../../api/DCRs Api Slice/chemistDCR/ChemistDCRAllSlice';
-import { useSelector } from 'react-redux';
-
-import { useGetAllCompanyProductsWithoutPaginationByIdQuery } from '../../../api/productSlices/companyProductSlice';
-import { useGetcompanyUserRolesByIdQuery } from '../../../api/CompanySlices/companyUserRoleSlice';
-import { useGetRewardsByIdQuery } from '../../../api/MPOSlices/rewardsApiSlice';
-
-import { useGetRewardsForChemistByDcrIdQuery } from '../../../api/DCRs Api Slice/rewardsAPISlice';
-import { useGetChemistVisitedWithByDcrIdQuery } from '../../../api/MPOSlices/companyRolesSlice';
-import { useGetUsersByCompanyUserByIdQuery } from '../../../api/MPOSlices/UserSlice';
+import { useGetChemistDcrByIdQuery } from '../../../api/DCRs Api Slice/chemistDCR/ChemistDCRAllSlice';
+;
 
 
 const DCRChemistDetail = () => {
@@ -86,20 +78,44 @@ const DCRChemistDetail = () => {
                             </div>
                             <div className=" rounded-[1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg bg-white/80 backdrop-blur-lg ">
                                 <Typography variant="h6">Visited With</Typography>
-                                <VisitedWith id={data?.dcr?.dcr?.id} />
+                                {
+                                    data?.visited_with.map((key, index) => (
+                                        <Typography variant="body2" color="textSecondary" key={index}>
+                                            Visited with :{" "}
+                                            {key?.user_name?.first_name +
+                                                " " +
+                                                key?.user_name?.middle_name +
+                                                " " +
+                                                key?.user_name?.last_name}
+                                        </Typography>
+                                    ))
+                                }
                             </div>
 
                             <div className="col-span-2 rounded-[1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg min-h-[23rem] bg-white/80 backdrop-blur-lg ">
-                                <Typography variant="h6" style={{ marginBottom: "10px" }}>Promoted Product</Typography>
-                                <PromotedProduct id={data?.dcr?.dcr?.id} />
+                                <Typography variant="h6" style={{ marginBottom: "10px" }}>
+                                    Promoted Product
+                                </Typography>
+                                {
+                                    data?.promoted_product.map((key, index) => (
+                                        <Typography variant="body2" color="textSecondary">
+                                            Product: {key?.product_name?.product_name}
+                                        </Typography>
+                                    ))
+                                }
                             </div>
 
-
-
                             <div className=" rounded-[1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg  bg-white/80 backdrop-blur-lg">
-                                <Typography variant="h6" style={{ marginBottom: "10px" }}>Rewards</Typography>
-                                <RewardsRole id={data?.dcr?.dcr?.id} />
-
+                                <Typography variant="h6" style={{ marginBottom: "10px" }}>
+                                    Rewards
+                                </Typography>
+                                {
+                                    data?.rewards.map((key, index) => (
+                                        <Typography variant="body2" color="textSecondary">
+                                            Gift: {key?.reward}
+                                        </Typography>
+                                    ))
+                                }
                             </div>
                         </div>
                     </>
@@ -109,95 +125,4 @@ const DCRChemistDetail = () => {
     );
 };
 
-const PromotedProduct = ({ id }) => {
-    const { data } = useGetChemistAllDCRByIdQuery(id,{
-        skip:!id
-    })
-    return (
-        <>
-            {
-                data !== undefined ?
-                    <>
-                        {
-                            data.ordered_products.map((key, index) => (
-                                <PromotedProductById id={key.id} key={index} />
-                            ))
-                        }
-                    </> : <></>
-            }
-        </>
-    )
-}
-
-const PromotedProductById = ({ id }) => {
-    const { data } = useGetAllCompanyProductsWithoutPaginationByIdQuery(id);
-    return (
-        <>
-            <Typography variant="body2" color="textSecondary">
-                Product: {data?.product_name?.product_name}
-            </Typography>
-        </>
-    )
-}
-
-const RewardsRole = ({ id }) => {
-    const { data } = useGetRewardsForChemistByDcrIdQuery(id);
-    return (
-        <>
-            {
-                data !== undefined ?
-                    <>
-                        {
-                            data.map((key, index) => (
-                                <RewardsRoleById id={key.reward_id} key={index} />
-                            ))
-                        }
-                    </> : null
-            }
-        </>
-    )
-}
-
-const RewardsRoleById = ({ id }) => {
-    const { data } = useGetRewardsByIdQuery(id, {
-        skip: !id
-    });
-    return (
-        <>
-            <Typography variant="body2" color="textSecondary">
-                Gift: {data?.reward}
-            </Typography>
-        </>
-    )
-}
-
-const VisitedWith = ({ id }) => {
-    const { data } = useGetChemistVisitedWithByDcrIdQuery(id);
-    return (
-        <>
-            {
-                data !== undefined ?
-                    <>
-                        {
-                            data.map((key, index) => (
-                                <VisitedWithById id={key.roles_id} key={index} />
-                            ))
-                        }
-                    </> : null
-            }
-        </>
-    )
-}
-
-const VisitedWithById = ({ id }) => {
-    const { data } = useGetUsersByCompanyUserByIdQuery(id);
-    return (
-        <>
-            <Typography variant="body2" color="textSecondary">
-                Visited: {data?.user_name?.first_name + ' ' + data?.user_name?.middle_name + " " +
-                    data?.user_name?.last_name}
-            </Typography>
-        </>
-    )
-}
 export default React.memo(DCRChemistDetail);

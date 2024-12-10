@@ -359,7 +359,7 @@ export const DoctorCallFolderSlice = apiSlice.injectEndpoints({
         updateDoctorsSpecialization: builder.mutation({
             query: (updateDoctorSpecialization) => {
                 return {
-                    url: `doctor/company-wise-doctor-specialization/${updateDoctorSpecialization.get('id')}/`,
+                    url: `doctor/company-wise-doctor-specialization/${updateDoctorSpecialization.id}/`,
                     method: 'PATCH',
                     body: updateDoctorSpecialization
                 }
