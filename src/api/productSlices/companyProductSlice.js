@@ -83,7 +83,7 @@ export const companyProductSlice = apiSlice.injectEndpoints({
             query: (updateCompanyProducts) => {
 
                 return {
-                    url: `/product/company-product/${updateCompanyProducts.get('id')}/`,
+                    url: `/product/company-product/${updateCompanyProducts.id}/`,
                     method: 'PUT',
                     body: updateCompanyProducts
                 };

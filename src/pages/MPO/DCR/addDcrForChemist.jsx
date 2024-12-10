@@ -27,6 +27,7 @@ import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { BSDate } from "nepali-datepicker-react";
 import moment from "moment";
+import { useGetAllProductsOptionsQuery } from "../../../api/MPOSlices/ProductSlice";
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: ' Name', alignRight: false },
@@ -568,7 +569,7 @@ const AddDCRforChemist = () => {
 
 //! Chemist DCR
 const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id }) => {
-    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id, company_division_name } = useSelector((state) => state.cookie);
 
     const Chemist = useGetChemistsByIdQuery(data.chemist_id);
     const [executiveOptions, setExecutiveOptions] = useState([]);
@@ -602,11 +603,9 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
     }
 
 
-    const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(
-        company_id, {
-        skip: !company_id
-    }
-    );
+    const companyProduct = useGetAllProductsOptionsQuery({ id: company_id, division_name: company_division_name }, {
+        skip: !company_id || !company_division_name
+    })
 
     const productOptions = useMemo(() => {
         if (companyProduct !== undefined) {

@@ -25,6 +25,7 @@ import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import moment from "moment";
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { BSDate } from "nepali-datepicker-react";
+import { useGetAllProductsOptionsQuery, useGetAllProductsQuery } from "../../../api/MPOSlices/ProductSlice";
 
 const TABLE_HEAD = [
     { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
@@ -325,7 +326,7 @@ const AddDcrForDoctor = () => {
                             setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
                             setTimeout(() => {
                                 setSuccessMessage({ show: false, message: '' });
-                                // navigate('/dashboard/admin/dcr');
+                                navigate('/dashboard/admin/dcr');
                             }, 2000);
                             //         } else {
                             //             setSuccessMessage({ show: true, message: 'DCR Added Successfully Added.' });
@@ -528,7 +529,7 @@ const AddDcrForDoctor = () => {
 }
 
 const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
-    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id, company_division_name } = useSelector((state) => state.cookie);
 
     const Doctor = useGetDoctorsByIdQuery(data.doctor_id);
     const [executiveOptions, setExecutiveOptions] = useState([]);
@@ -560,9 +561,13 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
         const mpotparea = value.map(option => option.id)
         setCompanyRoles(mpotparea)
     }
-    const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
-        skip: !company_id
-    });
+    // const companyProduct = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
+    //     skip: !company_id
+    // });
+
+    const companyProduct = useGetAllProductsOptionsQuery({ id: company_id, division_name: company_division_name }, {
+        skip: !company_id || !company_division_name
+    })
 
     const productOptions = useMemo(() => {
         if (companyProduct !== undefined) {

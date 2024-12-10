@@ -29,7 +29,7 @@ export const ProductSlice = apiSlice.injectEndpoints({
         //! GET all the products without pagination
         getAllProductsOptions: builder.query({
             query: (page) => ({
-                url: `product/company-division-product-without-pagination/`,
+                url: `product/company-division-product-without-pagination/?company_name=${page.id}&division_name=${page.division_name}`,
                 method: 'GET'
             }),
             providesTags: ['Product']

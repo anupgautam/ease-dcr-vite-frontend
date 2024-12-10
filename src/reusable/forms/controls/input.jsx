@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect } from 'react';
 import { TextField } from '@mui/material';
 
 const Input = forwardRef((props, ref) => {
-    const { name, label, value, error = null, onChange, autoFocus = false, id, ...other } = props;
+    const { name, label, value, error = null, onChange, autoFocus = false, disable = false, id, ...other } = props;
     useEffect(() => {
         if (id && autoFocus) {
             const autoFocus = document.getElementById(id);
@@ -15,6 +15,7 @@ const Input = forwardRef((props, ref) => {
         <TextField
             id={id}
             variant="outlined"
+            disable={disable}
             label={label}
             name={name}
             value={value}
