@@ -106,14 +106,14 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
 
         getTourplanOfMpoByDateMonth: builder.query({
             query: mpoName => ({
-                url: `/mpo/company-mpo-tour-plan/?company_name=${mpoName.company_name}&mpo_name=${mpoName.mpo_name}&tour_plan__tour_plan__select_the_month=${mpoName.month}&page=${mpoName.page}&tour_plan__tour_plan__year=${mpoName.date}&mpo_name__role_name__role_name=${mpoName.role_data}`,
+                url: `/mpo/company-mpo-tour-plan/?company_name=${mpoName.company_name}&mpo_name=${mpoName.mpo_name}&select_the_month=${mpoName.month}&page=${mpoName.page}&year=${mpoName.date}&role_name=${mpoName.role_data}`,
                 method: 'GET',
             }),
             providesTags: ['Tourplan', 'TourPlan'],
         }),
         getTourplanOfMpoByDateMonthandShift: builder.query({
             query: mpoName => ({
-                url: `/mpo/company-mpo-tour-plan/?company_name=${mpoName.company_name}&mpo_name_id=${mpoName.mpo_name}&tour_plan__tour_plan__select_the_date_id=${mpoName.date}&tour_plan__shift_id=${mpoName.shift}`,
+                url: `/mpo/company-mpo-tour-plan/?company_name=${mpoName.company_name}&mpo_name=${mpoName.mpo_name}&select_the_date_id=${mpoName.date}&shift=${mpoName.shift}`,
                 method: 'GET',
             }),
             providesTags: ['Tourplan'],
@@ -231,7 +231,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
                 // 
                 const { mpo_name_id, tour_plan__tour_plan__select_the_month, tour_plan__tour_plan__select_the_date_id } = FilteredData;
                 return {
-                    url: `mpo/company-mpo-tour-plan/?mpo_name_id=${mpo_name_id}&tour_plan__tour_plan__select_the_month=${tour_plan__tour_plan__select_the_month}&tour_plan__tour_plan__select_the_date_id=${tour_plan__tour_plan__select_the_date_id}`,
+                    url: `mpo/company-mpo-tour-plan/?mpo_name=${mpo_name_id}&select_the_month=${tour_plan__tour_plan__select_the_month}&select_the_date_id=${tour_plan__tour_plan__select_the_date_id}`,
                     method: 'GET',
                     // body: { ...FilteredData },
                     headers: {
