@@ -126,21 +126,23 @@ const DefaultApplication = () => {
         <>
             <>
                 {
-                    data === undefined ? <>
-                        {
-                            eightArrays.map((key) => (
-                                <TableRow key={key} >
-                                    <TableCell><Skeleton /></TableCell>
-                                    <TableCell><Skeleton /></TableCell>
-                                    <TableCell><Skeleton /></TableCell>
-                                    <TableCell><Skeleton /></TableCell>
-                                    <TableCell><Skeleton /></TableCell>
-                                    <TableCell><Skeleton /></TableCell>
-                                    <TableCell><Skeleton /></TableCell>
-                                    <TableCell><Skeleton /></TableCell>
-                                </TableRow>
-                            ))}
-                    </> :
+                    data === undefined ? (
+                        <>
+                            {
+                                eightArrays.map((key) => (
+                                    <TableRow key={key} >
+                                        <TableCell><Skeleton /></TableCell>
+                                        <TableCell><Skeleton /></TableCell>
+                                        <TableCell><Skeleton /></TableCell>
+                                        <TableCell><Skeleton /></TableCell>
+                                        <TableCell><Skeleton /></TableCell>
+                                        <TableCell><Skeleton /></TableCell>
+                                        <TableCell><Skeleton /></TableCell>
+                                        <TableCell><Skeleton /></TableCell>
+                                    </TableRow>
+                                ))}
+                        </>
+                    ) : (
                         <>{data && data.map((application, index) => (
                             <TableRow hover tabIndex={-1} role="checkbox" key={application.id}>
                                 <TableCell>{index + 1}</TableCell>
@@ -211,7 +213,7 @@ const DefaultApplication = () => {
                             </TableRow>
                         ))
                         }
-                        </>}
+                        </>)}
             </>
             {isDrawerOpen && <EditApplication
                 idharu={selectedUpdateId} onClose={onCloseDrawer} mpoId={mpoId}
