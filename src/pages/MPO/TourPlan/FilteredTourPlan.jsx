@@ -361,7 +361,7 @@ const FilteredTourPlan = () => {
                                                         <TableBody>
                                                             <>
                                                                 {
-                                                                    TourPlanSearch === undefined ? <>
+                                                                    TourPlanSearch === undefined ? <>(
                                                                         {
                                                                             eightArrays.map((key) => {
                                                                                 return (
@@ -378,8 +378,8 @@ const FilteredTourPlan = () => {
                                                                                         <TableCell><Skeleton /></TableCell>
                                                                                     </TableRow>
                                                                                 )
-                                                                            })}
-                                                                    </> :
+                                                                            })})
+                                                                    </> : (
                                                                         <>
                                                                             {TourPlanSearch && TourPlanSearch.count == 0 ?
                                                                                 <TableRow>
@@ -510,7 +510,7 @@ const FilteredTourPlan = () => {
                                                                                 })
 
                                                                             }
-                                                                        </>}
+                                                                        </>)}
                                                             </>
                                                         </TableBody>
                                                     </Table>
