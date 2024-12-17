@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { io } from "socket.io-client";
 import UserList from "./UserList"
 import ChatTestMessage from "./chatTestMessage";
+import { useGetGroupWsConnectionQuery } from "../../../api/newChatSlices/groupSlice";
 
 
 const TestChat = () => {
@@ -24,11 +25,32 @@ const TestChat = () => {
 
     const [typingMsg, setTypingMsg] = useState({ 'msg': '' })
     const [groupName, setGroupName] = useState(`${WEBSOCKET_BASE_URL}ws/ac/`);
-    const [userId, setUserId] = useState(0);
+    const [userId, setUserId] = useState();
     const [userChats] = useGetChatsByUserMutation();
+    const [chatMessage, setChatMessage] = useState()
+
     const changeTypingMsg = (e) => {
         setTypingMsg({ 'msg': e.target.value })
     }
+
+    const getUserWSConnection = useGetGroupWsConnectionQuery(
+        { id: userId, company_name: company_id, myId: company_user_role_id },
+        { skip: !userId }
+    );
+
+    useEffect(() => {
+        if (getUserWSConnection?.data) {
+            setChatMessage(getUserWSConnection.data);
+        }
+    }, [getUserWSConnection])
+
+    const socket = io(BASE_URL);
+
+    useEffect(() => {
+        socket.on('receiveMessage', (data) => {
+            console.log({ message: `Message from ${data.socketId}: ${data.message}` });
+        });
+    }, [])
 
     const [ChatData, setChatData] = useState([]);
 
@@ -40,7 +62,7 @@ const TestChat = () => {
         socket.emit('joinChat', dynamicRoomId);
         const data = {
             room_id: dynamicRoomId,
-            chat_to: '1',
+            chat_to: userId,
             chat_from: company_user_role_id,
             company_name: company_id,
             message: typingMsg.msg,
@@ -48,6 +70,7 @@ const TestChat = () => {
         socket.emit('sendMessage', data);
         setTypingMsg({ 'msg': '' });
     };
+
     return (
         <div className="flex h-[calc(85vh-0px)] antialiased text-gray-800">
             <div className="flex flex-row h-full w-full overflow-x-hidden">
@@ -83,7 +106,7 @@ const TestChat = () => {
                         className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4"
                     >
                         {/* //! Messages */}
-                        <ChatTestMessage messages={ChatData} scrollRef={scrollRef} />
+                        <ChatTestMessage messages={chatMessage} scrollRef={scrollRef} />
                         <div
                             className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4"
                         >
@@ -117,30 +140,14 @@ const TestChat = () => {
                                         name="msg"
                                         value={typingMsg.msg}
                                     />
-
-                                    {/* <button
-                                        className="absolute flex items-center justify-center h-full w-12 right-0 top-0 text-gray-400 hover:text-gray-600"
-                                    >
-                                        <svg
-                                            className="w-6 h-6"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                            ></path>
-                                        </svg>
-                                    </button> */}
                                 </div>
                             </div>
                             <div className="ml-4">
                                 <button
-                                    className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
+                                    className={`flex items-center justify-center rounded-xl text-white px-4 py-1 flex-shrink-0 ${typingMsg?.msg
+                                        ? "bg-indigo-500 hover:bg-indigo-600"
+                                        : "bg-gray-400 cursor-not-allowed"
+                                        }`}
                                     onClick={submitMessage}
                                 >
                                     <span>Send</span>

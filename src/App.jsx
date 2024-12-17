@@ -80,20 +80,30 @@ export default function App() {
       socket.on('connect', () => {
         console.log('Connected to Socket.io server');
         socket.emit('registerAdmin', Cookies.get('company_user_role_id'));
+        socket.emit('chatUser', Cookies.get('company_user_role_id'));
       });
 
       socket.on('Notification', (notification) => {
         console.log('Notification received:', notification.message);
         toast.success(notification.message);
       });
+      socket.on('receiveMessage', (data) => {
+        // toast.success(`Message from: ${data.message_from}`);
+        if (data?.user_id !== Cookies.get('company_user_role_id'))
+          toast.success(<span>
+            Message from: <span className="font-bold">{data.message_from}</span>
+          </span>);
+      });
 
       return () => {
         socket.off('Notification');
+        socket.off('receiveMessage');
         socket.disconnect();
         console.log('Disconnected from Socket.io server');
       };
     }
   }, [socket, Cookies.get('company_user_role_id')]);
+
 
 
   return (

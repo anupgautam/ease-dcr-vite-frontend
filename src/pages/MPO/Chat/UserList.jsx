@@ -1,23 +1,16 @@
-import React from "react";
-import { useGetAllUsersQuery, useGetAllUsersWithoutPaginationQuery } from "../../../api/MPOSlices/UserSlice";
-import { useGetGroupWsConnectionMutation } from "../../../api/newChatSlices/groupSlice";
+import React, { useState, useEffect } from "react";
+import { useGetAllUsersQuery, useGetUsersByCompanyRoleWithOutPageQuery } from "../../../api/MPOSlices/UserSlice";
+import { useGetGroupWsConnectionQuery } from "../../../api/newChatSlices/groupSlice";
 import { useSelector } from 'react-redux';
 
 const UserList = ({ setGroupName, setUserId }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, company_user_role_id } = useSelector((state) => state.cookie);
 
-    const userList = useGetAllUsersWithoutPaginationQuery(company_id);
-    const [getUserWSConnection] = useGetGroupWsConnectionMutation();
+    const userList = useGetUsersByCompanyRoleWithOutPageQuery({ company_name: company_id, user_id: company_user_role_id });
+
     const handleUser = (id) => {
         setUserId(id);
-        getUserWSConnection({
-            'id': id
-        }).then((res) => {
-            setGroupName(res.data.data[0])
-        })
     }
-
-    console.log(userList?.data)
 
     return (
         <div className="flex flex-col mt-8">
@@ -65,13 +58,15 @@ const UserList = ({ setGroupName, setUserId }) => {
                     userList && userList?.data?.map((key, index) => (
                         <button
                             className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
+                            key={key?.user_name?.id || index}
+                            onClick={(event) => handleUser(key?.id)}
                         >
                             <div
                                 className="flex items-center justify-center h-8 w-8 bg-gray-200 rounded-full"
                             >
                                 {key.user_name.first_name.charAt(0)}{key.user_name.last_name.charAt(0)}
                             </div>
-                            <div className="ml-2 text-sm font-semibold">{key.user_name.first_name} {key.user_name.last_name}</div>
+                            <div className="ml-2 text-sm font-semibold">{key.user_name.first_name} {key.user_name.middle_name} {key.user_name.last_name}</div>
                             {/* <div
                                 className="flex items-center justify-center ml-auto text-xs text-white bg-red-500 h-4 w-4 rounded leading-none"
                             >

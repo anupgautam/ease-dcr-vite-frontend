@@ -70,7 +70,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         //! Get users by company roles with pagination
         getUsersByCompanyRoleWithOutPage: builder.query({
             query: (id) => ({
-                url: `user/company-user-role-without-pagination/?company_name=${id}`,
+                url: `chat/chat/get_user/?company_name=${id.company_name}&user_id=${id.user_id}`,
                 method: 'GET'
             }),
             providesTags: (result, error, arg) =>

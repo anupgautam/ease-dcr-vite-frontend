@@ -11,6 +11,7 @@ const EventUserList = ({ setGroupName, setUserId }) => {
 
     const userList = useGetAllUsersWithoutPaginationQuery(company_id);
     const [getUserWSConnection] = useGetGroupWsConnectionMutation();
+    
     const handleUser = (id) => {
         setUserId(id);
         getUserWSConnection({

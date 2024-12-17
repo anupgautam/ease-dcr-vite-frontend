@@ -39,13 +39,13 @@ const Chat = () => {
         setTypingMsg({ 'msg': e.target.value })
     }
 
+    const socket = io(BASE_URL);
 
-
-    // useEffect(() => {
-    //     socket.on('receiveMessage', (data) => {
-    //         console.log({ message: `Message from ${data.socketId}: ${data.message}` });
-    //     });
-    // }, [])
+    useEffect(() => {
+        socket.on('receiveMessage', (data) => {
+            console.log({ message: `Message from ${data.socketId}: ${data.message}` });
+        });
+    }, [])
 
     const [ChatData, setChatData] = useState([]);
     // const [dataLength, setDataLength] = useState(1);
@@ -95,7 +95,6 @@ const Chat = () => {
 
 
     const submitMessage = () => {
-        const socket = io(BASE_URL);
         const dynamicRoomId = 'room_' + Math.random().toString(36).substring(7);
         socket.emit('joinChat', dynamicRoomId);
         const data = {
