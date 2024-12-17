@@ -13,6 +13,7 @@ const ChatTestMessage = ({ messages }) => {
     }, [messages]);
 
 
+    // const chatData = messages.filter(data => data.chat_from === company_user_role_id);
     return (
         <div className="flex flex-col h-full overflow-x-auto mb-4">
             <div className="flex flex-col h-full">
