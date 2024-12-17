@@ -78,6 +78,7 @@ import ListOfRolesController from './pages/MPO/Roles/ListOfRolesController';
 import ListOfRolesSuperAdminController from './pages/MPO/RolesSuperAdmin/ListOfCompanyRolesController';
 import ListOfCompanyWiseUsers from './pages/MPO/CompanyUsers/ListOfCompanyWiseUsers';
 import DefaultCompanyUsers from './pages/MPO/CompanyUsers/DefaultCompanyUsers';
+import TestChat from './pages/MPO/Chat/TestChat';
 
 export default function Router() {
   const routes = useRoutes([
@@ -284,6 +285,10 @@ export default function Router() {
         {
           path: 'admin/chat',
           element: <Authentication component={ChatController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/chattest',
+          element: <Authentication component={TestChat} allowRoles={['admin']} />,
         },
         {
           path: 'admin/notification',

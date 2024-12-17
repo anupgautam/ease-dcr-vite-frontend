@@ -59,7 +59,8 @@ const EditTourPlan = ({ idharu, onClose }) => {
         is_dcr_added: "",
         select_the_month: "",
         is_approved: "",
-        hulting_station: ""
+        hulting_station: "",
+        day_status: ""
     });
 
     const [MpoTpArea, setMpoTpArea] = useState([]);
@@ -71,8 +72,8 @@ const EditTourPlan = ({ idharu, onClose }) => {
     useEffect(() => {
         if (TourPlan?.data) {
             const selectedAreas = TourPlan?.data?.mpo_area_read?.map(area => ({
-                id: area.company_mpo_area_id.id,
-                title: area.company_mpo_area_id.area_name,
+                id: area?.id,
+                title: area?.area_name,
             }));
 
             setInitialFValues(prevValues => ({
@@ -85,6 +86,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                 is_dcr_added: TourPlan?.data?.tour_plan?.tour_plan?.is_dcr_added,
                 is_approved: TourPlan?.data?.is_approved,
                 hulting_station: TourPlan?.data?.tour_plan?.tour_plan?.hulting_station,
+                day_status: TourPlan?.data?.tour_plan?.tour_plan?.day_status,
                 area_name: selectedAreas,
             }));
             setDateData(TourPlan?.data?.tour_plan?.tour_plan?.select_the_date_id ? TourPlan?.data?.tour_plan?.tour_plan?.select_the_date_id : now)
@@ -132,6 +134,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
             is_dcr_added: values.is_dcr_added,
             is_approved: values.is_approved,
             hulting_station: values.hulting_station,
+            day_status: values.day_status,
             select_the_month: getNepaliMonthName(moment(values.select_the_date_id).month() + 1),
             select_the_date: typeof values.select_the_date_id === "string" ? values.select_the_date_id : DateToString(values.select_the_date_id),
             id: idharu,
@@ -186,7 +189,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                             <IconButton className="close-button" onClick={onClose}>
                                 <Close />
                             </IconButton>
-                            <Typography variant="h6">Edit TourPlan</Typography>
+                            <Typography variant="h6">Edit MPO TourPlan</Typography>
                         </Typography>
                     </Box>
                     <Form onSubmit={handleSubmit}>

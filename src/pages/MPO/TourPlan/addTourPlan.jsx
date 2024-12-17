@@ -315,6 +315,7 @@ const AddTourPlan = () => {
             shift: 1,
             visited_data: MpoAreaData,
             hulting_station: values.hulting_station,
+            day_status: values.day_status,
             is_admin_opened: false,
             user_id: company_user_role_id,
             company_id: company_id,
@@ -336,6 +337,7 @@ const AddTourPlan = () => {
                         visit_data: MpoAreaData,
                         hulting_station: "",
                         user_id: company_user_role_id,
+                        day_status: ""
                     })
                 }
                 else {
@@ -357,6 +359,11 @@ const AddTourPlan = () => {
             })
     }
 
+    const dayStatus = [
+        { id: "Working Day", title: "Working Day" },
+        { id: "Meeting", title: "Meeting" },
+        { id: "Transit", title: "Transit" },
+    ]
     return (
         <>
             <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={toggleDrawer}>
@@ -555,6 +562,15 @@ const AddTourPlan = () => {
                                         label="Hulting Station"
                                         value={values.hulting_station || ""}
                                         onChange={handleInputChange}
+                                    />
+                                </Box>
+                                <Box marginBottom={2}>
+                                    <Controls.Select
+                                        name={`day_status`}
+                                        label="Day Status"
+                                        value={values.day_status || ""}
+                                        onChange={handleInputChange}
+                                        options={dayStatus}
                                     />
                                 </Box>
                             </Box>
