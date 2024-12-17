@@ -30,6 +30,7 @@ const TravelRolePage = () => {
     const { company_id } = useSelector((state) => state.cookie);
 
     const userList = useGetAllCompanyUsersWithoutPaginationQuery({ id: company_id })
+    console.log(userList?.data?.results)
 
     return (
         <>

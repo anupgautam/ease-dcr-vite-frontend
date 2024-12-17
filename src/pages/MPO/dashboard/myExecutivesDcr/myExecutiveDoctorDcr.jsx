@@ -90,6 +90,8 @@ const MyExecutiveDoctorDcr = () => {
     const [deleteTourPlan] = useDeleteDoctorsDCRByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
+    console.log(data)
+
     return (
         <>
             <Card>
@@ -123,19 +125,19 @@ const MyExecutiveDoctorDcr = () => {
                                                     <TableCell component="th" scope="row" align="left">
                                                         {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {tourplan.mpo_name.user_name.first_name + " " + tourplan.mpo_name.user_name.last_name}
+                                                            {tourplan?.mpo_name?.user_name?.first_name + " " + tourplan?.mpo_name?.user_name?.last_name}
                                                         </Typography>
                                                         {/* </Stack> */}
                                                     </TableCell>
-                                                    <TableCell align="left">{tourplan.dcr.shift.shift}</TableCell>
-                                                    <TableCell align="left">{moment(tourplan.dcr.dcr.date).format('DD')}</TableCell>
+                                                    <TableCell align="left">{tourplan?.shift?.shift}</TableCell>
+                                                    <TableCell align="left">{moment(tourplan?.dcr?.dcr?.date).format('DD')}</TableCell>
                                                     {/* <TableCell align="left">{tourplan.dcr.dcr.year}</TableCell> */}
                                                     {/* <TableCell align="left">{tourplan.dcr.dcr.month}</TableCell> */}
-                                                    <TableCell align="left">{tourplan.dcr.dcr.visited_area.area_name}</TableCell>
+                                                    <TableCell align="left">{tourplan?.dcr?.visited_area?.area_name}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {tourplan?.dcr?.dcr?.visited_doctor?.doctor_name?.doctor_name}
+                                                            {tourplan?.dcr?.visited_doctor?.doctor_name?.doctor_name}
                                                         </Typography>
                                                         {/* </Stack> */}
                                                     </TableCell>

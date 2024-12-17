@@ -198,6 +198,9 @@ const AddTravelAllowancesMPO = () => {
         }
     }, [createTravelAllowances, values])
 
+    console.log(selectedDates)
+
+
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     return (
         <>

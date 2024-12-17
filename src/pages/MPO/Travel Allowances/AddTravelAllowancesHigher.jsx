@@ -167,7 +167,6 @@ const AddTravelAllowancesHigher = () => {
             user_id: company_user_role_id,
             company_name: company_id,
         };
-
         try {
             const response = await createTravelAllowances(jsonData)
             if (response) {
@@ -195,6 +194,8 @@ const AddTravelAllowancesHigher = () => {
             setLoading(false)
         }
     }, [createTravelAllowances, values])
+    console.log(selectedDates)
+
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     return (
