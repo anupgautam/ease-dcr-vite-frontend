@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { WEBSOCKET_BASE_URL } from '../../../baseURL'
+import { BASE_URL, WEBSOCKET_BASE_URL } from '../../../baseURL'
 import connectWebSocket from "../../../reusable/utils/multipleWSConnection";
 import { useDispatch } from "react-redux";
 import { addData } from "../../../reducer/chatReducer";
@@ -11,6 +11,7 @@ import { Card, Grid, Typography } from "@mui/material";
 import { BsFillChatDotsFill } from "react-icons/bs";
 import ChatContainer from "./chatMessageList";
 import { useSelector } from 'react-redux';
+import { io } from "socket.io-client";
 
 
 const ChatApp = () => {
@@ -26,118 +27,86 @@ const ChatApp = () => {
 
 const Chat = () => {
 
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
 
     const [typingMsg, setTypingMsg] = useState({ 'msg': '' })
-    const [isGroup, setIsGroup] = useState(false);
     const [groupName, setGroupName] = useState(`${WEBSOCKET_BASE_URL}ws/ac/`);
     const [userId, setUserId] = useState(0);
-    const [sockets, setSockets] = useState([]);
     const [userChats] = useGetChatsByUserMutation();
     const changeTypingMsg = (e) => {
         setTypingMsg({ 'msg': e.target.value })
     }
 
-    const [urls, setUrls] = useState([`${WEBSOCKET_BASE_URL}ws/ac/`])
+
+
+    // useEffect(() => {
+    //     socket.on('receiveMessage', (data) => {
+    //         console.log({ message: `Message from ${data.socketId}: ${data.message}` });
+    //     });
+    // }, [])
+
     const [ChatData, setChatData] = useState([]);
-    const [dataLength, setDataLength] = useState(1);
+    // const [dataLength, setDataLength] = useState(1);
 
-    useEffect(() => {
-        if (company_id) {
-            setUrls([groupName]);
-        }
-    }, [company_id, groupName])
 
-    const [isLoading, setIsLoading] = useState(false);
+
+    // const [isLoading, setIsLoading] = useState(false);
     const scrollRef = useRef();
 
-    const handleScroll = async () => {
-        const container = scrollRef.current;
-        if (container.scrollTop === 0) {
-            try {
-                setDataLength((prevDataLength) => prevDataLength + 1);
-                setIsLoading(true);
-                const res = await userChats({
-                    user_list: [company_id, userId],
-                    data_length: dataLength,
-                });
-                setChatData((prevChatData) => [...prevChatData, ...res.data.data]);
-            } catch (error) {
-                console.error('Error loading data:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-    };
-    useEffect(() => {
-        const container = scrollRef.current;
+    // const handleScroll = async () => {
+    //     const container = scrollRef.current;
+    //     if (container.scrollTop === 0) {
+    //         try {
+    //             setDataLength((prevDataLength) => prevDataLength + 1);
+    //             setIsLoading(true);
+    //             const res = await userChats({
+    //                 user_list: [company_id, userId],
+    //                 data_length: dataLength,
+    //             });
+    //             setChatData((prevChatData) => [...prevChatData, ...res.data.data]);
+    //         } catch (error) {
+    //             console.error('Error loading data:', error);
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     }
+    // };
+    // useEffect(() => {
+    //     const container = scrollRef.current;
 
-        if (container) {
-            container.addEventListener('scroll', handleScroll);
+    //     if (container) {
+    //         container.addEventListener('scroll', handleScroll);
 
-            return () => {
-                container.removeEventListener('scroll', handleScroll);
-            };
-        }
-    }, [scrollRef.current, dataLength]);
+    //         return () => {
+    //             container.removeEventListener('scroll', handleScroll);
+    //         };
+    //     }
+    // }, [scrollRef.current, dataLength]);
 
 
 
-    useEffect(() => {
-        if (userId !== 0) {
-            userChats({
-                user_list: [company_id, userId],
-                data_length: dataLength,
-            }).
-                then((res) => {
-                    dispatch(addData(res?.data?.data));
-                    setChatData(res?.data?.data);
-                })
-        }
-    }, [userId, company_id])
 
-    const onMessageReceived = useCallback((message) => {
-        setChatData((prevChatData) => [...prevChatData, message]);
-    }, []);
 
-    useEffect(() => {
-        const openWebSocketConnections = () => {
-            if (urls && Array.isArray(urls)) {
-                const newSockets = urls.map((url) => {
-                    return connectWebSocket(url, company_id, onMessageReceived);
-                });
-                setSockets(newSockets);
-            }
-        };
-        openWebSocketConnections();
-        return () => {
-            sockets.forEach((socket) => {
-                socket.close();
-            });
-        };
-    }, [urls, company_id, onMessageReceived]);
+
+
+
 
 
     const submitMessage = () => {
-        sockets.forEach((socket) => {
-            if (socket.url.includes(groupName)) {
-                socket.send(JSON.stringify({
-                    'type': 'chat',
-                    'message': typingMsg.msg,
-                    'initiator': company_id,
-                    'receiver': userId,
-                    'user': company_id,
-                    'group_name': groupName,
-                    'is_group': isGroup,
-                    'default': false,
-                    'unique_id': generate8CharacterUUID()
-                }));
-                setTypingMsg({ msg: "" });
-            } else {
-            }
-        });
+        const socket = io(BASE_URL);
+        const dynamicRoomId = 'room_' + Math.random().toString(36).substring(7);
+        socket.emit('joinChat', dynamicRoomId);
+        const data = {
+            room_id: dynamicRoomId,
+            chat_to: '1',
+            chat_from: company_user_role_id,
+            company_name: company_id,
+            message: typingMsg.msg,
+        };
+        socket.emit('sendMessage', data);
+        setTypingMsg({ 'msg': '' });
     };
 
 
