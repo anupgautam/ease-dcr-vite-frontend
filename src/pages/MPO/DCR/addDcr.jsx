@@ -29,7 +29,7 @@ import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import moment from 'moment';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
-import { BSDate } from "nepali-datepicker-react";
+import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 
 
 const AddDcrForHo = () => {
@@ -38,9 +38,34 @@ const AddDcrForHo = () => {
 
 
     const now = new BSDate().now();
+    const [dateData, setDateData] = useState(now);
 
     const monthData = getNepaliMonthName(now._date.month);
     const yearData = now._date.year;
+
+    const [dateFormat, setDateFormat] = useState(dateData?._date)
+    const [nepaliDate, setNepaliDate] = useState(dateFormat)
+
+
+    const formatDate = (date) => {
+        const year = date.year;
+        const month = String(date.month).padStart(2, '0');
+        const day = String(date.day).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const formattedDate = formatDate(nepaliDate);
+
+    useEffect(() => {
+        const formatDate = (date) => {
+            const year = date.year;
+            const month = String(date.month).padStart(2, '0');
+            const day = String(date.day).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        const formattedDate = formatDate(nepaliDate);
+    }, [dateData])
 
     const chemistcategories = [
         { id: "A", title: "A" },
@@ -199,7 +224,8 @@ const AddDcrForHo = () => {
     const onAddDcr = async (e) => {
         setLoading(true);
         const data = {
-            date: values.date,
+            // date: values.date,
+            date: formattedDate,
             visited_with: values.visited_with,
             shift: values.shift,
             user_id: company_user_role_id,
@@ -325,6 +351,12 @@ const AddDcrForHo = () => {
                                     // error={errors.select_the_date}
                                     disable={true}
                                 />
+                                {/* <label htmlFor="date" style={{ fontSize: '14px', color: "black", fontWeight: '600', marginBottom: "15px" }}>Select the Date*</label><br />
+
+                                <NepaliDatePicker
+                                    value={dateData}
+                                    format="YYYY-MM-DD"
+                                    onChange={(value) => setDateData(value)} /> */}
                             </Box>
                             <Box marginBottom={2}>
                                 <Controls.Select

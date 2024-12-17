@@ -66,12 +66,12 @@ export const groupSlice = apiSlice.injectEndpoints({
                 }
             }
         }),
-        getGroupWsConnection: builder.mutation({
+        getGroupWsConnection: builder.query({
             query: (group) => {
                 return {
-                    url: `/chat/user-ws/`,
-                    method: 'POST',
-                    body: group,
+                    url: `chat/chat/get_my_chat/?chat_to=${group.id}&chat_from=${group.myId}&company_name=${group.company_name}`,
+                    method: 'GET',
+                    // body: group,
                 }
             }
         }),
@@ -107,7 +107,7 @@ export const {
     useGetGroupsByIdQuery,
     useGetGroupListMutation,
     useGetGroupWsConnectionMutation,
-
+    useGetGroupWsConnectionQuery,
 } = groupSlice
 
 // returns the query result object
