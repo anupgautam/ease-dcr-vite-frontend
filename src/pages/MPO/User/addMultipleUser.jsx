@@ -33,7 +33,7 @@ const TABLE_HEAD = [
     { id: 'executive_level', label: 'Executive Level', alignRight: false },
     { id: 'division_name', label: 'Division Name', alignRight: false },
     { id: 'company_area', label: 'Company Area', alignRight: false },
-    { id: 'station_type', label: 'Station Type', alignRight: false },
+    // { id: 'station_type', label: 'Station Type', alignRight: false },
 ];
 
 const AddMultipleUser = () => {
@@ -313,8 +313,8 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
             temp.email = returnValidation(['null', 'email'], values.email);
         if ('company_area' in fieldValues)
             temp.company_area = returnValidation(['null'], values.company_area);
-        if ('station_type' in fieldValues)
-            temp.station_type = returnValidation(['null'], values.station_type);
+        // if ('station_type' in fieldValues)
+            // temp.station_type = returnValidation(['null'], values.station_type);
 
 
         setErrors({
@@ -352,7 +352,7 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
         company_name: company_id,
         company_area: areaOptions,
         division_name: divisionOptions,
-        station_type: "",
+        // station_type: "",
         is_active: "true",
         date_of_joining: formattedDate,
     })
@@ -522,7 +522,7 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 />
             </TableCell>
 
-            <TableCell align="left" style={{ width: "300px" }}>
+            {/* <TableCell align="left" style={{ width: "300px" }}>
                 <Controls.Input
                     name="station_type"
                     label="Station Type*"
@@ -531,7 +531,7 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
                     onChange={handleInputChange}
                     error={errors.station_type}
                 />
-            </TableCell>
+            </TableCell> */}
         </>
     )
 }

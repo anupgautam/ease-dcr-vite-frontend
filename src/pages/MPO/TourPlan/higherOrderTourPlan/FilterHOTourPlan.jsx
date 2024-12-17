@@ -179,7 +179,7 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                                                                                 <TableCell align="left">
                                                                                     {
                                                                                         tourplan.visited_data.map((key, index) => (
-                                                                                            <HigherVisitedWith key={index} id={key.visited_with} />
+                                                                                            <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }}>{key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name},</Typography>
                                                                                         ))
                                                                                     }
                                                                                 </TableCell>
@@ -300,15 +300,5 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
     )
 }
 
-const HigherVisitedWith = ({ id }) => {
-    const { data } = useGetcompanyUserRolesByIdQuery(id, {
-        skip: !id
-    });
-    return (
-        <>
-            <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }}>{data?.user_name?.first_name + " " + data?.user_name?.middle_name + " " + data?.user_name?.last_name},</Typography>
-        </>
-    )
-}
 
 export default React.memo(FilteredHOTourPlan)

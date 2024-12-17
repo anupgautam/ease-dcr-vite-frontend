@@ -70,37 +70,40 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         setSelectedAreas(value)
     }
 
+    const [multipleVisitedWith, setMultipleVisitedWith] = useState([])
+
+    const handleMultipleVisitedWith = (e, value) => {
+        setMultipleVisitedWith(value)
+    }
+
     //! Filter Options
     const filteredOptions = mpoAreaData.filter(
         (option) => !selectedAreas.some((selected) => selected.id === option.id)
     );
 
     //! Getting TourPlan by ID
-    const TourPlan = useGetHOTourPlansByIdQuery(idharu, {
-        skip: !idharu
-    });
+    const TourPlan = useGetHOTourPlansByIdQuery(idharu);
 
     const [LowerExecutive] = usePostUserIdToGetLowerLevelExecutiveMutation();
 
-    useEffect(() => {
-        if (TourPlan?.data?.user_id?.id) {
-            LowerExecutive({ id: TourPlan?.data?.user_id?.id })
-                .then((res) => {
-                    if (res.data) {
-                        const data = res.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
-                        setUsers(data);
-                    }
-                })
-        }
-    }, [TourPlan?.data?.user_id?.id])
-
-    const [userLists] = usePostUserIdToGetLowerLevelExecutiveMutation()
-
     const [users, setUsers] = useState([]);
 
+    // useEffect(() => {
+    //     if (TourPlan?.data?.user_id?.id) {
+    //         LowerExecutive({ id: TourPlan?.data?.user_id?.id })
+    //             .then((res) => {
+    //                 if (res.data) {
+    //                     const data = res.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
+    //                     setUsers(data);
+    //                 }
+    //             })
+    //     }
+    // }, [TourPlan?.data?.user_id?.id])
+
+    const [userLists] = usePostUserIdToGetLowerLevelExecutiveMutation()
     useEffect(() => {
-        if (company_user_role_id) {
-            userLists({ id: company_user_role_id })
+        if (company_user_id) {
+            userLists({ id: company_user_id })
                 .then((res) => {
                     if (res.data) {
                         const data = res?.data?.map(key => ({
@@ -111,7 +114,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                     }
                 })
         }
-    }, [company_user_role_id])
+    }, [company_user_id])
 
     // //! Get selected area
     const shiftData = useGetShiftsQuery();
@@ -153,6 +156,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         is_dcr_added: "",
         is_approved: "",
         hulting_station: "",
+        day_status: "",
     })
 
     const [MpoAreaData, setMpoAreaData] = useState([]);
@@ -169,10 +173,15 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
         );
     };
 
-
-
+    const [defaultVisitedWith, setDefaultVisitedWith] = useState([])
     useEffect(() => {
         if (TourPlan.data) {
+
+            const selectedVisitedWith = TourPlan?.data?.visited_data?.map(visited => ({
+                id: visited?.id,
+                title: visited?.user_name?.first_name + " " + visited?.user_name?.middle_name + " " + visited?.user_name?.last_name
+            }))
+
             setInitialFValues({
                 user_id: TourPlan?.data?.user_id?.user_name.first_name + ' ' + TourPlan?.data?.user_id?.user_name.last_name,
                 shift: 1,
@@ -181,11 +190,13 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                 is_dcr_added: TourPlan?.data?.is_dcr_added,
                 is_approved: TourPlan?.data?.is_approved,
                 hulting_station: TourPlan?.data?.hulting_station,
+                day_status: TourPlan?.data?.day_status,
                 visited_data: TourPlan?.data?.visited_data
             });
             setDateData(TourPlan?.data?.date ? TourPlan?.data?.date : now)
+            setDefaultVisitedWith(selectedVisitedWith)
         }
-    }, [TourPlan.data])
+    }, [TourPlan])
 
 
 
@@ -263,7 +274,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     const monthData = getNepaliMonthName(moment(dateData).month() + 1);
     const handleSubmit = async (e) => {
         setLoading(true)
-        const data = { visit_data: MpoAreaData, id: idharu, company_id: company_id, user_id: TourPlan?.data?.user_id?.id, shift: 1, date: typeof values.date === "string" ? values.date : DateToString(values.date), is_dcr_added: values.is_dcr_added === null ? false : values.is_dcr_added, is_approved: values.is_approved, hulting_station: values.hulting_station, month: monthData }
+        const data = { visit_data: MpoAreaData, id: idharu, company_id: company_id, user_id: TourPlan?.data?.user_id?.id, shift: 1, date: typeof values.date === "string" ? values.date : DateToString(values.date), is_dcr_added: values.is_dcr_added === null ? false : values.is_dcr_added, is_approved: values.is_approved, hulting_station: values.hulting_station, day_status: values.day_status, month: monthData }
         // const formData = new FormData();
         // formData.append("user_id", TourPlan?.data?.user_id?.id);
         // formData.append("shift", 1);
@@ -311,6 +322,12 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     }
 
     // const visitedData = values?.visited_data?.map((visiteddata) => visiteddata.visited_with)
+
+    const dayStatus = [
+        { id: "Working Day", title: "Working Day" },
+        { id: "Meeting", title: "Meeting" },
+        { id: "Transit", title: "Transit" },
+    ]
     return (
         <>
             <Drawer
@@ -336,7 +353,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                         style={{ marginBottom: "40px" }}
                     >
                         <Typography variant="h6" className="drawer-box-text">
-                            Edit TourPlan <br />
+                            Edit HO TourPlan <br />
                             <IconButton
                                 className="close-button"
                                 onClick={onClose}
@@ -370,7 +387,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                             <NepaliDatePicker value={dateData} format="YYYY-MM-DD" onChange={(value) => setDateData(value)} />
                         </Box>
                         <Box marginBottom={2}>
-                            <FormControl sx={{ m: 1, width: 300 }}>
+                            {/* <FormControl sx={{ m: 1, width: 300 }}>
                                 <InputLabel>{"Select the Visited With*"}</InputLabel>
                                 <Select
                                     labelId="demo-multiple-name-label"
@@ -393,25 +410,24 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                         </MenuItem>
                                     ))}
                                 </Select>
-                            </FormControl>
+                            </FormControl> */}
 
-                            {/* <Autocomplete
+                            <Autocomplete
                                 multiple
-                                options={filteredOptions}
-                                value={selectedAreas}
-                                // options={mpoAreaData}
-                                // value={MpoTpArea.map(id => mpoAreaData.find(option => option.id === id) || {})}
+                                options={users}
                                 getOptionLabel={(option) => option.title}
-                                onChange={handleMpoTpArea}
+                                value={multipleVisitedWith || []}
+                                onChange={handleMultipleVisitedWith}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
                                 renderInput={(params) => (
-                                    <TextField {...params} label="Select the Visited With*" />
+                                    <TextField {...params} label="Select the Visited With*"/>
                                 )}
                                 renderOption={(props, option) => (
                                     <li {...props} key={option.id}>
                                         {option.title}
                                     </li>
                                 )}
-                            /> */}
+                            />
                         </Box>
                         {/* {Array.isArray(values?.visited_data) &&
                             values.visited_data.map((key, index) => (
@@ -433,6 +449,16 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                 value={values.hulting_station}
                                 onChange={handleInputChange}
                                 placeholderText="Hulting Station"
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <Controls.Select
+                                name="day_status"
+                                label="Day Status"
+                                value={values.day_status}
+                                onChange={handleInputChange}
+                                placeholderText="Day Status"
+                                options={dayStatus}
                             />
                         </Box>
                         <Box marginBottom={2}>
