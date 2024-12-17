@@ -12,72 +12,36 @@ const ChatTestMessage = ({ messages }) => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    const id = company_user_role_id;
+    console.log('company_user_role_id', company_user_role_id);
 
-    console.log(messages);
+    console.log('messagesmessages', messages);
 
     // const chatData = messages.filter(data => data.chat_from === company_user_role_id);
     return (
         <div className="flex flex-col h-full overflow-x-auto mb-4">
             <div className="flex flex-col h-full">
                 <div className="grid grid-cols-12 gap-y-2">
-
-
-                    {/*//! Conversation  */}
-
-                    {messages &&
-                        messages.map((message, index) => {
-                            {/* const isSender = message.chat_from === company_user_role_id; */ }
-
+                    {
+                        messages && messages.map((data, index) => {
+                            const dataCondition = Number(company_user_role_id) === Number(data.chat_from);
                             return (
-                                <div
-                                    key={index}
-                                >
-                                    <div style={message.chat_from == id ? { marginTop: '10px', marginRight: '10px', marginBottom: '10px' } : { marginTop: '10px', marginBottom: '10px' }}>
-                                        <div className={message.chat_from == id ? "content" : "content1"}>
-                                            <span className={message.chat_from == id ? "content-sended " : "content-recieved "}>{message.message}</span>
+                                <div className={dataCondition ? "col-start-6 col-end-13 p-3 rounded-lg" : "col-start-1 col-end-8 p-3 rounded-lg"} key={index}>
+                                    <div className={dataCondition ? "flex items-center justify-start flex-row-reverse" : "flex flex-row items-center"}>
+                                        <div
+                                            className={dataCondition ? "flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0" : "flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0"}
+                                        >
+                                            A
+                                        </div>
+                                        <div
+                                            className={dataCondition ? "relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl" : "relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"}
+                                        >
+                                            <div>{data.chat_message}</div>
                                         </div>
                                     </div>
                                 </div>
-                            );
-                        })}
-
-
-                    {/*//* Right  */}
-                    {/* <div className="col-start-6 col-end-13 p-3 rounded-lg">
-                        <div className="flex items-center justify-start flex-row-reverse">
-                            <div
-                                className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0"
-                            >
-                                A
-                            </div>
-                            <div
-                                className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl"
-                            >
-                                <div>I'm ok what about you?</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-start-1 col-end-8 p-3 rounded-lg">
-                        <div className="flex flex-row items-center">
-                            <div
-                                className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0"
-                            >
-                                A
-                            </div>
-                            <div
-                                className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
-                            >
-                                <div>Hey How are you today?</div>
-                            </div>
-                        </div>
-                    </div> */}
-
-
-
-
-
+                            )
+                        })
+                    }
                 </div>
             </div>
         </div >

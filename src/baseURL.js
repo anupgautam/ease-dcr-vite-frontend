@@ -1,4 +1,4 @@
-export const BASE_URL = "http://192.168.1.69:9000/";
+export const BASE_URL = "http://localhost:9000/";
 // export const BASE_URL = "https://api.easesfa.com/";
 // export const BASE_URL = "https://d15b-27-34-67-114.ngrok-free.app/";
 // export const BASE_URL = "http://localhost:8000/";

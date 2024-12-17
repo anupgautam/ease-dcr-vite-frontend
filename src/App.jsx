@@ -69,6 +69,7 @@ export default function App() {
 
 
   const socket = io(BASE_URL, {
+    transports: ['websocket'],
     withCredentials: true,
   });
 
