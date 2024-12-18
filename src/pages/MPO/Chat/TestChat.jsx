@@ -27,7 +27,7 @@ const TestChat = () => {
     const [groupName, setGroupName] = useState(`${WEBSOCKET_BASE_URL}ws/ac/`);
     const [userId, setUserId] = useState();
     const [userChats] = useGetChatsByUserMutation();
-    const [chatMessage, setChatMessage] = useState()
+    const [chatMessage, setChatMessage] = useState([]);
 
     const changeTypingMsg = (e) => {
         setTypingMsg({ 'msg': e.target.value })
@@ -38,26 +38,24 @@ const TestChat = () => {
         { skip: !userId }
     );
 
-    useEffect(() => {
-        if (getUserWSConnection?.data) {
-            setChatMessage(getUserWSConnection.data);
-        }
-    }, [getUserWSConnection])
+    // useEffect(() => {
+    //     if (getUserWSConnection?.data) {
+    //         setChatMessage(getUserWSConnection.data);
+    //     }
+    // }, [getUserWSConnection])
 
-    const socket = io(BASE_URL);
+    const socket = io(BASE_URL, {
+        transports: ['websocket'],
+        withCredentials: true,
+    });
 
-    useEffect(() => {
-        socket.on('receiveMessage', (data) => {
-            console.log({ message: `Message from ${data.socketId}: ${data.message}` });
-        });
-    }, [])
 
-    const [ChatData, setChatData] = useState([]);
+
+    const [ChatData, setChatData] = useState();
 
     const scrollRef = useRef();
 
     const submitMessage = () => {
-        const socket = io(BASE_URL);
         const dynamicRoomId = 'room_' + Math.random().toString(36).substring(7);
         socket.emit('joinChat', dynamicRoomId);
         const data = {
@@ -70,6 +68,33 @@ const TestChat = () => {
         socket.emit('sendMessage', data);
         setTypingMsg({ 'msg': '' });
     };
+
+
+    useEffect(() => {
+        if (company_user_role_id) {
+            socket.on('connect', () => {
+                console.log('Connected to Socket.io server11');
+                socket.emit('chatUser', company_user_role_id);
+                socket.emit('history', company_user_role_id);
+                const data = { chat_from: company_user_role_id, chat_to: userId }
+                socket.emit("history", data);
+            });
+            socket.on('receiveMessage', (data) => {
+                console.log('datatatata', data);
+            });
+
+            socket.on('previousChat', (data) => {
+                setChatMessage(data);
+            });
+
+            return () => {
+                socket.off('receiveMessage');
+                socket.off('previousChat');
+                socket.disconnect();
+                console.log('Disconnected from Socket.io server');
+            };
+        }
+    }, [company_user_role_id]);
 
     return (
         <div className="flex h-[calc(85vh-0px)] antialiased text-gray-800">

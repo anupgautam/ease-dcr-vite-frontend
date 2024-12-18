@@ -12,11 +12,7 @@ const ChatTestMessage = ({ messages }) => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    console.log('company_user_role_id', company_user_role_id);
 
-    console.log('messagesmessages', messages);
-
-    // const chatData = messages.filter(data => data.chat_from === company_user_role_id);
     return (
         <div className="flex flex-col h-full overflow-x-auto mb-4">
             <div className="flex flex-col h-full">
