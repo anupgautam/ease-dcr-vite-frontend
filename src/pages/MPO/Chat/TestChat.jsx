@@ -80,7 +80,7 @@ const TestChat = () => {
                 socket.emit("history", data);
             });
             socket.on('receiveMessage', (data) => {
-                console.log('datatatata', data);
+                setChatMessage(data);
             });
 
             socket.on('previousChat', (data) => {
