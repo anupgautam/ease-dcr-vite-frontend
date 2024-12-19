@@ -157,7 +157,6 @@ const EditChemist = ({ idharu, onClose }) => {
             mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id,
             is_investment: false
         };
-        console.log(values)
         try {
             const response = await updateChemists(data)
             if (response) {

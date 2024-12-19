@@ -194,7 +194,6 @@ const AddTravelAllowancesHigher = () => {
             setLoading(false)
         }
     }, [createTravelAllowances, values])
-    console.log(selectedDates)
 
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);

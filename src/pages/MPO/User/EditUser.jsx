@@ -49,6 +49,7 @@ const EditUser = ({ idharu, onClose }) => {
     const rolesharu = data?.data?.map(key => ({ id: key.id, title: key.role_name_value })) || [];
     
     const divisions = Divisions?.data?.map(key => ({ id: key.id, title: key.division_name })) || [];
+    
     const companyAreas = CompanyAreas?.data?.map(key => ({ id: key.id, title: key.company_area })) || [];
 
 

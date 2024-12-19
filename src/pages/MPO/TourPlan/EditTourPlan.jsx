@@ -30,7 +30,13 @@ import moment from 'moment';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 
 const EditTourPlan = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+
+    const dayStatus = [
+        { id: "Working Day", title: "Working Day" },
+        { id: "Meeting", title: "Meeting" },
+        { id: "Transit", title: "Transit" },
+    ]
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new Date();
     const [dateData, setDateData] = useState();
@@ -78,7 +84,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
 
             setInitialFValues(prevValues => ({
                 ...prevValues,
-                mpo_name: `${TourPlan?.data?.mpo_name?.user_name?.first_name} ${TourPlan?.data?.mpo_name?.user_name?.last_name}`,
+                mpo_name: TourPlan?.data?.mpo_name?.id,
                 shift: TourPlan?.data?.tour_plan?.shift?.id,
                 select_the_date_id: TourPlan?.data?.tour_plan?.tour_plan?.select_the_date_id,
                 purpose_of_visit: TourPlan?.data?.tour_plan?.tour_plan?.purpose_of_visit,
@@ -132,13 +138,15 @@ const EditTourPlan = ({ idharu, onClose }) => {
             shift: values.shift,
             purpose_of_visit: values.purpose_of_visit,
             is_dcr_added: values.is_dcr_added,
-            is_approved: values.is_approved,
+            is_approved: values.is_approved ? values.is_approved : false,
             hulting_station: values.hulting_station,
             day_status: values.day_status,
             select_the_month: getNepaliMonthName(moment(values.select_the_date_id).month() + 1),
             select_the_date: typeof values.select_the_date_id === "string" ? values.select_the_date_id : DateToString(values.select_the_date_id),
             id: idharu,
-            company_name: company_id
+            company_name: company_id,
+            mpo_name: values.mpo_name,
+            approved_by: TourPlan?.data?.approved_by?.id ? TourPlan?.data?.approved_by?.id : company_user_role_id
         };
         try {
             const response = await updateTourPlans({ id: idharu, value: data }).unwrap();
@@ -146,7 +154,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
             if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited TourPlan' });
                 setTimeout(() => {
-                    history("/dashboard/admin/tourplan");
+                    // history("/dashboard/admin/tourplan");
                     setSuccessMessage({ show: false, message: '' });
                     onClose();
                 }, 2000);
@@ -260,6 +268,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                     value={values.is_approved}
                                     onChange={handleInputChange}
                                     label="Is Approved"
+                                    type="checkbox"
                                 />
                             }
                         </Box>

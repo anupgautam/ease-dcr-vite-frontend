@@ -41,10 +41,15 @@ export function useForm(initialFValues, validateOnChange = false, validate, edit
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
+        // setValues({
+        //     ...values,
+        //     [name]: value || ''
+        // });
+
         setValues({
             ...values,
-            [name]: value || ''
+            [name]: type === "checkbox" ? checked : value || "",
         });
         // if (validateOnChange)
         //     validate({ [name]: value });

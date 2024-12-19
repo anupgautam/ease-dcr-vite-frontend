@@ -329,6 +329,7 @@ const AddTourPlan = () => {
                 if (res.data) {
                     initialStates()
                     setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
+                    setIsDrawerOpen(false)
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
                     }, 5000);
@@ -399,7 +400,7 @@ const AddTourPlan = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Add Tourplan
+                            Add {user_role} Tourplan
                         </Typography>
 
                     </Box>

@@ -6,7 +6,6 @@ export default function DateTimePicker(props) {
 
   const convertToDefEventPara = (name, value) => {
     onChange({ target: { name, value } });
-    console.log('yes ma k xa', value)
   };
 
   return (

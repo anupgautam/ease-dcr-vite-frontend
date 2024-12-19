@@ -217,7 +217,7 @@ export default function Router() {
         },
         {
           path: 'admin/missedcalls',
-          element: <Authentication component={ListOfMissedCallsController} allowRoles={['admin']} />,
+          element: <Authentication component={ListOfMissedCallsController} allowRoles={['admin', 'MPO', 'other-roles']} />,
         },
         {
           path: 'admin/target',
@@ -283,12 +283,12 @@ export default function Router() {
           element: <Authentication component={ListofLeaveUserController} allowRoles={['admin']} />,
         },
         {
-          path: 'admin/chat',
+          path: 'admin/chattest',
           element: <Authentication component={ChatController} allowRoles={['admin']} />,
         },
         {
-          path: 'admin/chattest',
-          element: <Authentication component={TestChat} allowRoles={['admin']} />,
+          path: 'admin/chat',
+          element: <Authentication component={TestChat} allowRoles={['admin', 'MPO', 'other-roles', 'SuperAdmin']} />,
         },
         {
           path: 'admin/notification',

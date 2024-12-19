@@ -44,7 +44,26 @@ export const MissedCallSlices = apiSlice.injectEndpoints({
         }),
         getMissedDataByMpo: builder.query({
             query: (id) => ({
-                url: `/stat/mpo-missed-call/?mpo_name=${id.mpo_name}&company_name=${id.company_name}&month=${id.month}&year=${id.year}`,
+                // url: `/stat/mpo-missed-call/?mpo_name=${id.mpo_name}&company_name=${id.company_name}&month=${id.month}&year=${id.year}`,
+                url: `mpo/company-mpo-tour-plan/get_missed_calls/?mpo_name=${id.mpo_name}&month=${id.month}&year=${id.year}&company_name=${id.company_name}`,
+                method: 'GET',
+            }),
+            providesTags: ['MissedCall'],
+        }),
+
+        getMissedDataByOtherRole: builder.query({
+            query: (id) => ({
+                // url: `/stat/mpo-missed-call/?mpo_name=${id.mpo_name}&company_name=${id.company_name}&month=${id.month}&year=${id.year}`,
+                url: `other-roles/get_missed_calls/?user_id=${id.mpo_name}&month=${id.month}&year=${id.year}&company_name=${id.company_name}`,
+                method: 'GET',
+            }),
+            providesTags: ['MissedCall'],
+        }),
+
+        getMissedDataByAdminRole: builder.query({
+            query: (id) => ({
+                // url: `/stat/mpo-missed-call/?mpo_name=${id.mpo_name}&company_name=${id.company_name}&month=${id.month}&year=${id.year}`,
+                url: `mpo/company-mpo-tour-plan/get_missed_calls/?mpo_name=${id.mpo_name}&month=${id.month}&year=${id.year}&company_name=${id.company_name}`,
                 method: 'GET',
             }),
             providesTags: ['MissedCall'],
@@ -56,7 +75,9 @@ export const {
     // useGetAllMissedCallsQuery,
     useSearchMPOMissedCallMutation,
     useSearchHighterOrderMissedCallMutation,
-    useGetMissedDataByMpoQuery
+    useGetMissedDataByMpoQuery,
+    useGetMissedDataByAdminRoleQuery,
+    useGetMissedDataByOtherRoleQuery
 } = MissedCallSlices
 
 // //! returns the query result object

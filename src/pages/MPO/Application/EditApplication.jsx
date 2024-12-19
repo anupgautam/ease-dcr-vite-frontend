@@ -161,7 +161,7 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
             leave_from: dateData,
             leave_to: dateDataAnother,
             leave_status: 'approved',
-            is_approved: values.is_approved,
+            is_approved: values.is_approved ? values.is_approved : false,
             id: idharu,
             company_name: company_id,
             user_id: values.user_id,
@@ -170,18 +170,24 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
         try {
             const response = await updateApplications(formData).unwrap();
 
-            if (response.data) {
+            if (response) {
                 setSuccessMessage({ show: true, message: 'Successfully Edited Application' });
-                setLoading(false);
                 setTimeout(() => {
-                    history("/dashboard/admin/application")
+                    // history("/dashboard/admin/application")
+                    onClose();
                     setSuccessMessage({ show: false, message: '' });
                 }, 2000);
             }
-            else {
+            else if (response?.error) {
                 setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                 setLoading(false);
                 setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            }
+            else {
+                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                setTimeout(() => {
+                    setErrorMessage({ show: false, message: '' });
+                }, 2000);
             }
         }
         catch (error) {
@@ -189,6 +195,9 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
             }, 2000);
+        }
+        finally {
+            setLoading(false);
         }
     }, [updateApplications, values])
 

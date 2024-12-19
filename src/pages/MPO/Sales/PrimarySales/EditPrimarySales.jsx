@@ -121,7 +121,6 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
     }, []);
 
     const [updatedYear, setUpdatedYear] = useState("");
-    console.log(updatedMonth, updatedYear)
 
     const handleYearChange = useCallback((event) => {
         setUpdatedYear(event.target.value);

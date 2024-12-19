@@ -6,6 +6,7 @@ import TargetSearch from './TargetSearch';
 import TargetChart from './TargetChart';
 import AddTarget from './AddTarget';
 import { useSelector } from 'react-redux';
+import FilteredTarget from './FilteredTarget';
 
 const TargetPage = () => {
     const { user_role } = useSelector((state) => state.cookie);
@@ -35,6 +36,7 @@ const TargetPage = () => {
                 }
             </Box>
             <TargetSearch index={0} value={value} />
+            {/* <FilteredTarget/> */}
             <TargetChart index={1} value={value} />
         </>
     )

@@ -376,13 +376,11 @@ const AttendanceList = ({ data = [], userList, allDaysInMonth, selectedMonth, se
     //     }
     // });
 
-    // console.log(calendar)
 
 
     const [AttendanceData] = usePostingAllUserAttendanceMutation();
     const [AttendData, setAttendData] = useState();
 
-    console.log('AttendData', AttendData);
 
     useEffect(() => {
         if (userList) {
