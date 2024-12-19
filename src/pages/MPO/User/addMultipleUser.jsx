@@ -48,7 +48,6 @@ const AddMultipleUser = () => {
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
     const [createUsers] = useCreateUsersMutation();
-    console.log('AllMutipleData', AllMutipleData);
 
     const [isLoading, setIsLoading] = useState(false);
     const onAddUsers = async (e) => {
@@ -203,7 +202,6 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
 
     //! Multiple Company Divsion
     const [divisionOptions, setDivisionOptions] = useState([])
-    console.log('divisionOptions', divisionOptions);
 
     const handleMultipleDivision = (event, value) => {
         const selectedIds = value.map(option => option.id);

@@ -62,7 +62,6 @@ const EditUserAdmin = ({ idharu, onClose }) => {
         try {
             setExecLoading(true);
             const response = await getExecLevel(companyId).unwrap();
-            console.log("response", response);
             const levels = response.map(key => ({
                 id: key.id,
                 title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`

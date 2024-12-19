@@ -8,6 +8,7 @@ const ChatTestMessage = ({ messages }) => {
     const { company_id, user_role, company_user_role_id, user } = useSelector((state) => state.cookie);
 
     const scrollRef = useRef();
+    
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
@@ -22,7 +23,7 @@ const ChatTestMessage = ({ messages }) => {
                         messages && messages.map((data, index) => {
                             const dataCondition = Number(company_user_role_id) === Number(data.chat_from);
                             return (
-                                <div className={dataCondition ? "col-start-6 col-end-13 p-3 rounded-lg" : "col-start-1 col-end-8 p-3 rounded-lg"} key={index}>
+                                <div ref={scrollRef} className={dataCondition ? "col-start-6 col-end-13 p-3 rounded-lg" : "col-start-1 col-end-8 p-3 rounded-lg"} key={index}>
                                     <div className={dataCondition ? "flex items-center justify-start flex-row-reverse" : "flex flex-row items-center"}>
                                         <div
                                             className={dataCondition ? "flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0" : "flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0"}
@@ -41,7 +42,7 @@ const ChatTestMessage = ({ messages }) => {
                     }
                 </div>
             </div>
-        </div >
+        </div>
     )
 }
 export default ChatTestMessage

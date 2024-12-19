@@ -93,13 +93,14 @@ const LoginFormInputs = () => {
                         Cookies.set('company_area_id', res.data.company_area_id.length === 1 ? res.data.company_area_id[0] : JSON.stringify(res.data.company_area_id));
                         Cookies.set('company_division_name', res.data.company_division_name.length === 1 ? res.data.company_division_name : JSON.stringify(res.data.company_division_name));
                         dispatch(setUserRole({ role: res.data.role }))
-                        setSuccessMessage({ show: true, message: 'Successfully Logged In' });
+                        // setSuccessMessage({ show: true, message: 'Successfully Logged In' });
+                        toast.success("Successfully Logged In")
                         setLoading(true);
                         console.log(res)
                         setTimeout(() => {
-                            if(res?.data?.is_admin){
+                            if (res?.data?.is_admin) {
                                 toast.success("Super Admin Logged In")
-                                Cookies.set('user_role','SuperAdmin')
+                                Cookies.set('user_role', 'SuperAdmin')
                                 navigate('/dashboard/superadmin/company')
                             }
                             else if (res.data.role === 'admin' || res.data.role === 'ADMIN') {

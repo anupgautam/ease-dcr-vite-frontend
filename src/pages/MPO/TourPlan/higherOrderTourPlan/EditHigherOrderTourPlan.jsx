@@ -86,7 +86,6 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     const [LowerExecutive] = usePostUserIdToGetLowerLevelExecutiveMutation();
 
-    const [users, setUsers] = useState([]);
 
     // useEffect(() => {
     //     if (TourPlan?.data?.user_id?.id) {
@@ -99,6 +98,8 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     //             })
     //     }
     // }, [TourPlan?.data?.user_id?.id])
+
+    const [users, setUsers] = useState([]);
 
     const [userLists] = usePostUserIdToGetLowerLevelExecutiveMutation()
     useEffect(() => {
@@ -194,7 +195,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                 visited_data: TourPlan?.data?.visited_data
             });
             setDateData(TourPlan?.data?.date ? TourPlan?.data?.date : now)
-            setDefaultVisitedWith(selectedVisitedWith)
+            setMultipleVisitedWith(selectedVisitedWith)
         }
     }, [TourPlan])
 
@@ -420,7 +421,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                 onChange={handleMultipleVisitedWith}
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
                                 renderInput={(params) => (
-                                    <TextField {...params} label="Select the Visited With*"/>
+                                    <TextField {...params} label="Select the Visited With*" />
                                 )}
                                 renderOption={(props, option) => (
                                     <li {...props} key={option.id}>

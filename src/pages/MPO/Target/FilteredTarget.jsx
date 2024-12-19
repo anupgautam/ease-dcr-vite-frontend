@@ -35,6 +35,7 @@ const FilteredTarget = ({ selectedYear, selectedRole }) => {
     const yearData = now._date.year;
 
     const { data } = useGetTargetsByFilterQuery({ selectedYear, selectedRole, company_name: company_id });
+
     const [deleteTarget] = useDeleteTargetsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 

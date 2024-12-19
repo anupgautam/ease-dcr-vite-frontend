@@ -73,7 +73,7 @@ export default function NotificationsPopover() {
 
   return (
     <>
-      {user_role === 'admin' &&
+      {/* {user_role === 'admin' && */}
         <Tooltip title="Chat" arrow>
           <Link to={'/dashboard/admin/chat'}>
             <IconButton color={open ? 'primary' : 'default'} sx={{ width: 40, height: 40 }}>
@@ -81,7 +81,7 @@ export default function NotificationsPopover() {
             </IconButton>
           </Link>
         </Tooltip>
-      }
+      {/* } */}
 
       <Tooltip title="Notifications" arrow>
         <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>

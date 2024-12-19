@@ -73,9 +73,6 @@ export default function App() {
     withCredentials: true,
   });
 
-
-
-
   useEffect(() => {
     if (Cookies.get('company_user_role_id')) {
       socket.on('connect', () => {
@@ -90,7 +87,7 @@ export default function App() {
       });
       socket.on('receiveMessage', (data) => {
         // toast.success(`Message from: ${data.message_from}`);
-        if (data?.user_id !== Cookies.get('company_user_role_id'))
+        if (data?.chat_from !== Number(Cookies.get('company_user_role_id')))
           toast.success(<span>
             Message from: <span className="font-bold">{data.message_from}</span>
           </span>);
@@ -103,9 +100,7 @@ export default function App() {
         console.log('Disconnected from Socket.io server');
       };
     }
-  }, [socket, Cookies.get('company_user_role_id')]);
-
-
+  }, [socket]);
 
   return (
     <HelmetProvider>

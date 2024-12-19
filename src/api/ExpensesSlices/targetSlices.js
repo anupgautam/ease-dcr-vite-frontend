@@ -39,7 +39,7 @@ export const TargetSlices = apiSlice.injectEndpoints({
                     method: 'GET'
                 }
             },
-            invalidatesTags: ['Target']
+            providesTags: ['Target']
         }),
 
         //!GET Target by user
@@ -98,7 +98,7 @@ export const TargetSlices = apiSlice.injectEndpoints({
         updateTargets: builder.mutation({
             query: (updateTarget) => {
                 return {
-                    url: `expenses/target/${updateTarget.get('id')}/`,
+                    url: `expenses/target/${updateTarget.id}/`,
                     method: 'PATCH',
                     body: updateTarget,
                 }

@@ -89,7 +89,6 @@ const EditProduct = ({ idharu, onClose }) => {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
-    console.log(values.product_id)
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true);

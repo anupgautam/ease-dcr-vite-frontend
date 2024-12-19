@@ -72,9 +72,34 @@ const AddDoctorEvents = () => {
 
 
     //! Format Date
-    const today = NepaliDateConverter.getNepaliDate();
-    const [selectedDates, setSelectedDates] = useState(today);
+    const now = new BSDate().now();
+    const [dateData, setDateData] = useState(now);
+    // const [selectedDates, setSelectedDates] = useState(now);
+    const [dateFormat, setDateFormat] = useState(dateData?._date)
+    const [nepaliDate, setNepaliDate] = useState(dateFormat)
 
+    const formatDate = (date) => {
+        const year = date.year;
+        const month = String(date.month).padStart(2, '0');
+        const day = String(date.day).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const [formattedDate, setFormattedDate] = useState(formatDate(nepaliDate));
+
+    useEffect(() => {
+        // Update nepaliDate and formattedDate whenever dateData changes
+        if (dateData?._date) {
+            const updatedNepaliDate = dateData?._date;
+            setNepaliDate(updatedNepaliDate);
+            setFormattedDate(formatDate(updatedNepaliDate));
+        }
+    }, [dateData]);
+
+    const handleDateChange = (value) => {
+        setDateData(value); // Update the raw date value
+        setFormattedDate(value)
+    };
     const DoctorData = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_name: user_role === "admin" ? mpoName : company_user_role_id, mpo_area: "" }, {
         skip: !company_id || !company_user_role_id
     })
@@ -108,7 +133,6 @@ const AddDoctorEvents = () => {
         if ('event_title' in fieldValues)
             temp.event_title = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.event_title)
         temp.doctor_id = returnValidation(['null'], values.doctor_id)
-        temp.selectedDates = returnValidation(['null'], selectedDates)
 
         setErrors({
             ...temp
@@ -121,7 +145,7 @@ const AddDoctorEvents = () => {
 
     useEffect(() => {
         validate();
-    }, [values.event_title, values.doctor_id, selectedDates])
+    }, [values.event_title, values.doctor_id])
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -131,16 +155,26 @@ const AddDoctorEvents = () => {
     const onAddEvents = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("event_title", values.event_title);
-        formData.append("doctor_id", values.doctor_id);
-        formData.append("event_date", selectedDates);
-        formData.append("mpo_name", user_role === "admin" ? mpoName : company_user_role_id);
-        formData.append('company_name', company_id)
+        // const formData = new FormData();
+        // formData.append("event_title", values.event_title);
+        // formData.append("doctor_id", values.doctor_id);
+        // // formData.append("event_date", selectedDates);
+        // formData.append("event_date", formattedDate);
+        // formData.append("mpo_name", user_role === "admin" ? mpoName : company_user_role_id);
+        // formData.append('company_name', company_id)
+
         try {
-            const response = await createDoctors(formData)
+            const jsonData = {
+                event_title: values.event_title,
+                doctor_id: values.doctor_id,
+                event_date: formattedDate,
+                mpo_name: user_role === "admin" ? mpoName : company_user_role_id,
+                company_name: company_id,
+            }
+            const response = await createDoctors(jsonData)
             if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Doctor Event.' });
+                setIsDrawerOpen(false)
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
@@ -251,9 +285,9 @@ const AddDoctorEvents = () => {
                     <Box marginBottom={2}>
                         <label htmlFor="date" style={{ fontSize: '13px', color: "grey", fontWeight: '600', marginBottom: "10px" }}>Event Date*</label><br />
                         <NepaliDatePicker
-                            value={selectedDates}
+                            value={dateData}
                             format="YYYY-MM-DD"
-                            onChange={(value) => setSelectedDates(value)} />
+                            onChange={(value) => handleDateChange(value)} />
                     </Box>
                     <Stack spacing={1} direction="row">
                         <Controls.SubmitButton

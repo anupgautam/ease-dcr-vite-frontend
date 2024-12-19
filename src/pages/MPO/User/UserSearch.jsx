@@ -175,7 +175,6 @@ const UserSearch = () => {
       is_active: JSON.parse(e.target.value),
       company_id: company_id,
     }
-    console.log('data', data);
     UserStatus({ id: user.id, data: data }).then((res) => {
       if (res.data) {
       }
@@ -305,7 +304,7 @@ const UserSearch = () => {
             <Table>
               <UserListHead headLabel={TABLE_HEAD} />
               <TableBody>
-                {searchResults.search.length <= 3 ? (
+                {searchResults?.search?.length <= 3 ? (
                   <>
                     {roleSelect ? (
                       <>
@@ -363,6 +362,14 @@ const UserSearch = () => {
                                     null
                                     ? ""
                                     : usersearch?.division_name?.division_name}
+                                </TableCell> */}
+                                {/* <TableCell align="left">
+                                  {usersearch?.company_area?.map((area, index) => (
+                                    <div key={index}>
+                                      {area.company_area}
+                                      "Yeha Area"
+                                    </div>
+                                  ))}
                                 </TableCell> */}
                                 <TableCell align="left">
                                   {usersearch?.division_name?.map((division, index) => (
@@ -561,8 +568,20 @@ const UserSearch = () => {
                               <TableCell align="left">
                                 {usersearch?.role_name?.role_name_value}
                               </TableCell>
+                              {/* {usersearch?.company_area.length!==0 } */}
                               <TableCell align="left">
-                                {usersearch?.company_area?.company_area}
+                                {usersearch?.company_area?.map((area, index) => (
+                                  <div key={index}>
+                                    {area.company_area}
+                                  </div>
+                                ))}
+                              </TableCell>
+                              <TableCell align="left">
+                                {usersearch?.division_name?.map((area, index) => (
+                                  <div key={index}>
+                                    {area.division_name}
+                                  </div>
+                                ))}
                               </TableCell>
                               <TableCell align="left">
                                 {usersearch.executive_level.user_name === null
@@ -576,11 +595,7 @@ const UserSearch = () => {
                                   usersearch?.executive_level?.user_name
                                     ?.last_name}
                               </TableCell>
-                              <TableCell align="left">
-                                {usersearch?.division_name?.division_name === null
-                                  ? ""
-                                  : usersearch?.division_name?.division_name}
-                              </TableCell>
+
                               <TableCell align="left">
                                 {usersearch?.role_name?.role_name?.role_name ===
                                   "admin" ? (

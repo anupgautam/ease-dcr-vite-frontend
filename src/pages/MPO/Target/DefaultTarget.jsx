@@ -28,6 +28,7 @@ const DefaultTarget = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
 
     const { data } = useGetTargetsQuery(company_id);
+
     const [deleteTarget] = useDeleteTargetsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 

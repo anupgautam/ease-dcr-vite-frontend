@@ -30,6 +30,11 @@ const MpoNavConfig = [
         icon: <Icon icon="icon-park-solid:plan" style={{ fontSize: '20px' }} />,
     },
     {
+        title: 'Missed Call',
+        path: 'admin/missedcalls',
+        icon: <Icon icon="heroicons-solid:phone-missed-call" style={{ fontSize: '20px' }} />,
+    },
+    {
         title: 'DCR',
         path: 'admin/dcr',
         icon: <Icon icon="material-symbols:data-table-outline" style={{ fontSize: '20px' }} />,
