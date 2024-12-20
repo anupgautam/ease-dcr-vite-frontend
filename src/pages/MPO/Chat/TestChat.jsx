@@ -38,6 +38,7 @@ const TestChat = () => {
         { skip: !userId }
     );
 
+
     // useEffect(() => {
     //     if (getUserWSConnection?.data) {
     //         setChatMessage(getUserWSConnection.data);
@@ -61,7 +62,7 @@ const TestChat = () => {
         const data = {
             room_id: dynamicRoomId,
             chat_to: userId,
-            chat_from: company_user_role_id,
+            chat_from: Number(company_user_role_id),
             company_name: company_id,
             message: typingMsg.msg,
         };
@@ -75,12 +76,12 @@ const TestChat = () => {
             socket.on('connect', () => {
                 console.log('Connected to Socket.io server11');
                 socket.emit('chatUser', company_user_role_id);
-                socket.emit('history', company_user_role_id);
-                const data = { chat_from: company_user_role_id, chat_to: userId }
+                const data = { chat_from: Number(company_user_role_id), chat_to: userId }
                 socket.emit("history", data);
             });
             socket.on('receiveMessage', (data) => {
-                setChatMessage(data);
+                // setChatMessage(data);
+                // console.log('data', data);
             });
 
             socket.on('previousChat', (data) => {
@@ -94,7 +95,7 @@ const TestChat = () => {
                 console.log('Disconnected from Socket.io server');
             };
         }
-    }, [company_user_role_id]);
+    }, [company_user_role_id, userId]);
 
     return (
         <div className="flex h-[calc(85vh-0px)] antialiased text-gray-800">
@@ -154,7 +155,7 @@ const TestChat = () => {
                                         name="msg"
                                         value={typingMsg.msg}
                                         onChange={changeTypingMsg}
-                                        // onKeyDown={handleKeyDown}
+                                    // onKeyDown={handleKeyDown}
                                     />
                                 </div>
                             </div>
