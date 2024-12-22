@@ -102,22 +102,22 @@ export default function DashboardAppPage() {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <Link to="/dashboard/admin/listofproduct" style={{ textDecoration: 'none', width: "100%" }}>
-              <AppWidgetSummary title="Total Products" total={totalStats?.data?.total_number?.total_product} img='/assets/images/icons/pharmacy.png' />
+              <AppWidgetSummary title="Total Products" total={totalStats?.data?.total_product} img='/assets/images/icons/pharmacy.png' />
             </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Link to="/dashboard/admin/listofchemist" style={{ textDecoration: 'none', width: "100%" }}>
-              <AppWidgetSummary title="Total Chemists" total={totalStats?.data?.total_number?.total_chemist} color="info" img='/assets/images/icons/pharmacist.png' />
+              <AppWidgetSummary title="Total Chemists" total={totalStats?.data?.total_chemist} color="info" img='/assets/images/icons/pharmacist.png' />
             </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Link to="/dashboard/admin/listofdoctor" style={{ textDecoration: 'none', width: "100%" }}>
-              <AppWidgetSummary title="Total Doctors" total={totalStats?.data?.total_number?.total_doctor} color="warning" img='/assets/images/icons/doctor.png' />
+              <AppWidgetSummary title="Total Doctors" total={totalStats?.data?.total_doctor} color="warning" img='/assets/images/icons/doctor.png' />
             </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Link to="/dashboard/admin/listofstockist" style={{ textDecoration: 'none', width: "100%" }}>
-              <AppWidgetSummary title="Total Stockists" total={totalStats?.data?.total_number?.total_stockist} color="error" img='/assets/images/icons/stockist.png' />
+              <AppWidgetSummary title="Total Stockists" total={totalStats?.data?.total_stockist} color="error" img='/assets/images/icons/stockist.png' />
             </Link>
           </Grid>
 

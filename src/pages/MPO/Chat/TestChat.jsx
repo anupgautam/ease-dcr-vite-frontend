@@ -24,9 +24,7 @@ const TestChat = () => {
     const dispatch = useDispatch();
 
     const [typingMsg, setTypingMsg] = useState({ 'msg': '' })
-    const [groupName, setGroupName] = useState(`${WEBSOCKET_BASE_URL}ws/ac/`);
     const [userId, setUserId] = useState(0);
-    const [userChats] = useGetChatsByUserMutation();
     const [chatMessage, setChatMessage] = useState([]);
 
     const changeTypingMsg = (e) => {
@@ -39,12 +37,6 @@ const TestChat = () => {
     );
 
 
-    // useEffect(() => {
-    //     if (getUserWSConnection?.data) {
-    //         setChatMessage(getUserWSConnection.data);
-    //     }
-    // }, [getUserWSConnection])
-
     const socket = io(BASE_URL, {
         transports: ['websocket'],
         withCredentials: true,
@@ -52,13 +44,42 @@ const TestChat = () => {
 
 
 
-    const [ChatData, setChatData] = useState();
 
     const scrollRef = useRef();
 
+    useEffect(() => {
+        if (!company_user_role_id || !userId) return;
+        setChatMessage([]);
+        socket.emit('chatUser', company_user_role_id);
+
+        socket.on('connect', () => {
+            console.log('Connected to Socket.io server');
+        });
+
+        socket.on('receiveMessage', (data) => {
+            console.log('New message received:', data);
+            setChatMessage((prevMessages) => [
+                ...prevMessages,
+                {
+                    chat_from: data.chat_from,
+                    chat_to: data.chat_to,
+                    chat_message: data.chat_message,
+                    message_from: data.message_from,
+                }
+            ]);
+        });
+
+
+        return () => {
+            socket.off('receiveMessage');
+            socket.disconnect();
+            console.log('Disconnected from Socket.io server');
+        };
+    }, [company_user_role_id, userId]);
+
     const submitMessage = () => {
         const dynamicRoomId = 'room_' + Math.random().toString(36).substring(7);
-        socket.emit('joinChat', dynamicRoomId);
+
         const data = {
             room_id: dynamicRoomId,
             chat_to: userId,
@@ -66,36 +87,43 @@ const TestChat = () => {
             company_name: company_id,
             message: typingMsg.msg,
         };
+
         socket.emit('sendMessage', data);
-        setTypingMsg({ 'msg': '' });
+
+        setTypingMsg({ msg: '' });
+        setChatMessage((prevMessages) => [
+            ...prevMessages,
+            {
+                chat_to: userId,
+                chat_from: Number(company_user_role_id),
+                chat_message: typingMsg.msg,
+                message_from: company_user_role_id,
+            }
+        ]);
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            submitMessage();
+        }
+    };
 
     useEffect(() => {
-        if (company_user_role_id) {
-            socket.on('connect', () => {
-                console.log('Connected to Socket.io server11');
-                socket.emit('chatUser', company_user_role_id);
-                const data = { chat_from: Number(company_user_role_id), chat_to: userId }
-                socket.emit("history", data);
-            });
-            socket.on('receiveMessage', (data) => {
-                // setChatMessage(data);
-                // console.log('data', data);
-            });
+        document.addEventListener('keydown', handleKeyPress);
 
-            socket.on('previousChat', (data) => {
-                setChatMessage(data);
-            });
+        return () => {
+            document.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [typingMsg.msg]);
 
-            return () => {
-                socket.off('receiveMessage');
-                socket.off('previousChat');
-                socket.disconnect();
-                console.log('Disconnected from Socket.io server');
-            };
+    useEffect(() => {
+        if (getUserWSConnection?.data) {
+            if (userId && company_user_role_id) {
+                setChatMessage(getUserWSConnection.data);
+            }
         }
-    }, [company_user_role_id, userId]);
+    }, [userId, company_user_role_id, getUserWSConnection])
 
     return (
         <div className="flex h-[calc(85vh-0px)] antialiased text-gray-800">
@@ -125,7 +153,7 @@ const TestChat = () => {
                     </div>
                     {/*//! User Lists  */}
 
-                    <UserList setGroupName={setGroupName} setUserId={setUserId} />
+                    <UserList setUserId={setUserId} />
                 </div>
 
                 <div className="flex flex-col flex-auto h-full">
