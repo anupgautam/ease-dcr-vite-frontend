@@ -111,12 +111,6 @@ const FilteredDCR = () => {
         // 
     }, []);
 
-    // const handleNepaliMonthChange = (event) => {
-    //     setSelectedMonth(event.target.value);
-    //     // 
-    //     setCompanyId(company_id);
-    // };
-
     //! Date Format 
     const [startDate, setStartDate] = useState(null);
     const [dateData, setDateData] = useState('')
@@ -143,6 +137,7 @@ const FilteredDCR = () => {
         }
     }, [selectedId])
 
+    console.log("UserRole", user_role, "ParamsRole", role, selectedDCRType, selectedMonth, selectedYear)
 
     return (
         <>
@@ -173,6 +168,8 @@ const FilteredDCR = () => {
                                 </FormControl>
                             </Grid>
                         }
+
+
                         {
                             user_role !== "admin" &&
                             <Grid item md={2}>
@@ -192,6 +189,9 @@ const FilteredDCR = () => {
                                 </FormControl>
                             </Grid>
                         }
+
+
+                        {/*//! MPO  */}
                         {role === "MPO" || user_role === "MPO" ?
                             <Grid item md={3}>
                                 {
@@ -248,7 +248,7 @@ const FilteredDCR = () => {
                                                     </MenuItem>
                                                 </Select>
                                             </FormControl>
-                                            {selectedDCRType === "Doctor" ?
+                                            {/* {selectedDCRType === "Doctor" ?
                                                 <>
                                                     {selectedYear && selectedMonth ?
                                                         <ExportDoctorDCR
@@ -258,8 +258,34 @@ const FilteredDCR = () => {
                                                             dateOnly={dateOnly}
                                                         />
                                                         : <></>}
-                                                </> : <></>
-                                            }
+                                                    <DefaultDoctorDCR />
+                                                </>
+                                                :
+                                                <>
+                                                </>
+                                            } */}
+                                            {selectedDCRType === "Doctor" ? (
+                                                <>
+                                                    {selectedYear && selectedMonth ? (
+                                                        <>
+                                                            {/* <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}> */}
+                                                            <ExportDoctorDCR
+                                                                selectedUser={selectedId ? selectedId?.id : id}
+                                                                selectedMonth={selectedMonth}
+                                                                selectedDate={dateData}
+                                                                dateOnly={dateOnly}
+                                                            />
+                                                            <DefaultDoctorDCR />
+                                                            {/* </div> */}
+                                                        </>
+                                                    ) : null}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {/* Add other content here if needed */}
+                                                </>
+                                            )}
+
                                             {selectedDCRType === "Chemist" ?
                                                 <>
                                                     {selectedYear && selectedMonth ?
@@ -300,6 +326,8 @@ const FilteredDCR = () => {
                                 }
                             </Grid>
                             : <></>}
+
+
                         {/* {
                             user_role === "admin" &&
                             <Grid item md={2}>
@@ -322,6 +350,8 @@ const FilteredDCR = () => {
                         } */}
                     </Grid>
                 </Box>
+
+                {/*//! MPO Wala  */}
                 {role === "MPO" || user_role === "MPO" ?
                     <>
                         {/* {

@@ -79,6 +79,7 @@ import ListOfRolesSuperAdminController from './pages/MPO/RolesSuperAdmin/ListOfC
 import ListOfCompanyWiseUsers from './pages/MPO/CompanyUsers/ListOfCompanyWiseUsers';
 import DefaultCompanyUsers from './pages/MPO/CompanyUsers/DefaultCompanyUsers';
 import TestChat from './pages/MPO/Chat/TestChat';
+import ResetPassword from './pages/ResetPassword';
 
 export default function Router() {
   const routes = useRoutes([
@@ -94,6 +95,10 @@ export default function Router() {
     {
       path: '/forgetpassword',
       element: <ForgotPassword />,
+    },
+    {
+      path: '/changepassword',
+      element: <ChangePassword />,
     },
     {
       path: '/otp',
@@ -154,7 +159,7 @@ export default function Router() {
         {
           path: 'admin/add/mutiple/product',
           element: <Authentication component={AddMultipleProduct} allowRoles={['admin', 'MPO']} />,
-        },
+        },  
         {
           path: 'admin/add/mutiple/mpo/area',
           element: <Authentication component={AddMultipleMpoArea} allowRoles={['admin', 'MPO']} />,
@@ -294,10 +299,10 @@ export default function Router() {
           path: 'admin/notification',
           element: <Authentication component={NotificationController} allowRoles={['admin', 'MPO', 'other-roles']} />,
         },
-        {
-          path: 'admin/changepassword',
-          element: <Authentication component={ChangePassword} allowRoles={['admin', 'MPO', 'other-roles']} />,
-        },
+        // {
+        //   path: 'admin/changepassword',
+        //   element: <Authentication component={ChangePassword} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        // },
         {
           path: 'admin/user/attendance',
           // element: <Authentication component={ListofAttendance} allowRoles={['admin']} />,

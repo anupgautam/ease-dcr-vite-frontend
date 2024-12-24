@@ -1,7 +1,9 @@
 
 import { useState, useEffect } from 'react'
-// @mui
-import { Typography, Box, Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import useResponsive from '../../hooks/useResponsive';
+
+import { Typography, Box, Grid,Container, Link } from '@mui/material';
 // hooks
 import { LoadingButton } from '@mui/lab';
 // components
@@ -13,7 +15,33 @@ import { returnValidation } from '../../validation';
 import { useChangePasswordMutation } from '../../api/MPOSlices/AccountApiSlice';
 import { extractErrorMessage } from '../../reusable/extractErrorMessage';
 import { useSelector } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom';
 
+const StyledRoot = styled('div')(({ theme }) => ({
+    [theme.breakpoints.up('md')]: {
+        display: 'flex',
+    },
+}));
+
+const StyledSection = styled('div')(({ theme }) => ({
+    width: '100%',
+    maxWidth: 480,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    // boxShadow: theme.customShadows.card,
+    backgroundColor: theme.palette.background.default,
+}));
+
+const StyledContent = styled('div')(({ theme }) => ({
+    maxWidth: 480,
+    margin: 'auto',
+    minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    padding: theme.spacing(12, 0),
+}));
 //! new password mutation hook
 
 // ----------------------------------------------------------------------
@@ -28,6 +56,9 @@ export default function ChangePassword() {
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' })
     const [success, setSuccess] = useState(false)
     const { User_id } = useSelector((state) => state.cookie);
+    const mdUp = useResponsive('up', 'md');
+
+    const navigate = useNavigate()
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
@@ -83,6 +114,7 @@ export default function ChangePassword() {
                     setPwd()
                     setConfirmPwd()
                     setValues({ old: '', password: '', new: '' })
+                    navigate('/login')
                 }
                 else {
                     setErrorMessage({ show: true, message: extractErrorMessage(res?.error) });
@@ -103,74 +135,92 @@ export default function ChangePassword() {
         }
     }
 
+    console.log(values)
+
     return (
         <>
-            <Box style={{ textAlign: 'start' }}>
-                <Typography style={{ textAlign: 'start' }} variant="h4" gutterBottom>
-                    Change Password
-                </Typography>
-                <Grid container spacing={4}>
-                    <Grid item xs={5}>
-                        <Box marginBottom={3} marginTop={4}>
-                            <Controls.InputPassword
-                                name="old"
-                                label="Previous Password*"
-                                value={values.old}
-                                onChange={handleInputChange}
-                                error={errors.old}
-                            />
-                        </Box>
-                        <Box marginBottom={3}>
-                            <Controls.InputPassword
-                                name="password"
-                                label=" New Password*"
-                                value={values.password}
-                                onChange={handleInputChange}
-                                error={errors.password}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
-                            <Controls.InputPassword
-                                name="new"
-                                label=" Confirm New Password*"
-                                value={values.new}
-                                onChange={handleInputChange}
-                                error={errors.new}
-                            />
-                        </Box>
-                        <LoadingButton className="loginbutton" fullWidth size="large" type="submit" variant="contained" onClick={handleSubmission} >
+            <StyledRoot>
+                {mdUp && (
+                    <StyledSection>
+                        <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
                             Change Password
-                        </LoadingButton>
-                    </Grid>
-                    <Grid item xs={12} md={7}>
-                        <Box style={{ textAlign: "start", marginTop: "25px" }}>
-                            <Typography className="emailtext">
-                                Password Policy
+                        </Typography>
+                        <img src="/assets/illustrations/forgot_password.png" alt="Change Password" />
+                    </StyledSection>
+                )}
+
+                <Container maxWidth="sm">
+                    <StyledContent>
+                        <Box style={{ textAlign: 'start' }}>
+                            <Typography style={{ textAlign: 'start' }} variant="h4" gutterBottom>
+                                Change Password
                             </Typography>
-                            <ul style={{ padding: "0px", marginTop: "15px" }}>
-                                <li className="emailtext" style={{ marginLeft: "10px", listStyleType: "circle" }}>
-                                    Password Maximum Length is 15
-                                </li>
-                                <li
-                                    className="emailtext"
-                                    style={{ marginTop: "8px", marginLeft: "10px", listStyleType: "circle" }}
-                                >
-                                    Password Minimum Length is 8
-                                </li>
-                                <li
-                                    className="emailtext"
-                                    style={{ marginTop: "8px", marginLeft: "10px", listStyleType: "circle" }}
-                                >
-                                    At Least 3 Number of lowercase letters in password
-                                </li>
-                            </ul>
-                        </Box>
-                    </Grid>
-                    {/* <button fullWidth className='loginbutton' size="large" type="submit" variant="contained" onClick={handleSubmission}>
+                            <Grid container spacing={4}>
+                                <Grid item xs={10}>
+                                    <Box marginBottom={3} marginTop={4}>
+                                        <Controls.InputPassword
+                                            name="old"
+                                            label="Previous Password*"
+                                            value={values.old}
+                                            onChange={handleInputChange}
+                                            error={errors.old}
+                                        />
+                                    </Box>
+                                    <Box marginBottom={3}>
+                                        <Controls.InputPassword
+                                            name="password"
+                                            label=" New Password*"
+                                            value={values.password}
+                                            onChange={handleInputChange}
+                                            error={errors.password}
+                                        />
+                                    </Box>
+                                    <Box marginBottom={2}>
+                                        <Controls.InputPassword
+                                            name="new"
+                                            label=" Confirm New Password*"
+                                            value={values.new}
+                                            onChange={handleInputChange}
+                                            error={errors.new}
+                                        />
+                                    </Box>
+                                    <LoadingButton className="loginbutton" fullWidth size="large" type="submit" variant="contained" onClick={handleSubmission} >
+                                        Change Password
+                                    </LoadingButton>
+                                </Grid>
+                                {/* <Grid item xs={12} md={7}>
+                                    <Box style={{ textAlign: "start", marginTop: "25px" }}>
+                                        <Typography className="emailtext">
+                                            Password Policy
+                                        </Typography>
+                                        <ul style={{ padding: "0px", marginTop: "15px" }}>
+                                            <li className="emailtext" style={{ marginLeft: "10px", listStyleType: "circle" }}>
+                                                Password Maximum Length is 15
+                                            </li>
+                                            <li
+                                                className="emailtext"
+                                                style={{ marginTop: "8px", marginLeft: "10px", listStyleType: "circle" }}
+                                            >
+                                                Password Minimum Length is 8
+                                            </li>
+                                            <li
+                                                className="emailtext"
+                                                style={{ marginTop: "8px", marginLeft: "10px", listStyleType: "circle" }}
+                                            >
+                                                At Least 3 Number of lowercase letters in password
+                                            </li>
+                                        </ul>
+                                    </Box>
+                                </Grid> */}
+                                {/* <button fullWidth className='loginbutton' size="large" type="submit" variant="contained" onClick={handleSubmission}>
                         Change Password
                     </button> */}
-                </Grid>
-            </Box>
+                            </Grid>
+                        </Box>
+                    </StyledContent>
+                </Container>
+
+            </StyledRoot>
             {
                 ErrorMessage.show === true ? (
                     <Grid>
@@ -192,3 +242,4 @@ export default function ChangePassword() {
         </>
     );
 }
+
