@@ -13,7 +13,7 @@ import { Icon } from '@iconify/react';
 import { useGetCompanyUserByIdQuery, useGetcompanyUserRolesByIdQuery } from '../../../../api/CompanySlices/companyUserRoleSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCookie } from '../../../../reducers/cookieReducer';
-import { useGetAllUsersWithoutPaginationByIdQuery, useGetUsersByIdQuery } from '../../../../api/MPOSlices/UserSlice';
+import { useGetAllUsersWithoutPaginationByIdQuery, useGetUsersByIdQuery, useGetUserProfileByIdQuery, useUpdateUserProfileByIdMutation } from '../../../../api/MPOSlices/UserSlice';
 
 const MENU_OPTIONS = [
   {
@@ -35,6 +35,12 @@ export default function AccountPopover() {
   //! LogOut
   const navigate = useNavigate();
 
+  const userProfile = useGetUserProfileByIdQuery(company_user_role_id, {
+    skip: !company_user_role_id
+  })
+
+  const [profilePicture] = useUpdateUserProfileByIdMutation()
+
   const settings = () => {
     navigate('/dashboard/settings/admin/companyareas')
   }
@@ -52,6 +58,16 @@ export default function AccountPopover() {
   const [success, setSuccess] = useState(false)
 
   const refreshToken = Cookies.get('refresh')
+
+  // const {
+  //   values,
+  //   setValues,
+  //   errors,
+  //   setErrors,
+  //   handleInputChange,
+  //   handleImageUpload,
+  //   resetForm,
+  // } = useForm(initialFValues, true, validate);
   // 
   const logOut = async (e) => {
     try {
@@ -77,7 +93,31 @@ export default function AccountPopover() {
       setMessage({ show: true, message: "Logout Failed" });
     }
   }
+
+  const changeProfile = async (e) => {
+
+    const formDataWithFile = new FormData();
+    if (file) {
+      formDataWithFile.append('profile_pic', file);
+    } else if (formData.image) {
+      formDataWithFile.append('profile_pic', formData.image);
+    } else if (userProfile?.data?.profile_pic) {
+      formDataWithFile.append('profile_pic', data.image);
+    }
+    formDataWithFile.append('id', company_user_role_id)
+    try {
+      const response = await profilePicture(formDataWithFile).unwrap();
+      setOpenProfileDialogue(false)
+      toast.success("Profile Picture updated")
+    } catch (error) {
+      toast.error("Profile Picture failed to upload.")
+
+    }
+  }
   const [open, setOpen] = useState(null);
+
+  const [img, setImg] = useState(userProfile?.data?.profile_pic || null);
+  const [file, setFile] = useState(null);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -89,11 +129,19 @@ export default function AccountPopover() {
 
   //! Dialogue
   const [openDialogue, setOpenDialogue] = useState(false);
+  const [openProfileDialogue, setOpenProfileDialogue] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleClickOpenDialogue = () => {
     setOpenDialogue(true)
+  }
+
+  const handleClickProfileDialogue = () => {
+    setOpenProfileDialogue(true)
+  }
+  const handleCloseProfileDialogue = () => {
+    setOpenProfileDialogue(true)
   }
 
   const handleCloseDialogue = () => {
@@ -102,6 +150,14 @@ export default function AccountPopover() {
   const userName = useGetUsersByIdQuery(company_user_id, {
     skip: !company_user_id
   })
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setImg(selectedFile); // Store the file to show preview
+    }
+  };
 
   return (
     <>
@@ -123,7 +179,7 @@ export default function AccountPopover() {
             }),
           }}
         >
-          <Avatar src={account.photoURL} alt="photoURL" />
+          <Avatar src={userProfile?.data?.profile_pic} alt="Profile Picture" />
         </IconButton>
       </Tooltip>
 
@@ -166,6 +222,12 @@ export default function AccountPopover() {
           Profile
         </MenuItem> */}
 
+        <MenuItem onClick={(e) => handleClickProfileDialogue(e)} sx={{ m: 1 }}>
+          <ListItemIcon>
+            <Icon icon="iconamoon:profile-circle-fill" />
+          </ListItemIcon>
+          Change profile picture
+        </MenuItem>
         <MenuItem onClick={reDirectChangePwd} sx={{ m: 1 }}>
           <ListItemIcon>
             <Icon icon="teenyicons:password-solid" />
@@ -195,6 +257,49 @@ export default function AccountPopover() {
           </Button>
           <Button
             onClick={handleCloseDialogue}
+            autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        fullScreen={fullScreen}
+        open={openProfileDialogue}
+        onClose={handleCloseProfileDialogue}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          {"Click to change profile picture"}
+          {img &&
+            <>
+              <Avatar
+                src={file ? URL.createObjectURL(img) : `${userProfile?.data?.profile_pic}`}
+                alt={userProfile?.data?.profile_pic || "Profile Picture"}
+                width={120}
+                height={120}
+                objectFit="cover"
+              />
+              <div className="flex gap-x-2 cursor-pointer">
+                <label className="flex items-center gap-2">
+                  <Icon icon="material-symbols:upload" width="50" height="50" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                </label>
+              </div>
+            </>
+          }
+        </DialogTitle>
+
+        <DialogActions>
+          <Button autoFocus onClick={(e) => { changeProfile(e); handleCloseProfileDialogue() }}>
+            Yes
+          </Button>
+          <Button
+            onClick={handleCloseProfileDialogue}
             autoFocus>
             No
           </Button>

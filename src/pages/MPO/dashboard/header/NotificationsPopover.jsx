@@ -74,13 +74,13 @@ export default function NotificationsPopover() {
   return (
     <>
       {/* {user_role === 'admin' && */}
-        <Tooltip title="Chat" arrow>
-          <Link to={'/dashboard/admin/chat'}>
-            <IconButton color={open ? 'primary' : 'default'} sx={{ width: 40, height: 40 }}>
-              <Iconify icon="fluent:chat-12-filled" />
-            </IconButton>
-          </Link>
-        </Tooltip>
+      <Tooltip title="Chat" arrow>
+        <Link to={'/dashboard/admin/chat'}>
+          <IconButton color={open ? 'primary' : 'default'} sx={{ width: 40, height: 40 }}>
+            <Iconify icon="fluent:chat-12-filled" />
+          </IconButton>
+        </Link>
+      </Tooltip>
       {/* } */}
 
       <Tooltip title="Notifications" arrow>
@@ -112,11 +112,12 @@ export default function NotificationsPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
-          <List
-            disablePadding
-          >
+          <List disablePadding>
             {data?.slice(0, 2).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
+              <NotificationItem
+                key={String(notification.id)}
+                notification={{ ...notification, id: String(notification.id) }}
+              />
             ))}
           </List>
         </Scrollbar>

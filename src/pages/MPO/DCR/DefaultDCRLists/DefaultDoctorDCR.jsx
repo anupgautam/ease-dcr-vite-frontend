@@ -18,7 +18,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -89,6 +90,7 @@ const DefaultDoctorDCR = () => {
 
     // !Get Tour Plans
     const { data } = useGetAllDataofDCRDoctorQuery({ page: page, id: company_user_role_id });
+    console.log(data)
 
     const [deleteTourPlan] = useDeleteDoctorsDCRByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -124,26 +126,20 @@ const DefaultDoctorDCR = () => {
                                                 <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}>
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
-                                                        {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                         <Typography variant="subtitle2" noWrap>
                                                             {tourplan.mpo_name.user_name.first_name + " " + tourplan.mpo_name.user_name.last_name}
                                                         </Typography>
-                                                        {/* </Stack> */}
                                                     </TableCell>
-                                                    <TableCell align="left">{tourplan.dcr.shift.shift}</TableCell>
-                                                    <TableCell align="left">{moment(tourplan.dcr.dcr.date).format('DD')}</TableCell>
-                                                    {/* <TableCell align="left">{tourplan.dcr.dcr.year}</TableCell> */}
-                                                    {/* <TableCell align="left">{tourplan.dcr.dcr.month}</TableCell> */}
-                                                    <TableCell align="left">{tourplan.dcr.dcr.visited_area.area_name}</TableCell>
+                                                    <TableCell align="left">{tourplan?.shift?.shift}</TableCell>
+                                                    <TableCell align="left">{tourplan?.dcr?.date}</TableCell>
+                                                    {/* <TableCell align="left">{moment(tourplan?.dcr?.date).format('DD')}</TableCell> */}
+                                                    {/* <TableCell align="left">{tourplan.dcr.dcr.visited_area.area_name}</TableCell> */}
                                                     <TableCell component="th" scope="row" align="left">
-                                                        {/* <Stack direction="row" alignItems="center" spacing={2}> */}
-                                                        <Typography variant="subtitle2" noWrap>
+                                                        {/* <Typography variant="subtitle2" noWrap>
                                                             {tourplan?.dcr?.dcr?.visited_doctor?.doctor_name?.doctor_name}
-                                                        </Typography>
-                                                        {/* </Stack> */}
+                                                        </Typography> */}
                                                     </TableCell>
-                                                    {/*//! Edit  */}
-                                                    <TableCell align="left">
+                                                    {/* <TableCell align="left">
                                                         {
                                                             user_role === 'admin' &&
                                                             <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id, tourplan.mpo_name.id)}>
@@ -152,7 +148,6 @@ const DefaultDoctorDCR = () => {
                                                                 </Badge>
                                                             </IconButton>
                                                         }
-                                                        {/*//! Delete  */}
                                                         {
                                                             user_role === 'admin' &&
                                                             <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.dcr.dcr.id); handleClickOpen() }}>
@@ -161,7 +156,7 @@ const DefaultDoctorDCR = () => {
                                                                 </Badge>
                                                             </IconButton>
                                                         }
-                                                    </TableCell>
+                                                    </TableCell> */}
                                                     <Dialog
                                                         fullScreen={fullScreen}
                                                         open={openDialogue}

@@ -8,6 +8,7 @@ import FilteredDCR from './FilteredDCR';
 import ExcelCSVDCR from './ExcelCSVDCR';
 import AddDcrForHo from './addDcr';
 import { useSelector } from 'react-redux';
+import FilteredDCRTest from './FilteredDCRTest';
 
 const ListOfDCR = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -30,7 +31,8 @@ const ListOfDCR = () => {
                     }
                 </Grid>
             </Box>
-            <FilteredDCR />
+            {/* <FilteredDCR /> */}
+            <FilteredDCRTest/>
         </Container>
     )
 }

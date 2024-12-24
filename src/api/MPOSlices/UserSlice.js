@@ -101,6 +101,28 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 providesTags: ['User']
             }),
 
+        //! GET userprofile by id
+        getUserProfileById: builder.query(
+            {
+                query: (id) => (
+                    {
+                        url: `user/user-profile-picture/${id}`,
+                        method: 'GET'
+                    }),
+                providesTags: ['User']
+            }),
+
+        //! PATCH userprofile by id
+        updateUserProfileById: builder.mutation({
+                query: (updateProfilePic) => (
+                    {
+                        url: `user/user-profile-picture/${updateProfilePic.get('id')}`,
+                        method: 'PATCH',
+                        body:updateProfilePic
+                    }),
+                invalidateTags: ['User']
+            }),
+
         //!GET users by company role
         getUsersByCompanyRoleIdExecutativeLevel: builder.query(
             {
@@ -286,7 +308,9 @@ export const {
     useLoginUserByAdminMutation,
     usePostUserIdToGetLowerLevelExecutiveMutation,
     useGetAllUsersWithoutPaginationByIdQuery,
-    useGetAllExecutiveLevelsMutation
+    useGetAllExecutiveLevelsMutation,
+    useGetUserProfileByIdQuery,
+    useUpdateUserProfileByIdMutation
     // useGetAllExecutiveLevelsQuery,
 } = userApiSlice
 

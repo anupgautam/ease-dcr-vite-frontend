@@ -81,7 +81,6 @@ const LoginFormInputs = () => {
             if (!emailError && !passwordError) {
                 try {
                     const res = await login({ email, password });
-
                     if (res.data) {
                         Cookies.set('User_id', res.data.user_id);
                         Cookies.set('company_id', res.data.company_id);
@@ -96,38 +95,46 @@ const LoginFormInputs = () => {
                         // setSuccessMessage({ show: true, message: 'Successfully Logged In' });
                         toast.success("Successfully Logged In")
                         setLoading(true);
-                        console.log(res)
+
                         setTimeout(() => {
-                            if (res?.data?.is_admin) {
-                                toast.success("Super Admin Logged In")
-                                Cookies.set('user_role', 'SuperAdmin')
-                                navigate('/dashboard/superadmin/company')
+                            if (res?.data?.is_generated === true) {
+                                toast.success("Login Successful")
+                                navigate('/changepassword')
                             }
-                            else if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
-                                Cookies.set('user_role', 'admin');
-                                navigate('/dashboard/admin');
-                                dispatch(setCredentials({ ...res, email }));
-                            } else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
-                                Cookies.set('user_role', 'MPO');
-                                navigate('/dashboard/admin/listofdoctor');
-                            } else if (res.data.role === 'ASM') {
-                                Cookies.set('user_role', 'other-roles');
-                                navigate('/dashboard/admin/tourplan');
-                            } else if (
-                                res.data.role === 'RSM'
-                                || res.data.role === 'SM'
-                                || res.data.role === 'MM'
-                                || res.data.role === 'CH'
-                            ) {
-                                Cookies.set('user_role', 'other-roles');
-                                Cookies.set('role', 'other');
-                                navigate('/dashboard/admin/tourplan');
-                            } else {
-                                setErrorMessage({ show: true, message: 'User Does not exist.' });
-                                setTimeout(() => {
-                                    setErrorMessage({ show: false, message: '' });
-                                }, 2000);
+                            else {
+                                if (res?.data?.is_admin) {
+                                    toast.success("Super Admin Logged In")
+                                    Cookies.set('user_role', 'SuperAdmin')
+                                    navigate('/dashboard/superadmin/company')
+                                }
+                                else if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
+                                    Cookies.set('user_role', 'admin');
+                                    navigate('/dashboard/admin');
+                                    dispatch(setCredentials({ ...res, email }));
+                                } else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
+                                    Cookies.set('user_role', 'MPO');
+                                    navigate('/dashboard/admin/listofdoctor');
+                                } else if (res.data.role === 'ASM') {
+                                    Cookies.set('user_role', 'other-roles');
+                                    navigate('/dashboard/admin/tourplan');
+                                } else if (
+                                    res.data.role === 'RSM'
+                                    || res.data.role === 'SM'
+                                    || res.data.role === 'MM'
+                                    || res.data.role === 'CH'
+                                ) {
+                                    Cookies.set('user_role', 'other-roles');
+                                    Cookies.set('role', 'other');
+                                    navigate('/dashboard/admin/tourplan');
+                                }
+                                else {
+                                    setErrorMessage({ show: true, message: 'User Does not exist.' });
+                                    setTimeout(() => {
+                                        setErrorMessage({ show: false, message: '' });
+                                    }, 2000);
+                                }
                             }
+
                             setLoading(false);
                         }, 1000);
 

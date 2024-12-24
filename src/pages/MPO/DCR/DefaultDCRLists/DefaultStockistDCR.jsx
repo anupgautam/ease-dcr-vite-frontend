@@ -88,6 +88,7 @@ const DefaultStockistDCR = () => {
 
     // !Get Tour Plans
     const { data } = useGetAllStockistsDCRQuery({ page: page, id: company_user_role_id });
+    console.log(data)
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteStockistsDCRByIdMutation();
@@ -130,15 +131,15 @@ const DefaultStockistDCR = () => {
                                                         </Typography>
                                                         {/* </Stack> */}
                                                     </TableCell>
-                                                    <TableCell align="left">{tourplan.dcr.shift.shift}</TableCell>
-                                                    <TableCell align="left">{tourplan.dcr.dcr.date}</TableCell>
+                                                    <TableCell align="left">{tourplan?.shift?.shift}</TableCell>
+                                                    <TableCell align="left">{tourplan?.dcr?.date}</TableCell>
                                                     {/* <TableCell align="left">{tourplan.dcr.dcr.year}</TableCell> */}
                                                     {/* <TableCell align="left">{tourplan.dcr.dcr.month}</TableCell> */}
                                                     {/* <TableCell align="left">{tourplan.dcr.dcr.visited_area.area_name}</TableCell> */}
                                                     <TableCell component="th" scope="row" align="left">
                                                         {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {tourplan.dcr.dcr.visited_stockist.stockist_name.stockist_name}
+                                                            {tourplan?.dcr?.dcr?.visited_stockist?.stockist_name?.stockist_name}
                                                         </Typography>
                                                         {/* </Stack> */}
                                                     </TableCell>
@@ -146,7 +147,7 @@ const DefaultStockistDCR = () => {
                                                     <TableCell align="left">
                                                         {
                                                             user_role === 'admin' &&
-                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.dcr.dcr.id, tourplan.mpo_name.id)}>
+                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan?.dcr?.dcr?.id, tourplan?.mpo_name?.id)}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:edit-fill" />
                                                                 </Badge>
@@ -155,7 +156,7 @@ const DefaultStockistDCR = () => {
                                                         {/*//! Delete  */}
                                                         {
                                                             user_role === 'admin' &&
-                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.dcr.dcr.id); handleClickOpen() }}>
+                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan?.dcr?.dcr?.id); handleClickOpen() }}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:trash-2-outline" />
                                                                 </Badge>

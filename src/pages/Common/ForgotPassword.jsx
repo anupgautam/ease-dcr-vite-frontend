@@ -13,8 +13,6 @@ import { useForgotPasswordMutation } from '../../api/MPOSlices/AccountApiSlice';
 import Cookies from 'js-cookie'
 import { extractErrorMessage } from '../../reusable/extractErrorMessage';
 
-
-
 const StyledRoot = styled('div')(({ theme }) => ({
     [theme.breakpoints.up('md')]: {
         display: 'flex',
