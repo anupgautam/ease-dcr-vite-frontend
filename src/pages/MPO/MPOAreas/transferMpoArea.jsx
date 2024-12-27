@@ -75,40 +75,94 @@ const TransferMpoArea = () => {
         setAreaOptions(selectedIds);
     };
 
-    const transferArea = (e) => {
+    // const transferArea = (e) => {
+    //     e.preventDefault();
+    //     setLoading(true)
+    //     const data = {
+    //         "transfer_to_mpo": values.transfer_to,
+    //         "transfer_from_mpo": values.transfer_from,
+    //         "area_id": areaOptions,
+    //     }
+    //     MpoTransferArea(data)
+    //         .then((res) => {
+    //             console.log(res)
+    //             if (res?.data) {
+    //                 setSuccessMessage({ show: true, message: 'Successfully Transfered Area.' });
+    //                 setTimeout(() => {
+    //                     setSuccessMessage({ show: false, message: '' });
+    //                 }, 3000);
+    //                 setIsDrawerOpen(false)
+    //                 setLoading(false)
+    //             } else if (res?.error) {
+    //                 console.log(res?.error)
+    //                 // setErrorMessage({ show: true, message: res.error.data[0] });
+    //                 setTimeout(() => {
+    //                     setErrorMessage({ show: false, message: '' });
+    //                 }, 3000);
+    //                 setLoading(false)
+    //             }
+    //             else {
+    //                 setErrorMessage({ show: true, message: res.error.data[0] });
+    //                 setTimeout(() => {
+    //                     setErrorMessage({ show: false, message: '' });
+    //                 }, 3000);
+    //                 setLoading(false)
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+    //             console.log(err)
+    //             setTimeout(() => {
+    //                 setErrorMessage({ show: false, message: '' });
+    //             }, 3000);
+    //         })
+    //         .finally(err => {
+    //             setLoading(true)
+    //         })
+    // }
+
+    const transferArea = async (e) => {
         e.preventDefault();
-        setLoading(true)
+        setLoading(true);
+
         const data = {
-            "transfer_to_mpo": values.transfer_to,
-            "transfer_from_mpo": values.transfer_from,
-            "area_id": areaOptions,
-        }
-        MpoTransferArea(data)
-            .then((res) => {
-                if (res?.data) {
-                    setSuccessMessage({ show: true, message: 'Successfully Transfered Area.' });
-                    setLoading(false)
-                    setTimeout(() => {
-                        setSuccessMessage({ show: false, message: '' });
-                    }, 3000);
-                    setIsDrawerOpen(false)
-                } else {
-                    setErrorMessage({ show: true, message: res.error.data[0] });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 3000);
-                }
-            })
-            .catch((err) => {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+            transfer_to_mpo: values.transfer_to,
+            transfer_from_mpo: values.transfer_from,
+            area_id: areaOptions,
+        };
+
+        try {
+            const res = await MpoTransferArea(data);
+
+            if (res?.data) {
+                setSuccessMessage({ show: true, message: 'Successfully Transferred Area.' });
+                setTimeout(() => {
+                    setSuccessMessage({ show: false, message: '' });
+                }, 3000);
+                setIsDrawerOpen(false);
+            } else if (res?.error) {
+                console.log(res?.error);
+                setErrorMessage({ show: true, message: res?.error?.data?.[0] || 'An error occurred.' });
                 setTimeout(() => {
                     setErrorMessage({ show: false, message: '' });
                 }, 3000);
-            })
-            .finally(err => {
-                setLoading(true)
-            })
-    }
+            } else {
+                setErrorMessage({ show: true, message: 'Unexpected error occurred.' });
+                setTimeout(() => {
+                    setErrorMessage({ show: false, message: '' });
+                }, 3000);
+            }
+        } catch (err) {
+            console.error(err);
+            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+            setTimeout(() => {
+                setErrorMessage({ show: false, message: '' });
+            }, 3000);
+        } finally {
+            setLoading(false); // Ensure loading is turned off regardless of the outcome
+        }
+    };
+
 
     return (
         <>

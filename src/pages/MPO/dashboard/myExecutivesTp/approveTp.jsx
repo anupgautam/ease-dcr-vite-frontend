@@ -6,6 +6,7 @@ import { BSDate } from "nepali-datepicker-react";
 import { useBulkUpdateTourplanByHoMutation, useBulkUpdateTourplanByMpoMutation } from "@/api/MPOSlices/TourPlanSlice";
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import { useSelector } from 'react-redux';
+import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const ApprovedTP = ({ mpoName, role }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -66,6 +67,7 @@ const ApprovedTP = ({ mpoName, role }) => {
             };
             UpdateBulkTourPlan(data)
                 .then((res) => {
+                    console.log(res)
                     if (res.data) {
                         setIsDrawerOpen(false)
                         setSuccessMessage({ show: true, message: 'Tour Plan Successfully Verified.' });
@@ -73,10 +75,10 @@ const ApprovedTP = ({ mpoName, role }) => {
                             setSuccessMessage({ show: false, message: '' });
                         }, 2000);
                     } else {
-                        setErrorMessage({ show: true, message: response.error.data[0] });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 2000);
+                        console.log(res?.error?.data?.message)
+                        setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
+                        // toast.error(res?.error?.data?.message?.toString() || 'An unexpected error occurred.');
+                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     }
                 })
                 .catch((err) => {
@@ -101,10 +103,10 @@ const ApprovedTP = ({ mpoName, role }) => {
                             setSuccessMessage({ show: false, message: '' });
                         }, 2000);
                     } else {
-                        setErrorMessage({ show: true, message: response.error.data[0] });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 2000);
+                        console.log("Here error 400")
+                        // setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
+                        toast.error({ show: true, message: extractErrorMessage(res?.error) });
+                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     }
                 })
                 .catch((err) => {

@@ -222,6 +222,8 @@ const ChemistSearch = () => {
 
     const debouncedSearch = debounce(onSearch, 300);
 
+    console.log(SearchData)
+
     return (
         <>
             <Card>

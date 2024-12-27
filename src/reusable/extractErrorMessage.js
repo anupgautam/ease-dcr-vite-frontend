@@ -1,3 +1,6 @@
+import { toast } from 'react-toastify';
+
+
 export const extractErrorMessage = (error) => {
     const defaultErrorMessage = "Internal Server Error";
     const authErrorMessage = "Error Failed";
@@ -28,8 +31,9 @@ export const extractErrorMessage = (error) => {
 
     if (error?.response?.data) {
         errorMessage = deepSearch(error.response.data) || defaultErrorMessage;
+        // errorMessage = deepSearch(error.response.data) || (defaultErrorMessage);
     } else if (error?.data) {
-        errorMessage = deepSearch(error.data) || defaultErrorMessage;
+        errorMessage = deepSearch(error.data) || (defaultErrorMessage);
     }
 
     return errorMessage;

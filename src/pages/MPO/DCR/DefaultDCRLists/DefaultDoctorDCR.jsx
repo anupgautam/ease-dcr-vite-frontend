@@ -127,7 +127,7 @@ const DefaultDoctorDCR = () => {
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {tourplan.mpo_name.user_name.first_name + " " + tourplan.mpo_name.user_name.last_name}
+                                                            {tourplan?.mpo_name?.user_name?.first_name + " " + tourplan?.mpo_name?.user_name?.last_name}
                                                         </Typography>
                                                     </TableCell>
                                                     <TableCell align="left">{tourplan?.shift?.shift}</TableCell>

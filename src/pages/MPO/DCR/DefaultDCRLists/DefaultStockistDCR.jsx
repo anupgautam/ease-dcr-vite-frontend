@@ -127,7 +127,7 @@ const DefaultStockistDCR = () => {
                                                     <TableCell component="th" scope="row" align="left">
                                                         {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {tourplan.mpo_name.user_name.first_name + " " + tourplan.mpo_name.user_name.last_name}
+                                                            {tourplan?.mpo_name?.user_name?.first_name + " " + tourplan?.mpo_name?.user_name?.last_name}
                                                         </Typography>
                                                         {/* </Stack> */}
                                                     </TableCell>
