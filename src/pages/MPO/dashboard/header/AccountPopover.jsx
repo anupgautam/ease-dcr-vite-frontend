@@ -14,6 +14,7 @@ import { useGetCompanyUserByIdQuery, useGetcompanyUserRolesByIdQuery } from '../
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCookie } from '../../../../reducers/cookieReducer';
 import { useGetAllUsersWithoutPaginationByIdQuery, useGetUsersByIdQuery, useGetUserProfileByIdQuery, useUpdateUserProfileByIdMutation } from '../../../../api/MPOSlices/UserSlice';
+import { toast } from 'react-toastify';
 
 const MENU_OPTIONS = [
   {
@@ -111,7 +112,6 @@ export default function AccountPopover() {
       toast.success("Profile Picture updated")
     } catch (error) {
       toast.error("Profile Picture failed to upload.")
-
     }
   }
   const [open, setOpen] = useState(null);
@@ -141,7 +141,7 @@ export default function AccountPopover() {
     setOpenProfileDialogue(true)
   }
   const handleCloseProfileDialogue = () => {
-    setOpenProfileDialogue(true)
+    setOpenProfileDialogue(false)
   }
 
   const handleCloseDialogue = () => {
@@ -194,7 +194,7 @@ export default function AccountPopover() {
             p: 0,
             mt: 1.5,
             ml: 0.75,
-            width: 200,
+            width: 250,
             '& .MuiMenuItem-root': {
               typography: 'body2',
               borderRadius: 0.75,
@@ -262,6 +262,7 @@ export default function AccountPopover() {
           </Button>
         </DialogActions>
       </Dialog>
+      {/*//! Profile Picture  */}
       <Dialog
         fullScreen={fullScreen}
         open={openProfileDialogue}
@@ -270,8 +271,8 @@ export default function AccountPopover() {
       >
         <DialogTitle id="responsive-dialog-title">
           {"Click to change profile picture"}
-          {img &&
-            <>
+          <>
+            {img &&
               <Avatar
                 src={file ? URL.createObjectURL(img) : `${userProfile?.data?.profile_pic}`}
                 alt={userProfile?.data?.profile_pic || "Profile Picture"}
@@ -279,19 +280,19 @@ export default function AccountPopover() {
                 height={120}
                 objectFit="cover"
               />
-              <div className="flex gap-x-2 cursor-pointer">
-                <label className="flex items-center gap-2">
-                  <Icon icon="material-symbols:upload" width="50" height="50" />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleFileChange}
-                  />
-                </label>
-              </div>
-            </>
-          }
+            }
+            <div className="flex gap-x-2 cursor-pointer">
+              <label className="flex items-center gap-2">
+                <Icon icon="material-symbols:upload" width="50" height="50" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </label>
+            </div>
+          </>
         </DialogTitle>
 
         <DialogActions>
@@ -299,7 +300,7 @@ export default function AccountPopover() {
             Yes
           </Button>
           <Button
-            onClick={handleCloseProfileDialogue}
+            onClick={(e) => handleCloseProfileDialogue(e)}
             autoFocus>
             No
           </Button>

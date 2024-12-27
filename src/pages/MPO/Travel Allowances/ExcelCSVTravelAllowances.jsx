@@ -285,12 +285,12 @@ const ExcelCSVTourPlan = () => {
                     <Stack spacing={1} direction="row">
                         {TourPlanSearch &&
                             <>
-                                {/* <Box marginTop={2}>
+                                <Box marginTop={2}>
                                     <ExportToExcel
                                         headers={selectedUser?.role === "MPO" ? headers1 : headers}
                                         fileName={`${selectedUser?.role === "MPO" ? selectedUser.title + ' ' + 'Tour Plan' : 'All Tour Plan'}`}
                                         data={selectedUser?.role === "MPO" ? templateData1 : templateData} />
-                                </Box> */}
+                                </Box>
                             </>
                         }
                     </Stack>

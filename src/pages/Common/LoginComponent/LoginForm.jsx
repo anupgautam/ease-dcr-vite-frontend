@@ -109,12 +109,15 @@ const LoginFormInputs = () => {
                                 }
                                 else if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
                                     Cookies.set('user_role', 'admin');
+                                    toast.success("Admin Logged In")
                                     navigate('/dashboard/admin');
                                     dispatch(setCredentials({ ...res, email }));
                                 } else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
                                     Cookies.set('user_role', 'MPO');
+                                    toast.success("MPO Logged In")
                                     navigate('/dashboard/admin/listofdoctor');
                                 } else if (res.data.role === 'ASM') {
+                                    toast.success("ASM Logged In")
                                     Cookies.set('user_role', 'other-roles');
                                     navigate('/dashboard/admin/tourplan');
                                 } else if (

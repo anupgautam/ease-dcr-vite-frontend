@@ -55,24 +55,24 @@ const Navbar = () => {
           ))}
         </div>
         {login ? (
-          <button className="bg-[#6364f2] p-2  px-4 md:px-8  rounded-[30px] text-[9px] md:text-[18px] text-white hover:scale-105 hover:bg-violet-800 duration-300">
-            <RouterLink
-              to={
-                user_role === "admin" ?
-                  "/dashboard/admin"
-                  : "/dashboard/admin/listofdoctor"
-              }
-              className="ud-main-btn ud-white-btn"
-            >
+          <RouterLink
+            to={
+              user_role === "admin" ?
+                "/dashboard/admin"
+                : "/dashboard/admin/listofdoctor"
+            }
+            className="ud-main-btn ud-white-btn"
+          >
+            <button className="bg-[#6364f2] p-2  px-4 md:px-8  rounded-[30px] text-[9px] md:text-[18px] text-white hover:scale-105 hover:bg-violet-800 duration-300">
               Go to Dashboard
-            </RouterLink>
-          </button>
+            </button>
+          </RouterLink>
         ) : (
-          <button className="bg-[#6364f2] p-2 px-4 md:px-8 rounded-[30px] text-[9px] md:text-[18px] text-white hover:scale-105 hover:bg-violet-800 duration-300">
-            <RouterLink to="/login" className="ud-main-btn ud-white-btn">
+          <RouterLink to="/login" className="ud-main-btn ud-white-btn">
+            <button className="bg-[#6364f2] p-2 px-4 md:px-8 rounded-[30px] text-[9px] md:text-[18px] text-white hover:scale-105 hover:bg-violet-800 duration-300">
               Login
-            </RouterLink>
-          </button>
+            </button>
+          </RouterLink>
         )}
       </div>
     </div>
