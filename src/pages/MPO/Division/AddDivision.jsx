@@ -20,6 +20,7 @@ import {
 } from '@/api/DivisionSilces/companyDivisionSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const AddDivision = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -37,11 +38,15 @@ const AddDivision = () => {
         setErrors({
             ...temp
         })
-        // 
 
         if (fieldValues === values)
             return Object.values(temp).every(x => x == "")
     }
+
+    //! Chat wala  
+    // const validate = (values) => {
+    //     return values?.division_name?.trim() !== "";
+    // };
 
 
     const [initialFValues, setInitialFValues] = useState({
@@ -62,6 +67,16 @@ const AddDivision = () => {
 
     }, [values.division_name])
 
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+        const isDivisionNameValid = values?.division_name?.trim() !== "";
+        console.log("Validation Wala:", valid, "Khali wala test", isDivisionNameValid)
+
+        setIsButtonDisabled((valid && isDivisionNameValid));
+    }, [values]);
+
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
@@ -73,7 +88,9 @@ const AddDivision = () => {
         const data = { division_name: values.division_name, company_name: company_id }
         try {
             const response = await createDivisions(data)
-            if (response) {
+            console.log(response)
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
                 setSuccessMessage({ show: true, message: 'Successfully Added Company Division' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
@@ -81,36 +98,20 @@ const AddDivision = () => {
                 setIsDrawerOpen(false)
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: "Error" });
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                toast.error(`Some Error Occured`)
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
 
     }, [values, createDivisions]);
-
-    // useEffect(() => {
-    //     const handleKeyDown = (e) => {
-    //         if (e.key === 'Enter' && values.reward && values.price) {
-    //             onAddCompanyDivision(e);
-    //         }
-    //     };
-    //     window.addEventListener('keydown', handleKeyDown);
-    //     return () => {
-    //         window.removeEventListener('keydown', handleKeyDown);
-    //     };
-    // }, [values.division_name,onAddCompanyDivision]);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -175,6 +176,7 @@ const AddDivision = () => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddCompanyDivision(e)}
                             text="Submit"
                         />

@@ -19,6 +19,7 @@ const DefaultList = () => {
     //! GET Uploads 
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
     const { data } = useGetUploadQuery({ page: page, id: company_id });
+    console.log(data)
 
     return (
         <>

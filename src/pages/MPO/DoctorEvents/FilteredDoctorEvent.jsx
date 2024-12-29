@@ -268,7 +268,7 @@ const FilteredDoctorEvent = () => {
                                                 <TableCell><Skeleton /></TableCell>
                                             </TableRow>
                                         ))
-                                    ) : DoctorEventData.count === 0 ? (
+                                    ) : DoctorEventData?.count === 0 ? (
                                         <TableRow>
                                             <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
                                                 <Paper sx={{ textAlign: 'center' }}>
@@ -283,7 +283,7 @@ const FilteredDoctorEvent = () => {
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        DoctorEventData.results.map((events, index) => (
+                                        DoctorEventData?.results?.map((events, index) => (
                                             <TableRow hover tabIndex={-1} role="checkbox" key={events.id}>
                                                 <TableCell>{index + 1}</TableCell>
                                                 <TableCell component="th" scope="row" align="left">
@@ -291,23 +291,25 @@ const FilteredDoctorEvent = () => {
                                                         {events.event_title}
                                                     </Typography>
                                                 </TableCell>
-                                                <TableCell align="left">{events.event_date}</TableCell>
-                                                <TableCell align="left">{events.doctor_id.doctor_name.doctor_name}</TableCell>
+                                                <TableCell align="left">{events?.event_date}</TableCell>
+                                                <TableCell align="left">{events?.doctor_id?.doctor_name?.doctor_name}</TableCell>
                                                 <TableCell align="left">
-                                                    {`${events.mpo_id.user_name.first_name} ${events.mpo_id.user_name.last_name}`}
+                                                    {`${events?.mpo_name?.user_name?.first_name} ${events?.mpo_name?.user_name?.middle_name} ${events?.mpo_name?.user_name?.last_name}`}
                                                 </TableCell>
-                                                <IconButton
-                                                    color="error"
-                                                    sx={{ width: 40, height: 40, mt: 0.75 }}
-                                                    onClick={() => {
-                                                        setSelectedId(events.id);
-                                                        handleClickOpen();
-                                                    }}
-                                                >
-                                                    <Badge>
-                                                        <Iconify icon="eva:trash-2-outline" />
-                                                    </Badge>
-                                                </IconButton>
+                                                <TableCell>
+                                                    <IconButton
+                                                        color="error"
+                                                        sx={{ width: 40, height: 40, mt: 0.75 }}
+                                                        onClick={() => {
+                                                            setSelectedId(events.id);
+                                                            handleClickOpen();
+                                                        }}
+                                                    >
+                                                        <Badge>
+                                                            <Iconify icon="eva:trash-2-outline" />
+                                                        </Badge>
+                                                    </IconButton>
+                                                </TableCell>
                                                 <Dialog
                                                     fullScreen={fullScreen}
                                                     open={openDialogue}

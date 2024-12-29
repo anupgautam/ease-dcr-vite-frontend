@@ -36,6 +36,13 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
     const [dateData, setDateData] = useState();
     const [dateDataAnother, setDateDataAnother] = useState();
 
+    const leaves = [
+        { id: "CL", title: "Casual Leave" },
+        { id: "SP", title: "Sick Leave" },
+        { id: "PL", title: "Paid Leave" },
+        { id: "LWP", title: "Leave Without Pay" }
+    ]
+
     const [submittedto, setSubmittedTo] = useState([]);
     useEffect(() => {
         HigherLevelUser({ "id": company_user_role })
@@ -229,12 +236,20 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
                         </Typography>
                     </Box>
                     <Box marginBottom={2}>
-                        <Controls.Input
+                        {/* <Controls.Input
                             id="autoFocus"
                             autoFocus
                             name="leave_type"
                             label="Leave Type"
                             value={values.leave_type}
+                            onChange={handleInputChange}
+                            error={errors.leave_type}
+                        /> */}
+                        <Controls.Select
+                            name="leave_type"
+                            label="Leave Type*"
+                            value={values.leave_type}
+                            options={leaves}
                             onChange={handleInputChange}
                             error={errors.leave_type}
                         />

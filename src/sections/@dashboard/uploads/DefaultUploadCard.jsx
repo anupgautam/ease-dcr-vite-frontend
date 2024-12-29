@@ -36,7 +36,7 @@ export default function DefaultUploadCard({ uploads }) {
   const [deleteUpload] = useDeleteUploadByIdMutation();
   const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
   const { upload, upload_name, upload_type } = uploads || {};
-  // 
+  const encodedURL = encodeURI(upload);
 
   return (
     <>
@@ -77,7 +77,7 @@ export default function DefaultUploadCard({ uploads }) {
           <Card>
             <Box sx={{ pt: '100%', position: 'relative' }}>
               <Link to={`/uploadnewtab/${uploads.id}`} target="_blank">
-                <StyledProductImg alt={upload_name} src={upload} />
+                <img alt={upload_name} src={upload} />
               </Link>
             </Box>
 

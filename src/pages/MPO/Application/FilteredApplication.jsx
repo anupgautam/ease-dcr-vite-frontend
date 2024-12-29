@@ -244,23 +244,23 @@ const FilteredApplication = () => {
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell component="th" scope="row" align="left">
                                                                         <Typography variant="subtitle2" noWrap>
-                                                                            {application.application_id.leave_type}
+                                                                            {application?.application_id?.leave_type}
                                                                         </Typography>
                                                                         {/* </Stack> */}
                                                                     </TableCell>
-                                                                    <TableCell align="left">{application.application_id.leave_cause}</TableCell>
-                                                                    <TableCell align="left">{application.application_id.leave_from}</TableCell>
-                                                                    <TableCell align="left">{application.application_id.leave_to}</TableCell>
-                                                                    <TableCell align="left">{application.application_id.is_approved === true ? "Approved" : "Pending"}</TableCell>
+                                                                    <TableCell align="left">{application?.application_id?.leave_cause}</TableCell>
+                                                                    <TableCell align="left">{application?.application_id?.leave_from}</TableCell>
+                                                                    <TableCell align="left">{application?.application_id?.leave_to}</TableCell>
+                                                                    <TableCell align="left">{application?.application_id?.is_approved === true ? "Approved" : "Pending"}</TableCell>
                                                                     <TableCell align="left">{actualDate}</TableCell>
                                                                     <TableCell align="left">
-                                                                        <Label color={(application.application_id.is_approved === true ? 'green' : 'red')}>
-                                                                            {sentenceCase(application.application_id.is_approved.toString())}</Label>
+                                                                        <Label color={(application?.application_id?.is_approved === true ? 'green' : 'red')}>
+                                                                            {sentenceCase(application?.application_id?.is_approved.toString())}</Label>
                                                                     </TableCell>
                                                                     <TableCell align="left">
                                                                         {
                                                                             user_role === 'admin' &&
-                                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application.id, application.mpo_name.id)} >
+                                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(application?.id, application?.mpo_name?.id)} >
                                                                                 <Badge>
                                                                                     <Iconify icon="eva:edit-fill" />
                                                                                 </Badge>
@@ -268,7 +268,7 @@ const FilteredApplication = () => {
                                                                         }
                                                                         {
                                                                             user_role === 'admin' &&
-                                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(application.id); handleClickOpen() }}>
+                                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(application?.id); handleClickOpen() }}>
                                                                                 <Badge>
                                                                                     <Iconify icon="eva:trash-2-outline" />
                                                                                 </Badge>
