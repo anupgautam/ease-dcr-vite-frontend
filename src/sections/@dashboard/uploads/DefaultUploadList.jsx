@@ -13,7 +13,7 @@ DefaultUploadList.propTypes = {
 export default function DefaultUploadList({ uploads, ...other }) {
   return (
     <Grid container spacing={3} {...other}>
-      {uploads?.results?.map((upload) => (
+      {uploads?.map((upload) => (
         <Grid key={upload.id} item xs={12} sm={6} md={3}>
           <DefaultUploadCard uploads={upload} />
         </Grid>

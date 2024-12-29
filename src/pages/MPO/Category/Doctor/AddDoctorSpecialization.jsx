@@ -47,7 +47,7 @@ const AddDoctorSpecialization = () => {
 
 
     const initialFValues = {
-
+        category_name: "",
     }
 
     const {
@@ -59,8 +59,14 @@ const AddDoctorSpecialization = () => {
 
     useEffect(() => {
         validate();
-
     }, [values.category_name])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+        setIsButtonDisabled(!valid || values.category_name.trim() === ""); // Disable if invalid or empty
+    }, [values]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -70,16 +76,19 @@ const AddDoctorSpecialization = () => {
     const onAddDoctorSpecializations = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const data = {category_name: values.category_name, company_name: company_id}
+        const data = { category_name: values.category_name, company_name: company_id }
         try {
             const response = await createDoctorCategory(data).unwrap();
             if (response) {
+                console.log(response)
+                // toast.success(`${response?.data?.}`)
                 setSuccessMessage({ show: true, message: 'Successfully Added Doctor Categories' });
                 setTimeout(() => {
                     setSuccessMessage({ show: false, message: '' });
                 }, 3000);
                 setIsDrawerOpen(false)
             } else if (response?.error) {
+                console.log(response?.error)
                 setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                 setLoading(false);
                 setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
@@ -136,7 +145,7 @@ const AddDoctorSpecialization = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Add Doctor Category
+                            Add Doctor Specialization
                         </Typography>
                     </Box>
 
@@ -152,12 +161,21 @@ const AddDoctorSpecialization = () => {
                         />
                     </Box>
                     <Stack spacing={1} direction="row">
-                        <Controls.SubmitButton
+                        {/* <Controls.SubmitButton
                             variant="contained"
+                            
                             className="submit-button"
                             onClick={(e) => onAddDoctorSpecializations(e)}
                             text="Submit"
-                        />
+                        /> */}
+                        <Button
+                            variant="contained"
+                            className="submit-button"
+                            disabled={isButtonDisabled}
+                            onClick={(e) => onAddDoctorSpecializations(e)}
+                        >
+                            Submit
+                        </Button>
                         <Button
                             variant="outlined"
                             className="cancel-button"

@@ -19,6 +19,7 @@ import {
 } from '../../../api/CompanySlices/companyAreaSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const EditCompanyAreas = ({ idharu, onClose }) => {
     const { company_id, refresh, access } = useSelector((state) => state.cookie);
@@ -115,30 +116,40 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
         const data = { id: idharu, company_area: values.company_area, station_type: values.station_type, company_name: company_id }
         try {
             const response = await updateCompanyAreas(data)
+            console.log(response)
             if (response.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Company Areas' });
-                setTimeout(() => {
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
+                toast.success(`${'Some error Messages'}`)
+                onClose();
+
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Company Areas' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                toast.error(`${'Some error Messages'}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                toast.error(`${'Some error Messages'}`)
+
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
             }
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            console.log(error)
+            toast.error(`${'Some error Messages'}`)
+
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
         } finally {
             setLoading(false)
         }

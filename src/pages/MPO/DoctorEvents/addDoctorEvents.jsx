@@ -29,7 +29,7 @@ import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
-
+import { toast } from 'react-toastify';
 
 const AddDoctorEvents = () => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -172,24 +172,34 @@ const AddDoctorEvents = () => {
                 company_name: company_id,
             }
             const response = await createDoctors(jsonData)
-            if (response.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Doctor Event.' });
-                setIsDrawerOpen(false)
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
-                setIsDrawerOpen(false)
-            } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+            console.log(response)
+            // if (response.data) {
+            //     setSuccessMessage({ show: true, message: 'Successfully Added Doctor Event.' });
+            //     setIsDrawerOpen(false)
+            //     setTimeout(() => {
+            //         setSuccessMessage({ show: false, message: '' });
+            //     }, 3000);
+            //     setIsDrawerOpen(false)
+            // } else if (response?.error) {
+            //     setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+            //     setLoading(false);
+            //     setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+            // } else {
+            //     setErrorMessage({ show: true, message: "Something went wrong." });
+            //     setTimeout(() => {
+            //         setErrorMessage({ show: false, message: '' });
+            //     }, 3000);
+            // }
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-            } else {
-                setErrorMessage({ show: true, message: "Something went wrong." });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                setIsDrawerOpen(false)
+            }
+            else if (response?.error) {
+                toast.error(`${response?.error?.data?.message}`)
             }
         } catch (error) {
+            console.log(error)
             setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
             setTimeout(() => {
                 setErrorMessage({ show: false, message: '' });
@@ -309,20 +319,6 @@ const AddDoctorEvents = () => {
             {loading && (
                 <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 1000 }}>
                     <CircularProgress />
-                </Grid>
-            )}
-            {ErrorMessage.show && (
-                <Grid>
-                    <Box className="messageContainer errorMessage">
-                        <h1 style={{ fontSize: '14px', color: 'white' }}>{ErrorMessage.message}</h1>
-                    </Box>
-                </Grid>
-            )}
-            {SuccessMessage.show && (
-                <Grid>
-                    <Box className="messageContainer successMessage">
-                        <h1 style={{ fontSize: '14px', color: 'white' }}>{SuccessMessage.message}</h1>
-                    </Box>
                 </Grid>
             )}
         </>

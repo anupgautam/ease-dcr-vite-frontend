@@ -47,10 +47,16 @@ export function useForm(initialFValues, validateOnChange = false, validate, edit
         //     [name]: value || ''
         // });
 
-        setValues({
-            ...values,
+        // setValues({
+        //     ...values,
+        //     [name]: type === "checkbox" ? checked : value || "",
+        // });
+
+        //! Chat Handle Input Change
+        setValues((prev) => ({
+            ...prev,
             [name]: type === "checkbox" ? checked : value || "",
-        });
+        }));
         // if (validateOnChange)
         //     validate({ [name]: value });
     };

@@ -33,7 +33,7 @@ const AddApplication = () => {
     const [selectedDatesTo, setSelectedDatesTo] = useState(today);
 
     const leaves = [
-        { id: "CP", title: "Casual Leave" },
+        { id: "CL", title: "Casual Leave" },
         { id: "SP", title: "Sick Leave" },
         { id: "PL", title: "Paid Leave" },
         { id: "LWP", title: "Leave Without Pay" }

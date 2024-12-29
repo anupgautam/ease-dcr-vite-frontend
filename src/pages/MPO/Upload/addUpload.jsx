@@ -90,6 +90,7 @@ const AddUpload = () => {
         }
         try {
             const response = await createUpload(formData)
+            console.log(response)
             if (response.data) {
                 setSuccessMessage({ show: true, message: 'Successfully Added Upload.' });
                 setTimeout(() => {
