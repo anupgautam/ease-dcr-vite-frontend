@@ -25,6 +25,7 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
 import USERLIST from '@/_mock/user';
 import 'react-loading-skeleton/dist/skeleton.css'
+import { toast } from 'react-toastify';
 
 import {
     useGetDoctorsSpecializationQuery,
@@ -42,7 +43,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultSpecialization = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -74,9 +75,25 @@ const DefaultSpecialization = () => {
 
     //! Get Categories
     const { data } = useGetDoctorsSpecializationQuery(company_id);
+
     // !Delete Doctor Category
     const [deleteCategories] = useDeleteDoctorsSpecializationByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteCategories(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Doctor Specilization"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     const headers = [
         { label: 'S.No.', key: 'sno' },
@@ -150,7 +167,7 @@ const DefaultSpecialization = () => {
                     {"Are you sure want to delete?"}
                 </DialogTitle>
                 <DialogActions>
-                    <Button autoFocus onClick={() => { deleteCategories(selectedId); handleClose() }}>
+                    <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                         Yes
                     </Button>
                     <Button

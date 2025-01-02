@@ -173,8 +173,8 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
             query: (id) => {
 
                 return {
-                    url: `mpo/company-mpo-area/`,
-                    method: 'PATCH',
+                    url: `mpo/company-mpo-area/${id.id}/`,
+                    method: 'PUT',
                     body: id
                 }
             },
@@ -468,6 +468,7 @@ export const {
     useGetTourplanOfMpoByDateMonthandShiftQuery,
     useBulkUpdateTourplanByHoMutation,
     useGetLockedTourPlanForHigherQuery,
+    useUpdateAreaofMPOMutation,
 
     //! TP Lock Hooks
     useGetTPlockDaysQuery,

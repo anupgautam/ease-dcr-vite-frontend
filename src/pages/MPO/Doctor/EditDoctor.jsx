@@ -21,6 +21,7 @@ import {
 } from "@/api/MPOSlices/DoctorSlice";
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 
@@ -72,18 +73,64 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
         { id: "Others", title: "Others" },
     ]
 
+
+    //! Validation wala  
+    const validate = (fieldValues = values) => {
+        let temp = { ...errors };
+        if ('doctor_name' in fieldValues)
+            temp.doctor_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.doctor_name);
+        temp.doctor_gender = returnValidation(['null'], values.doctor_gender);
+        temp.doctor_specialization = returnValidation(['null'], values.doctor_specialization);
+        temp.doctor_qualification = returnValidation(['null', "specialcharacter"], values.doctor_qualification);
+        temp.doctor_territory = returnValidation(['null'], values.doctor_territory);
+        temp.mpo_name = returnValidation(['null'], values.mpo_name);
+        temp.doctor_nmc_number = returnValidation(['null', "specialcharacter", "minLength3"], values.doctor_nmc_number);
+
+        temp.doctor_category = returnValidation(['null'], values.doctor_category);
+        temp.doctor_address = returnValidation(['null', "minLength3", "specialcharacter"], values.doctor_address);
+        temp.doctor_phone_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.doctor_phone_number);
+
+        setErrors({
+            ...temp
+        })
+        // 
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x == "")
+    }
+
     const [initialFValues, setInitialFValues] = useState({
+        is_invested: false,
         doctor_name: "",
-        doctor_address: "",
         doctor_gender: "",
-        doctor_phone_number: "",
-        doctor_territory: "",
         doctor_specialization: "",
-        doctor_category: "",
-        doctor_nmc_number: "",
         doctor_qualification: "",
-        is_invested: "",
+        doctor_territory: "",
+        mpo_name: "",
+        doctor_nmc_number: "",
+        doctor_category: "",
+        doctor_address: "",
+        doctor_phone_number: "",
     })
+
+    useEffect(() => {
+        if (Doctor?.data) {
+            setInitialFValues({
+                // 'id': Doctor?.data?.id,
+                doctor_name: Doctor?.data?.doctor_name?.doctor_name,
+                doctor_address: Doctor?.data?.doctor_name?.doctor_address,
+                doctor_gender: Doctor?.data?.doctor_name?.doctor_gender,
+                doctor_phone_number: Doctor?.data?.doctor_name?.doctor_phone_number,
+                doctor_territory: Doctor?.data?.doctor_name?.doctor_territory.id,
+                doctor_category: Doctor?.data?.doctor_name?.doctor_category,
+                doctor_nmc_number: Doctor?.data?.doctor_name?.doctor_nmc_number,
+                doctor_qualification: Doctor?.data?.doctor_name?.doctor_qualification,
+                doctor_specialization: Doctor?.data?.doctor_name?.doctor_specialization?.id,
+                mpo_name: Doctor?.data?.mpo_name,
+                is_invested: false,
+            });
+        }
+    }, [Doctor])
 
     const { values,
         errors,
@@ -96,51 +143,39 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
         true
     )
 
-    //! Validation wala  
-    const validate = useCallback((fieldValues = values) => {
-        // 
-        let temp = { ...errors }
-        if ('doctor_name' in fieldValues)
-            temp.doctor_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.doctor_name)
-        temp.doctor_territory = returnValidation(['null'], values.doctor_territory)
-        temp.doctor_specialization = returnValidation(['null'], values.doctor_specialization)
-        temp.doctor_category = returnValidation(['null'], values.doctor_category)
-
-        setErrors({
-            ...temp
-        })
-        // 
-
-        if (fieldValues === values)
-            return Object.values(temp).every(x => x == "")
-    }, [values, errors])
-
-
-    useEffect(() => {
-        if (Doctor.data) {
-            setInitialFValues({
-                'id': Doctor?.data?.id,
-                'doctor_name': Doctor?.data?.doctor_name?.doctor_name,
-                'doctor_address': Doctor?.data?.doctor_name?.doctor_address,
-                'doctor_gender': Doctor?.data?.doctor_name?.doctor_gender,
-                'doctor_phone_number': Doctor?.data?.doctor_name?.doctor_phone_number,
-                'doctor_territory': Doctor?.data?.doctor_name?.doctor_territory.id,
-                'doctor_category': Doctor?.data?.doctor_name?.doctor_category,
-                'doctor_nmc_number': Doctor?.data?.doctor_name?.doctor_nmc_number,
-                'doctor_qualification': Doctor?.data?.doctor_name?.doctor_qualification,
-                'doctor_specialization': Doctor?.data?.doctor_name?.doctor_specialization?.id,
-                'mpo_name': Doctor?.data?.mpo_name,
-                'is_invested': false,
-            });
-        }
-    }, [Doctor.data])
-
     useEffect(() => {
         validate();
-
     }, [
-        values
-    ])
+        values.doctor_name,
+        values.doctor_gender,
+        values.doctor_specialization,
+        values.doctor_qualification,
+        values.doctor_territory,
+        values.mpo_name,
+        values.doctor_nmc_number,
+        values.doctor_category,
+        values.doctor_address,
+        values.doctor_phone_number,
+    ]);
+
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.doctor_name,
+    values.doctor_gender,
+    values.doctor_specialization,
+    values.doctor_qualification,
+    values.doctor_territory,
+    values.mpo_name,
+    values.doctor_nmc_number,
+    values.doctor_category,
+    values.doctor_address,
+    values.doctor_phone_number,
+    ]);
 
     //! Edit user
     const [updateDoctors] = useUpdateDoctorsMutation();
@@ -168,34 +203,45 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
             id: id,
         };
         try {
-            const response = await updateDoctors(data).unwrap();
+            const response = await updateDoctors(data)
             if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Doctor' });
-                setTimeout(() => {
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
-            } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Doctor' });
+                // setTimeout(() => {
+                //     onClose();
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                onClose();
+            } else if (response?.error) {
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.msg}`)
+                setLoading(false);
             } else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.error(`Some Error Occured`)
             }
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
+
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
-    }, [updateDoctors, id, values])
-
+    }, [updateDoctors, values])
 
     return (
         <>
@@ -355,6 +401,7 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => handleSubmit(e)}
                                 text="Submit"
                             />

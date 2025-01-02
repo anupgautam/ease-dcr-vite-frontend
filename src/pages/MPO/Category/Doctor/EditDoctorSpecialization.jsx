@@ -21,6 +21,7 @@ import {
 } from '@/api/MPOSlices/DoctorSlice'
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const EditDoctorCategories = ({ idharu, onClose }) => {
 
@@ -34,7 +35,8 @@ const EditDoctorCategories = ({ idharu, onClose }) => {
         // 
         let temp = { ...errors }
         if ('category_name' in fieldValues)
-            temp.category_name = returnValidation(['null'], values.category_name)
+            temp.category_name = returnValidation(['null', 'number', 'lessThan50', 'validateUsername', 'minLength3'], values.category_name)
+
         setErrors({
             ...temp
         })
@@ -54,7 +56,7 @@ const EditDoctorCategories = ({ idharu, onClose }) => {
                 category_name: Category?.data?.category_name,
             });
         }
-    }, [Category.data])
+    }, [Category])
 
 
 
@@ -74,50 +76,71 @@ const EditDoctorCategories = ({ idharu, onClose }) => {
     }, [values.category_name
     ])
 
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.category_name]);
+
     const [loading, setLoading] = useState(false)
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
 
     //! Edit tourplan
-    const [updateCategorys] = useUpdateDoctorsSpecializationMutation();
-    const history = useNavigate()
+    const [updateSpecilization] = useUpdateDoctorsSpecializationMutation();
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
         const data = { category_name: values.category_name, company_name: company_id, id: idharu }
         try {
-            const response = await updateCategorys(data).unwrap();
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Doctor Specialization' });
-                setTimeout(() => {
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
+            const response = await updateSpecilization(data)
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Doctor Specialization' });
+                // setTimeout(() => {
+                //     onClose();
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                console.log(response?.error)
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.error(`Some Error Occured`)
             }
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
+
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
 
-    }, [updateCategorys, values])
+    }, [updateSpecilization, values])
 
     return (
         <>
@@ -163,12 +186,13 @@ const EditDoctorCategories = ({ idharu, onClose }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => handleSubmit(e)}
                                 text="Submit"
                             />
                             <Button
                                 variant="outlined"
-                                // className="cancel-button"
+                                className="cancel-button"
                                 onClick={onClose}
                             >
                                 Cancel

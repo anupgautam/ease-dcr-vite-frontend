@@ -45,6 +45,7 @@ import {
 } from '@/api/CompanySlices/companyUserRoleSlice';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 
 const TABLE_HEAD = [
@@ -119,6 +120,21 @@ const FilteredApplication = () => {
     // !Delete Application
     const [deleteApplication] = useDeleteApplicationsByIdMutation()
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteApplication(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Application"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
+
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
     const theme = useTheme();
@@ -153,6 +169,7 @@ const FilteredApplication = () => {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+    console.log(results)
 
     return (
         <>
@@ -195,12 +212,12 @@ const FilteredApplication = () => {
                                 headLabel={TABLE_HEAD}
                             />
                             <TableBody>
-                                {results.data ?
+                                {results?.data ?
                                     <>
 
                                         <>
                                             {
-                                                results.data === undefined ? <>
+                                                results?.data === undefined ? <>
                                                     {
                                                         eightArrays.map((key) => (
                                                             <TableRow key={key} >
@@ -246,7 +263,6 @@ const FilteredApplication = () => {
                                                                         <Typography variant="subtitle2" noWrap>
                                                                             {application?.application_id?.leave_type}
                                                                         </Typography>
-                                                                        {/* </Stack> */}
                                                                     </TableCell>
                                                                     <TableCell align="left">{application?.application_id?.leave_cause}</TableCell>
                                                                     <TableCell align="left">{application?.application_id?.leave_from}</TableCell>
@@ -285,8 +301,8 @@ const FilteredApplication = () => {
                                                                             {"Are you sure want to delete?"}
                                                                         </DialogTitle>
                                                                         <DialogActions>
-                                                                            <Button autoFocus onClick={() => { deleteApplication(selectedId); handleClose() }}>
-                                                                                Yes{selectedId}
+                                                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
+                                                                                Yes
                                                                             </Button>
                                                                             <Button
                                                                                 onClick={handleClose}

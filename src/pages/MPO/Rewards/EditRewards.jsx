@@ -19,20 +19,21 @@ import {
 } from '@/api/MPOSlices/rewardsApiSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const EditRewards = ({ idharu, onClose }) => {
     const { company_id, refresh, access } = useSelector((state) => state.cookie);
 
     //! Getting Rewards by ID
     const Rewards = useGetRewardsByIdQuery(idharu);
-    const Divisions = useGetRewardsByIdQuery(company_id);
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
         if ('reward' in fieldValues)
-            temp.reward = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.reward)
+            temp.reward = returnValidation(['null', 'lessThan50', 'reward', 'minLength3'], values.reward)
+
         setErrors({
             ...temp
         })
@@ -46,12 +47,12 @@ const EditRewards = ({ idharu, onClose }) => {
     })
 
     useEffect(() => {
-        if (Rewards.data) {
+        if (Rewards?.data) {
             setInitialFValues({
-                reward: Rewards.data.reward,
+                reward: Rewards?.data?.reward,
             });
         }
-    }, [Rewards.data])
+    }, [Rewards])
 
 
     const { values,
@@ -65,15 +66,20 @@ const EditRewards = ({ idharu, onClose }) => {
         true
     )
 
-
     useEffect(() => {
         validate();
     }, [
         values.reward])
 
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+        setIsButtonDisabled(!valid);
+    }, [values.reward]);
+
     //! Edit user
     const [updateRewards] = useUpdateRewardsMutation();
-    const history = useNavigate()
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -82,39 +88,55 @@ const EditRewards = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
-        formData.append("reward", values.reward);
-        formData.append('id', idharu);
-        formData.append("company_name", company_id);
-        formData.append('refresh', refresh)
-        formData.append('access', access);
+        // const formData = new FormData();
+        // formData.append("reward", values.reward);
+        // formData.append('id', idharu);
+        // formData.append("company_name", company_id);
+        // formData.append('refresh', refresh)
+        // formData.append('access', access);
+
+        const data = { reward: values.reward, id: Rewards?.data?.id, company_name: company_id, refresh: refresh, access: access }
+
         try {
-            const response = await updateRewards(formData).unwrap();
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Rewards' });
+            const response = await updateRewards(data)
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Rewards' });
+                // setLoading(false);
+                // setTimeout(() => {
+                //     onClose();
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setLoading(false);
-                setTimeout(() => {
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
+                onClose();
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                console.log(response?.error)
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: 'Data failed to update.' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                // setErrorMessage({ show: true, message: 'Data failed to update.' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+                toast.error(`Some Error Occured`)
+
             }
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
+
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -173,6 +195,7 @@ const EditRewards = ({ idharu, onClose }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => handleSubmit(e)}
                                 text="Submit"
                             />

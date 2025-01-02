@@ -11,6 +11,7 @@ import DateTimePicker from "./DateTimePicker";
 import InputPassword from "./InputPassword";
 import File from './File'
 import SubmitButton from './SubmitButton'
+import MultiSelectAutocomplete from './MultiSelectAutocomplete'
 
 const Controls = {
     Input,
@@ -25,7 +26,8 @@ const Controls = {
     DateTimePicker,
     InputPassword,
     File,
-    SubmitButton
+    SubmitButton,
+    MultiSelectAutocomplete
 }
 
 export default Controls;

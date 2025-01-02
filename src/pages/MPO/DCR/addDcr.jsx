@@ -30,6 +30,7 @@ import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import moment from 'moment';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
+import { toast } from 'react-toastify';
 
 
 const AddDcrForHo = () => {
@@ -92,7 +93,7 @@ const AddDcrForHo = () => {
             LowerExecutive({ id: company_user_id })
                 .then((res) => {
                     if (res.data) {
-                        const data = res.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
+                        const data = res.data.map(key => ({ id: key.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name }));
                         setExecutiveLevelOptions(data);
                     }
                 })
@@ -237,27 +238,32 @@ const AddDcrForHo = () => {
             .then((res) => {
                 if (res.data) {
                     setIsDrawerOpen(false)
-                    setSuccessMessage({ show: true, message: 'Successfully Added DCR.' });
-                    setTimeout(() => {
-                        setSuccessMessage({ show: false, message: '' });
-                    }, 2000);
+                    // setSuccessMessage({ show: true, message: 'Successfully Added DCR.' });
+                    // setTimeout(() => {
+                    //     setSuccessMessage({ show: false, message: '' });
+                    // }, 2000);
+                    toast.success(`Successfully Added DCR.`)
                 }
                 else {
-                    setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 2000);
+                    // setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
+                    // setTimeout(() => {
+                    //     setErrorMessage({ show: false, message: '' });
+                    // }, 2000);
+                    toast.error(`${res?.error}`)
+                    setLoading(false);
                 }
             })
             .catch((err) => {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.error(`Some Error Occurred. Try again later.`)
             })
-        // .finally(() => {
-        //     setLoading(false)
-        // })
+        .finally(() => {
+            setLoading(false)
+        })
 
         setIsDrawerOpen(false)
     }
@@ -327,7 +333,7 @@ const AddDcrForHo = () => {
                                                                                 <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
                                                                                     {key.month}
                                                                                 </span>
-                                                                                <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.visited_data.map((key) => key.user_name.first_name + " " + " " + key.user_name.middle_name + key.user_name.last_name)
+                                                                                <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.visited_data.map((key) => key?.user_name?.first_name + " " + " " + key?.user_name?.middle_name + key?.user_name?.last_name)
                                                                                     .join(', ')}</Typography>
                                                                             </Box>
                                                                         </Grid>

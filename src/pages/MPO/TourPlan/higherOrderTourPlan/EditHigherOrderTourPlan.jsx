@@ -29,6 +29,7 @@ import { useSelector } from 'react-redux';
 import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
 import { ConstructionOutlined } from '@mui/icons-material';
 import { extractErrorMessage } from '../../../../reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
@@ -109,7 +110,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                     if (res.data) {
                         const data = res?.data?.map(key => ({
                             id: key.id,
-                            title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
+                            title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name
                         }));
                         setUsers(data)
                     }
@@ -292,31 +293,40 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
             setEdited(true)
             await updateTourPlans(data)
                 .then((response) => {
-                    if (response.data) {
-                        setSuccessMessage({ show: true, message: 'Successfully Edited TourPlan' });
-                        setTimeout(() => {
-                            history("/dashboard/admin/tourplan")
-                            setSuccessMessage({ show: false, message: '' });
-                            onClose();
-                        }, 2000);
+                    if (response?.data) {
+                        // setSuccessMessage({ show: true, message: 'Successfully Edited TourPlan' });
+                        // setTimeout(() => {
+                        //     history("/dashboard/admin/tourplan")
+                        //     setSuccessMessage({ show: false, message: '' });
+                        //     onClose();
+                        // }, 2000);
+
+                        toast.success('Successfully Edited TourPlan')
+                        history("/dashboard/admin/tourplan")
+                        onClose();
                     }
                     else if (response?.error) {
-                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        // setLoading(false);
+                        // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        toast.error(`${response?.error}`)
                         setLoading(false);
-                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     }
                     else {
-                        setErrorMessage({ show: true, message: "Error" });
-                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        // setErrorMessage({ show: true, message: "Error" });
+                        // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        toast.error(`Some Error Occurred. Try again later`)
+
                     }
                 })
         }
         catch (error) {
 
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
+            toast.error(`Some Error Occurred. Try again later`)
         } finally {
             setLoading(false)
         }

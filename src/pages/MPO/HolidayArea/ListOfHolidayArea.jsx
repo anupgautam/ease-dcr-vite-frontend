@@ -48,7 +48,7 @@ const ListOfHolidayArea = () => {
                             className="cancel-button"
                             onClick={handleToggle}
                         >
-                            {showHolidayArea ? 'View Holidays' : 'View Holiday Area'}
+                            {showHolidayArea ? 'View Holiday Names' : 'View Holiday Areas'}
                         </Button>
                     </Box>
                     {showHolidayArea ? <DefaultHolidayArea /> : <DefaultHolidays />}

@@ -35,6 +35,7 @@ import { useGetCompanyRolesByCompanyQuery } from '@/api/CompanySlices/companyRol
 import { useGetUsersByCompanyRoleIdQuery } from '@/api/MPOSlices/UserSlice';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const TABLE_HEAD = [
     { id: 'user_name', label: 'User Name', alignRight: false },
@@ -64,10 +65,10 @@ const AllUserTp = () => {
         setRoleSelect('');
     };
 
-    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: roleSelect === null ? "" : roleSelect }, 
-    // {
-    //     skip: !company_id || !roleSelect
-    // }
+    const userList = useGetUsersByCompanyRoleIdQuery({ id: company_id, page: roleSelect === null ? "" : roleSelect },
+        // {
+        //     skip: !company_id || !roleSelect
+        // }
     );
 
     useEffect(() => {
@@ -75,7 +76,7 @@ const AllUserTp = () => {
         if (roleList?.data) {
             roleList.data.map((key) => {
                 // dataList.push({ id: key.id, title: key.role_name_value })
-                dataList.push({ id: key.id, title: key.role_name.role_name })
+                dataList.push({ id: key.id, title: key?.role_name?.role_name })
             })
         }
         setCompanyRoleList(dataList);
@@ -133,6 +134,21 @@ const AllUserTp = () => {
 
     // !Delete users
     const [deleteUser] = useDeletecompanyUserRolesByIdMutation();
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteUser(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete User"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
@@ -241,7 +257,7 @@ const AllUserTp = () => {
                                                                             {"Are you sure want to delete?"}
                                                                         </DialogTitle>
                                                                         <DialogActions>
-                                                                            <Button autoFocus onClick={() => { deleteUser(selectedId); handleClose() }}>
+                                                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                                 Yes
                                                                             </Button>
                                                                             <Button
@@ -307,7 +323,7 @@ const AllUserTp = () => {
                                                                         {"Are you sure want to delete?"}
                                                                     </DialogTitle>
                                                                     <DialogActions>
-                                                                        <Button autoFocus onClick={() => { deleteUser(selectedId); handleClose() }}>
+                                                                        <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                             Yes
                                                                         </Button>
                                                                         <Button

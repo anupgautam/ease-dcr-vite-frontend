@@ -47,7 +47,7 @@ const AddCompanyRoles = () => {
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
         if ('role_name_value' in fieldValues)
-            temp.role_name_value = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.role_name_value)
+            temp.role_name_value = returnValidation(['null', 'lessThan50', 'validateUsername'], values.role_name_value)
         temp.role_name = returnValidation(['null'], values.role_name)
         temp.company_name = returnValidation(['null'], values.company_name)
         temp.priority_value = returnValidation(['null', 'lessThan50'], values.priority_value)

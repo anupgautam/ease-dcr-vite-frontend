@@ -55,6 +55,7 @@ import moment from 'moment';
 import ApprovedTP from '../dashboard/myExecutivesTp/approveTp';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const TABLE_HEAD = [
     { id: 'mpo_name', label: 'Name', alignRight: false },
@@ -278,6 +279,20 @@ const FilteredTourPlan = () => {
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteTourPlansByIdMutation()
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteTourPlan(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Tourplan."}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
@@ -495,7 +510,7 @@ const FilteredTourPlan = () => {
                                                                                                     {"Are you sure want to delete?"}
                                                                                                 </DialogTitle>
                                                                                                 <DialogActions>
-                                                                                                    <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
+                                                                                                    <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                                                         Yes
                                                                                                     </Button>
                                                                                                     <Button

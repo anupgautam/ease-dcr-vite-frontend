@@ -31,7 +31,7 @@ import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useAddHigherTourPlanMutation, useAddTourplanMutation } from '@/api/MPOSlices/tourPlan&Dcr';
 import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
-
+import { toast } from 'react-toastify';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import {
@@ -54,7 +54,6 @@ const AddTourPlan = () => {
         setIsDrawerOpen(false);
         setTpResponseData([]);
     }
-
 
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_role_id },
         {
@@ -87,7 +86,7 @@ const AddTourPlan = () => {
             LowerExecutive({ id: company_user_id })
                 .then((res) => {
                     if (res.data) {
-                        const data = res.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
+                        const data = res?.data.map(key => ({ id: key.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name }));
                         setExecutiveLevelOptions(data);
                     }
                 })
@@ -169,7 +168,7 @@ const AddTourPlan = () => {
 
     useEffect(() => {
         if (CompanyRoles) {
-            const data = CompanyRoles.map((key) => {
+            const data = CompanyRoles?.map((key) => {
                 return {
                     visit_with: key
                 }
@@ -183,8 +182,8 @@ const AddTourPlan = () => {
         setLoading(true);
         const newTodo = {
             selected_date: selectedDates,
-            purpose_of_visit: formValuesArray.purpose_of_visit || "",
-            hulting_station: formValuesArray.hulting_station || "",
+            purpose_of_visit: formValuesArray?.purpose_of_visit || "",
+            hulting_station: formValuesArray?.hulting_station || "",
         };
 
         // setTourPlanTodos(prevTodos => [...prevTodos, newTodo]);
@@ -206,11 +205,11 @@ const AddTourPlan = () => {
             tour_plan: {
                 shift: { shift: 1 },
                 tour_plan: {
-                    select_the_month: getNepaliMonthName(moment(tour.selected_date).month() + 1),
-                    select_the_date_id: tour.selected_date,
+                    select_the_month: getNepaliMonthName(moment(tour?.selected_date).month() + 1),
+                    select_the_date_id: tour?.selected_date,
                     year: moment(tour.selected_date).year(),
-                    purpose_of_visit: tour.purpose_of_visit,
-                    hulting_station: tour.hulting_station,
+                    purpose_of_visit: tour?.purpose_of_visit,
+                    hulting_station: tour?.hulting_station,
                     is_dcr_added: false,
                     is_unplanned: false,
                     is_admin_opened: false,
@@ -227,7 +226,8 @@ const AddTourPlan = () => {
         AddTourPlan(new_data)
             .then(res => {
                 if (res.data) {
-                    setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
+                    // setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
+                    toast.success(`Successfully Added Tourplan.`)
                     const updatedData = res.data.data.map((item, index) => ({
                         ...item,
                         mpo_area_name: TPAreaName[index]
@@ -235,20 +235,23 @@ const AddTourPlan = () => {
 
                     setTpResponseData(prevData => [...prevData, ...updatedData]);
                     initialStates()
-                    setTimeout(() => {
-                        setSuccessMessage({ show: false, message: '' });
-                    }, 4000);
+                    // setTimeout(() => {
+                    //     setSuccessMessage({ show: false, message: '' });
+                    // }, 4000);
                 } else {
-                    setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
+                    // setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
+                    // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                    toast.error(`${res?.error}`)
                     setLoading(false);
-                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
                 }
             })
             .catch(err => {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 4000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 4000);
+                toast.error(`Some Error Occurred. Try again later.`)
             })
             .finally(() => {
                 setLoading(false);
@@ -266,7 +269,8 @@ const AddTourPlan = () => {
                 );
             })
             .catch((error) => {
-                console.error("Failed to delete tour plan:", error);
+                // console.error("Failed to delete tour plan:", error);
+                toast.error('Failed to delete tour plan')
             });
     };
 
@@ -328,11 +332,12 @@ const AddTourPlan = () => {
             .then(res => {
                 if (res.data) {
                     initialStates()
-                    setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
                     setIsDrawerOpen(false)
-                    setTimeout(() => {
-                        setSuccessMessage({ show: false, message: '' });
-                    }, 5000);
+                    // setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
+                    // setTimeout(() => {
+                    //     setSuccessMessage({ show: false, message: '' });
+                    // }, 5000);
+                    toast.success("Successfully Added Tourplan")
                     setInitialFValues({
                         shift: "",
                         visit_data: MpoAreaData,
@@ -342,18 +347,20 @@ const AddTourPlan = () => {
                     })
                 }
                 else {
-                    setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
+                    // setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
+                    // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                    toast.error(`${res?.error}`)
                     setLoading(false);
-                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                 }
             })
             .catch(err => {
                 initialStates()
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                    toggleDrawer()
-                }, 5000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 5000);
+                toast.error(`Some Error Occurred. Try again later.`)
+                toggleDrawer()
             })
             .finally(() => {
                 setLoading(false)

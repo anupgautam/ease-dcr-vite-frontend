@@ -261,6 +261,7 @@ const FilteredMissedCalls = () => {
                                                             <TableCell><Skeleton /></TableCell>
                                                             <TableCell><Skeleton /></TableCell>
                                                             <TableCell><Skeleton /></TableCell>
+                                                            <TableCell><Skeleton /></TableCell>
                                                             {/* <TableCell><Skeleton /></TableCell> */}
                                                         </TableRow>
                                                     ))}

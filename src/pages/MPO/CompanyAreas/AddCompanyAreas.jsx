@@ -24,7 +24,7 @@ import { extractErrorMessage } from '../../../reusable/extractErrorMessage';
 import { toast } from 'react-toastify';
 
 const AddCompanyAreas = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id } = useSelector((state) => state.cookie);
 
     //! react-google-map-picker 
     const DefaultLocation = { lat: 10, lng: 106 };
@@ -56,9 +56,11 @@ const AddCompanyAreas = () => {
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
-        if ('company_name' in fieldValues)
-            temp.company_area = returnValidation(['null'], values.company_area)
-        temp.station_type = returnValidation(['null'], values.station_type)
+        if ('company_area' in fieldValues)
+            temp.company_area = returnValidation(['null', 'lessThan50', 'validateUsername', 'minLength3'], values.company_area)
+
+        temp.station_type = returnValidation(['null', 'lessThan50', 'validateUsername', 'minLength2', 'number'], values.station_type)
+
         // temp.country = returnValidation(['null', 'number'], values.country)
         // temp.division = returnValidation(['null', 'specialcharacter'], values.division)
         // temp.state = returnValidation(['null', 'specialcharacter'], values.state)
@@ -75,10 +77,10 @@ const AddCompanyAreas = () => {
     }
 
 
-    const [initialFValues, setInitialFValues] = useState({
-        longitude: "27.693970",
-        latitude: "85.314030",
-    })
+    // const [initialFValues, setInitialFValues] = useState({
+    //     longitude: "27.693970",
+    //     latitude: "85.314030",
+    // })
 
     // useEffect(()=>{
     //     setInitialValues({
@@ -87,6 +89,11 @@ const AddCompanyAreas = () => {
     //     })
     // })
 
+    const initialFValues = {
+        company_area: '',
+        station_type: '',
+    };
+
     const {
         values,
         setValues,
@@ -94,21 +101,26 @@ const AddCompanyAreas = () => {
         setErrors,
         handleInputChange,
         resetForm,
-    } = useForm(initialFValues, true)
+    } = useForm(initialFValues, true, validate)
 
     useEffect(() => {
         validate();
-
     }, [
         values.company_area,
         values.station_type,
-        values.company_name,
-        // values.country,
-        // values.division,
-        // values.state,
-        // values.longitude,
-        // values.latitude,
     ])
+
+    useEffect(() => {
+        validate();
+    }, [values.company_area, values.station_type]);
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.company_area, values.station_type]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -121,32 +133,32 @@ const AddCompanyAreas = () => {
 
         const data = { company_area: values.company_area, station_type: values.station_type, company_name: company_id }
         try {
-            const response = await createCompanyAreas(data).unwrap();
-            console.log(response)
-            if (response) {
+            const response = await createCompanyAreas(data)
+            if (response?.data) {
                 // setSuccessMessage({ show: true, message: 'Successfully Added Company Areas' });
                 // setTimeout(() => {
                 //     setSuccessMessage({ show: false, message: '' });
                 // }, 3000);
-                toast.success(`${response?.msg}`)
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
+                resetForm();
             }
             else if (response?.error) {
                 // setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
                 // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
             }
             else {
                 // setErrorMessage({ show: true, message: "Error" });
                 // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                toast.error(`Some Error Occured`)
             }
         } catch (error) {
-            console.log(error)
             // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            toast.error(`${error?.data?.msg}`)
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            toast.error('Backend Error')
+
         } finally {
             setLoading(false)
         }
@@ -195,7 +207,7 @@ const AddCompanyAreas = () => {
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Input
-                            id="autoFocus"
+                            id="auto-focus"
                             autoFocus
                             name="company_area"
                             label="Company Area Name*"
@@ -290,6 +302,7 @@ const AddCompanyAreas = () => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddCompanyAreas(e)}
                             text="Submit"
                         />

@@ -34,6 +34,7 @@ import {
 } from '@/api/ApplicationSlices/ApplicationSlices';
 import EditApplication from './EditApplication';
 import moment from 'moment';
+import { toast } from 'react-toastify';
 
 
 const TABLE_HEAD = [
@@ -89,6 +90,21 @@ const DefaultApplication = () => {
     // !Delete TourPlan
     const [deleteApplication] = useDeleteApplicationsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteApplication(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Application"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     //! Date format
     const [dateFormat, setDateFormat] = useState("");
@@ -196,7 +212,7 @@ const DefaultApplication = () => {
                                     </DialogTitle>
                                     <DialogActions>
                                         <Button autoFocus onClick={() => {
-                                            deleteApplication(selectedId)
+                                            handleDelete(selectedId)
                                                 .then((res) => {
                                                     handleClose()
                                                 })

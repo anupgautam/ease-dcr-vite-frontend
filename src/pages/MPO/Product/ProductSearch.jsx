@@ -27,6 +27,7 @@ import { useTheme } from "@mui/material/styles";
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import { useForm1 } from '../../../reusable/components/forms/useForm';
+import { toast } from 'react-toastify';
 
 import {
     useGetAllProductsQuery,
@@ -165,6 +166,20 @@ const ProductSearch = () => {
     // !Delete products
     const [deleteProduct] = useDeleteProductsByIdMutation()
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteProduct(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Product"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
     const theme = useTheme();
@@ -305,7 +320,7 @@ const ProductSearch = () => {
                                                                             {"Are you sure want to delete?"}
                                                                         </DialogTitle>
                                                                         <DialogActions>
-                                                                            <Button autoFocus onClick={() => { deleteProduct(selectedId); handleClose() }}>
+                                                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                                 Yes
                                                                             </Button>
                                                                             <Button

@@ -22,6 +22,7 @@ import {
 } from '@/api/MPOSlices/UserSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '../../../reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const EditTPLock = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -56,7 +57,7 @@ const EditTPLock = ({ idharu, onClose }) => {
         if ('company_roles' in fieldValues)
             temp.company_roles = fieldValues.company_roles ? returnValidation(['null'], fieldValues.company_roles) : "";
         if ('tp_lock_days' in fieldValues)
-            temp.tp_lock_days = fieldValues.tp_lock_days ? returnValidation(['null', 'isNumberOnly'], fieldValues.tp_lock_days) : "";
+            temp.tp_lock_days = fieldValues.tp_lock_days ? returnValidation(['null', 'hasValidTwoDigitNumber'], fieldValues.tp_lock_days) : "";
 
         setErrors({
             ...temp
@@ -72,13 +73,13 @@ const EditTPLock = ({ idharu, onClose }) => {
     })
 
     useEffect(() => {
-        if (TPDays.data) {
+        if (TPDays?.data) {
             setInitialFValues({
                 company_roles: TPDays.data.company_roles.role_name_value,
                 tp_lock_days: TPDays.data.tp_lock_days,
             });
         }
-    }, [TPDays.data])
+    }, [TPDays])
 
 
     const { values,
@@ -99,6 +100,14 @@ const EditTPLock = ({ idharu, onClose }) => {
         values.company_roles,
         values.tp_lock_days])
 
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.company_roles, values.tp_lock_days]);
+
     //! Edit user
     const [updateTPDays] = useUpdateTPDaysMutation();
     const history = useNavigate()
@@ -112,24 +121,36 @@ const EditTPLock = ({ idharu, onClose }) => {
         const data = { id: idharu, company_name: company_id, tp_lock_days: values.tp_lock_days, company_roles: companyRoles };
         try {
             const response = await updateTPDays(data)
-            if (response.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited TPDays' });
-                setTimeout(() => {
-                    onClose()
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
-            } else {
-                setErrorMessage({ show: true, message: extractErrorMessage(response?.error) });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Edited TPDays' });
+                // setTimeout(() => {
+                //     onClose()
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+                toast.success(`${response?.data?.message}`)
+                setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
+            } else if (response?.error) {
+                // setErrorMessage({ show: true, message: extractErrorMessage(response?.error) });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+                console.log(response?.error)
+                toast.error(`${response?.error?.data?.message}`)
+                setLoading(false);
+            }
+            else {
+                toast.error(`Some Error Occured`)
             }
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -190,6 +211,7 @@ const EditTPLock = ({ idharu, onClose }) => {
                                 variant="contained"
                                 className="submit-button"
                                 onClick={(e) => handleSubmit(e)}
+                                disabled={isButtonDisabled}
                                 text="Submit"
                             />
                             <Button

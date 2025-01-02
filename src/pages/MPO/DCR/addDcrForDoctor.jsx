@@ -26,6 +26,7 @@ import moment from "moment";
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { BSDate } from "nepali-datepicker-react";
 import { useGetAllProductsOptionsQuery, useGetAllProductsQuery } from "../../../api/MPOSlices/ProductSlice";
+import { toast } from 'react-toastify';
 
 const TABLE_HEAD = [
     { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
@@ -209,7 +210,7 @@ const AddDcrForDoctor = () => {
                     res.data.forEach(keyData => {
                         executive.push({
                             id: keyData.id,
-                            title: keyData.user_name.first_name + " " + keyData.user_name.middle_name + " " + keyData.user_name.last_name,
+                            title: keyData?.user_name?.first_name + " " + keyData?.user_name?.middle_name + " " + keyData?.user_name?.last_name,
                         });
                     });
                     setExecutiveOptions(executive);
@@ -245,7 +246,7 @@ const AddDcrForDoctor = () => {
                 return companyProduct.data.map(key =>
                 ({
                     id: key.id,
-                    title: key.product_name.product_name,
+                    title: key?.product_name?.product_name,
                 })
                 );
             }
@@ -323,11 +324,14 @@ const AddDcrForDoctor = () => {
                             //     .then(res => {
                             //         if (res.data) {
                             //             if (LastData === true) {
-                            setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
-                            setTimeout(() => {
-                                setSuccessMessage({ show: false, message: '' });
-                                navigate('/dashboard/admin/dcr');
-                            }, 2000);
+                            // setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
+                            // setTimeout(() => {
+                            //     setSuccessMessage({ show: false, message: '' });
+                            //     navigate('/dashboard/admin/dcr');
+                            // }, 2000);
+                            toast.success(`All DCR Successfully Added.`)
+                            navigate('/dashboard/admin/dcr');
+
                             //         } else {
                             //             setSuccessMessage({ show: true, message: 'DCR Added Successfully Added.' });
                             //             setTimeout(() => {
@@ -341,21 +345,26 @@ const AddDcrForDoctor = () => {
 
                             // });
                         } else if (res?.error) {
-                            setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                            // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                            // setLoading(false);
+                            // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                            toast.error(`${res?.error}`)
                             setLoading(false);
-                            setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                         } else {
-                            setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
-                            setTimeout(() => {
-                                setErrorMessage({ show: false, message: '' });
-                            }, 2000);
+                            // setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
+                            // setTimeout(() => {
+                            //     setErrorMessage({ show: false, message: '' });
+                            // }, 2000);
+                            toast.error(`This TP is not allowed to create DCR.`)
                         }
                     })
                     .catch(err => {
-                        setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 2000);
+                        // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                        // setTimeout(() => {
+                        //     setErrorMessage({ show: false, message: '' });
+                        // }, 2000);
+                        toast.error(`This TP is not allowed to create DCR.`)
+
                     })
                     .finally(() => {
                         setLoading(false)
@@ -399,7 +408,7 @@ const AddDcrForDoctor = () => {
                                                                                             <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
                                                                                                 {key?.tour_plan?.tour_plan?.select_the_month}
                                                                                             </span>
-                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.area_name)
+                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key?.mpo_area_read?.map((key) => key.area_name)
                                                                                                 .join(', ')}</Typography>
                                                                                         </Box>
                                                                                     </Grid>
@@ -544,7 +553,7 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                     res.data.forEach(keyData => {
                         executive.push({
                             id: keyData.id,
-                            title: keyData.user_name.first_name + " " + keyData.user_name.middle_name + " " + keyData.user_name.last_name,
+                            title: keyData?.user_name?.first_name + " " + keyData?.user_name?.middle_name + " " + keyData?.user_name?.last_name,
                         });
                     });
                     setExecutiveOptions(executive);
@@ -575,7 +584,7 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
                 return companyProduct.data.map(key =>
                 ({
                     id: key.id,
-                    title: key.product_name.product_name,
+                    title: key?.product_name?.product_name,
                 })
                 );
             }
@@ -597,7 +606,7 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
     const rewardsOptions = useMemo(() => {
         if (rewards !== undefined) {
             if (rewards.status === 'fulfilled') {
-                return rewards.data.map(key => ({ id: key.id, title: key.reward }));
+                return rewards?.data.map(key => ({ id: key.id, title: key.reward }));
             }
         }
         return [];

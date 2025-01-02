@@ -23,6 +23,7 @@ import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import {
     useAreaMPOQuery,
@@ -81,14 +82,27 @@ const DefaultList = () => {
 
     // !Get Tour Plans
     const { data } = useAreaMPOQuery(
-        { company_name: company_id, mpo_name: user_role === 'admin' ? "" : company_user_role_id },
-        {
-            skip: !company_id || !user_role || !company_user_role_id,
-        }
+        { company_name: company_id, mpo_name: user_role === 'admin' ? "" : company_user_role_id }
     );
 
     //! Delete MPO Areas
     const [deleteAreas] = useDeleteareaMPOMutation()
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteAreas(id);
+            console.log(response)
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete MPO Area"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
@@ -150,7 +164,7 @@ const DefaultList = () => {
                                                             {"Are you sure want to delete?"}
                                                         </DialogTitle>
                                                         <DialogActions>
-                                                            <Button autoFocus onClick={() => { deleteAreas(selectedId); handleClose() }}>
+                                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                 Yes
                                                             </Button>
                                                             <Button

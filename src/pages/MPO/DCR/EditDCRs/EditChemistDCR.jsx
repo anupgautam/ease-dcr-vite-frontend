@@ -32,6 +32,7 @@ import {
 } from '@/api/DCRs Api Slice/chemistDCR/shiftWiseChemistDCRSlice';
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { useGetAllVisitedMpoWiseChemistQuery } from '@/api/MPOSlices/doctorApiSlice';
+import { toast } from 'react-toastify';
 
 
 const EditChemistDCR = ({ idharu, onClose }) => {
@@ -104,13 +105,9 @@ const EditChemistDCR = ({ idharu, onClose }) => {
         true
     )
 
-
-
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: mpo_id }, {
         skip: !company_id || !mpo_id
     });
-
-
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {

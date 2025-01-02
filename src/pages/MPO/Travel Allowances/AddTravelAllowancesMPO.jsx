@@ -29,6 +29,7 @@ import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { usePostMPOExpensesMutation } from '../../../api/CompanySlices/companyAreaWiseExpenses';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const BS_MONTHS = [
     "Baisakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
@@ -113,29 +114,19 @@ const AddTravelAllowancesMPO = () => {
 
     const [createTravelAllowances] = usePostMPOExpensesMutation()
 
-    const initialFValues = {
-
-    }
-
-    const {
-        values,
-        setValues,
-        errors,
-        setErrors,
-        handleInputChange,
-        resetForm,
-    } = useForm(initialFValues, true)
-
     //! Validation wala  
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
         if ('travel_allowance' in fieldValues)
-            temp.travel_allowance = fieldValues.travel_allowance ? returnValidation(['null', 'isNumberOnly'], fieldValues.travel_allowance) : "";
-        if ('daily_allowance' in fieldValues)
-            temp.daily_allowance = fieldValues.daily_allowance ? returnValidation(['null', 'isNumberOnly'], fieldValues.daily_allowance) : "";
-        temp.area_from = returnValidation(['null'], values.area_from)
-        temp.area_to = returnValidation(['null'], values.area_to)
+
+            temp.travel_allowance = returnValidation(['null', 'isNumberOnly'], values.travel_allowance)
+        temp.daily_allowance = returnValidation(['null', 'isNumberOnly'], values.daily_allowance)
+        temp.other_allowance = returnValidation(['null', 'isNumberOnly'], values.other_allowance)
+        // temp.area_from = returnValidation(['null'], values.area_from)
+        // temp.area_to = returnValidation(['null'], values.area_to)
+        // temp.year = returnValidation(['null'], values.year)
+        // temp.month = returnValidation(['null'], values.month)
 
         setErrors({
             ...temp
@@ -145,10 +136,34 @@ const AddTravelAllowancesMPO = () => {
             return Object.values(temp).every(x => x == "")
     }
 
+    const initialFValues = {
+        travel_allowance: "",
+        daily_allowance: "",
+        other_allowance: "",
+        year: "",
+        month: "",
+    }
+
+    const {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChange,
+        resetForm,
+    } = useForm(initialFValues, true, validate)
+
     useEffect(() => {
         validate();
 
-    }, [values.leave_cause, values.daily_allowance])
+    }, [values.travel_allowance, values.daily_allowance, values.other_allowance])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+        setIsButtonDisabled(!valid);
+    }, [values.travel_allowance, values.daily_allowance, values.other_allowance]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -171,27 +186,37 @@ const AddTravelAllowancesMPO = () => {
 
         try {
             const response = await createTravelAllowances(jsonData)
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Allowances.' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Added Allowances.' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false)
+
+                toast.success(`${response?.data?.message}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
+                resetForm();
             } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                toast.error(`${response?.error?.data?.message}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             } else {
-                setErrorMessage({ show: true, message: "Unable to Add Allowances" });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                // setErrorMessage({ show: true, message: "Unable to Add Allowances" });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 3000);
+                toast.error(`Some Error Occured`)
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -342,13 +367,13 @@ const AddTravelAllowancesMPO = () => {
                     </Box>
 
                     <Stack spacing={1} direction="row">
-                        <Button
+                        <Controls.SubmitButton
                             variant="contained"
-                            className="summit-button"
+                            className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddDoctors(e)}
-                        >
-                            Submit{" "}
-                        </Button>
+                            text="Submit"
+                        />
                         <Button
                             variant="outlined"
                             className="cancel-button"

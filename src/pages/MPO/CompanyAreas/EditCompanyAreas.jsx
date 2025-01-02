@@ -22,7 +22,7 @@ import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { toast } from 'react-toastify';
 
 const EditCompanyAreas = ({ idharu, onClose }) => {
-    const { company_id, refresh, access } = useSelector((state) => state.cookie);
+    const { company_id } = useSelector((state) => state.cookie);
 
     //! Getting chemist by ID
     const CompanyAreas = useGetCompanyAreasByIdQuery(idharu);
@@ -32,18 +32,13 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
         // 
         let temp = { ...errors }
         if ('company_area' in fieldValues)
-            temp.company_area = returnValidation(['null', 'number'], values.company_area)
-        temp.station_type = returnValidation(['null'], values.station_type)
-        // temp.country = returnValidation(['null', 'number'], values.country)
-        // temp.division = returnValidation(['null', 'specialcharacter'], values.division)
-        // temp.state = returnValidation(['null', 'specialcharacter'], values.state)
-        // temp.longitude = returnValidation(['null', 'alphanumeric'], values.longitude)
-        // temp.latitude = returnValidation(['null', 'alphanumeric'], values.latitude)
+            temp.company_area = returnValidation(['null', 'lessThan50', 'validateUsername', 'minLength3', 'number'], values.company_area)
+
+        temp.station_type = returnValidation(['null', 'lessThan50', 'validateUsername', 'minLength2', 'number'], values.station_type)
 
         setErrors({
             ...temp
         })
-        // 
 
         if (fieldValues === values)
             return Object.values(temp).every(x => x == "")
@@ -54,11 +49,6 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
         company_area: "",
         station_type: "",
         company_name: '',
-        // country: "",
-        // division: "",
-        // state: "",
-        // longitude: "",
-        // latitude: "",
     })
 
     useEffect(() => {
@@ -66,14 +56,11 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
             setInitialFValues({
                 'company_area': CompanyAreas?.data?.company_area,
                 'station_type': CompanyAreas?.data?.station_type,
-                'company_name': CompanyAreas?.data?.company_name,
-                // 'division': CompanyAreas?.data?.company_area?.division,
-                // 'state': CompanyAreas?.data?.company_area?.state,
-                // 'longitude': CompanyAreas?.data?.company_area?.longitude,
-                // 'latitude': CompanyAreas?.data?.company_area?.latitude,
+                // 'company_name': CompanyAreas?.data?.company_name,
+                'company_name': company_id,
             });
         }
-    }, [CompanyAreas.data])
+    }, [CompanyAreas])
 
     const { values,
         errors,
@@ -91,18 +78,20 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
 
     }, [
         values.company_area,
-        values.station_type,
-        // values.country,
-        // values.division,
-        // values.state,
-        // values.longitude,
-        // values.latitude,
+        values.station_type
     ])
 
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.company_area,
+    values.station_type]);
 
     //! Edit user
     const [updateCompanyAreas] = useUpdateCompanyAreasMutation();
-    const history = useNavigate();
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -112,13 +101,14 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
         e.preventDefault();
         setLoading(true)
 
-
         const data = { id: idharu, company_area: values.company_area, station_type: values.station_type, company_name: company_id }
+
         try {
             const response = await updateCompanyAreas(data)
-            console.log(response)
-            if (response.data) {
-                toast.success(`${'Some error Messages'}`)
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setLoading(false);
                 onClose();
 
                 // setSuccessMessage({ show: true, message: 'Successfully Edited Company Areas' });
@@ -127,7 +117,7 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
                 // }, 2000);
             }
             else if (response?.error) {
-                toast.error(`${'Some error Messages'}`)
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
 
                 // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
@@ -144,7 +134,7 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
         }
         catch (error) {
             console.log(error)
-            toast.error(`${'Some error Messages'}`)
+            toast.error('Backend Error')
 
             // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
             // setTimeout(() => {
@@ -251,6 +241,7 @@ const EditCompanyAreas = ({ idharu, onClose }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => handleSubmit(e)}
                                 text="Submit"
                             />

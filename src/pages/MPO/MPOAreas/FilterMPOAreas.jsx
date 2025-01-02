@@ -48,6 +48,7 @@ import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice
 import EditMpoArea from './editMpoArea';
 import Iconify from '@/components/iconify/Iconify';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const TABLE_HEAD = [
     { id: 'area_name"', label: 'Tour Plan Date', alignRight: false },
@@ -124,7 +125,7 @@ const FilterMPOAreas = () => {
         if (MpoList) {
             return MpoList.map(key => ({
                 id: key.id,
-                title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name
+                title: key?.user_name?.first_name + ' ' + key?.user_name?.middle_name + ' ' + key?.user_name?.last_name
             }))
         }
         return [];
@@ -189,6 +190,21 @@ const FilterMPOAreas = () => {
     // !Delete Application
     const [deleteApplication] = useDeleteareaMPOMutation()
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteApplication(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete MPO Area"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
+
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
     const theme = useTheme();
@@ -244,7 +260,7 @@ const FilterMPOAreas = () => {
                                         <TableBody>
                                             <>
                                                 {
-                                                    results.data === undefined ? <>
+                                                    results?.data === undefined ? <>
                                                         {
                                                             eightArrays.map((key) => (
                                                                 <TableRow key={key} >
@@ -320,7 +336,7 @@ const FilterMPOAreas = () => {
                                                                                 {"Are you sure want to delete?"}
                                                                             </DialogTitle>
                                                                             <DialogActions>
-                                                                                <Button autoFocus onClick={() => { deleteApplication(selectedId); handleClose() }}>
+                                                                                <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                                     Yes
                                                                                 </Button>
                                                                                 <Button

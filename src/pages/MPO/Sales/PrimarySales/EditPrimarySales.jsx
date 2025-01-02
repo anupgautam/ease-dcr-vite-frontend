@@ -29,6 +29,7 @@ import {
     NepaliDateConverter
 } from "react-nepali-date-picker-lite";
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
+import { toast } from 'react-toastify';
 
 
 const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
@@ -58,7 +59,7 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
     }, [Stockist])
 
     //! Getting chemist by ID
-    const SecondarySales = useGetPrimarySalesByIdQuery(idharu);
+    const PrimarySales = useGetPrimarySalesByIdQuery(idharu);
 
     const now = new BSDate().now();
     const [companyId, setCompanyId] = useState(parseInt(company_id));
@@ -139,7 +140,8 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
             temp.stockist_name = returnValidation(['null'], values.stockist_name)
         temp.year = returnValidation(['null'], values.year)
         temp.month = returnValidation(['null'], values.month)
-        temp.quantity = returnValidation(['null'], values.quantity)
+        temp.quantity = returnValidation(['null', 'alpha', 'specialcharacter', 'lessthan3'], values.quantity)
+        temp.total_amount = returnValidation(['null', 'specialcharacter', 'lessthan3'], values.total_amount)
 
         setErrors({
             ...temp
@@ -152,24 +154,26 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
 
 
     const [initialFValues, setInitialFValues] = useState({
-        product_id: "",
         stockist_name: "",
+        year: "",
+        month: "",
         quantity: "",
+        total_amount: ""
     })
 
     useEffect(() => {
-        if (SecondarySales.data) {
+        if (PrimarySales?.data) {
             setInitialFValues({
-                'stockist_name': SecondarySales?.data?.stockist_name.id,
-                'quantity': SecondarySales?.data?.quantity,
-                total_amount: SecondarySales?.data?.total_amount
-                // 'year': parseInt(SecondarySales?.data?.year),
-                // 'month': SecondarySales?.data?.month,
+                stockist_name: PrimarySales?.data?.stockist_name.id,
+                quantity: PrimarySales?.data?.quantity,
+                total_amount: PrimarySales?.data?.total_amount,
+                year: parseInt(PrimarySales?.data?.year),
+                month: parseInt(PrimarySales?.data?.month)
             });
-            setUpdatedMonth(String(SecondarySales?.data?.month))
-            setUpdatedYear(String(SecondarySales?.data?.year))
+            setUpdatedMonth(String(PrimarySales?.data?.month))
+            setUpdatedYear(String(PrimarySales?.data?.year))
         }
-    }, [SecondarySales.data])
+    }, [PrimarySales])
 
     const { values,
         errors,
@@ -191,17 +195,30 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
         values.stockist_name,
         values.year,
         values.month,
-
+        values.total_amount
     ])
 
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [
+        values.stockist_name,
+        values.quantity,
+        values.year,
+        values.month,
+        values.total_amount]);
+
     //! Edit user
-    const [updateSecondarySaless] = useUpdatePrimarySalesMutation();
+    const [updatePrimarySales] = useUpdatePrimarySalesMutation();
     const history = useNavigate();
     const [loading, setLoading] = useState(false)
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true);
         const jsonData = {
@@ -214,35 +231,48 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
             total_amount: values.total_amount,
         }
         try {
-            const response = await updateSecondarySaless(jsonData).unwrap();
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Secondary Sales' });
-                setTimeout(() => {
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
-            } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+            const response = await updatePrimarySales(jsonData)
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Secondary Sales' });
+                // setTimeout(() => {
+                //     onClose();
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.success(`${response?.data?.message}`)
+                setIsButtonDisabled(true)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                onClose();
+            } else if (response?.error) {
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                console.log(response?.error)
+                toast.error(`${response?.error?.data?.message}`)
+                setLoading(false);
             }
             else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+                toast.error(`Some Error Occured`)
             }
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
+
+            console.log(error)
+            toast.error('Backend Error')
         }
         finally {
             setLoading(false)
         }
-    }
+    }, [values, PrimarySales])
 
 
 
@@ -271,7 +301,7 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6">
-                            Edit Secondary Sales
+                            Edit Primary Sales
                         </Typography>
                     </Box>
 
@@ -324,7 +354,7 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
                                         value={values.stockist_name}
                                         options={rolesOptions}
                                         onChange={handleInputChange}
-                                        error={errors.doctorDCRId}
+                                        error={errors.stockist_name}
                                     />
                                 </Box>
                             </Grid>
@@ -335,6 +365,7 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
                                         label="Total Amount*"
                                         value={values.total_amount}
                                         onChange={handleInputChange}
+                                        error={errors.total_amount}
                                     />
                                 </Box>
                             </Grid>
@@ -357,6 +388,7 @@ const EditPrimarySales = ({ idharu, onClose, selectedOption }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => handleSubmit(e)}
                                 text="Submit"
                             />

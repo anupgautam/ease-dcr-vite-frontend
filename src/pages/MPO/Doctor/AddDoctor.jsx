@@ -24,6 +24,7 @@ import {
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { Link } from 'react-router-dom';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const AddDoctor = () => {
     const { company_id, company_user_role_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -78,8 +79,39 @@ const AddDoctor = () => {
 
     const [createDoctors] = useCreateDoctorsMutation();
 
+    const validate = (fieldValues = values) => {
+        let temp = { ...errors };
+        if ('doctor_name' in fieldValues)
+            temp.doctor_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.doctor_name);
+        temp.doctor_specialization = returnValidation(['null'], values.doctor_specialization);
+        temp.doctor_address = returnValidation(['null', "minLength3", "specialcharacter"], values.doctor_address);
+        temp.doctor_phone_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.doctor_phone_number);
+        temp.doctor_gender = returnValidation(['null'], values.doctor_gender);
+        temp.doctor_territory = returnValidation(['null'], values.doctor_territory);
+        temp.doctor_nmc_number = returnValidation(['null', "specialcharacter", "minLength3"], values.doctor_nmc_number);
+        temp.doctor_qualification = returnValidation(['null', "specialcharacter"], values.doctor_qualification);
+        temp.category_name = returnValidation(['null'], values.category_name);
+
+        // temp.doctor_anniversary = returnValidation(['null'], values.doctor_anniversary);
+
+        setErrors({
+            ...temp,
+        });
+
+        if (fieldValues === values) return Object.values(temp).every((x) => x === '');
+    };
+
     const initialFValues = {
         is_invested: false,
+        doctor_name: "",
+        doctor_gender: "",
+        doctor_specialization: "",
+        doctor_qualification: "",
+        doctor_territory: "",
+        doctor_nmc_number: "",
+        category_name: "",
+        doctor_address: "",
+        doctor_phone_number: "",
     };
 
     const {
@@ -89,41 +121,37 @@ const AddDoctor = () => {
         setErrors,
         handleInputChange,
         resetForm,
-    } = useForm(initialFValues, true);
-
-
-    const validate = (fieldValues = values) => {
-        let temp = { ...errors };
-        if ('doctor_name' in fieldValues)
-            temp.doctor_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.doctor_name);
-        temp.doctor_territory = returnValidation(['null'], values.doctor_territory);
-        temp.category_name = returnValidation(['null'], values.category_name);
-        temp.mpo_name = returnValidation(['null'], values.mpo_name);
-        temp.doctor_specialization = returnValidation(['null'], values.doctor_specialization);
-        temp.doctor_birthday = returnValidation(['null'], values.doctor_birthday);
-        temp.doctor_anniversary = returnValidation(['null'], values.doctor_anniversary);
-
-        setErrors({
-            ...temp,
-        });
-
-        if (fieldValues === values) return Object.values(temp).every((x) => x === '');
-    };
+    } = useForm(initialFValues, true, validate);
 
     useEffect(() => {
         validate();
     }, [
         values.doctor_name,
-        values.doctor_gender,
         values.doctor_specialization,
-        values.doctor_qualification,
-        values.doctor_territory,
-        values.mpo_name,
-        values.doctor_nmc_number,
-        values.category_name,
         values.doctor_address,
         values.doctor_phone_number,
-        values.is_invested,
+        values.doctor_gender,
+        values.doctor_territory,
+        values.doctor_nmc_number,
+        values.doctor_qualification,
+        values.category_name,
+    ]);
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.doctor_name,
+    values.doctor_gender,
+    values.doctor_specialization,
+    values.doctor_qualification,
+    values.doctor_territory,
+    values.doctor_nmc_number,
+    values.category_name,
+    values.doctor_address,
+    values.doctor_phone_number,
     ]);
 
     //! Get MPO Area
@@ -162,27 +190,36 @@ const AddDoctor = () => {
         };
         try {
             const response = await createDoctors(data);
-            if (response.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Doctor.' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
-                setIsDrawerOpen(false);
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Added Doctor.' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false);
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setIsDrawerOpen(false)
             } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             } else {
-                setErrorMessage({ show: true, message: response.error.data[0] });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                // setErrorMessage({ show: true, message: response.error.data[0] });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 3000);
+                toast.error(`Some Error Occured`)
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -396,6 +433,7 @@ const AddDoctor = () => {
                                 <Controls.SubmitButton
                                     variant="contained"
                                     className="submit-button"
+                                    disabled={isButtonDisabled}
                                     onClick={(e) => onAddDoctors(e)}
                                     text="Submit"
                                 />

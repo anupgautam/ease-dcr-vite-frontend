@@ -21,6 +21,7 @@ import {
 import { NepaliDatePicker } from "nepali-datepicker-react";
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const EditApplication = ({ mpoId, idharu, onClose }) => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -28,13 +29,37 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
     //! Getting Application by ID
     const Application = useGetApplicationsByIdQuery(idharu);
 
-    //! Get Higher level user roles
-    const company_user_role = 3;
-    const [HigherUser, setHigherUser] = useState();
-    const [HigherLevelUser] = useGetUpperLevelCompanyUserRoleByIdMutation();
+    const validate = (fieldValues = values) => {
+        // 
+        let temp = { ...errors }
+        if ('leave_type' in fieldValues)
+            temp.leave_type = returnValidation(['null'], values.leave_type)
+        temp.leave_cause = returnValidation(['null', 'lessThan50', 'specialcharacter', 'minLength3'], values.leave_cause)
 
-    const [dateData, setDateData] = useState();
-    const [dateDataAnother, setDateDataAnother] = useState();
+        temp.leave_status = returnValidation(['null'], values.leave_status)
+
+        setErrors({
+            ...temp
+        })
+        // 
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x == "")
+    }
+
+    const [initialFValues, setInitialFValues] = useState({
+        leave_type: "",
+        leave_cause: "",
+        leave_from: "",
+        leave_to: "",
+        leave_status: "",
+        is_submitted: "",
+        submission_date: "",
+        is_approved: false,
+        company_name: "",
+        approved_by: "",
+        submit_to: "",
+    })
 
     const leaves = [
         { id: "CL", title: "Casual Leave" },
@@ -63,21 +88,6 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
         }
     }, [HigherUser]);
 
-
-    const [initialFValues, setInitialFValues] = useState({
-        leave_type: "",
-        leave_cause: "",
-        leave_from: "",
-        leave_to: "",
-        leave_status: "",
-        is_submitted: "",
-        submission_date: "",
-        is_approved: false,
-        company_name: "",
-        approved_by: "",
-        submit_to: "",
-    })
-
     const { values,
         errors,
         setErrors,
@@ -88,32 +98,6 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
         false,
         true
     )
-
-    //! Validation wala  
-    const validate = (fieldValues = values) => {
-        // 
-        let temp = { ...errors }
-        if ('leave_type' in fieldValues)
-            temp.leave_type = returnValidation(['null'], values.leave_type)
-        temp.leave_cause = returnValidation(['null'], values.leave_cause)
-        temp.leave_from = returnValidation(['null'], values.leave_from)
-        temp.leave_to = returnValidation(['null'], values.leave_to)
-        temp.leave_status = returnValidation(['null'], values.leave_status)
-        temp.is_submitted = returnValidation(['null'], values.is_submitted)
-        temp.submission_date = returnValidation(['null'], values.submission_date)
-        temp.is_approved = returnValidation(['null'], values.is_approved)
-        temp.company_name = returnValidation(['null'], values.company_name)
-        temp.approved_by = returnValidation(['null'], values.approved_by)
-        temp.submit_to = returnValidation(['null'], values.submit_to)
-
-        setErrors({
-            ...temp
-        })
-        // 
-
-        if (fieldValues === values)
-            return Object.values(temp).every(x => x == "")
-    }
 
     useEffect(() => {
         if (Application.data) {
@@ -151,6 +135,24 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
     values.submit_to
     ])
 
+    //! Get Higher level user roles
+    const company_user_role = 3;
+    const [HigherUser, setHigherUser] = useState();
+    const [HigherLevelUser] = useGetUpperLevelCompanyUserRoleByIdMutation();
+
+    const [dateData, setDateData] = useState();
+    const [dateDataAnother, setDateDataAnother] = useState();
+
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.leave_type,
+    values.leave_cause]);
+
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
@@ -177,31 +179,46 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
         try {
             const response = await updateApplications(formData).unwrap();
 
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Application' });
-                setTimeout(() => {
-                    // history("/dashboard/admin/application")
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Application' });
+                // setTimeout(() => {
+                //     // history("/dashboard/admin/application")
+                //     onClose();
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                console.log(response?.error)
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.error(`Some Error Occured`)
+
             }
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
+
+            console.log(error)
+            toast.error('Backend Error')
         }
         finally {
             setLoading(false);
@@ -256,6 +273,8 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Input
+                            id="auto-focus"
+                            autoFocus
                             name="leave_cause"
                             label="Leave Cause"
                             value={values.leave_cause}
@@ -295,12 +314,13 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
                         </Grid>
                     </Grid>
                     <Stack spacing={1} direction="row">
-                        <Button
+                        <Controls.SubmitButton
                             variant="contained"
+                            className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => handleSubmit(e)}
-                        >
-                            Submit{" "}
-                        </Button>
+                            text="Submit"
+                        />
                         <Button
                             variant="outlined"
                             onClick={onClose}

@@ -60,8 +60,8 @@ export default function TargetChart(props) {
   const roles = useMemo(() => {
     if (rolesData !== undefined) {
       return rolesData?.map((key) => ({
-        id: key.id,
-        title: key.role_name.role_name
+        id: key?.id,
+        title: key?.role_name?.role_name
       }))
     }
     return [];
@@ -158,7 +158,7 @@ export default function TargetChart(props) {
                         <MenuItem value={null}>None</MenuItem>
                         {roles?.map((role) => (
                           <MenuItem key={role.id} value={role.id}>
-                            {role.title && role.title}
+                            {role?.title && role?.title}
                           </MenuItem>
                         ))}
                       </Select>
@@ -178,7 +178,7 @@ export default function TargetChart(props) {
                           <MenuItem value={null}>None</MenuItem>
                           {companyUserList?.map((role) => (
                             <MenuItem key={role.id} value={role.id}>
-                              {role.title && role.title}
+                              {role?.title && role?.title}
                             </MenuItem>
                           ))}
                         </Select>
@@ -196,7 +196,7 @@ export default function TargetChart(props) {
                       >
                         <MenuItem value={null}>None</MenuItem>
                         {year?.map((year) => (
-                          <MenuItem key={year.value} value={year.value}>
+                          <MenuItem key={year?.value} value={year?.value}>
                             {year.label}
                           </MenuItem>
                         ))}

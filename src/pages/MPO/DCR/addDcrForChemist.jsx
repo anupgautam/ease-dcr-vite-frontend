@@ -28,6 +28,7 @@ import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { BSDate } from "nepali-datepicker-react";
 import moment from "moment";
 import { useGetAllProductsOptionsQuery } from "../../../api/MPOSlices/ProductSlice";
+import { toast } from 'react-toastify';
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: ' Name', alignRight: false },
@@ -223,7 +224,7 @@ const AddDCRforChemist = () => {
                     res.data.forEach(keyData => {
                         executive.push({
                             id: keyData.id,
-                            title: keyData.user_name.email,
+                            title: keyData?.user_name?.email,
                         });
                     });
                     setExecutiveOptions(executive);
@@ -241,7 +242,7 @@ const AddDCRforChemist = () => {
     const rewardsOptions = useMemo(() => {
         if (rewards !== undefined) {
             if (rewards.status === 'fulfilled') {
-                return rewards?.data?.map(key => ({ id: key.id, title: key.reward }))
+                return rewards?.data?.map(key => ({ id: key.id, title: key?.reward }))
             }
         }
         return [];
@@ -258,7 +259,7 @@ const AddDCRforChemist = () => {
             return companyProduct.data.map(key =>
             ({
                 id: key.id,
-                title: key.product_name.product_name,
+                title: key?.product_name?.product_name,
             })
             );
         }
@@ -350,11 +351,15 @@ const AddDCRforChemist = () => {
                 .then(res => {
                     setLoading(false);
                     if (res.data) {
-                        setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
-                        setTimeout(() => {
-                            setSuccessMessage({ show: false, message: '' });
-                            navigate('/dashboard/admin/dcr');
-                        }, 2000);
+                        // setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
+                        // setTimeout(() => {
+                        //     setSuccessMessage({ show: false, message: '' });
+                        //     navigate('/dashboard/admin/dcr');
+                        // }, 2000);
+
+                        toast.success(`All DCR Successfully Added.`)
+                        navigate('/dashboard/admin/dcr');
+
                         // createMpoDcr(mpoShiftData)
                         //     .then(res => {
                         //         if (res.data) {
@@ -381,22 +386,29 @@ const AddDCRforChemist = () => {
 
                     }
                     else if (res?.error) {
-                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        // setLoading(false);
+                        // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                        toast.error(`${res?.error}`)
                         setLoading(false);
-                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     }
                     else {
-                        setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 2000);
+                        // setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
+                        // setTimeout(() => {
+                        //     setErrorMessage({ show: false, message: '' });
+                        // }, 2000);
+
+                        toast.error(`Some Error Occured. Try again later.`)
+                        setLoading(false);
                     }
                 })
                 .catch(err => {
-                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 2000);
+                    // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                    // setTimeout(() => {
+                    //     setErrorMessage({ show: false, message: '' });
+                    // }, 2000);
+                    toast.error(`Some Error Occurred. Try again later.`)
                 })
                 .finally(() => {
                     setLoading(false)
@@ -431,13 +443,13 @@ const AddDCRforChemist = () => {
                                                                                 <Grid container spacing={2}>
                                                                                     <Grid item xs={3.5}>
                                                                                         <Box style={{ padding: '5px', textAlign: 'center', border: '1.2px solid #2d8960', borderRadius: "5px", marginTop: '11px', marginBottom: "11px" }}>
-                                                                                            <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{key.tour_plan.tour_plan.select_the_date_id.slice(8)}</Typography>
+                                                                                            <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{key?.tour_plan?.tour_plan?.select_the_date_id?.slice(8)}</Typography>
                                                                                         </Box>
                                                                                     </Grid>
                                                                                     <Grid item xs={8.5}>
                                                                                         <Box >
                                                                                             <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
-                                                                                                {key.tour_plan.tour_plan.select_the_month}
+                                                                                                {key?.tour_plan?.tour_plan?.select_the_month}
                                                                                             </span>
                                                                                             <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.area_name)
                                                                                                 .join(', ')}</Typography>
@@ -585,7 +597,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
                     res.data.forEach(keyData => {
                         executive.push({
                             id: keyData.id,
-                            title: keyData.user_name.first_name + " " + keyData.user_name.middle_name + " " + keyData.user_name.last_name,
+                            title: keyData?.user_name?.first_name + " " + keyData?.user_name?.middle_name + " " + keyData?.user_name?.last_name,
                         });
                     });
                     setExecutiveOptions(executive);
@@ -613,7 +625,7 @@ const ChemistDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values, id })
                 return companyProduct.data.map(key =>
                 ({
                     id: key.id,
-                    title: key.product_name.product_name,
+                    title: key?.product_name?.product_name,
                 })
                 );
             }

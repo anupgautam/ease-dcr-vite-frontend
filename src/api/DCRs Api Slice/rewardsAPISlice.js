@@ -108,7 +108,7 @@ export const RewardsApiSlice = apiSlice.injectEndpoints({
             query: (updateRewards) => {
 
                 return {
-                    url: `/dcr/rewards/${updateRewards.get('id')}/`,
+                    url: `dcr/rewards/${updateRewards.id}/`,
                     method: 'PUT',
                     body: updateRewards
                 };

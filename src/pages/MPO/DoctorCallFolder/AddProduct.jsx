@@ -15,6 +15,7 @@ import Iconify from '../../../components/iconify';
 import { useForm } from '../../../reusable/forms/useForm';
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
+import { toast } from 'react-toastify';
 
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
@@ -68,6 +69,18 @@ const AddProduct = () => {
         resetForm,
     } = useForm(initialFValues, true, validate);
 
+    useEffect(() => {
+        validate();
+    }, [values.product_id, values.product_image]);
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.product_id, values.product_image]);
+
     const onAddProducts = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
@@ -77,35 +90,49 @@ const AddProduct = () => {
         formData.append("company_name", company_id);
 
         try {
-            await createProducts(formData)
+            await createProducts(formData).unwrap()
                 .then((response) => {
-                    if (response.data) {
-                        setSuccessMessage({ show: true, message: 'Successfully Added Doctor Call' });
-                        setTimeout((e) => {
-                            setSuccessMessage({ show: false, message: '' });
-                        }, 3000);
-                        setIsDrawerOpen(false);
+                    console.log(response)
+                    if (response) {
+                        // setSuccessMessage({ show: true, message: 'Successfully Added Doctor Call' });
+                        // setTimeout((e) => {
+                        //     setSuccessMessage({ show: false, message: '' });
+                        // }, 3000);
+                        // setIsDrawerOpen(false);
+
+                        toast.success(`${response?.msg}`)
+                        setIsButtonDisabled(true)
+                        setIsDrawerOpen(false)
+                        resetForm();
                     } else if (response?.error) {
-                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        // setLoading(false);
+                        // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        toast.error(`${response?.error?.data?.msg}`)
                         setLoading(false);
-                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     } else {
-                        setErrorMessage({ show: true, message: response.error.data[0] });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 3000);
+                        // setErrorMessage({ show: true, message: response.error.data[0] });
+                        // setTimeout(() => {
+                        //     setErrorMessage({ show: false, message: '' });
+                        // }, 3000);
+                        toast.error(`Some Error Occured`)
                     }
                 }).catch((err) => {
-                    setErrorMessage({ show: true, message: 'Some Error Occured.' });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 3000);
+                    // setErrorMessage({ show: true, message: 'Some Error Occured.' });
+                    // setTimeout(() => {
+                    //     setErrorMessage({ show: false, message: '' });
+                    // }, 3000);
+
+                    console.log(error)
+                    toast.error('Backend Error')
                 })
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -121,9 +148,7 @@ const AddProduct = () => {
         }
     }, [File]);
 
-    useEffect(() => {
-        validate();
-    }, [values]);
+
 
     return (
         <>
@@ -193,6 +218,7 @@ const AddProduct = () => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddProducts(e)}
                             text="Submit"
                         />

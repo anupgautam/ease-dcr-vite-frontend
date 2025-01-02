@@ -22,6 +22,7 @@ import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { BSDate } from "nepali-datepicker-react";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 const AddDCRForStockist = () => {
     const { company_id, user_role, company_user_id, company_user_role_id, company_area_id } = useSelector((state) => state.cookie);
@@ -179,7 +180,7 @@ const AddDCRForStockist = () => {
                     res.data.forEach(keyData => {
                         executive.push({
                             id: keyData.id,
-                            title: keyData.user_name.first_name + " " + keyData.user_name.middle_name + " " + keyData.user_name.last_name,
+                            title: keyData?.user_name?.first_name + " " + keyData?.user_name?.middle_name + " " + keyData?.user_name?.last_name,
                         });
                     });
                     setExecutiveOptions(executive);
@@ -215,7 +216,7 @@ const AddDCRForStockist = () => {
                 return companyProduct.data.map(key =>
                 ({
                     id: key.id,
-                    title: key.product_name.product_name,
+                    title: key?.product_name?.product_name,
                 })
                 );
             }
@@ -289,11 +290,15 @@ const AddDCRForStockist = () => {
                     console.log('resssss', res);
                     setLoading(false)
                     if (res.data) {
-                        setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
-                        setTimeout(() => {
-                            setSuccessMessage({ show: false, message: '' });
-                            navigate('/dashboard/admin/dcr');
-                        }, 2000);
+                        // setSuccessMessage({ show: true, message: 'All DCR Successfully Added.' });
+                        // setTimeout(() => {
+                        //     setSuccessMessage({ show: false, message: '' });
+                        //     navigate('/dashboard/admin/dcr');
+                        // }, 2000);
+
+                        toast.success(`Successfully Added Tourplan.`)
+                        navigate('/dashboard/admin/dcr');
+
                         // if (LastData === true) {
                         //     updateTourplan({
                         //         id: values.tour_id,
@@ -351,22 +356,26 @@ const AddDCRForStockist = () => {
                         //         setLoading(false)
                         //     })
                     } else if (res?.error) {
-                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        // setLoading(false);
+                        // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        toast.error(`${res?.error}`)
                         setLoading(false);
-                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     } else {
-                        setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 2000);
+                        // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                        // setTimeout(() => {
+                        //     setErrorMessage({ show: false, message: '' });
+                        // }, 2000);
+                        toast.error('Some Error Occurred. Try again later.')
                     }
                 })
                 .catch((err) => {
 
-                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 2000);
+                    // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                    // setTimeout(() => {
+                    //     setErrorMessage({ show: false, message: '' });
+                    // }, 2000);
+                    toast.error('Some Error Occurred. Try again later.')
                 })
                 .finally(() => {
                     setLoading(false)
@@ -401,15 +410,15 @@ const AddDCRForStockist = () => {
                                                                                 <Grid container spacing={2}>
                                                                                     <Grid item xs={3.5}>
                                                                                         <Box style={{ padding: '5px', textAlign: 'center', border: '1.2px solid #2d8960', borderRadius: "5px", marginTop: '11px', marginBottom: "11px" }}>
-                                                                                            <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{key.tour_plan.tour_plan.select_the_date_id.slice(8)}</Typography>
+                                                                                            <Typography style={{ fontSize: "16px", color: 'black', fontWeight: '600' }}>{key?.tour_plan?.tour_plan?.select_the_date_id?.slice(8)}</Typography>
                                                                                         </Box>
                                                                                     </Grid>
                                                                                     <Grid item xs={8.5}>
                                                                                         <Box >
                                                                                             <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
-                                                                                                {key.tour_plan.tour_plan.select_the_month}
+                                                                                                {key?.tour_plan?.tour_plan?.select_the_month}
                                                                                             </span>
-                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.mpo_area_read.map((key) => key.area_name)
+                                                                                            <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key?.mpo_area_read?.map((key) => key?.area_name)
                                                                                                 .join(', ')}</Typography>
                                                                                         </Box>
                                                                                     </Grid>

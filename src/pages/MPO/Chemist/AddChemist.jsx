@@ -23,6 +23,7 @@ import { usePostAllMPONamesNoPageMutation } from '@/api/MPOSlices/DoctorSlice';
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { Link } from 'react-router-dom';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const AddChemist = () => {
     const { company_id, user_role, company_user_role_id, company_user_id } = useSelector((state) => state.cookie);
@@ -40,7 +41,7 @@ const AddChemist = () => {
 
     const mpoNames = useMemo(() => {
         if (MpoList) {
-            return MpoList.map(key => ({ id: key.id, title: key.user_name.first_name + ' ' + key.user_name.last_name }))
+            return MpoList.map(key => ({ id: key.id, title: key?.user_name?.first_name + ' ' + key?.user_name?.last_name }))
         }
         return [];
     }, [MpoList])
@@ -58,17 +59,6 @@ const AddChemist = () => {
         }
     }, [company_id])
 
-    const initialFValues = {
-        is_invested: false
-    }
-
-    const {
-        values,
-        errors,
-        setErrors,
-        handleInputChange,
-    } = useForm(initialFValues, true)
-
     //! Create Chemist
     const [createChemists] = useCreateChemistsMutation();
 
@@ -80,22 +70,68 @@ const AddChemist = () => {
         if ('chemist_name' in fieldValues)
             temp.chemist_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.chemist_name)
         temp.chemist_category = returnValidation(['null'], values.chemist_category)
+        temp.mpo_name = returnValidation(['null'], values.mpo_name)
         temp.chemist_territory = returnValidation(['null'], values.chemist_territory)
+        temp.chemist_contact_person = returnValidation(['null', 'lessThan50', 'specialcharacter', 'minLength3'], values.chemist_contact_person)
         temp.chemist_phone_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.chemist_phone_number)
+        temp.chemist_pan_number = returnValidation(['null', 'minLength3', 'specialcharacter'], values.chemist_pan_number)
+        temp.chemist_address = returnValidation(['null', 'minLength3', 'specialcharacter'], values.chemist_address)
 
         setErrors({
             ...temp
         })
-        // 
+        
 
         if (fieldValues === values)
             return Object.values(temp).every(x => x == "")
     }
 
+    const initialFValues = {
+        is_invested: false,
+        chemist_name: "",
+        chemist_address: "",
+        mpo_name: "",
+        chemist_territory: "",
+        chemist_contact_person: "",
+        chemist_phone_number: "",
+        chemist_pan_number: "",
+        chemist_category: ""
+    }
+
+    const {
+        values,
+        errors,
+        setErrors,
+        handleInputChange,
+    } = useForm(initialFValues, true, validate)
+
     useEffect(() => {
         validate();
 
-    }, [values.chemist_name, values.category_name, values.chemist_address, values.chemist_phone_number])
+    }, [values.chemist_name,
+    values.chemist_category,
+    values.chemist_address,
+    values.mpo_name,
+    values.chemist_territory,
+    values.chemist_contact_person,
+    values.chemist_phone_number,
+    values.chemist_pan_number,
+    ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.chemist_name,
+    values.chemist_category,
+    values.chemist_address,
+    values.mpo_name,
+    values.chemist_territory,
+    values.chemist_contact_person,
+    values.chemist_phone_number,
+    values.chemist_pan_number,]);
 
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id },
         {
@@ -132,27 +168,37 @@ const AddChemist = () => {
         };
         try {
             const response = await createChemists(data)
-            if (response.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Chemists' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Added Chemists' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false)
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
             } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             } else {
-                setSuccessMessage({ show: true, message: response.error.data });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+                // setSuccessMessage({ show: true, message: response.error.data });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                toast.error(`Some Error Occured`)
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -348,6 +394,7 @@ const AddChemist = () => {
                                     <Controls.SubmitButton
                                         variant="contained"
                                         className="submit-button"
+                                        disabled={isButtonDisabled}
                                         onClick={(e) => onAddChemists(e)}
                                         text="Submit"
                                     />

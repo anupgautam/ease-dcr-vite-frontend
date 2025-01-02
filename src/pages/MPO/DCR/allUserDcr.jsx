@@ -24,6 +24,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
+import { toast } from 'react-toastify';
 
 import { useForm1 } from '../../../reusable/components/forms/useForm';
 
@@ -93,7 +94,7 @@ const AllUserDcr = () => {
         let dataList = []
         if (roleList?.data) {
             roleList.data.map((key) => {
-                dataList.push({ id: key.id, title: key.role_name.role_name })
+                dataList.push({ id: key.id, title: key?.role_name?.role_name })
             })
         }
         setCompanyRoleList(dataList);
@@ -140,6 +141,21 @@ const AllUserDcr = () => {
 
     // !Delete users
     const [deleteUser] = useDeletecompanyUserRolesByIdMutation();
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteUser(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete User"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
@@ -266,7 +282,7 @@ const AllUserDcr = () => {
                                                                             {"Are you sure want to delete?"}
                                                                         </DialogTitle>
                                                                         <DialogActions>
-                                                                            <Button autoFocus onClick={() => { deleteUser(selectedId); handleClose() }}>
+                                                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                                 Yes
                                                                             </Button>
                                                                             <Button
@@ -332,7 +348,7 @@ const AllUserDcr = () => {
                                                                         {"Are you sure want to delete?"}
                                                                     </DialogTitle>
                                                                     <DialogActions>
-                                                                        <Button autoFocus onClick={() => { deleteUser(selectedId); handleClose() }}>
+                                                                        <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                             Yes
                                                                         </Button>
                                                                         <Button

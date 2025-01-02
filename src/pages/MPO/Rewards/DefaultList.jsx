@@ -22,6 +22,7 @@ import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import {
     useGetAllRewardsQuery,
@@ -35,7 +36,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -85,10 +86,21 @@ const DefaultList = () => {
     const [deleteRewards] = useDeleteRewardsByIdMutation();
 
     const handleDelete = async (id) => {
-        await deleteRewards(id);
-        refetch();
-        handleClose();
+        try {
+            const response = await deleteRewards(id);
+            if (response?.data) {
+                toast.success("Reward deleted successfully!");
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete reward"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            refetch(); // Refetch data to update the UI
+            handleClose(); // Close the dialog or modal
+        }
     };
+
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     return (
