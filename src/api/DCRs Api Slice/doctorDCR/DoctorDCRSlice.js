@@ -14,14 +14,14 @@ export const DoctorDCRSlice = apiSlice.injectEndpoints({
         //! GET all doctor DCR
         getAllDoctorsDCR: builder.query({
             query: (page) => ({
-                url: `dcr/mpo-shift-wise-dcr-for-doctor/?dcr__dcr__visited_doctor__company_name=${page.id}&page=${page.page}`,
+                url: `dcr/mpo-shift-wise-dcr-for-doctor/?company_name=${page.id}&page=${page.page}`,
                 method: 'GET'
             }),
             providesTags: ['DoctorDCR']
         }),
         getAllDataofDCRDoctor: builder.query({
             query: (id) => ({
-                url: `dcr/mpo-shift-wise-dcr-for-doctor/?dcr__dcr__visited_doctor__company_name=${id.id}&page=${id.page}`,
+                url: `dcr/mpo-shift-wise-dcr-for-doctor/?company_name=${id.id}&page=${id.page}`,
                 method: 'GET'
             }),
             providesTags: ['DoctorDCR']

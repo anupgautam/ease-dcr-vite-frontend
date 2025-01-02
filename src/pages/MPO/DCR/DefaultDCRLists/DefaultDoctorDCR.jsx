@@ -45,7 +45,7 @@ const TABLE_HEAD = [
     { id: '' },
 ];
 
-const DefaultDoctorDCR = () => {
+const DefaultDoctorDCR = ({ selectedUser, dateOnly }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
@@ -89,8 +89,8 @@ const DefaultDoctorDCR = () => {
     }
 
     // !Get Tour Plans
-    const { data } = useGetAllDataofDCRDoctorQuery({ page: page, id: company_user_role_id });
-    console.log(data)
+    const { data } = useGetAllDataofDCRDoctorQuery({ page: page, id: user_role === "admin" ? selectedUser : company_user_role_id });
+
 
     const [deleteTourPlan] = useDeleteDoctorsDCRByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -133,11 +133,11 @@ const DefaultDoctorDCR = () => {
                                                     <TableCell align="left">{tourplan?.shift?.shift}</TableCell>
                                                     <TableCell align="left">{tourplan?.dcr?.date}</TableCell>
                                                     {/* <TableCell align="left">{moment(tourplan?.dcr?.date).format('DD')}</TableCell> */}
-                                                    {/* <TableCell align="left">{tourplan.dcr.dcr.visited_area.area_name}</TableCell> */}
+                                                    <TableCell align="left">{tourplan.dcr.visited_area.area_name}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
-                                                        {/* <Typography variant="subtitle2" noWrap>
-                                                            {tourplan?.dcr?.dcr?.visited_doctor?.doctor_name?.doctor_name}
-                                                        </Typography> */}
+                                                        <Typography variant="subtitle2" noWrap>
+                                                            {tourplan?.dcr?.visited_doctor?.doctor_name?.doctor_name}
+                                                        </Typography>
                                                     </TableCell>
                                                     {/* <TableCell align="left">
                                                         {

@@ -137,14 +137,12 @@ const FilteredDCRTest = () => {
         }
     }, [selectedId])
 
-    console.log("UserRole", user_role, "ParamsRole", role, selectedDCRType, selectedMonth, selectedYear)
 
     return (
         <>
             <SelectDataDCR />
             <Card>
-                <Box style={{ padding: "20px" }}>
-
+                <Box >
                     {
                         user_role !== "admin" &&
                         <Grid item md={2}>
@@ -230,11 +228,10 @@ const FilteredDCRTest = () => {
                                         )}
                                     </Stack>
                                 )}
-
-                            {/* {
-                                    user_role === "admin" &&
-                                    <>
-                                        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
+                            <Grid container spacing={2}>
+                                {user_role === "admin" && (
+                                    <Grid item md={3}>
+                                        <Stack direction="column" spacing={2} padding={"20px"} paddingBottom={'0px'}>
                                             <FormControl sx={{ minWidth: 200 }}>
                                                 <InputLabel id="mpo-select-label">DCR Type</InputLabel>
                                                 <Select
@@ -245,152 +242,104 @@ const FilteredDCRTest = () => {
                                                     label="DCR Type"
                                                 >
                                                     <MenuItem value="">None</MenuItem>
-                                                    <MenuItem key={"doctor"} value={"Doctor"}>
-                                                        {"Doctor"}
-                                                    </MenuItem>
-                                                    <MenuItem key={"chemist"} value={"Chemist"}>
-                                                        {"Chemist"}
-                                                    </MenuItem>
-                                                    <MenuItem key={"stockist"} value={"Stockist"}>
-                                                        {"Stockist"}
-                                                    </MenuItem>
+                                                    <MenuItem key="doctor" value="Doctor">Doctor</MenuItem>
+                                                    <MenuItem key="chemist" value="Chemist">Chemist</MenuItem>
+                                                    <MenuItem key="stockist" value="Stockist">Stockist</MenuItem>
+                                                    <MenuItem key="other-roles" value="other-roles">Other Roles</MenuItem>
                                                 </Select>
                                             </FormControl>
-
-                                            {selectedDCRType === "Doctor" ? (
-                                                <>
-                                                    {selectedYear && selectedMonth ? (
-                                                        <>
-                                                            <ExportDoctorDCR
-                                                                selectedUser={selectedId ? selectedId?.id : id}
-                                                                selectedMonth={selectedMonth}
-                                                                selectedDate={dateData}
-                                                                dateOnly={dateOnly}
-                                                            />
-                                                            <DefaultDoctorDCR />
-                                                        </>
-                                                    ) : null}
-                                                </>
-                                            ) : (
-                                                <>
-                                                </>
-                                            )}
-
-                                            {selectedDCRType === "Chemist" ?
-                                                <>
-                                                    {selectedYear && selectedMonth ?
-                                                        <ExportChemistDCR
-                                                            selectedUser={selectedId ? selectedId?.id : id}
-                                                            selectedMonth={selectedMonth}
-                                                            selectedDate={dateData}
-                                                            dateOnly={dateOnly}
-                                                        />
-                                                        : <></>}
-                                                </> : <></>
-                                            }
-
-                                            {selectedDCRType === "Stockist" ?
-                                                <>
-                                                    {selectedYear && selectedMonth ?
-                                                        <ExportStockistDCR
-                                                            selectedUser={selectedId ? selectedId : id}
-                                                            selectedMonth={selectedMonth}
-                                                            selectedDate={selectedYear}
-                                                            dateOnly={dateOnly}
-                                                        />
-                                                        : <></>}
-                                                </> : <></>
-                                            }
-                                            {selectedDCRType === "other-roles" ?
-                                                <>
-                                                    {selectedYear && selectedMonth ?
-                                                        <ExportHODCR
-                                                            selectedUser={selectedId ? selectedId?.id : id}
-                                                            selectedMonth={selectedMonth}
-                                                            selectedDate={selectedYear}
-                                                        />
-                                                        : <></>}
-                                                </> : <></>
-                                            }
                                         </Stack>
+                                    </Grid>
+                                )}
+                                <Grid item md={7}></Grid>
+                                {selectedDCRType && selectedYear && selectedMonth && (
+                                    <>
+                                        {selectedDCRType === "Doctor" && (
+                                            <Grid item xs={2}>
+                                                <Box padding={'20px'} style={{ textAlign: "right" }}>
+                                                    <ExportDoctorDCR
+                                                        selectedUser={selectedId?.id || id}
+                                                        selectedMonth={selectedMonth}
+                                                        selectedDate={dateData}
+                                                        dateOnly={dateOnly}
+                                                    />
+                                                </Box>
+                                            </Grid>
+                                        )}
+                                        {selectedDCRType === "Chemist" && (
+                                            <Grid item xs={2}>
+                                                <Box padding={'20px'} style={{ textAlign: "right" }}>
+                                                    <ExportChemistDCR
+                                                        selectedUser={selectedId?.id || id}
+                                                        selectedMonth={selectedMonth}
+                                                        selectedDate={dateData}
+                                                        dateOnly={dateOnly}
+                                                    />
+                                                </Box>
+                                            </Grid>
+                                        )}
+                                        {selectedDCRType === "Stockist" && (
+                                            <Grid item xs={2}>
+                                                <Box padding={'20px'} style={{ textAlign: "right" }}>
+                                                    <ExportStockistDCR
+                                                        selectedUser={selectedId?.id || id}
+                                                        selectedMonth={selectedMonth}
+                                                        selectedDate={dateData}
+                                                        dateOnly={dateOnly}
+                                                    />
+                                                </Box>
+                                            </Grid>
+                                        )}
+                                        {selectedDCRType === "other-roles" && (
+                                            <Grid item xs={2}>
+                                                <Box padding={'20px'} style={{ textAlign: "right" }}>
+                                                    <ExportHODCR
+                                                        selectedUser={selectedId?.id || id}
+                                                        selectedMonth={selectedMonth}
+                                                        selectedDate={dateData}
+                                                    />
+                                                </Box>
+                                            </Grid>
+                                        )}
                                     </>
-                                } */}
+                                )}
+                            </Grid>
+                            <Box marginTop={2}>
+                                {selectedDCRType === "Doctor" &&
+                                    (
+                                        <DefaultDoctorDCR
+                                            selectedUser={selectedId ? selectedId?.id : id}
+                                            dateOnly={dateOnly}
+                                        />
+                                    )
+                                }
 
-
-                            {user_role === "admin" && (
-                                <Grid item md={3}>
-                                    <Stack direction="column" spacing={2}>
-                                        {/* DCR Type Selection */}
-                                        <FormControl sx={{ minWidth: 200 }}>
-                                            <InputLabel id="mpo-select-label">DCR Type</InputLabel>
-                                            <Select
-                                                labelId="mpo-select-label"
-                                                id="mpo-select"
-                                                value={selectedDCRType}
-                                                onChange={handleOptionDCRType}
-                                                label="DCR Type"
-                                            >
-                                                <MenuItem value="">None</MenuItem>
-                                                <MenuItem key="doctor" value="Doctor">Doctor</MenuItem>
-                                                <MenuItem key="chemist" value="Chemist">Chemist</MenuItem>
-                                                <MenuItem key="stockist" value="Stockist">Stockist</MenuItem>
-                                                <MenuItem key="other-roles" value="other-roles">Other Roles</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Stack>
-                                </Grid>
-                            )}
-
-                            {/* Export Components */}
-                            {selectedDCRType && selectedYear && selectedMonth && (
-                                <>
-                                    {selectedDCRType === "Doctor" && (
-                                        <div>
-                                            <ExportDoctorDCR
-                                                selectedUser={selectedId?.id || id}
-                                                selectedMonth={selectedMonth}
-                                                selectedDate={dateData}
-                                                dateOnly={dateOnly}
-                                            />
-                                            <DefaultDoctorDCR />
-                                        </div>
-                                    )}
-                                    {selectedDCRType === "Chemist" && (
-                                        <>
-                                            <ExportChemistDCR
-                                                selectedUser={selectedId?.id || id}
-                                                selectedMonth={selectedMonth}
-                                                selectedDate={dateData}
-                                                dateOnly={dateOnly}
-                                            />
-                                            <DefaultChemistDCR />
-                                        </>
-                                    )}
-                                    {selectedDCRType === "Stockist" && (
-                                        <>
-                                            <ExportStockistDCR
-                                                selectedUser={selectedId?.id || id}
-                                                selectedMonth={selectedMonth}
-                                                selectedDate={dateData}
-                                                dateOnly={dateOnly}
-                                            />
-                                            <DefaultStockistDCR />
-                                        </>
-                                    )}
-                                    {selectedDCRType === "other-roles" && (
-                                        <>
-                                            <ExportHODCR
-                                                selectedUser={selectedId?.id || id}
-                                                selectedMonth={selectedMonth}
-                                                selectedDate={dateData}
-                                            />
-                                            <DefaultHODCR />
-                                        </>
-                                    )}
-                                </>
-                            )}
-
-
+                                {selectedDCRType === "Chemist" &&
+                                    (
+                                        <DefaultChemistDCR
+                                            selectedUser={selectedId ? selectedId?.id : id}
+                                            dateOnly={dateOnly}
+                                        />
+                                    )
+                                }
+                                {selectedDCRType === "Stockist" &&
+                                    (
+                                        <DefaultStockistDCR
+                                            selectedUser={selectedId ? selectedId?.id : id}
+                                            dateOnly={dateOnly}
+                                        />
+                                    )
+                                }
+                                {
+                                    selectedDCRType === "other-roles" &&
+                                    (
+                                        <DefaultHODCR
+                                            selectedUser={selectedId ? selectedId?.id : id}
+                                            dateOnly={dateOnly}
+                                        />
+                                    )
+                                }
+                            </Box>
                         </Grid>
                         : <></>}
 

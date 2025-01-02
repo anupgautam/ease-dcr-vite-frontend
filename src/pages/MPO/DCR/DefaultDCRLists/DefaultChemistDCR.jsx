@@ -44,7 +44,7 @@ const TABLE_HEAD = [
     { id: '' },
 ];
 
-const DefaultChemistDCR = () => {
+const DefaultChemistDCR = ({ selectedUser, dateOnly }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
@@ -88,8 +88,9 @@ const DefaultChemistDCR = () => {
         setPage(thisArray[3]);
     }
 
+
     // !Get Tour Plans
-    const { data } = useGetAllChemistsDCRQuery({ page: page, id: company_user_role_id });
+    const { data } = useGetAllChemistsDCRQuery({ page: page, id: user_role === "admin" ? selectedUser : company_user_role_id });
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteChemistsDCRByIdMutation();
@@ -121,26 +122,26 @@ const DefaultChemistDCR = () => {
                                                 ))}
                                         </> :
                                             <>{data && data.results.map((tourplan, index) => (
-                                                <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}>
+                                                <TableRow hover tabIndex={-1} role="checkbox" key={tourplan?.id}>
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {tourplan.mpo_name.user_name.first_name + " " + tourplan.mpo_name.user_name.last_name}
+                                                            {tourplan?.mpo_name?.user_name?.first_name + " " + tourplan?.mpo_name?.user_name?.middle_name + " " + tourplan?.mpo_name?.user_name?.last_name}
                                                         </Typography>
                                                     </TableCell>
-                                                    <TableCell align="left">{tourplan.dcr.shift.shift}</TableCell>
-                                                    <TableCell align="left">{tourplan.dcr.dcr.date}</TableCell>
-                                                    <TableCell align="left">{tourplan.dcr.dcr.visited_area.area_name}</TableCell>
+                                                    <TableCell align="left">{tourplan?.dcr?.shift?.shift}</TableCell>
+                                                    <TableCell align="left">{tourplan?.dcr?.date}</TableCell>
+                                                    <TableCell align="left">{tourplan?.dcr?.visited_area?.area_name}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {tourplan.dcr.dcr.visited_chemist.chemist_name.chemist_name}
+                                                            {tourplan?.dcr?.visited_chemist?.chemist_name?.chemist_name}
                                                         </Typography>
                                                     </TableCell>
                                                     {/*//! Edit  */}
                                                     <TableCell align="left">
                                                         {
                                                             user_role === 'admin' &&
-                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.dcr.dcr.id, tourplan.mpo_name.id)}>
+                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.dcr.id, tourplan.mpo_name.id)}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:edit-fill" />
                                                                 </Badge>
@@ -149,7 +150,7 @@ const DefaultChemistDCR = () => {
                                                         {/*//! Delete  */}
                                                         {
                                                             user_role === 'admin' &&
-                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.dcr.dcr.id); handleClickOpen() }}>
+                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.dcr.id); handleClickOpen() }}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:trash-2-outline" />
                                                                 </Badge>
