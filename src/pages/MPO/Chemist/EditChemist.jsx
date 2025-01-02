@@ -24,6 +24,7 @@ import {
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 
 const EditChemist = ({ idharu, onClose }) => {
@@ -65,6 +66,29 @@ const EditChemist = ({ idharu, onClose }) => {
         return [];
     }, [MpoArea])
 
+    //! Validation wala  
+    const validate = (fieldValues = values) => {
+        // 
+        let temp = { ...errors }
+        if ('chemist_name' in fieldValues)
+            temp.chemist_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.chemist_name)
+        temp.chemist_category = returnValidation(['null'], values.chemist_category)
+        temp.mpo_name = returnValidation(['null'], values.mpo_name)
+        temp.chemist_territory = returnValidation(['null'], values.chemist_territory)
+        temp.chemist_contact_person = returnValidation(['null', 'lessThan50', 'specialcharacter', 'minLength3'], values.chemist_contact_person)
+        temp.chemist_phone_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.chemist_phone_number)
+        temp.chemist_pan_number = returnValidation(['null', 'minLength3', 'specialcharacter'], values.chemist_pan_number)
+        temp.chemist_address = returnValidation(['null', 'minLength3', 'specialcharacter'], values.chemist_address)
+
+        setErrors({
+            ...temp
+        })
+        // 
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x == "")
+    }
+
     const [initialFValues, setInitialFValues] = useState({
         chemist_name: "",
         chemist_address: "",
@@ -76,37 +100,6 @@ const EditChemist = ({ idharu, onClose }) => {
         mpo_name: "",
         is_invested: "",
     })
-
-    const { values,
-        errors,
-        setErrors,
-        handleInputChange
-    } = useForm(
-        initialFValues,
-        true,
-        false,
-        true
-    )
-    //! Validation wala  
-    const validate = useCallback((fieldValues = values) => {
-        // 
-        let temp = { ...errors }
-        if ('chemist_name' in fieldValues)
-            temp.chemist_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.chemist_name)
-        temp.chemist_territory = returnValidation(['null'], values.chemist_territory)
-        temp.chemist_address = returnValidation(['null'], values.chemist_address)
-        temp.chemist_category = returnValidation(['null'], values.chemist_category)
-        temp.chemist_phone_number = returnValidation(['null', 'phonenumber'], values.chemist_phone_number)
-        temp.chemist_contact_person = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.chemist_contact_person)
-
-        setErrors({
-            ...temp
-        })
-        // 
-
-        if (fieldValues === values)
-            return Object.values(temp).every(x => x == "")
-    }, [values, errors])
 
     useEffect(() => {
         if (Chemist?.data || AreaById?.data) {
@@ -125,12 +118,44 @@ const EditChemist = ({ idharu, onClose }) => {
         }
     }, [Chemist.data, AreaById.data])
 
+    const { values,
+        errors,
+        setErrors,
+        handleInputChange
+    } = useForm(
+        initialFValues,
+        true,
+        false,
+        true
+    )
+
     useEffect(() => {
         validate();
 
-    }, [
-        values
+    }, [values.chemist_name,
+    values.chemist_category,
+    values.chemist_address,
+    values.mpo_name,
+    values.chemist_territory,
+    values.chemist_contact_person,
+    values.chemist_phone_number,
+    values.chemist_pan_number,
     ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.chemist_name,
+    values.chemist_category,
+    values.chemist_address,
+    values.mpo_name,
+    values.chemist_territory,
+    values.chemist_contact_person,
+    values.chemist_phone_number,
+    values.chemist_pan_number,]);
 
 
     //! Edit user
@@ -160,31 +185,45 @@ const EditChemist = ({ idharu, onClose }) => {
         try {
             const response = await updateChemists(data)
             if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Chemist' });
-                setTimeout(() => {
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
-            } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Chemist' });
+                // setTimeout(() => {
+                //     onClose();
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                onClose();
+            } else if (response?.error) {
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                console.log(response?.error)
+                toast.error(`${response?.error?.data?.msg}`)
+                setLoading(false);
             } else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.error(`Some Error Occured`)
             }
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
+
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
-    }, [updateChemists, idharu, values])
+    }, [updateChemists, values])
 
     return (
         <>
@@ -316,6 +355,7 @@ const EditChemist = ({ idharu, onClose }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => handleSubmit(e)}
                                 text="Submit"
                             />

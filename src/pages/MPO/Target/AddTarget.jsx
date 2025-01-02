@@ -29,7 +29,7 @@ import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { useGetAllCompanyUsersWithoutPaginationQuery } from '../../../api/CompanySlices/companyUserRoleSlice';
-import { Key } from '@mui/icons-material';
+import { toast } from 'react-toastify';
 
 const AddTarget = () => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -66,7 +66,7 @@ const AddTarget = () => {
         if (Data?.data !== undefined) {
             return Data?.data?.results?.map((key) => ({
                 id: key.id,
-                title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
+                title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name
             }))
         }
     })
@@ -82,30 +82,14 @@ const AddTarget = () => {
         setIsDrawerOpen(false);
     }, [])
 
-    const initialFValues = {
-
-    }
-    const {
-        values,
-        setValues,
-        errors,
-        setErrors,
-        handleInputChange,
-        resetForm,
-    } = useForm(initialFValues, true)
-
-    const [createTarget] = useCreateTargetMutation();
-
     //! Validation wala  
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
-        temp.year = returnValidation(['null'], values.year)
-        temp.target_from = returnValidation(['null'], values.target_from)
-        temp.target_to = returnValidation(['null'], values.target_to)
         if ('target_amount' in fieldValues)
-            temp.target_amount = fieldValues.target_amount ? returnValidation(['null', 'isNumberOnly'], fieldValues.target_amount) : "";
-        if ('sales' in fieldValues)
-            temp.sales = fieldValues.sales ? returnValidation(['null', 'isNumberOnly'], fieldValues.sales) : "";
+            temp.target_amount = returnValidation(['null', "isNumberOnly"], values.target_amount)
+
+        temp.target_to = returnValidation(['null'], values.target_to)
+
 
         setErrors({
             ...temp
@@ -115,10 +99,33 @@ const AddTarget = () => {
             return Object.values(temp).every(x => x == "")
     }
 
+    const initialFValues = {
+        target_to: "",
+        target_amount: "",
+    }
+
+    const {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChange,
+        resetForm,
+    } = useForm(initialFValues, true, validate)
+
     useEffect(() => {
         validate();
+    }, [values.target_to, values.target_amount]);
 
-    }, [values.target_from, values.year, values.sales, values.target_to, values.target_amount])
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.target_to, values.target_amount]);
+
+    const [createTarget] = useCreateTargetMutation();
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -138,29 +145,40 @@ const AddTarget = () => {
 
         try {
             const response = await createTarget(jsonObject)
-            if (response.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Target' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Added Target' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false)
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
+                resetForm();
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 3000);
+                toast.error(`Some Error Occured`)
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -252,6 +270,7 @@ const AddTarget = () => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddStockists(e)}
                             text="Submit"
                         />

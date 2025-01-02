@@ -32,6 +32,7 @@ import {
 } from '@/api/MPOSlices/productApiSlice'
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const BS_MONTHS = [
     "Baisakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
@@ -153,7 +154,8 @@ const AddPrimarySales = ({ selectedOption }) => {
             temp.stockist_name = returnValidation(['null'], values.stockist_name)
         temp.year = returnValidation(['null'], values.year)
         temp.month = returnValidation(['null'], values.month)
-        temp.quantity = returnValidation(['null'], values.quantity)
+        temp.quantity = returnValidation(['null', 'alpha', 'specialcharacter', 'lessthan3'], values.quantity)
+        temp.total_amount = returnValidation(['null', 'specialcharacter', 'lessthan3'], values.total_amount)
 
         setErrors({
             ...temp
@@ -166,7 +168,11 @@ const AddPrimarySales = ({ selectedOption }) => {
 
 
     const initialFValues = {
-
+        stockist_name: "",
+        year: "",
+        month: "",
+        quantity: "",
+        total_amount: ""
     }
 
     const {
@@ -176,16 +182,32 @@ const AddPrimarySales = ({ selectedOption }) => {
         setErrors,
         handleInputChange,
         resetForm,
-    } = useForm(initialFValues, true)
+    } = useForm(initialFValues, true, validate)
 
     useEffect(() => {
         validate();
 
     }, [
-        values.product_id,
+        // values.product_id,
         values.stockist_name,
         values.quantity,
+        values.year,
+        values.month,
+        values.total_amount
     ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [
+    values.stockist_name,
+    values.quantity,
+    values.year,
+    values.month,
+    values.total_amount]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -204,28 +226,36 @@ const AddPrimarySales = ({ selectedOption }) => {
             total_amount: values.total_amount
         }
         try {
-            const response = await createPrimarySales(jsonData).unwrap();
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Secondary Sales' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+            const response = await createPrimarySales(jsonData)
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Added Secondary Sales' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false)
+
+                toast.success(`${response?.data?.message}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.message}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: "Error" });
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                toast.error(`Some Error Occured`)
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -309,7 +339,7 @@ const AddPrimarySales = ({ selectedOption }) => {
                                     value={values.name}
                                     options={rolesOptions}
                                     onChange={handleInputChange}
-                                    error={errors.doctorDCRId}
+                                    error={errors.stockist_name}
                                 />
                             </Box>
                         </Grid>
@@ -333,6 +363,7 @@ const AddPrimarySales = ({ selectedOption }) => {
                                     label="Total Amount*"
                                     value={values.name}
                                     onChange={handleInputChange}
+                                    error={errors.total_amount}
                                 />
                             </Box>
                         </Grid>
@@ -355,6 +386,7 @@ const AddPrimarySales = ({ selectedOption }) => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddChemists(e)}
                             text="Submit"
                         />

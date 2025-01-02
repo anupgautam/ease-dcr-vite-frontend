@@ -21,6 +21,7 @@ import {
 } from '@/api/MPOSlices/rewardsApiSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '../../../reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const AddRewards = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -31,10 +32,9 @@ const AddRewards = () => {
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors };
+
         if ('reward' in fieldValues)
-            temp.reward = fieldValues.reward ? returnValidation(['null'], fieldValues.reward) : "";
-        if ('price' in fieldValues)
-            temp.price = fieldValues.price ? returnValidation(['null', 'isNumberOnly'], fieldValues.price) : "";
+            temp.reward = returnValidation(['null', 'lessThan50', 'reward', 'minLength3'], values.reward)
 
         setErrors({
             ...temp
@@ -59,7 +59,15 @@ const AddRewards = () => {
 
     useEffect(() => {
         validate();
-    }, [values.reward, values.price]);
+    }, [values.reward]);
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.reward]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -67,34 +75,46 @@ const AddRewards = () => {
 
     const onAddRewards = useCallback(async (e) => {
         e.preventDefault();
-        if (validate()) {
-            setLoading(true)
-            const formData = new FormData();
-            formData.append("reward", values.reward);
-            formData.append("company_name", company_id);
-            try {
-                const response = await createRewards(formData).unwrap();
-                if (response) {
-                    setSuccessMessage({ show: true, message: 'Successfully Added Rewards' });
-                    setTimeout(() => {
-                        setSuccessMessage({ show: false, message: '' });
-                        setIsDrawerOpen(false);
-                        resetForm();
-                    }, 3000);
-                }
-                else if (response?.error) {
-                    setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
-                    setLoading(false);
-                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                }
-            } catch (error) {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 3000);
-            } finally {
-                setLoading(false)
+        setLoading(true)
+        // const formData = new FormData();
+        // formData.append("reward", values.reward);
+        // formData.append("company_name", company_id);
+        const data = { reward: values.reward, company_name: company_id }
+
+        try {
+            const response = await createRewards(data)
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Added Rewards' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                //     setIsDrawerOpen(false);
+                //     resetForm();
+                // }, 3000);
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setIsDrawerOpen(false)
+                resetForm();
+
             }
+            else if (response?.error) {
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                toast.error(`${response?.error?.data?.msg}`)
+                setLoading(false);
+            }
+            else {
+                toast.error(`Some Error Occured`)
+            }
+        } catch (error) {
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
+        } finally {
+            setLoading(false)
         }
     }, [createRewards, values]);
 
@@ -140,7 +160,7 @@ const AddRewards = () => {
                             id="auto-focus"
                             name="reward"
                             label="Reward*"
-                            value={values.reward}
+                            value={values.name}
                             onChange={handleInputChange}
                             error={errors.reward}
                             autoFocus
@@ -159,6 +179,7 @@ const AddRewards = () => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddRewards(e)}
                             text="Submit"
                         />

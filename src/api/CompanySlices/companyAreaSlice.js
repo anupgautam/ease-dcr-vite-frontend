@@ -73,10 +73,10 @@ export const CompanyAreaSlice = apiSlice.injectEndpoints({
                 return {
                     url: `mpo/company-mpo-area/${createCompanyAreas.id}/`,
                     method: 'PATCH',
-                    body: createCompanyAreas.data,
+                    body: createCompanyAreas,
                 }
             },
-            invalidatesTags: ['CompanyAreas']
+            invalidatesTags: ['CompanyAreas', 'Tourplan']
         }),
 
         //! Login User

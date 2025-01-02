@@ -15,6 +15,7 @@ import moment from "moment";
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery, usePostUserIdToGetLowerLevelExecutiveMutation } from "@/api/MPOSlices/UserSlice";
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 
 const AddUnplannedTp = () => {
@@ -51,7 +52,7 @@ const AddUnplannedTp = () => {
             LowerExecutive({ id: company_user_role_id })
                 .then((res) => {
                     if (res.data) {
-                        const data = res.data.map(key => ({ id: key.id, title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name }));
+                        const data = res.data.map(key => ({ id: key.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name }));
                         setExecutiveLevelOptions(data);
                     }
                 })
@@ -126,28 +127,34 @@ const AddUnplannedTp = () => {
                 AddTourPlan(data)
                     .then(res => {
                         if (res.data) {
-                            setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
-                            setTimeout(() => {
-                                setSuccessMessage({ show: false, message: '' });
-                                setIsDrawerOpen(false)
-                            }, 5000);
+                            // setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
+                            // setTimeout(() => {
+                            //     setSuccessMessage({ show: false, message: '' });
+                            //     setIsDrawerOpen(false)
+                            // }, 5000);
+                            toast.success('Successfully Added Unplanned Tourplan')
+                            setIsDrawerOpen(false)
                         }
                         else if (response?.error) {
-                            setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                            // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                            // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                            toast.error(`${response?.error}`)
                             setLoading(false);
-                            setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                         } else {
-                            setErrorMessage({ show: true, message: response.error.data[0] });
-                            setTimeout(() => {
-                                setErrorMessage({ show: false, message: '' });
-                            }, 5000);
+                            // setErrorMessage({ show: true, message: response.error.data[0] });
+                            // setTimeout(() => {
+                            //     setErrorMessage({ show: false, message: '' });
+                            // }, 5000);
+                            toast.error(`${response?.error.data[0]}`)
+
                         }
                     })
                     .catch(err => {
-                        setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 5000);
+                        // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                        // setTimeout(() => {
+                        //     setErrorMessage({ show: false, message: '' });
+                        // }, 5000);
+                        toast.error(`Some Error Occurred. Try again later.`)
                     })
                     .finally(() => {
                         setLoading(false)
@@ -170,29 +177,34 @@ const AddUnplannedTp = () => {
                 AddHigherOrder(data)
                     .then((res) => {
                         if (res.data) {
-                            setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
+                            // setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
+                            // setTimeout(() => {
+                            //     setSuccessMessage({ show: false, message: '' });
+                            //     setIsDrawerOpen(false)
+                            // }, 4000);
+                            toast.success('Successfully Added Unplanned TourPlan')
+                            setIsDrawerOpen(false)
                             initialStates()
                             resetForm()
-                            setTimeout(() => {
-                                setSuccessMessage({ show: false, message: '' });
-                                setIsDrawerOpen(false)
-                            }, 4000);
                         } else if (res.error.status === '400') {
                             setLoading(false)
-                            setErrorMessage({ show: true, message: res.error.data[0] });
+                            // setErrorMessage({ show: true, message: res.error.data[0] });
+                            // initialStates()
+                            // setTimeout(() => {
+                            //     setErrorMessage({ show: false, message: '' });
+                            // }, 5000);
+                            toast.error(`${res?.error?.data[0]}`)
                             initialStates()
-                            setTimeout(() => {
-                                setErrorMessage({ show: false, message: '' });
-                            }, 5000);
                         }
                     })
                     .catch(err => {
                         setLoading(false)
-                        setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
                         initialStates()
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 5000);
+                        // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                        // setTimeout(() => {
+                        //     setErrorMessage({ show: false, message: '' });
+                        // }, 5000);
+                        toast.error('Some Error Occured. Try again later.')
                     })
                     .finally(() => {
                         setLoading(false)
@@ -200,12 +212,14 @@ const AddUnplannedTp = () => {
             }
         } else {
             setLoading(false);
-            setErrorMessage({ show: true, message: 'Unplanned tourplan can be create in today dates only.' });
             initialStates()
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-                setIsDrawerOpen(false)
-            }, 5000);
+            // setErrorMessage({ show: true, message: 'Unplanned tourplan can be create in today dates only.' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            //     setIsDrawerOpen(false)
+            // }, 5000);
+            toast.error('Unplanned tourplan can be create in today dates only.')
+            setIsDrawerOpen(false)
         }
     }
 

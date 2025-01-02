@@ -24,6 +24,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { toast } from 'react-toastify';
 
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
@@ -200,6 +201,20 @@ const DoctorSearch = () => {
     // !Delete doctors
     const [deleteDoctor] = useDeleteDoctorsByIdMutation()
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteDoctor(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Doctor"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
     const theme = useTheme();
@@ -317,7 +332,7 @@ const DoctorSearch = () => {
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell component="th" scope="row" align="left">
                                                                         <Typography variant="subtitle2" noWrap>
-                                                                            {doctorsearch?.doctor_name.doctor_name}
+                                                                            Dr. {doctorsearch?.doctor_name.doctor_name}
                                                                         </Typography>
                                                                     </TableCell>
                                                                     <TableCell align="left">{doctorsearch?.doctor_name?.doctor_territory.area_name}</TableCell>
@@ -350,7 +365,7 @@ const DoctorSearch = () => {
                                                                 {"Are you sure want to delete?"}
                                                             </DialogTitle>
                                                             <DialogActions>
-                                                                <Button autoFocus onClick={() => { deleteDoctor(selectedId); handleClose() }}>
+                                                                <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                     Yes
                                                                 </Button>
                                                                 <Button
@@ -395,7 +410,7 @@ const DoctorSearch = () => {
                                                                                         <TableCell>{index + 1}</TableCell>
                                                                                         <TableCell component="th" scope="row" align="left">
                                                                                             <Typography variant="subtitle2" noWrap>
-                                                                                                {doctorsearch?.doctor_name?.doctor_name}
+                                                                                                Dr. {doctorsearch?.doctor_name?.doctor_name}
                                                                                             </Typography>
                                                                                         </TableCell>
                                                                                         <TableCell align="left">{doctorsearch?.doctor_name?.doctor_phone_number}</TableCell>

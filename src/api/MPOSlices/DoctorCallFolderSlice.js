@@ -55,9 +55,6 @@ export const DoctorCallFolderSlice = apiSlice.injectEndpoints({
                     // url: `doctor/doctor-call-folder/${id}/`,
                     method: 'PATCH',
                     body: updateDoctor,
-                    headers: {
-                        'Content-type': 'application/json; charset = UTF-8',
-                    }
                 }
             },
             invalidatesTags: ['DoctorCall'],
@@ -264,7 +261,7 @@ export const DoctorCallFolderSlice = apiSlice.injectEndpoints({
             invalidatesTags: ['DoctorCall']
         }),
 
-        //! POST doctors 
+        //! POST Call Folder
         createDoctorCall: builder.mutation({
             query: (newDoctor) => {
                 return {

@@ -23,6 +23,7 @@ import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const AddStockist = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -37,7 +38,36 @@ const AddStockist = () => {
         setIsDrawerOpen(false);
     }, [])
 
+
+
+    const [createStockists] = useCreateStockistsMutation();
+
+    //! Validation wala  
+    const validate = (fieldValues = values) => {
+        let temp = { ...errors }
+        if ('stockist_name' in fieldValues)
+            temp.stockist_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.stockist_name)
+        temp.stockist_address = returnValidation(['null','specialCharacter'], values.stockist_address)
+        temp.stockist_contact_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.stockist_contact_number)
+        temp.pan_vat_number = returnValidation(['null', 'specialcharacter'], values.pan_vat_number)
+        temp.stockist_territory = returnValidation(['null'], values.stockist_territory)
+        temp.stockist_category = returnValidation(['null'], values.stockist_category)
+
+        setErrors({
+            ...temp
+        })
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x == "")
+    }
+
     const initialFValues = {
+        stockist_name: "",
+        stockist_address: "",
+        stockist_contact_number: "",
+        pan_vat_number: "",
+        stockist_territory: "",
+        stockist_category: ""
     }
 
     const {
@@ -47,9 +77,20 @@ const AddStockist = () => {
         setErrors,
         handleInputChange,
         resetForm,
-    } = useForm(initialFValues, true)
+    } = useForm(initialFValues, true, validate)
 
-    const [createStockists] = useCreateStockistsMutation();
+    useEffect(() => {
+        validate();
+
+    }, [values.stockist_name, values.stockist_address, values.stockist_contact_number, values.stockist_territory, values.pan_vat_number, values.stockist_category])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.stockist_name, values.stockist_address, values.stockist_contact_number, values.stockist_territory, values.pan_vat_number, values.stockist_category]);
 
     const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id, {
         skip: !company_id
@@ -62,29 +103,7 @@ const AddStockist = () => {
         return [];
     }, [CompanyArea])
 
-    //! Validation wala  
-    const validate = (fieldValues = values) => {
-        let temp = { ...errors }
-        if ('stockist_name' in fieldValues)
-            temp.stockist_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.stockist_name)
-        temp.stockist_address = returnValidation(['null'], values.stockist_address)
-        temp.stockist_contact_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.stockist_contact_number)
-        temp.pan_vat_number = returnValidation(['null'], values.pan_vat_number)
-        temp.stockist_territory = returnValidation(['null'], values.stockist_territory)
-        temp.stockist_territory = returnValidation(['null'], values.stockist_category)
 
-        setErrors({
-            ...temp
-        })
-
-        if (fieldValues === values)
-            return Object.values(temp).every(x => x == "")
-    }
-
-    useEffect(() => {
-        validate();
-
-    }, [values.stockist_name, values.stockist_address, values.stockist_contact_number, values.stockist_territory, values.pan_vat_number])
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -104,30 +123,41 @@ const AddStockist = () => {
             company_name: company_id
         };
 
-
         try {
             const response = await createStockists(stockistData)
-            if (response.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Stockist' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Added Stockist' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false)
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
+                resetForm();
             } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
             } else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 3000);
+                toast.error(`Some Error Occured`)
+
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -296,6 +326,7 @@ const AddStockist = () => {
                                     <Controls.SubmitButton
                                         variant="contained"
                                         className="submit-button"
+                                        disabled={isButtonDisabled}
                                         onClick={(e) => onAddStockists(e)}
                                         text="Submit"
                                     />

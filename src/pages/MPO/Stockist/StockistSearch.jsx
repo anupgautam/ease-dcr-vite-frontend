@@ -44,6 +44,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Test from './DefaultList';
 import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 
 const TABLE_HEAD = [
@@ -162,6 +163,20 @@ const StockistSearch = () => {
     // !Delete stockists
     const [deleteStockist] = useDeleteStockistsByIdMutation();
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteStockist(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Stockist"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
     const theme = useTheme();
@@ -266,7 +281,7 @@ const StockistSearch = () => {
                                                                             {"Are you sure want to delete?"}
                                                                         </DialogTitle>
                                                                         <DialogActions>
-                                                                            <Button autoFocus onClick={() => { deleteStockist(selectedId); handleClose() }}>
+                                                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                                 Yes
                                                                             </Button>
                                                                             <Button

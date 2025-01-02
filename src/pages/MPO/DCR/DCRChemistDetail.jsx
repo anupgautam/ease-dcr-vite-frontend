@@ -10,7 +10,6 @@ import { useLocation } from 'react-router-dom';
 import { useGetChemistDcrByIdQuery } from '../../../api/DCRs Api Slice/chemistDCR/ChemistDCRAllSlice';
 ;
 
-
 const DCRChemistDetail = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);

@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Iconify from '../../../components/iconify';
+import { toast } from 'react-toastify';
 
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
@@ -32,7 +33,7 @@ const AddUpload = () => {
         // 
         let temp = { ...errors }
         if ('upload_name' in fieldValues)
-            temp.upload_name = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.upload_name)
+            temp.upload_name = returnValidation(['null', 'lessThan50', 'specialcharacter', 'minLength3'], values.upload_name)
         temp.upload_type = returnValidation(['null'], values.upload_type)
         temp.upload = returnValidation(['null'], values.upload)
 
@@ -46,9 +47,10 @@ const AddUpload = () => {
     }
 
     const initialFValues = {
-
+        upload_name: "",
+        upload_type: "",
+        upload: ""
     }
-
 
     const {
         values,
@@ -58,12 +60,20 @@ const AddUpload = () => {
         handleInputChange,
         handleImageUpload,
         resetForm,
-    } = useForm(initialFValues, true)
+    } = useForm(initialFValues, true, validate)
 
     useEffect(() => {
         validate();
 
     }, [values.upload_type, values.upload_name, values.upload])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.upload_type, values.upload_name, values.upload]);
 
     useEffect(() => {
         handleImageUpload('upload', File);
@@ -91,28 +101,39 @@ const AddUpload = () => {
         try {
             const response = await createUpload(formData)
             console.log(response)
-            if (response.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Upload.' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Added Upload.' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false)
+
+                toast.success(`${response?.data?.message}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
             } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                console.log(response)
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.message}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: response.error.data });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                // setErrorMessage({ show: true, message: response.error.data });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 3000);
+                toast.error(`Some Error Occured`)
+
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            toast.error(`Some Error Occured`)
         } finally {
             setLoading(false)
         }
@@ -202,6 +223,7 @@ const AddUpload = () => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddUpload(e)}
                             text="Submit"
                         />

@@ -23,6 +23,7 @@ import {
     useDeleteDoctorsByIdMutation
 } from "../../../api/MPOSlices/DoctorSlice";
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import { decryptData } from '../User/excryption';
 import { useLocation } from 'react-router-dom';
@@ -67,6 +68,21 @@ const DefaultList = () => {
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7];
 
+        const handleDelete = async (id) => {
+            try {
+                const response = await deleteDoctor(id);
+                if (response?.data) {
+                    toast.success(`${response?.data?.message}`)
+                } else if (response?.error) {
+                    toast.error(`Error: ${response.error.data?.message || "Failed to delete Doctor"}`);
+                }
+            } catch (error) {
+                toast.error("An unexpected error occurred during deletion.");
+            } finally {
+                handleClose();
+            }
+        };
+
     const onEdit = (id, divisionId) => {
         setSelectedUpdateId(id);
         setSelectedDivisionId(divisionId);
@@ -100,7 +116,7 @@ const DefaultList = () => {
                             <TableCell>{index + 1}</TableCell>
                             <TableCell component="th" scope="row" align="left">
                                 <Typography variant="subtitle2" noWrap>
-                                    {doc?.doctor_name?.doctor_name}
+                                    Dr. {doc?.doctor_name?.doctor_name}
                                 </Typography>
                             </TableCell>
                             <TableCell align="left">{doc?.doctor_name?.doctor_phone_number}</TableCell>
@@ -132,7 +148,7 @@ const DefaultList = () => {
                                             {"Are you sure want to delete?"}
                                         </DialogTitle>
                                         <DialogActions>
-                                            <Button autoFocus onClick={() => { deleteDoctor(selectedId); handleClose() }}>
+                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                 Yes
                                             </Button>
                                             <Button onClick={handleClose} autoFocus>

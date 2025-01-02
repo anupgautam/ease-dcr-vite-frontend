@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Iconify from '../../../../components/iconify';
+import { toast } from 'react-toastify';
 
 import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from '../../../../reusable/components/forms/controls/Controls';
@@ -34,7 +35,7 @@ const AddDoctorSpecialization = () => {
         // 
         let temp = { ...errors }
         if ('category_name' in fieldValues)
-            temp.category_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.category_name)
+            temp.category_name = returnValidation(['null', 'number', 'lessThan50', 'validateUsername', 'minLength3'], values.category_name)
 
         setErrors({
             ...temp
@@ -65,8 +66,9 @@ const AddDoctorSpecialization = () => {
 
     useEffect(() => {
         const valid = validate(values);
-        setIsButtonDisabled(!valid || values.category_name.trim() === ""); // Disable if invalid or empty
-    }, [values]);
+
+        setIsButtonDisabled(!valid);
+    }, [values.category_name]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -76,32 +78,43 @@ const AddDoctorSpecialization = () => {
     const onAddDoctorSpecializations = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
+
         const data = { category_name: values.category_name, company_name: company_id }
         try {
-            const response = await createDoctorCategory(data).unwrap();
-            if (response) {
+            const response = await createDoctorCategory(data)
+            if (response?.data) {
                 console.log(response)
                 // toast.success(`${response?.data?.}`)
-                setSuccessMessage({ show: true, message: 'Successfully Added Doctor Categories' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+                // setSuccessMessage({ show: true, message: 'Successfully Added Doctor Categories' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
+
             } else if (response?.error) {
-                console.log(response?.error)
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // console.log(response?.error)
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: "Error" });
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                // setErrorMessage({ show: true, message: "Error" });
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                toast.error(`Some Error Occured`)
+
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -161,21 +174,13 @@ const AddDoctorSpecialization = () => {
                         />
                     </Box>
                     <Stack spacing={1} direction="row">
-                        {/* <Controls.SubmitButton
-                            variant="contained"
-                            
-                            className="submit-button"
-                            onClick={(e) => onAddDoctorSpecializations(e)}
-                            text="Submit"
-                        /> */}
-                        <Button
+                        <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
                             disabled={isButtonDisabled}
                             onClick={(e) => onAddDoctorSpecializations(e)}
-                        >
-                            Submit
-                        </Button>
+                            text="Submit"
+                        />
                         <Button
                             variant="outlined"
                             className="cancel-button"

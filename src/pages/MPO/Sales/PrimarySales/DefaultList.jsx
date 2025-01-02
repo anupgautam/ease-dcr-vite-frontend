@@ -22,6 +22,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import EditSecondarySales from './EditPrimarySales';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { toast } from 'react-toastify';
 
 const DefaultList = () => {
 
@@ -66,8 +67,23 @@ const DefaultList = () => {
     const { data } = useGetAllPrimarySalesQuery(page);
 
     // !Delete chemists
-    const [deleteSecondarySale] = useDeletePrimarySalesByIdMutation()
+    const [deletePrimarySale] = useDeletePrimarySalesByIdMutation()
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deletePrimarySale(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Primary Sales"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     return (
         <>
@@ -122,7 +138,7 @@ const DefaultList = () => {
                                             {"Are you sure want to delete?"}
                                         </DialogTitle>
                                         <DialogActions>
-                                            <Button autoFocus onClick={() => { deleteSecondarySale(selectedId); handleClose() }}>
+                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                 Yes
                                             </Button>
                                             <Button

@@ -25,6 +25,7 @@ import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import {
     useGetAllDoctorEventsQuery,
@@ -41,7 +42,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultDoctorEvents = () => {
-    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+    const { company_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -111,6 +112,21 @@ const DefaultDoctorEvents = () => {
         }
     }, [dateFormat]);
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteDoctorEvents(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Doctor Events"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
+
     return (
         <>
             <Card>
@@ -145,10 +161,10 @@ const DefaultDoctorEvents = () => {
                                                     </TableCell>
                                                     <TableCell align="left">{doctorevent.event_date}</TableCell>
                                                     <TableCell align="left">{doctorevent.doctor_id.doctor_name.doctor_name}</TableCell>
-                                                    <TableCell align="left">{doctorevent?.mpo_name?.user_name.first_name + " " + doctorevent?.mpo_name?.user_name.middle_name + " " + doctorevent.mpo_name.user_name.last_name}</TableCell>
+                                                    <TableCell align="left">{doctorevent?.mpo_name?.user_name?.first_name + " " + doctorevent?.mpo_name?.user_name?.middle_name + " " + doctorevent?.mpo_name.user_name?.last_name}</TableCell>
                                                     {/*//! Delete  */}
                                                     <TableCell align="right">
-                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorevent.id); handleClickOpen() }}>
+                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(doctorevent?.id); handleClickOpen() }}>
                                                             <Badge>
                                                                 <Iconify icon="eva:trash-2-outline" />
                                                             </Badge>
@@ -187,7 +203,7 @@ const DefaultDoctorEvents = () => {
                     {"Are you sure want to delete?"}
                 </DialogTitle>
                 <DialogActions>
-                    <Button autoFocus onClick={() => { deleteDoctorEvents(selectedId); handleClose() }}>
+                    <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                         Yes
                     </Button>
                     <Button

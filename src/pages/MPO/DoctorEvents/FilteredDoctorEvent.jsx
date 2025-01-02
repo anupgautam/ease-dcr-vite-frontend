@@ -186,6 +186,21 @@ const FilteredDoctorEvent = () => {
     // !Delete DoctorEvent
     const [deleteDoctorEvent] = useDeleteDoctorsEventsByIdMutation()
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteDoctorEvent(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Doctor Events"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
+
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
     const theme = useTheme();
@@ -323,7 +338,7 @@ const FilteredDoctorEvent = () => {
                                                         <Button
                                                             autoFocus
                                                             onClick={() => {
-                                                                deleteDoctorEvent(selectedId);
+                                                                handleDelete(selectedId);
                                                                 handleClose();
                                                             }}
                                                         >

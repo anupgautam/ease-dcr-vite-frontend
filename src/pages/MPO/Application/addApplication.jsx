@@ -19,13 +19,14 @@ import {
     NepaliDateConverter
 } from "react-nepali-date-picker-lite";
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useCreateApplicationsMutation } from '../../../api/ApplicationSlices/ApplicationSlices';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
 const AddApplication = () => {
-    const { company_id, user_role, company_user_id,company_user_role_id } = useSelector((state) => state.cookie);
+    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     //! Format Date
     const today = NepaliDateConverter.getNepaliDate();
@@ -41,8 +42,24 @@ const AddApplication = () => {
 
     const [createDoctors] = useCreateApplicationsMutation()
 
-    const initialFValues = {
+    //! Validation wala  
+    const validate = (fieldValues = values) => {
+        // 
+        let temp = { ...errors }
+        if ('leave_cause' in fieldValues)
+            temp.leave_cause = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.leave_cause)
+        temp.leave_type = returnValidation(['null'], values.leave_type)
 
+        setErrors({
+            ...temp
+        })
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x == "")
+    }
+    const initialFValues = {
+        leave_type: "",
+        leave_cause: "",
     }
 
     const {
@@ -52,28 +69,19 @@ const AddApplication = () => {
         setErrors,
         handleInputChange,
         resetForm,
-    } = useForm(initialFValues, true)
-
-    //! Validation wala  
-    const validate = (fieldValues = values) => {
-        // 
-        let temp = { ...errors }
-        if ('leave_type' in fieldValues)
-            temp.leave_type = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.leave_type)
-        temp.leave_cause = returnValidation(['null'], values.leave_cause)
-
-        setErrors({
-            ...temp
-        })
-
-        if (fieldValues === values)
-            return Object.values(temp).every(x => x == "")
-    }
+    } = useForm(initialFValues, true, validate)
 
     useEffect(() => {
         validate();
+    }, [values.leave_type, values.leave_cause]);
 
-    }, [values.leave_cause, values.leave_type])
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.leave_type, values.leave_cause]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -94,30 +102,42 @@ const AddApplication = () => {
             leave_status: 'pending'
         };
         try {
-            const response = await createDoctors(formData)
-            if (response.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Leave Application.' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+            const response = await createDoctors(formData).unwrap();
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Added Leave Application.' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false)
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
+                resetForm();
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: "Unable to Add Application" });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                // setErrorMessage({ show: true, message: "Unable to Add Application" });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 3000);
+                toast.error(`Some Error Occured`)
+
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -205,17 +225,20 @@ const AddApplication = () => {
                     </Box>
                     <Box marginBottom={2}>
                         <Controls.Input
+                            id="auto-focus"
                             name="leave_cause"
                             label="Leave Cause"
                             value={values.name}
                             onChange={handleInputChange}
                             errors={errors.leave_cause}
+                            autoFocus
                         />
                     </Box>
                     <Stack spacing={1} direction="row">
                         <Button
                             variant="contained"
                             className="summit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddDoctors(e)}
                         >
                             Submit{" "}

@@ -21,11 +21,15 @@ import {
 import {
     useGetAllCompanyAreasQuery, useUpdateMpoAreasMutation
 } from '@/api/CompanySlices/companyAreaSlice'
+// import {
+//     useUpdateAreaofMPOMutation
+// } from '@/api/MPOSlices/TourPlanSlice'
 import {
     useGetAreaMPOByIdQuery,
 } from '@/api/MPOSlices/TourPlanSlice.js';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 
 const EditMpoArea = ({ idharu, onClose }) => {
@@ -131,7 +135,7 @@ const EditMpoArea = ({ idharu, onClose }) => {
         // 
         let temp = { ...errors }
         if ('area_name' in fieldValues)
-            temp.area_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.area_name)
+            temp.area_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter', "minLength3"], values.area_name)
         temp.mpo_name = returnValidation(['null'], values.mpo_name)
         temp.company_area = returnValidation(['null'], values.company_area)
         temp.station_type = returnValidation(['null'], values.station_type)
@@ -187,6 +191,13 @@ const EditMpoArea = ({ idharu, onClose }) => {
         values.company_area,
     ])
 
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.area_name, values.mpo_name, values.station_type]);
 
     //! Edit user
     // const [updateUsers] = useUpdatecompanyUserRolesMutation();
@@ -201,47 +212,47 @@ const EditMpoArea = ({ idharu, onClose }) => {
         setLoading(true)
         const data = { area_name: values.area_name, mpo_name: values.mpo_name, station_type: values.station_type, company_area: values.company_area, id: idharu, company_name: company_id }
         try {
-            await updateUsers({ id: idharu, data: data })
-                .then((response) => {
-                    if (response.data) {
-                        setSuccessMessage({ show: true, message: 'Successfully Updated MPO Area' });
-                        setTimeout(() => {
-                            setSuccessMessage({ show: false, message: '' });
-                        }, 2000);
-                        setIsDrawerOpen(false)
-                    }
-                    else if (response?.error) {
-                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
-                        setLoading(false);
-                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                    }
-                    else {
-                        setErrorMessage({ show: true, message: "Something went wrong." });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 2000);
-                    }
-                })
-                .catch((err) => {
-                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 3000);
-                })
-                .finally(() => {
-                    setLoading(false)
-                })
-            setIsDrawerOpen(false)
-        }
-        catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            const response = await updateUsers(data)
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Updated MPO Area' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+                // setIsDrawerOpen(false)
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
+            }
+            else if (response?.error) {
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                console.log(response?.error)
+                toast.error(`${response?.error?.data?.msg}`)
+                setLoading(false);
+            }
+            else {
+                // setErrorMessage({ show: true, message: "Something went wrong." });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.error(`Some Error Occured`)
+
+            }
+        } catch (error) {
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
-        setIsDrawerOpen(false)
     }, [updateUsers, values])
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -317,6 +328,7 @@ const EditMpoArea = ({ idharu, onClose }) => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => handleSubmit(e)}
                             text="Submit"
                         />

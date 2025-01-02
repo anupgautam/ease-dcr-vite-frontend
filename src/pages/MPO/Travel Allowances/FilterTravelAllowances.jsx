@@ -102,8 +102,8 @@ const FilterTravelAllowances = () => {
         if (isSuccess) {
             return data?.map((key) => ({
                 id: key.id,
-                title: key.role_name_value,
-                higher: key.role_name.role_name
+                title: key?.role_name_value,
+                higher: key?.role_name?.role_name
             }));
         }
         return [];

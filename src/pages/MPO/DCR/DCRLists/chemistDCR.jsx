@@ -23,6 +23,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { toast } from 'react-toastify';
 
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
@@ -115,6 +116,21 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
 
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteChemistsDCRByIdMutation();
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteTourPlan(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Tourplan."}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
@@ -242,7 +258,7 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
                                                                         {"Are you sure want to delete?"}
                                                                     </DialogTitle>
                                                                     <DialogActions>
-                                                                        <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
+                                                                        <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                             Yes
                                                                         </Button>
                                                                         <Button

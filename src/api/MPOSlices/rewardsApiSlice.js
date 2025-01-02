@@ -56,7 +56,7 @@ export const RewardsApiSlice = apiSlice.injectEndpoints({
         updateRewards: builder.mutation({
             query: (updateReward) => {
                 return {
-                    url: `dcr/rewards/${updateReward.get('id')}/`,
+                    url: `dcr/rewards/${updateReward.id}/`,
                     method: 'PUT',
                     body: updateReward
                 }

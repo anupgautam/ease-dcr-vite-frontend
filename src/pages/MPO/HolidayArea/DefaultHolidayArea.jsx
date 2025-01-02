@@ -21,6 +21,7 @@ import Scrollbar from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { toast } from 'react-toastify';
 
 import { useLazyFilterGetHolidaysAreaQuery, useGetCompanyHolidaysQuery, useDeleteHolidayAreasByIdMutation } from '@/api/HolidaySlices/holidaySlices';
 import { useSelector } from 'react-redux';

@@ -38,6 +38,23 @@ export default function SearchUploadCard({ uploads }) {
   if (!uploads) {
     return null; // Add a check to handle the case when uploads is undefined or null
   }
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteUpload(id);
+      console.log(response)
+      if (response?.data) {
+        toast.success(`${response?.data?.msg}`)
+      } else if (response?.error) {
+        toast.error(`Error: ${response.error.data?.message || "Failed to delete files"}`);
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred during deletion.");
+    } finally {
+      handleClose();
+    }
+  };
+
   return (
     <>
       {uploads === undefined ?
@@ -103,7 +120,7 @@ export default function SearchUploadCard({ uploads }) {
                   {upload_name}
                 </Typography>
                 {/* //! Delete  */}
-                <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => deleteUpload(uploads.id)}>
+                <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => handleDelete(uploads.id)}>
                   <Badge>
                     <Iconify icon="eva:trash-2-outline" />
                   </Badge>

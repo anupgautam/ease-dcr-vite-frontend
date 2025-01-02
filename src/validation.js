@@ -29,7 +29,10 @@ function Email(str) {
     return false;
 }
 
-
+function hasValidTwoDigitNumber(str) {
+    let regex = /^([1-2]?\d|30)$/; // Matches numbers between 0-29
+    return regex.test(str);
+}
 
 function lessThan50(str) {
     let regex = /^[a-zA-Z]{50,}$/;
@@ -42,18 +45,29 @@ function lessThan200(str) {
     return regex.test(str);
 }
 
+function validateUsername(str) {
+    let regex = /^[a-zA-Z\s]+$/;
+    return regex.test(str);
+}
+
+// function specialCharacter(str) {
+//     let regex = /^[a-zA-Z0-9]*$/;
+//     return regex.test(str);
+// }
 
 function specialCharacter(str) {
     let regex = /^[a-zA-Z0-9]*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{1}[a-zA-Z0-9]*$/;
     return regex.test(str);
 }
-
-
-function phoneNumber(str) {
-    let regex = /^(?:\d{1,9}|\d{11,})$/;
+function reward(str) {
+    let regex = /^[a-zA-Z0-9\s]+$/;
     return regex.test(str);
 }
 
+function phoneNumber(str) {
+    let regex = /^\d{10}$/;
+    return regex.test(str);
+}
 
 function passWord(str) {
     let regex = /^.{1,7}$/;
@@ -76,6 +90,16 @@ function isNumberOnly(str) {
     return regex.test(str);
 }
 
+function minLength3(str) {
+    let regex = /^.{3,}$/;  // Ensures at least 3 characters
+    return regex.test(str);
+}
+
+function minLength2(str) {
+    let regex = /^.{2,}$/;  // Ensures at least 3 characters
+    return regex.test(str);
+}
+
 export const returnValidation = (validationType, validationField) => {
     let err = ""
     if (validationType.includes('number')) {
@@ -93,6 +117,11 @@ export const returnValidation = (validationType, validationField) => {
             err = "The value cannot contain a number."
         }
     }
+    if (validationType.includes('hasAlphanumericValue')) {
+        if (hasAlphanumericValue(validationField)) {
+            err = "The value should only contain alpha numeric values."
+        }
+    }
     if (validationType.includes('lessThan50')) {
         if (lessThan50(validationField)) {
             err = "String should be less than 50 characters"
@@ -104,13 +133,23 @@ export const returnValidation = (validationType, validationField) => {
         }
     }
     if (validationType.includes('phonenumber')) {
-        if (phoneNumber(validationField)) {
+        if (!phoneNumber(validationField)) {
             err = "Enter a valid phone number of 10digits"
         }
     }
     if (validationType.includes('specialcharacter')) {
         if (specialCharacter(validationField)) {
             err = "No special Character"
+        }
+    }
+    if (validationType.includes('validateUsername')) {
+        if (!validateUsername(validationField)) {
+            err = "Only characters"
+        }
+    }
+    if (validationType.includes('reward')) {
+        if (!reward(validationField)) {
+            err = "Only characters and numbers"
         }
     }
     if (validationType.includes('password')) {
@@ -141,6 +180,21 @@ export const returnValidation = (validationType, validationField) => {
     if (validationType.includes('isNumberOnly')) {
         if (!isNumberOnly(validationField)) {
             err = "The value should be a number"
+        }
+    }
+    if (validationType.includes('minLength3')) {
+        if (!minLength3(validationField)) {
+            err = "Value must be more than 3 characters."
+        }
+    }
+    if (validationType.includes('minLength2')) {
+        if (!minLength2(validationField)) {
+            err = "Value must be more than 2 characters."
+        }
+    }
+    if (validationType.includes('hasValidTwoDigitNumber')) {
+        if (!hasValidTwoDigitNumber(validationField)) {
+            err = "Days must be less than 30"
         }
     }
     return err;

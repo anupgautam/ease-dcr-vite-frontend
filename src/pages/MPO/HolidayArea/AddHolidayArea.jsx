@@ -24,6 +24,7 @@ import {
 import { useGetCompanyHolidaysQuery, useCreateHolidayAreasMutation } from '@/api/HolidaySlices/holidaySlices';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const AddHolidayArea = () => {
     const { company_id, user_role, company_user_id, access, refresh } = useSelector((state) => state.cookie);
@@ -44,9 +45,19 @@ const AddHolidayArea = () => {
     }, [Areas])
 
     const [areaOptions, setAreaOptions] = useState([])
+    const [error, setError] = useState('');
     //! Options
     const handleHolidayAreas = (event, value) => {
         const selectedIds = value.map(option => option.id);
+        setAreaOptions(selectedIds);
+    };
+
+    const handleSelectedAreas = (selectedIds) => {
+        if (selectedIds.length === 0) {
+            setError('Please select at least one area.');
+        } else {
+            setError('');
+        }
         setAreaOptions(selectedIds);
     };
 
@@ -64,8 +75,8 @@ const AddHolidayArea = () => {
         // 
         let temp = { ...errors }
         if ('company_area' in fieldValues)
-            temp.company_area = returnValidation(['null'], values.company_area)
-        temp.holiday_type = returnValidation(['null'], values.holiday_type)
+            // temp.company_area = returnValidation(['null'], values.company_area)
+            temp.holiday_type = returnValidation(['null'], values.holiday_type)
 
         setErrors({
             ...temp
@@ -78,7 +89,8 @@ const AddHolidayArea = () => {
 
 
     const initialFValues = {
-
+        // company_area: '',
+        holiday_type: ''
     }
 
     const {
@@ -95,38 +107,58 @@ const AddHolidayArea = () => {
 
     }, [values.company_area, values.holiday_type])
 
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.holiday_type]);
+
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
-    const [company_area, setCompany_Area] = useState();
     //!Modal wala ko click event
     const onAddHolidayArea = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true)
         try {
             const response = await createHolidayArea({ "holiday_type": values.holiday_type, "company_area": areaOptions, company_name: company_id }).unwrap();
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Holiday Areas' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+
+            if (response?.data) {
+
+                // setSuccessMessage({ show: true, message: 'Successfully Added Holiday Areas' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false)
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: "Error" });
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                // setErrorMessage({ show: true, message: "Error" });
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                toast.error(`Some Error Occured`)
+
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -174,7 +206,7 @@ const AddHolidayArea = () => {
                         </Typography>
                     </Box>
                     <Box marginBottom={2}>
-                        <Autocomplete
+                        {/* <Autocomplete
                             multiple
                             options={areas}
                             getOptionLabel={(option) => option.title}
@@ -182,6 +214,17 @@ const AddHolidayArea = () => {
                             renderInput={(params) => (
                                 <TextField {...params} label="Company Areas" />
                             )}
+                            renderOption={(props, option) => (
+                                <li {...props} key={option.id}>
+                                    {option.title}
+                                </li>
+                            )}
+                        /> */}
+                        <Controls.MultiSelectAutocomplete
+                            options={areas}
+                            label="Company Areas"
+                            onChange={handleSelectedAreas}
+                            error={error} // Pass error message
                             renderOption={(props, option) => (
                                 <li {...props} key={option.id}>
                                     {option.title}
@@ -205,6 +248,7 @@ const AddHolidayArea = () => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddHolidayArea(e)}
                             text="Submit"
                         />

@@ -26,6 +26,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Test from './DefaultList';
 import EditChemist from './EditChemist'
+import { toast } from 'react-toastify';
 
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../sections/@dashboard/user';
@@ -207,6 +208,21 @@ const ChemistSearch = () => {
     // !Delete chemists
     const [deleteChemist] = useDeleteChemistsByIdMutation()
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteChemist(id);
+            console.log(response)
+            if (response) {
+                toast.success(`${response?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Chemist"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
     const theme = useTheme();
@@ -221,8 +237,6 @@ const ChemistSearch = () => {
     }, [])
 
     const debouncedSearch = debounce(onSearch, 300);
-
-    console.log(SearchData)
 
     return (
         <>
@@ -352,7 +366,7 @@ const ChemistSearch = () => {
                                                                             {"Are you sure want to delete?"}
                                                                         </DialogTitle>
                                                                         <DialogActions>
-                                                                            <Button autoFocus onClick={() => { deleteChemist(selectedId); handleClose() }}>
+                                                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                                 Yes
                                                                             </Button>
                                                                             <Button

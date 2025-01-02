@@ -33,6 +33,7 @@ import { useTheme } from "@mui/material/styles";
 import { useSelector } from 'react-redux';
 import { UserListHead } from '../../../sections/@dashboard/user';
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
+import { toast } from 'react-toastify';
 
 const TABLE_HEAD = [
     { id: 'image', label: 'Product Image', alignRight: false },
@@ -106,6 +107,21 @@ const DefaultList = () => {
     // !Delete product
     const [deleteProduct] = useDeleteDoctorCallByIdMutation()
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteProduct(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Doctor Specilization"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     return (
         <>
@@ -184,7 +200,7 @@ const DefaultList = () => {
                     {"Are you sure want to delete?"}
                 </DialogTitle>
                 <DialogActions>
-                    <Button autoFocus onClick={() => { deleteProduct(selectedId); handleClose(); }}>
+                    <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose(); }}>
                         Yes
                     </Button>
                     <Button onClick={handleClose} autoFocus>

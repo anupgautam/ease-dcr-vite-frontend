@@ -19,6 +19,7 @@ import {
     useUpdateDoctorCallMutation
 } from '../../../api/MPOSlices/DoctorCallFolderSlice'
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const EditProduct = ({ idharu, onClose }) => {
 
@@ -28,6 +29,21 @@ const EditProduct = ({ idharu, onClose }) => {
 
     //!  Getting Users by ID
     const Product = useGetDoctorCallByIdQuery(idharu);
+
+    //! Validation wala  
+    const validate = (fieldValues = values) => {
+        let temp = { ...errors }
+        if ('product_id' in fieldValues)
+            temp.product_id = returnValidation(['null'], values.product_id)
+        temp.product_image = returnValidation(['null'], values.product_image)
+
+        setErrors({
+            ...temp
+        });
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x === "")
+    }
 
     const CompanyDivisionProduct = useGetCompanyDivisionProductQuery({ id: company_id })
 
@@ -47,7 +63,7 @@ const EditProduct = ({ idharu, onClose }) => {
     useEffect(() => {
         if (Product?.data) {
             setInitialFValues({
-                'product_id': Product?.data?.product_id.id,
+                'product_id': Product?.data?.product_id?.id,
                 // 'product_id': 1,
                 'product_image': Product?.data?.image
             })
@@ -66,20 +82,18 @@ const EditProduct = ({ idharu, onClose }) => {
         true
     )
 
-    //! Validation wala  
-    const validate = (fieldValues = values) => {
-        let temp = { ...errors }
-        if ('product_id' in fieldValues)
-            temp.product_id = returnValidation(['null'], values.product_id)
-        temp.product_image = returnValidation(['null'], values.product_image)
+    useEffect(() => {
+        validate();
+    }, [
+        values.product_id, values.product_image])
 
-        setErrors({
-            ...temp
-        });
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
-        if (fieldValues === values)
-            return Object.values(temp).every(x => x === "")
-    }
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.product_id, values.product_image]);
 
     //! Edit user
     const [updateProducts] = useUpdateDoctorCallMutation();
@@ -100,30 +114,43 @@ const EditProduct = ({ idharu, onClose }) => {
         try {
             const response = await updateProducts(formData).unwrap();
             // const response = await updateProducts({ formData, id: idharu }).unwrap();
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Products' });
-                setTimeout(() => {
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
-            } else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Products' });
+                // setTimeout(() => {
+                //     onClose();
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.success(`${response?.message}`)
+                setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
+            } else if (response?.error) {
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+
+                console.log(response?.error)
+                toast.error(`${response?.error?.data?.msg}`)
+                setLoading(false);
+            }
+            else {
+                toast.error(`Some Error Occured`)
             }
         }
         catch (error) {
-            if (error) {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
-            }
+            // if (error) {
+            //     setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            //     setTimeout(() => {
+            //         setErrorMessage({ show: false, message: '' });
+            //     }, 2000);
+            // }
+            toast.error(`Some Error Occured`)
         } finally {
             setLoading(false)
         }
-    }, [updateProducts, idharu, values])
+    }, [updateProducts, values])
 
     return (
         <>
@@ -180,6 +207,7 @@ const EditProduct = ({ idharu, onClose }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => handleSubmit(e)}
                                 text="Submit"
                             />

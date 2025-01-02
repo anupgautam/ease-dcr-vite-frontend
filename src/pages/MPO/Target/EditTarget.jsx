@@ -22,6 +22,7 @@ import { useGetExecutiveLevelUsersQuery } from '../../../api/CompanySlices/compa
 import { useSelector } from 'react-redux';
 import { Grid } from 'react-loader-spinner';
 import { useGetAllCompanyUsersWithoutPaginationQuery } from '../../../api/CompanySlices/companyUserRoleSlice';
+import { toast } from 'react-toastify';
 
 
 const EditTarget = ({ idharu, onClose }) => {
@@ -60,12 +61,10 @@ const EditTarget = ({ idharu, onClose }) => {
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
-        if ('year' in fieldValues)
-            temp.year = returnValidation(['null'], values.year)
         if ('target_amount' in fieldValues)
-            temp.target_amount = returnValidation(['null', 'alpha'], values.target_amount)
-        // if ('sales' in fieldValues)
-        //     temp.sales = returnValidation(['null', 'alpha'], values.sales)
+            temp.target_amount = returnValidation(['null', "isNumberOnly"], values.target_amount)
+
+        temp.target_to = returnValidation(['null'], values.target_to)
 
         setErrors({
             ...temp
@@ -78,15 +77,14 @@ const EditTarget = ({ idharu, onClose }) => {
 
 
     const [initialFValues, setInitialFValues] = useState({
-        target_from: "",
         target_to: "",
-        year: "",
         target_amount: "",
     })
 
+    console.log(Target?.data)
 
     useEffect(() => {
-        if (Target) {
+        if (Target?.data) {
             setInitialFValues({
                 target_from: Target?.data?.target_from?.id,
                 target_to: Target?.data?.target_to?.id,
@@ -95,7 +93,7 @@ const EditTarget = ({ idharu, onClose }) => {
 
             });
         }
-    }, [Target?.data])
+    }, [Target])
 
     const { values,
         errors,
@@ -104,6 +102,7 @@ const EditTarget = ({ idharu, onClose }) => {
     } = useForm(
         initialFValues,
         true,
+        validate,
         false,
         true
     )
@@ -112,11 +111,17 @@ const EditTarget = ({ idharu, onClose }) => {
         validate();
 
     }, [
-        values.target_from,
         values.target_to,
-        values.year,
         values.target_amount,
     ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.target_to, values.target_amount]);
 
     //! Edit user
     const [updateTarget] = useUpdateTargetsMutation();
@@ -125,6 +130,7 @@ const EditTarget = ({ idharu, onClose }) => {
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
+    console.log("Default Values", values)
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -134,34 +140,45 @@ const EditTarget = ({ idharu, onClose }) => {
             target_to: values.target_to.id,
             year: values.year,
             id: idharu,
-            target_amount:values.target_amount,
+            target_amount: values.target_amount,
             company_name: company_id,
         }
         try {
             const response = updateTarget(jsonData)
             if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Target' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Target' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // onClose();
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setLoading(false);
                 onClose();
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 3000);
+                console.log(response?.error)
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 3000);
             }
             else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 3000);
+                toast.error(`Some Error Occured`)
+
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -245,6 +262,7 @@ const EditTarget = ({ idharu, onClose }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => handleSubmit(e)}
                                 text="Submit"
                             />

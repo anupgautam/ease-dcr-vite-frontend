@@ -46,6 +46,7 @@ import { useSelector } from 'react-redux';
 import DefaultList from './DefaultList';
 import AddPrimarySales from './AddPrimarySales'
 import { useDeletePrimarySalesByIdMutation, useSearchPrimarySalesMutation } from '../../../../api/MPOSlices/PrimarySalesApiSlice';
+import { toast } from 'react-toastify';
 
 const TABLE_HEAD = [
     { id: 'stockist_name', label: 'Stockist Name', alignRight: false },
@@ -221,7 +222,22 @@ const PrimarySalesSearch = () => {
     }, [selectedOption, selectedMonth, selectedYear])
 
     // !Delete chemists
-    const [deleteSecondarySales] = useDeletePrimarySalesByIdMutation()
+    const [deletePrimarySale] = useDeletePrimarySalesByIdMutation()
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deletePrimarySale(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Primary Sales"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     //! Dialogue 
     const [openDialogue, setOpenDialogue] = useState(false);
@@ -383,7 +399,7 @@ const PrimarySalesSearch = () => {
                                                                             {"Are you sure want to delete?"}
                                                                         </DialogTitle>
                                                                         <DialogActions>
-                                                                            <Button autoFocus onClick={() => { deleteSecondarySales(selectedId); handleClose() }}>
+                                                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                                 Yes
                                                                             </Button>
                                                                             <Button

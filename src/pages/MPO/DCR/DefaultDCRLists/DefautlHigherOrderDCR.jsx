@@ -18,6 +18,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { toast } from 'react-toastify';
 
 import Iconify from '@/components/iconify/Iconify';
 import { UserListHead } from '../../../../sections/@dashboard/user';
@@ -92,6 +93,21 @@ const DefaultHODCR = () => {
     const [deleteTourPlan] = useDeleteHODCRsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteTourPlan(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Tourplan."}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
+
     return (
         <>
             <Card>
@@ -161,7 +177,7 @@ const DefaultHODCR = () => {
                                                             {"Are you sure want to delete?"}
                                                         </DialogTitle>
                                                         <DialogActions>
-                                                            <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
+                                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                 Yes{selectedId}
                                                             </Button>
                                                             <Button

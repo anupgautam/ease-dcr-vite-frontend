@@ -23,6 +23,7 @@ import {
 import { useGetcompanyUserRolesByIdQuery } from '@/api/CompanySlices/companyUserRoleSlice';
 import Iconify from '@/components/iconify/Iconify';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const DefaultList = () => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -68,6 +69,21 @@ const DefaultList = () => {
 
     const [deleteStockist] = useDeleteStockistsByIdMutation();
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7];
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteStockist(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Stockist"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     const onEdit = useCallback((id) => {
         setSelectedUpdateId(id);
@@ -130,7 +146,7 @@ const DefaultList = () => {
                                             {"Are you sure want to delete?"}
                                         </DialogTitle>
                                         <DialogActions>
-                                            <Button autoFocus onClick={() => { deleteStockist(selectedId); handleClose() }}>
+                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                 Yes
                                             </Button>
                                             <Button onClick={handleClose} autoFocus>

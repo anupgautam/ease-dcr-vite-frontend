@@ -15,6 +15,7 @@ import Iconify from '../../../components/iconify';
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
+import { toast } from 'react-toastify';
 
 import {
     usePostAllMPONamesNoPageMutation
@@ -52,7 +53,7 @@ const AddMpoArea = () => {
 
     const mpoNames = useMemo(() => {
         if (MpoList) {
-            return MpoList.map(key => ({ id: key.id, title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name }))
+            return MpoList.map(key => ({ id: key.id, title: key?.user_name?.first_name + ' ' + key?.user_name?.middle_name + ' ' + key?.user_name?.last_name }))
         }
         return [];
     }, [MpoList])
@@ -77,7 +78,7 @@ const AddMpoArea = () => {
         // 
         let temp = { ...errors }
         if ('area_name' in fieldValues)
-            temp.area_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.area_name)
+            temp.area_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter', "minLength3"], values.area_name)
         temp.mpo_name = returnValidation(['null'], values.mpo_name)
         temp.station_type = returnValidation(['null'], values.station_type)
         temp.company_area = returnValidation(['null'], values.company_area)
@@ -92,7 +93,9 @@ const AddMpoArea = () => {
     }
 
     const initialFValues = {
-
+        area_name: "",
+        mpo_name: "",
+        station_type: ""
     }
 
     const {
@@ -102,12 +105,20 @@ const AddMpoArea = () => {
         setErrors,
         handleInputChange,
         resetForm,
-    } = useForm(initialFValues, true)
+    } = useForm(initialFValues, true, validate)
 
     useEffect(() => {
         validate();
 
     }, [values.area_name, values.mpo_name, values.station_type])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.area_name, values.mpo_name, values.station_type]);
 
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: values.mpo_name }, {
         skip: !company_id || !values.mpo_name
@@ -131,29 +142,39 @@ const AddMpoArea = () => {
         const data = { area_name: values.area_name, mpo_name: user_role === 'admin' ? values.mpo_name : company_user_role_id, station_type: values.station_type, company_name: company_id }
         try {
             const response = await createMpoArea(data)
-            if (response.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Area.' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Added Area.' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false)
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
+                resetForm();
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: response.error.data });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                // setErrorMessage({ show: true, message: response.error.data });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 3000);
+                toast.error(`Some Error Occured`)
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -281,13 +302,13 @@ const AddMpoArea = () => {
                                     />
                                 </Box>
                                 <Stack spacing={1} direction="row">
-                                    <Button
+                                    <Controls.SubmitButton
                                         variant="contained"
-                                        className="summit-button"
+                                        className="submit-button"
+                                        disabled={isButtonDisabled}
                                         onClick={(e) => onAddDoctors(e)}
-                                    >
-                                        Submit{" "}
-                                    </Button>
+                                        text="Submit"
+                                    />
                                     <Button
                                         variant="outlined"
                                         className="cancel-button"

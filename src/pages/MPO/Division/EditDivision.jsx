@@ -20,10 +20,11 @@ import {
 } from '@/api/DivisionSilces/companyDivisionSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 
 const EditDivision = ({ idharu, onClose }) => {
-    const { company_id, refresh, access } = useSelector((state) => state.cookie);
+    const { company_id } = useSelector((state) => state.cookie);
 
     //! Getting company division by ID
     const CompanyDivisions = useGetCompanyDivisionsByIdQuery(idharu);
@@ -33,8 +34,8 @@ const EditDivision = ({ idharu, onClose }) => {
         // 
         let temp = { ...errors }
         if ('division_name' in fieldValues)
-            temp.division_name = returnValidation(['null', 'number'], values.division_name)
-        temp.company_name = returnValidation(['null', 'number'], values.company_name)
+            temp.division_name = returnValidation(['null', 'number', 'lessThan50', 'validateUsername', 'minLength3'], values.division_name)
+
         setErrors({
             ...temp
         })
@@ -74,8 +75,16 @@ const EditDivision = ({ idharu, onClose }) => {
         validate();
 
     }, [
-        values.division_name, values.company_name
+        values.division_name
     ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.division_name]);
 
     //! Edit user
     const [updateCompanyDivisions] = useUpdateCompanyDivisionsMutation();
@@ -88,32 +97,26 @@ const EditDivision = ({ idharu, onClose }) => {
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setLoading(true);
+
         const data = { id: idharu, company_name: company_id, division_name: values.division_name }
+
         try {
             const response = await updateCompanyDivisions(data)
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Division' });
-                setTimeout(() => {
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             } else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                toast.error(`Some Error Occured`)
             }
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            toast.error(`Some Error Occured`)
         } finally {
             setLoading(false);
         }
@@ -148,6 +151,7 @@ const EditDivision = ({ idharu, onClose }) => {
                             Edit Division
                         </Typography>
                     </Box>
+                    
                     <Form onSubmit={handleSubmit}>
                         <Box marginBottom={2}>
                             <Controls.Input
@@ -164,6 +168,7 @@ const EditDivision = ({ idharu, onClose }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => handleSubmit(e)}
                                 text="Submit"
                             />

@@ -82,59 +82,41 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
         setCompanyId(company_id);
     }, []);
 
+    //! Validation wala  
+    const validate = (fieldValues = values) => {
+        // 
+        let temp = { ...errors }
+        if ('travel_allowance' in fieldValues)
+
+            temp.travel_allowance = returnValidation(['null', 'isNumberOnly'], values.travel_allowance)
+        temp.daily_allowance = returnValidation(['null', 'isNumberOnly'], values.daily_allowance)
+        temp.miscellaneous_allowance = returnValidation(['null', 'isNumberOnly'], values.miscellaneous_allowance)
+        temp.other_allowance = returnValidation(['null', 'isNumberOnly'], values.other_allowance)
+        // temp.area_from = returnValidation(['null'], values.area_from)
+        // temp.area_to = returnValidation(['null'], values.area_to)
+        // temp.year = returnValidation(['null'], values.year)
+        // temp.month = returnValidation(['null'], values.month)
+
+        setErrors({
+            ...temp
+        })
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x == "")
+    }
+
     const [initialFValues, setInitialFValues] = useState({
         // area_from: "",
         // area_to: "",
-        daily_allowance: "",
         travel_allowance: "",
+        miscellaneous_allowance: "",
+        daily_allowance: "",
         company_name: "",
         user_id: "",
         date: "",
         year: "",
         month: "",
     })
-
-    const { values,
-        errors,
-        setErrors,
-        handleInputChange,
-    } = useForm(
-        initialFValues,
-        true,
-        false,
-        true
-    )
-    //! Validation wala  
-    const validate = (fieldValues = values) => {
-        // 
-        let temp = { ...errors }
-        if ('area_from' in fieldValues)
-            // temp.area_from = returnValidation(['null'], values.area_from)
-        // temp.area_to = returnValidation(['null'], values.area_to)
-        temp.daily_allowance = returnValidation(['null'], values.daily_allowance)
-        temp.travel_allowance = returnValidation(['null'], values.travel_allowance)
-        // temp.miscellaneous_allowance = returnValidation(['null'], values.miscellaneous_allowance)
-        temp.other_allowance = returnValidation(['null'], values.other_allowance)
-
-        setErrors({
-            ...temp
-        })
-        // 
-
-        if (fieldValues === values)
-            return Object.values(temp).every(x => x == "")
-    }
-
-    useEffect(() => {
-        validate();
-    }, [
-        // values.area_from,
-        // values.area_to,
-        values.daily_allowance,
-        values.travel_allowance,
-        // values.miscellaneous_allowance,
-        values.other_allowance
-    ])
 
     useEffect(() => {
         if (TravelAllowance?.data) {
@@ -143,7 +125,7 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
                 // area_to: TravelAllowance?.data?.area_to,
                 daily_allowance: TravelAllowance?.data?.daily_allowance,
                 travel_allowance: TravelAllowance?.data?.travel_allowance,
-                // miscellaneous_allowance: TravelAllowance?.data?.miscellaneous_allowance,
+                miscellaneous_allowance: TravelAllowance?.data?.miscellaneous_allowance,
                 other_allowance: TravelAllowance?.data?.other_allowance,
                 company_name: TravelAllowance?.data?.company_name,
                 user_id: TravelAllowance?.data?.user_id,
@@ -155,6 +137,30 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
             setSelectedYear(TravelAllowance?.data?.year ? TravelAllowance?.data?.year : now)
         }
     }, [TravelAllowance.data])
+
+
+    const { values,
+        errors,
+        setErrors,
+        handleInputChange,
+    } = useForm(
+        initialFValues,
+        true,
+        false,
+        true
+    )
+
+
+    useEffect(() => {
+        validate();
+    }, [
+        // values.area_from,
+        // values.area_to,
+        values.daily_allowance,
+        values.travel_allowance,
+        values.miscellaneous_allowance,
+        values.other_allowance
+    ])
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -183,37 +189,54 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
         try {
             const response = await updateTravelAllowances(formData).unwrap()
                 .then((response) => {
-                    if (response) {
-                        setSuccessMessage({ show: true, message: 'Successfully Edited TravelAllowance' });
-                        setTimeout(() => {
-                            setSuccessMessage({ show: false, message: '' });
-                        }, 3000);
-                    } else if (response?.error) {
-                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                    if (response?.data) {
+                        // setSuccessMessage({ show: true, message: 'Successfully Edited TravelAllowance' });
+                        // setTimeout(() => {
+                        //     setSuccessMessage({ show: false, message: '' });
+                        // }, 3000);
+
+                        toast.success(`${response?.data?.msg}`)
+                        setIsButtonDisabled(true)
                         setLoading(false);
-                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        onClose();
+                    } else if (response?.error) {
+                        // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        // setLoading(false);
+                        // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                        console.log(response?.error)
+                        toast.error(`${response?.error?.data?.msg}`)
+                        setLoading(false);
                     } else {
-                        setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 3000);
+                        // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                        // setTimeout(() => {
+                        //     setErrorMessage({ show: false, message: '' });
+                        // }, 3000);
+
+                        toast.error(`Some Error Occured`)
                     }
                 })
                 .catch((err) => {
-                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 3000);
+                    // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                    // setTimeout(() => {
+                    //     setErrorMessage({ show: false, message: '' });
+                    // }, 3000);
+
+                    console.log(error)
+                    toast.error('Backend Error')
                 })
                 .finally(() => {
                     setLoading(false)
                 })
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+
+            console.log(error)
+            toast.error('Backend Error')
         }
         finally {
             setLoading(false)
@@ -369,6 +392,7 @@ const EditTravelAllowances = ({ mpoId, idharu, onClose }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => { handleSubmit(e); onClose() }}
                                 text="Submit"
                             />

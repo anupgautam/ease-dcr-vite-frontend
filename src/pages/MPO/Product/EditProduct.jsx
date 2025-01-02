@@ -20,6 +20,7 @@ import {
     useGetCompanyDivisionByCompanyIdQuery
 } from "@/api/MPOSlices/ProductSlice";
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const EditProduct = ({ idharu, onClose, mpoGet }) => {
 
@@ -33,11 +34,11 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
     const [divisionKoId, setDivisionKoId] = useState(0)
     const [mpoKoId, setMpoKoId] = useState(0)
     useEffect(() => {
-        if (Product.data) {
-            setDivisionKoId(Product.data.product_name.id)
+        if (Product?.data) {
+            setDivisionKoId(Product?.data?.product_name?.id)
             // setMpoKoId(Product.data.mpo_name.id)
         }
-    }, [Product.data])
+    }, [Product])
 
     //! Get division 
     const Division = useGetCompanyDivisionByCompanyIdQuery(company_id, {
@@ -84,28 +85,6 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
         { id: "1X6", title: "1X6" },
     ];
 
-    const [initialFValues, setInitialFValues] = useState({
-        product_name: "",
-        product_molecular_name: "",
-        product_description: '',
-        product_price_per_strip_in_mrp: "",
-        product_price_for_stockist: "",
-        company_name: "",
-        division_name: "",
-        product_type: "",
-    })
-
-    const { values,
-        errors,
-        setErrors,
-        handleInputChange
-    } = useForm(
-        initialFValues,
-        true,
-        false,
-        true
-    )
-
     //! Validation wala  
     const validate = (fieldValues = values) => {
         // 
@@ -113,7 +92,7 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
         if ('product_name' in fieldValues)
             temp.product_name = returnValidation(['null', 'number'], values.product_name)
         temp.product_molecular_name = returnValidation(['null'], values.product_molecular_name)
-        temp.product_description = returnValidation(['null'], values.product_description)
+        temp.product_description = returnValidation(['null', 'validateUsername'], values.product_description)
         temp.division_name = returnValidation(['null'], values.division_name)
         temp.company_name = returnValidation(['null'], values.company_name)
         temp.product_price_per_strip_in_mrp = returnValidation(['null', 'isNumberEdit'], values.product_price_per_strip_in_mrp)
@@ -131,9 +110,19 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
             return Object.values(temp).every(x => x == "")
     }
 
+    const [initialFValues, setInitialFValues] = useState({
+        product_name: "",
+        product_molecular_name: "",
+        product_description: '',
+        product_price_per_strip_in_mrp: "",
+        product_price_for_stockist: "",
+        company_name: "",
+        division_name: "",
+        product_type: "",
+    })
 
     useEffect(() => {
-        if (Product.data) {
+        if (Product?.data) {
             setInitialFValues({
                 'product_name': Product.data.product_name.product_name,
                 'product_molecular_name': Product.data.product_name.product_molecular_name,
@@ -146,7 +135,48 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
                 'product_image': Product.data.product_image
             })
         }
-    }, [Product.data, DivisionById.data])
+    }, [Product, DivisionById])
+
+    const { values,
+        errors,
+        setErrors,
+        handleInputChange
+    } = useForm(
+        initialFValues,
+        true,
+        false,
+        true
+    )
+
+    useEffect(() => {
+        validate();
+    }, [
+        values.product_name,
+        values.product_molecular_name,
+        values.product_description,
+        values.product_price_per_strip_in_mrp,
+        values.product_price_for_stockist,
+        values.division_name,
+        values.product_type,
+        values.product_image
+    ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [
+        values.product_name,
+        values.product_molecular_name,
+        values.product_description,
+        values.product_price_per_strip_in_mrp,
+        values.product_price_for_stockist,
+        values.division_name,
+        values.product_type,
+        values.product_image
+    ]);
 
     //! Edit user
     const [updateProducts] = useUpdateProductsMutation();
@@ -179,30 +209,43 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
         formData.append('access', access);
         try {
             const response = await updateProducts(formData).unwrap();
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Products' });
-                setTimeout(() => {
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
-            } else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Products' });
+                // setTimeout(() => {
+                //     onClose();
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
+            } else if (response?.error) {
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.error(`${response?.error?.data?.msg}`)
+                setLoading(false);
+            }
+            else {
+                toast.error(`Some Error Occured`)
             }
         }
         catch (error) {
             if (error) {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.error('Backend Error')
             }
         } finally {
             setLoading(false)
         }
-    }, [updateProducts, idharu, values, mpoGet])
+    }, [updateProducts, values])
 
 
     return (
@@ -318,6 +361,7 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => handleSubmit(e)}
                                 text="Submit"
                             />

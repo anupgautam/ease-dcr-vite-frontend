@@ -31,6 +31,7 @@ import {
     useGetHOTourPlansQuery,
     useDeleteHOTourPlansByIdMutation,
 } from '../../../../api/HighOrderSlices/hoTourPlanSlice';
+import { toast } from 'react-toastify';
 
 const TABLE_HEAD = [
     { id: 'user_name', label: 'User Name', alignRight: false },
@@ -91,6 +92,21 @@ const DefaultHOTourPlan = () => {
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteHOTourPlansByIdMutation()
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteTourPlan(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete Tourplan."}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose();
+        }
+    };
 
     return (
         <>
@@ -162,7 +178,7 @@ const DefaultHOTourPlan = () => {
                                                             {"Are you sure want to delete?"}
                                                         </DialogTitle>
                                                         <DialogActions>
-                                                            <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
+                                                            <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                                                                 Yes
                                                             </Button>
                                                             <Button

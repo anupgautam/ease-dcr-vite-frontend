@@ -29,6 +29,7 @@ import {
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
+import { toast } from 'react-toastify';
 
 const AddUser = () => {
 
@@ -101,7 +102,7 @@ const AddUser = () => {
                 const response = await getExecLevel(company_id).unwrap();
                 const levels = response.map(key => ({
                     id: key.id,
-                    title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`
+                    title: `${key?.user_name?.first_name} ${key?.user_name?.middle_name} ${key?.user_name?.last_name}`
                 }));
                 setExecutiveLevels(levels);
             } catch (error) {
@@ -151,36 +152,27 @@ const AddUser = () => {
     //! Create User
     const [createUsers] = useCreateUsersMutation()
 
-    const initialFValues = {
-        middle_name: "",
-    };
-
     //! Validation wala  
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
         if ('first_name' in fieldValues)
             temp.first_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.first_name);
-        temp.middle_name = returnValidation(['number', 'lessThan50', 'specialcharacter'], values.middle_name);
-        if ('last_name' in fieldValues)
-            temp.last_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.last_name);
-        if ('address' in fieldValues)
-            temp.address = returnValidation(['null'], values.address);
-        if ('role_name' in fieldValues)
-            temp.role_name = returnValidation(['null'], values.role_name);
-        if ('division_name' in fieldValues)
-            temp.division_name = returnValidation(['null'], values.division_name);
-        if ('executive_level' in fieldValues)
-            temp.executive_level = returnValidation(['null'], values.executive_level);
-        if ('phone_number' in fieldValues)
-            temp.phone_number = returnValidation(['null', 'phonenumber', 'specialchracter'], values.phone_number);
-        if ('email' in fieldValues)
-            temp.email = returnValidation(['null', 'email'], values.email);
-        if ('company_area' in fieldValues)
-            temp.company_area = returnValidation(['null'], values.company_area);
-        if ('station_type' in fieldValues)
-            temp.station_type = returnValidation(['null'], values.station_type);
 
+        temp.middle_name = returnValidation(['number', 'lessThan50', 'specialcharacter'], values.middle_name);
+        temp.last_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.last_name);
+
+        temp.email = returnValidation(['null', 'email'], values.email);
+        temp.executive_level = returnValidation(['null'], values.executive_level);
+        temp.role_name = returnValidation(['null'], values.role_name);
+        temp.address = returnValidation(['null'], values.address);
+        temp.phone_number = returnValidation(['null', 'phonenumber', 'specialchracter'], values.phone_number);
+        
+        // temp.station_type = returnValidation(['null'], values.station_type);
+        // if ('company_area' in fieldValues)
+        //     temp.company_area = returnValidation(['null'], values.company_area);
+        // if ('division_name' in fieldValues)
+        //     temp.division_name = returnValidation(['null'], values.division_name);
 
         setErrors({
             ...temp
@@ -191,6 +183,21 @@ const AddUser = () => {
             return Object.values(temp).every(x => x == "")
     }
 
+    const initialFValues = {
+        first_name: "",
+        middle_name: "",
+        last_name: "",
+        email: "",
+        role_name: "",
+        address: "",
+        executive_level: "",
+        phone_number: "",
+        // station_type: "",
+        // company_area: "",
+        // division_name: "",
+    };
+
+
     const {
         values,
         setValues,
@@ -198,13 +205,45 @@ const AddUser = () => {
         setErrors,
         handleInputChange,
         resetForm,
-    } = useForm(initialFValues, true)
-
+    } = useForm(initialFValues, true, validate)
 
     useEffect(() => {
         validate();
 
-    }, [values])
+    }, [
+        values.first_name,
+        values.last_name,
+        values.middle_name,
+        values.role_name,
+        values.address,
+        values.executive_level,
+        values.phone_number,
+        values.email,
+
+        // values.station_type
+        // values.company_area,
+        // values.division_name,
+    ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+        setIsButtonDisabled(!valid);
+    }, [
+        values.first_name,
+        values.last_name,
+        values.middle_name,
+        values.role_name,
+        values.address,
+        values.executive_level,
+        values.phone_number,
+        values.email,
+
+        // values.station_type,
+        // values.company_area,
+        // values.division_name,
+    ]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -228,33 +267,44 @@ const AddUser = () => {
                 is_tp_locked: false,
                 company_area: areaOptions,
                 division_name: divisionOptions,
-                station_type: values.station_type,
+                // station_type: values.station_type,
                 is_active: true,
                 date_of_joining: formattedDate,
             }
             const response = await createUsers(jsonData)
             if (response?.data) {
-                setSuccessMessage({ show: true, message: 'Successfully Added User' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
-                setIsDrawerOpen(false);
+                // setSuccessMessage({ show: true, message: 'Successfully Added User' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false);
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setIsDrawerOpen(false)
+
             } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
             } else {
-                setErrorMessage({ show: true, message: response?.error?.data[0] || response?.error?.data?.user_name?.email[0] });
-                setTimeout(() => {
-                    setIsDrawerOpen(false);
-                    setErrorMessage({ show: false, message: '' });
-                }, 3000);
+                // setErrorMessage({ show: true, message: response?.error?.data[0] || response?.error?.data?.user_name?.email[0] });
+                // setTimeout(() => {
+                //     setIsDrawerOpen(false);
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 3000);
+                toast.error(`Some Error Occured`)
             }
         } catch (err) {
-            setErrorMessage({ show: true, message: 'Email Already exists or some error occur while creating user.' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Email Already exists or some error occur while creating user.' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(err)
+            toast.error('Backend Error')
         }
         finally {
             setLoading(false)
@@ -638,6 +688,7 @@ const AddUser = () => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => onAddUsers(e)}
                                 text="Submit"
                             />

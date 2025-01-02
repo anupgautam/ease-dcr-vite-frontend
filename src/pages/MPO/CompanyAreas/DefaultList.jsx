@@ -28,6 +28,7 @@ import EditCompanyAreas from './EditCompanyAreas';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const TABLE_HEAD = [
     { id: 'company_name', label: 'Company Name', alignRight: false },
@@ -36,7 +37,7 @@ const TABLE_HEAD = [
 ];
 
 const DefaultList = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -75,6 +76,21 @@ const DefaultList = () => {
     // !Delete companyareaists
     const [deleteCompanyArea] = useDeleteCompanyAreaByIdMutation()
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteCompanyArea(id);
+            if (response?.data) {
+                toast.success(`${response?.data?.msg}`);
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.msg || "Failed to delete company areas"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        } finally {
+            handleClose(); // Close the dialog or modal
+        }
+    };
 
     return (
         <>
@@ -144,7 +160,7 @@ const DefaultList = () => {
                     {"Are you sure want to delete?"}
                 </DialogTitle>
                 <DialogActions>
-                    <Button autoFocus onClick={() => { deleteCompanyArea(selectedId); handleClose() }}>
+                    <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
                         Yes
                     </Button>
                     <Button

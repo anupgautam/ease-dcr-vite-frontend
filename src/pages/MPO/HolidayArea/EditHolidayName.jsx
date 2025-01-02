@@ -20,17 +20,40 @@ import {
 } from '@/api/CompanySlices/companyAreaSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
-
+import { toast } from 'react-toastify';
 
 const EditHolidayName = ({ idharu, onClose }) => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id } = useSelector((state) => state.cookie);
 
     //! Getting  by ID
     const HolidayName = useGetHolidayNamesByIdQuery(idharu);
 
+    //! Validation wala  
+    const validate = (fieldValues = values) => {
+        // 
+        let temp = { ...errors }
+        if ('holiday_name' in fieldValues)
+            temp.holiday_name = returnValidation(['null', 'lessThan50', 'specialcharacter', 'minLength3'], values.holiday_name)
+        setErrors({
+            ...temp
+        })
+        // 
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x == "")
+    }
+
     const [initialFValues, setInitialFValues] = useState({
         holiday_name: "",
     })
+
+    useEffect(() => {
+        if (HolidayName?.data) {
+            setInitialFValues({
+                holiday_name: HolidayName?.data?.holiday_name,
+            });
+        }
+    }, [HolidayName])
 
     const { values,
         errors,
@@ -42,32 +65,17 @@ const EditHolidayName = ({ idharu, onClose }) => {
         false,
         true
     )
-
-    //! Validation wala  
-    const validate = (fieldValues = values) => {
-        // 
-        let temp = { ...errors }
-        if ('holiday_name' in fieldValues)
-            temp.holiday_name = returnValidation(['null'], values.holiday_name)
-        setErrors({
-            ...temp
-        })
-        // 
-
-        if (fieldValues === values)
-            return Object.values(temp).every(x => x == "")
-    }
     useEffect(() => {
         validate();
     }, [values.holiday_name])
 
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
     useEffect(() => {
-        if (HolidayName?.data) {
-            setInitialFValues({
-                holiday_name: HolidayName?.data?.holiday_name,
-            });
-        }
-    }, [HolidayName?.data])
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.holiday_name]);
 
 
     //! Edit Holiday Area
@@ -85,32 +93,44 @@ const EditHolidayName = ({ idharu, onClose }) => {
         formData.append("holiday_name", values.holiday_name);
         formData.append("company_name", company_id);
         formData.append('id', idharu)
+
+        // const data = { holiday_name: values.holiday_name, company_name: company_id, id: idharu }
         try {
             const response = await updateHolidayName(formData).unwrap();
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Holiday Name' });
-                setTimeout(() => {
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
+            if (response?.response) {
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Holiday Name' });
+                // setTimeout(() => {
+                //     onClose();
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+                toast.error(`Some Error Occured`)
             }
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -140,7 +160,7 @@ const EditHolidayName = ({ idharu, onClose }) => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Edit Holiday Areas
+                            Edit Holiday Names
                         </Typography>
                     </Box>
 
@@ -159,6 +179,7 @@ const EditHolidayName = ({ idharu, onClose }) => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => handleSubmit(e)}
                             text="Submit"
                         />

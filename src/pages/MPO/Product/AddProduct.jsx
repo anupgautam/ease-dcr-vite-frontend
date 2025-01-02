@@ -16,6 +16,7 @@ import { useForm } from '../../../reusable/forms/useForm';
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
 import BlobToFile from '@/reusable/forms/utils/blobToFile';
+import { toast } from 'react-toastify';
 
 import {
     useGetCompDivisionQuery,
@@ -31,15 +32,12 @@ const AddProduct = () => {
 
     const [File, setFile] = useState(null);
 
-    const [createProducts] = useCreateProductsMutation();
     const [loading, setLoading] = useState(false);
 
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
 
-    const initialFValues = {
-        product_image: null,
-    }
+    const [createProducts] = useCreateProductsMutation();
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
@@ -50,7 +48,7 @@ const AddProduct = () => {
         temp.product_price_per_strip_in_mrp = returnValidation(['null'], values.product_price_per_strip_in_mrp)
         temp.product_price_for_stockist = returnValidation(['null'], values.product_price_for_stockist)
         temp.product_description = returnValidation(['null'], values.product_description)
-        temp.product_image = returnValidation(['null'], values.product_image)
+        // temp.product_image = returnValidation(['null'], values.product_image)
         temp.product_type = returnValidation(['null'], values.product_type)
         temp.bonus = returnValidation(['null'], values.bonus)
         temp.primary_rate = returnValidation(['null'], values.primary_rate)
@@ -64,6 +62,20 @@ const AddProduct = () => {
             return Object.values(temp).every(x => x === "")
     }
 
+    const initialFValues = {
+        // product_image: null,
+        product_name: "",
+        product_molecular_name: "",
+        division_name: "",
+        product_price_per_strip_in_mrp: "",
+        product_price_for_stockist: "",
+        product_description: "",
+        product_type: "",
+        bonus: "",
+        primary_rate: "",
+        secondary_rate: "",
+    }
+
     const {
         values,
         setValues,
@@ -73,6 +85,42 @@ const AddProduct = () => {
         handleImageUpload,
         resetForm,
     } = useForm(initialFValues, true, validate);
+
+    useEffect(() => {
+        validate();
+    }, [
+        // product_image,
+        values.product_name,
+        values.product_molecular_name,
+        values.division_name,
+        values.product_price_per_strip_in_mrp,
+        values.product_price_for_stockist,
+        values.product_description,
+        values.product_type,
+        values.bonus,
+        values.primary_rate,
+        values.secondary_rate
+    ]);
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [
+        // product_image,
+        values.product_name,
+        values.product_molecular_name,
+        values.division_name,
+        values.product_price_per_strip_in_mrp,
+        values.product_price_for_stockist,
+        values.product_description,
+        values.product_type,
+        values.bonus,
+        values.primary_rate,
+        values.secondary_rate
+    ]);
 
     const Division = useGetCompDivisionQuery(company_id, {
         skip: !company_id
@@ -136,35 +184,47 @@ const AddProduct = () => {
         formData.append("bonus", values.bonus);
         formData.append("product_type", values.product_type);
         try {
-            await createProducts(formData)
+            await createProducts(formData).unwrap()
                 .then((response) => {
                     if (response.data) {
-                        setSuccessMessage({ show: true, message: 'Successfully Added Product' });
-                        setTimeout((e) => {
-                            setSuccessMessage({ show: false, message: '' });
-                        }, 3000);
-                        setIsDrawerOpen(false);
+                        // setSuccessMessage({ show: true, message: 'Successfully Added Product' });
+                        // setTimeout((e) => {
+                        //     setSuccessMessage({ show: false, message: '' });
+                        // }, 3000);
+                        // setIsDrawerOpen(false);
+
+                        toast.success(`${response?.data?.msg}`)
+                        setIsButtonDisabled(true)
+                        setIsDrawerOpen(false)
                     } else if (response?.error) {
-                        setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                        // setLoading(false);
+                        // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                        toast.error(`${response?.error?.data?.msg}`)
                         setLoading(false);
-                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     } else {
-                        setErrorMessage({ show: true, message: response.error.data[0] });
-                        setTimeout(() => {
-                            setErrorMessage({ show: false, message: '' });
-                        }, 3000);
+                        // setErrorMessage({ show: true, message: response.error.data[0] });
+                        // setTimeout(() => {
+                        //     setErrorMessage({ show: false, message: '' });
+                        // }, 3000);
+                        toast.error(`Some Error Occured`)
                     }
                 }).catch((err) => {
-                    setErrorMessage({ show: true, message: 'Some Error Occured.' });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 3000);
+                    // setErrorMessage({ show: true, message: 'Some Error Occured.' });
+                    // setTimeout(() => {
+                    //     setErrorMessage({ show: false, message: '' });
+                    // }, 3000);
+                    console.log(error)
+                    toast.error('Backend Error')
                 })
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -179,10 +239,6 @@ const AddProduct = () => {
             handleImageUpload('image', File);
         }
     }, [File]);
-
-    useEffect(() => {
-        validate();
-    }, [values]);
 
     const [MutipleProduct, setAddMutipleProduct] = useState(false);
 
@@ -366,6 +422,7 @@ const AddProduct = () => {
                                     <Controls.SubmitButton
                                         variant="contained"
                                         className="submit-button"
+                                        disabled={isButtonDisabled}
                                         onClick={(e) => onAddProducts(e)}
                                         text="Submit"
                                     />

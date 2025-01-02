@@ -23,7 +23,7 @@ import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { toast } from 'react-toastify';
 
 const AddDivision = () => {
-    const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+    const { company_id } = useSelector((state) => state.cookie);
 
     //! Create Chemist
     const [createDivisions] = useCreateCompanyDivisionsMutation()
@@ -33,7 +33,7 @@ const AddDivision = () => {
         // 
         let temp = { ...errors }
         if ('division_name' in fieldValues)
-            temp.division_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.division_name)
+            temp.division_name = returnValidation(['null', 'number', 'lessThan50', 'validateUsername', 'minLength3'], values.division_name)
 
         setErrors({
             ...temp
@@ -43,14 +43,9 @@ const AddDivision = () => {
             return Object.values(temp).every(x => x == "")
     }
 
-    //! Chat wala  
-    // const validate = (values) => {
-    //     return values?.division_name?.trim() !== "";
-    // };
-
-
     const [initialFValues, setInitialFValues] = useState({
         company_name: company_id,
+        division_name: ""
     })
 
     const {
@@ -71,11 +66,9 @@ const AddDivision = () => {
 
     useEffect(() => {
         const valid = validate(values);
-        const isDivisionNameValid = values?.division_name?.trim() !== "";
-        console.log("Validation Wala:", valid, "Khali wala test", isDivisionNameValid)
 
-        setIsButtonDisabled((valid && isDivisionNameValid));
-    }, [values]);
+        setIsButtonDisabled(!valid);
+    }, [values.division_name]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -88,13 +81,13 @@ const AddDivision = () => {
         const data = { division_name: values.division_name, company_name: company_id }
         try {
             const response = await createDivisions(data)
-            console.log(response)
             if (response?.data) {
                 toast.success(`${response?.data?.msg}`)
-                setSuccessMessage({ show: true, message: 'Successfully Added Company Division' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+                // setSuccessMessage({ show: true, message: 'Successfully Added Company Division' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
             }
             else if (response?.error) {
@@ -166,13 +159,6 @@ const AddDivision = () => {
                         />
                     </Box>
                     <Stack spacing={1} direction="row">
-                        {/* <Button
-                            variant="contained"
-                            className="summit-button"
-                            onClick={(e) => onAddCompanyDivision(e)}
-                        >
-                            Submit{" "}
-                        </Button> */}
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"

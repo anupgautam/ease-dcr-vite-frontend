@@ -72,11 +72,8 @@ const AddDoctorEvents = () => {
 
 
     //! Format Date
-    const now = new BSDate().now();
-    const [dateData, setDateData] = useState(now);
-    // const [selectedDates, setSelectedDates] = useState(now);
-    const [dateFormat, setDateFormat] = useState(dateData?._date)
-    const [nepaliDate, setNepaliDate] = useState(dateFormat)
+    const today = NepaliDateConverter.getNepaliDate();
+    const [selectedDates, setSelectedDates] = useState(today);
 
     const formatDate = (date) => {
         const year = date.year;
@@ -85,21 +82,22 @@ const AddDoctorEvents = () => {
         return `${year}-${month}-${day}`;
     };
 
-    const [formattedDate, setFormattedDate] = useState(formatDate(nepaliDate));
+    // const [formattedDate, setFormattedDate] = useState(formatDate(nepaliDate));
 
-    useEffect(() => {
-        // Update nepaliDate and formattedDate whenever dateData changes
-        if (dateData?._date) {
-            const updatedNepaliDate = dateData?._date;
-            setNepaliDate(updatedNepaliDate);
-            setFormattedDate(formatDate(updatedNepaliDate));
-        }
-    }, [dateData]);
+    // useEffect(() => {
+    //     // Update nepaliDate and formattedDate whenever dateData changes
+    //     if (dateData?._date) {
+    //         const updatedNepaliDate = dateData?._date;
+    //         setNepaliDate(updatedNepaliDate);
+    //         setFormattedDate(formatDate(updatedNepaliDate));
+    //     }
+    // }, [dateData]);
 
-    const handleDateChange = (value) => {
-        setDateData(value); // Update the raw date value
-        setFormattedDate(value)
-    };
+    // const handleDateChange = (value) => {
+    //     setDateData(value); // Update the raw date value
+    //     setFormattedDate(value)
+    // };
+
     const DoctorData = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_name: user_role === "admin" ? mpoName : company_user_role_id, mpo_area: "" }, {
         skip: !company_id || !company_user_role_id
     })
@@ -113,18 +111,7 @@ const AddDoctorEvents = () => {
 
     const [createDoctors] = useCreateDoctorsEventsMutation()
 
-    const initialFValues = {
 
-    }
-
-    const {
-        values,
-        setValues,
-        errors,
-        setErrors,
-        handleInputChange,
-        resetForm,
-    } = useForm(initialFValues, true)
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
@@ -132,6 +119,7 @@ const AddDoctorEvents = () => {
         let temp = { ...errors }
         if ('event_title' in fieldValues)
             temp.event_title = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.event_title)
+
         temp.doctor_id = returnValidation(['null'], values.doctor_id)
 
         setErrors({
@@ -143,9 +131,31 @@ const AddDoctorEvents = () => {
             return Object.values(temp).every(x => x == "")
     }
 
+    const initialFValues = {
+        event_title: ""
+    }
+
+    const {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChange,
+        resetForm,
+    } = useForm(initialFValues, true, validate)
+
     useEffect(() => {
         validate();
     }, [values.event_title, values.doctor_id])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.event_title, values.doctor_id]);
+
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -167,12 +177,11 @@ const AddDoctorEvents = () => {
             const jsonData = {
                 event_title: values.event_title,
                 doctor_id: values.doctor_id,
-                event_date: formattedDate,
+                event_date: selectedDates,
                 mpo_name: user_role === "admin" ? mpoName : company_user_role_id,
                 company_name: company_id,
             }
             const response = await createDoctors(jsonData)
-            console.log(response)
             // if (response.data) {
             //     setSuccessMessage({ show: true, message: 'Successfully Added Doctor Event.' });
             //     setIsDrawerOpen(false)
@@ -198,12 +207,17 @@ const AddDoctorEvents = () => {
             else if (response?.error) {
                 toast.error(`${response?.error?.data?.message}`)
             }
+            else {
+                toast.error(`Some Error Occured`)
+            }
         } catch (error) {
+            // console.log(error)
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
             console.log(error)
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -292,17 +306,21 @@ const AddDoctorEvents = () => {
                             options={doctor}
                         />
                     </Box>
+
                     <Box marginBottom={2}>
-                        <label htmlFor="date" style={{ fontSize: '13px', color: "grey", fontWeight: '600', marginBottom: "10px" }}>Event Date*</label><br />
+                        <label htmlFor="date" style={{ fontSize: '13px', color: "grey", fontWeight: '600', marginBottom: "10px" }}>Event Date*</label>
+                        <br />
                         <NepaliDatePicker
-                            value={dateData}
+                            value={selectedDates}
                             format="YYYY-MM-DD"
-                            onChange={(value) => handleDateChange(value)} />
+                            onChange={(value) => setSelectedDates(value)} />
                     </Box>
+
                     <Stack spacing={1} direction="row">
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddEvents(e)}
                             text="Submit"
                         />

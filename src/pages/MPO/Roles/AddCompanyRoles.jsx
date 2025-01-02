@@ -22,6 +22,7 @@ import {
 } from '@/api/MPOSlices/companyRolesSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const AddCompanyRoles = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -42,10 +43,13 @@ const AddCompanyRoles = () => {
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
         if ('role_name' in fieldValues)
-            temp.role_name = returnValidation(['null', 'lessThan50', 'specialcharacter'], values.role_name)
-        temp.role_name_value = returnValidation(['null'], values.role_name_value)
-        temp.priority_value = returnValidation(['null', 'lessThan50'], values.priority_value)
-        temp.is_highest_priority = returnValidation(['null', 'lessThan50'], values.is_highest_priority)
+            temp.role_name = returnValidation(['null'], values.role_name)
+
+        temp.role_name_value = returnValidation(['null', 'specialCharacter', 'minLength3', 'number'], values.role_name_value)
+
+        temp.priority_value = returnValidation(['null', 'isNumberOnly'], values.priority_value)
+
+        // temp.is_highest_priority = returnValidation(['null'], values.is_highest_priority)
 
         setErrors({
             ...temp
@@ -57,7 +61,10 @@ const AddCompanyRoles = () => {
 
 
     const initialFValues = {
-        is_highest_priority: false
+        is_highest_priority: false,
+        role_name: "",
+        role_name_value: "",
+        priority_value: "",
     }
 
     const {
@@ -72,7 +79,16 @@ const AddCompanyRoles = () => {
     useEffect(() => {
         validate();
 
-    }, [values.role_name, values.priority_value])
+    }, [values.role_name, values.priority_value, values.role_name_value])
+
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.role_name, values.priority_value, values.role_name_value]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -86,33 +102,43 @@ const AddCompanyRoles = () => {
         const jsonData = {
             role_name: values.role_name,
             priority_value: values.priority_value,
-            role_name_value: values.roles_name_value,
+            role_name_value: values.role_name_value,
             is_highest_priority: values.is_highest_priority,
             company_name: company_id
         };
+
         try {
-            const response = await createCompanyRoles(jsonData).unwrap();
-            if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Added Roles' });
-                setTimeout(() => {
-                    setSuccessMessage({ show: false, message: '' });
-                }, 3000);
+            const response = await createCompanyRoles(jsonData)
+            if (response?.data) {
+                // setSuccessMessage({ show: true, message: 'Successfully Added Roles' });
+                // setTimeout(() => {
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 3000);
+                // setIsDrawerOpen(false)
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setIsDrawerOpen(false)
             }
             else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+
+                toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
             else {
                 setErrorMessage({ show: true, message: "Error" });
                 setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
+
+            console.log(error)
+            toast.error('Backend Error')
         } finally {
             setLoading(false)
         }
@@ -162,7 +188,7 @@ const AddCompanyRoles = () => {
                         <Controls.Select
                             name="role_name"
                             label="Role Name*"
-                            value={values.role_name}
+                            value={values.name}
                             onChange={handleInputChange}
                             error={errors.role_name}
                             options={roles}
@@ -172,9 +198,9 @@ const AddCompanyRoles = () => {
                         <Controls.Input
                             id="autoFocus"
                             autoFocus
-                            name="roles_name_value"
+                            name="role_name_value"
                             label="Roles Name*"
-                            value={values.role_name_value}
+                            value={values.name}
                             onChange={handleInputChange}
                             error={errors.role_name_value}
                         />
@@ -201,6 +227,7 @@ const AddCompanyRoles = () => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => onAddRoles(e)}
                             text="Submit"
                         />

@@ -19,6 +19,7 @@ import {
 } from "@/api/MPOSlices/StockistSlice";
 import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 
@@ -47,8 +48,9 @@ const EditStockist = ({ idharu, onClose }) => {
             temp.stockist_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.stockist_name)
         temp.stockist_address = returnValidation(['null'], values.stockist_address)
         temp.stockist_contact_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.stockist_contact_number)
-        temp.pan_vat_number = returnValidation(['null'], values.pan_vat_number)
+        temp.pan_vat_number = returnValidation(['null', 'specialcharacter'], values.pan_vat_number)
         temp.stockist_territory = returnValidation(['null'], values.stockist_territory)
+        temp.stockist_category = returnValidation(['null'], values.stockist_category)
 
         setErrors({
             ...temp
@@ -69,6 +71,20 @@ const EditStockist = ({ idharu, onClose }) => {
         stockist_category: "",
     })
 
+    useEffect(() => {
+        if (Stockist?.data) {
+            setInitialFValues({
+                stockist_name: Stockist.data.stockist_name.stockist_name,
+                stockist_address: Stockist.data.stockist_name.stockist_address,
+                stockist_contact_number: Stockist.data.stockist_name.stockist_contact_number,
+                pan_vat_number: Stockist.data.stockist_name.pan_vat_number,
+                stockist_territory: Stockist.data.stockist_name.stockist_territory.id,
+                stockist_category: Stockist.data.stockist_name.stockist_category
+
+            });
+        }
+    }, [Stockist.data])
+
     const { values,
         errors,
         setErrors,
@@ -81,24 +97,19 @@ const EditStockist = ({ idharu, onClose }) => {
     )
 
     useEffect(() => {
-        if (Stockist.data) {
-            setInitialFValues({
-                stockist_name: Stockist.data.stockist_name.stockist_name,
-                stockist_address: Stockist.data.stockist_name.stockist_address,
-                stockist_contact_number: Stockist.data.stockist_name.stockist_contact_number,
-                pan_vat_number: Stockist.data.stockist_name.pan_vat_number,
-                stockist_territory: Stockist.data.stockist_name.stockist_territory.id,
-                stockist_category: Stockist.data.stockist_name.stockist_category
-
-            });
-        }
-    }, [Stockist.data])
-    useEffect(() => {
         validate();
 
     }, [
-        values.stockist_name, values.stockist_address, values.stockist_contact_number, values.stockist_territory, values.pan_vat_number
+        values.stockist_name, values.stockist_address, values.stockist_contact_number, values.stockist_territory, values.pan_vat_number, values.stockist_category
     ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.stockist_name, values.stockist_address, values.stockist_contact_number, values.stockist_territory, values.pan_vat_number, values.stockist_category]);
 
     //! Edit user
     const [updateStockists] = useUpdateStockistsMutation();
@@ -124,32 +135,42 @@ const EditStockist = ({ idharu, onClose }) => {
         try {
             const response = await updateStockists(stockistData)
             if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited Stockist' });
-                setTimeout(() => {
-                    onClose();
-                    setSuccessMessage({ show: false, message: '' });
-                }, 2000);
-            } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setSuccessMessage({ show: true, message: 'Successfully Edited Stockist' });
+                // setTimeout(() => {
+                //     onClose();
+                //     setSuccessMessage({ show: false, message: '' });
+                // }, 2000);
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                onClose();
+            } else if (response?.error) {
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                console.log(response?.error)
+                toast.error(`${response?.error?.data?.msg}`)
+                setLoading(false);
             } else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+                toast.error(`Some Error Occured`)
             }
         }
         catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
+            console.log(error)
+            toast.error('Backend Error')
         }
         finally {
             setLoading(false)
         }
-    }, [updateStockists, idharu, values])
+    }, [updateStockists, values])
 
     return (
         <>
@@ -242,6 +263,7 @@ const EditStockist = ({ idharu, onClose }) => {
                             <Controls.SubmitButton
                                 variant="contained"
                                 className="submit-button"
+                                disabled={isButtonDisabled}
                                 onClick={(e) => handleSubmit(e)}
                                 text="Submit"
                             />
