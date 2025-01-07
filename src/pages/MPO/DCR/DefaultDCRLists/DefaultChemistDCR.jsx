@@ -137,7 +137,7 @@ const DefaultChemistDCR = ({ selectedUser, dateOnly }) => {
                                                     </TableRow>
                                                 ))}
                                         </> :
-                                            <>{data && data.results.map((tourplan, index) => (
+                                            <>{data && data?.results.map((tourplan, index) => (
                                                 <TableRow hover tabIndex={-1} role="checkbox" key={tourplan?.id}>
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">

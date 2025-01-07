@@ -35,7 +35,7 @@ import { useSelector } from 'react-redux';
 const EditStockistDCR = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
-
+    console.log("Id", idharu)
     const [noLoop, setNoLoop] = useState(true);
     const [initialShift, setInitialShift] = useState("");
     // const areas = useSelector(state => state.dcrData.company_areas);
@@ -97,15 +97,16 @@ const EditStockistDCR = ({ idharu, onClose }) => {
         company_roles: [],
     });
 
+    console.log("DCRAll", DCRAll?.data)
     useEffect(() => {
-        if (DCRAll.data) {
+        if (DCRAll?.data) {
             setInitialFValues({
                 edit: true,
-                date: DCRAll?.data?.date,
-                visited_area: DCRAll?.data?.visited_area,
-                visited_stockist: DCRAll?.data?.visited_stockist,
-                expenses_name: DCRAll?.data?.expenses_name,
-                expenses: DCRAll?.data?.expenses,
+                date: DCRAll?.data?.dcr?.date,
+                visited_area: DCRAll?.data?.dcr?.visited_area?.id,
+                visited_stockist: DCRAll?.data?.dcr?.visited_stockist?.id,
+                expenses_name: DCRAll?.data?.dcr?.expenses_name,
+                expenses: DCRAll?.data?.dcr?.expenses,
                 expenses_reasoning: DCRAll?.data?.expenses_reasoning,
                 rewards: DCRAll?.data?.rewards,
                 company_roles: DCRAll?.data?.company_roles
@@ -113,7 +114,7 @@ const EditStockistDCR = ({ idharu, onClose }) => {
             setDateData(DCRAll?.data?.date);
         }
         if (shiftWiseDCR.status == "fulfilled") {
-            setInitialShift(shiftWiseDCR?.data?.results[0]?.dcr?.shift.id)
+            setInitialShift(shiftWiseDCR?.data?.results[0]?.shift.id)
         }
     }, [DCRAll.data, shiftWiseDCR])
 

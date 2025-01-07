@@ -55,6 +55,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 ]
         }),
 
+        //! Day Status 
+        getAllDayStatus: builder.query({
+            query: () => ({
+                url: `day/status`,
+                method: 'GET'
+            }),
+            providesTags: ['User']
+        }),
+
         //! GET User role 
         getUsersRole: builder.query({
             query: (id) => ({
@@ -114,14 +123,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
         //! PATCH userprofile by id
         updateUserProfileById: builder.mutation({
-                query: (updateProfilePic) => (
-                    {
-                        url: `user/user-profile-picture/${updateProfilePic.get('id')}`,
-                        method: 'PATCH',
-                        body:updateProfilePic
-                    }),
-                invalidateTags: ['User']
-            }),
+            query: (updateProfilePic) => (
+                {
+                    url: `user/user-profile-picture/${updateProfilePic.get('id')}`,
+                    method: 'PATCH',
+                    body: updateProfilePic
+                }),
+            invalidateTags: ['User']
+        }),
 
         //!GET users by company role
         getUsersByCompanyRoleIdExecutativeLevel: builder.query(
@@ -155,13 +164,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
             }),
 
         // ! Get Executive Level
-        getAllExecutiveLevels: builder.mutation({
+        getAllExecutiveLevels: builder.query({
             query: (id) => (
                 {
                     url: `user/company-user-without-pagination/?company_name=${id}`,
                     method: 'GET',
                 }),
-            invalidatesTags: ['CompanyUserRoles', 'User', "CompanyUsers"],
+            providesTags: ['CompanyUserRoles', 'User', "CompanyUsers"],
         }),
 
         //! DELETE users by id
@@ -308,10 +317,11 @@ export const {
     useLoginUserByAdminMutation,
     usePostUserIdToGetLowerLevelExecutiveMutation,
     useGetAllUsersWithoutPaginationByIdQuery,
-    useGetAllExecutiveLevelsMutation,
-    useGetUserProfileByIdQuery,
-    useUpdateUserProfileByIdMutation
     // useGetAllExecutiveLevelsQuery,
+    useGetUserProfileByIdQuery,
+    useUpdateUserProfileByIdMutation,
+    useGetAllDayStatusQuery,
+    useGetAllExecutiveLevelsQuery,
 } = userApiSlice
 
 

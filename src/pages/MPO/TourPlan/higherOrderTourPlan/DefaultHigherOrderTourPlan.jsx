@@ -99,7 +99,7 @@ const DefaultHOTourPlan = () => {
             if (response?.data) {
                 toast.success(`${response?.data?.msg}`)
             } else if (response?.error) {
-                toast.error(`Error: ${response.error.data?.message || "Failed to delete Tourplan."}`);
+                toast.error(`Error: ${response?.error?.data?.message || "Failed to delete Tourplan."}`);
             }
         } catch (error) {
             toast.error("An unexpected error occurred during deletion.");
@@ -133,24 +133,24 @@ const DefaultHOTourPlan = () => {
                                                     </TableRow>
                                                 ))}
                                         </> :
-                                            <>{data && data.results.map((tourplan, index) => (
+                                            <>{data && data?.results?.map((tourplan, index) => (
                                                 <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}>
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" padding="none">
                                                         <Stack direction="row" alignItems="center" spacing={2}>
                                                             <Typography variant="subtitle2" noWrap>
-                                                                {tourplan.user_id.user_name.first_name + " " + tourplan.user_id.user_name.last_name}
+                                                                {tourplan?.user_id?.user_name?.first_name + " " + tourplan?.user_id?.user_name?.last_name}
                                                             </Typography>
                                                         </Stack>
                                                     </TableCell>
 
-                                                    <TableCell align="left">{tourplan.date}</TableCell>
-                                                    <TableCell align="left">{tourplan.month}</TableCell>
-                                                    <TableCell align="left">{tourplan.year}</TableCell>
+                                                    <TableCell align="left">{tourplan?.date}</TableCell>
+                                                    <TableCell align="left">{tourplan?.month}</TableCell>
+                                                    <TableCell align="left">{tourplan?.year}</TableCell>
                                                     <TableCell component="th" scope="row" padding="none">
                                                         <Stack direction="row" alignItems="center" spacing={2}>
                                                             <Typography variant="subtitle2" noWrap>
-                                                                {tourplan.visited_with.user_name.first_name + " " + tourplan.visited_with.user_name.last_name}
+                                                                {tourplan?.visited_with?.user_name?.first_name + " " + tourplan?.visited_with?.user_name?.last_name}
                                                             </Typography>
                                                         </Stack>
                                                     </TableCell>

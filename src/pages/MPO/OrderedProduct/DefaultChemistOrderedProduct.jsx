@@ -26,13 +26,14 @@ const TABLE_HEAD = [
 ];
 
 const DefaultChemistOrderedProduct = ({ data }) => {
+    console.log(data)
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
-        const data = e.target.ariaLabel
-        let thisArray = data.split(" ")
+        const data = e?.target?.ariaLabel
+        let thisArray = data?.split(" ")
         setPage(thisArray[3]);
     }, [])
 
@@ -48,7 +49,7 @@ const DefaultChemistOrderedProduct = ({ data }) => {
                             <TableBody>
                                 <>
                                     {
-                                        data.length === 0 ? <>
+                                        data?.length === 0 ? <>
                                             {
                                                 eightArrays.map((key) => (
                                                     <TableRow key={key} >
@@ -62,19 +63,19 @@ const DefaultChemistOrderedProduct = ({ data }) => {
                                                     </TableRow>
                                                 ))}
                                         </> :
-                                            <>{data && data.map((key, index) => (
-                                                <TableRow hover tabIndex={-1} role="checkbox" key={key.chemist_name}>
+                                            <>{data && data?.map((key, index) => (
+                                                <TableRow hover tabIndex={-1} role="checkbox" key={key?.chemist_name}>
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {key.chemist_name}
+                                                            {key?.chemist_name}
                                                         </Typography>
                                                         {/* </Stack> */}
                                                     </TableCell>
-                                                    <TableCell align="left">{key.product_name}</TableCell>
-                                                    <TableCell align="left">{key.stockist_name}</TableCell>
-                                                    <TableCell align="left">{key.ordered_quantity}</TableCell>
+                                                    <TableCell align="left">{key?.product_name}</TableCell>
+                                                    <TableCell align="left">{key?.stockist_name}</TableCell>
+                                                    <TableCell align="left">{key?.ordered_quantity}</TableCell>
                                                 </TableRow>
                                             ))
                                             }

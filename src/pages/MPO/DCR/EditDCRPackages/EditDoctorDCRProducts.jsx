@@ -14,6 +14,8 @@ import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSli
 
 
 const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
+
+  // console.log(id)
   const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
@@ -21,6 +23,8 @@ const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
   const { data } = useGetPromotedProductByDcrIdQuery(id, {
     skip: !id
   });
+
+  // console.log("Promoted Product", data)
 
   // const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: division?.id }, {
   //   skip: !company_id || !division?.id
@@ -32,9 +36,9 @@ const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
 
   const productList = useMemo(() => {
     if (productData !== undefined) {
-      return productData.map((key) => ({
+      return productData?.map((key) => ({
         id: key.id,
-        title: key.product_name.product_name
+        title: key?.product_name?.product_name
       }))
     }
     return [];
@@ -46,6 +50,8 @@ const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
   const { data: newProductList } = useGetProductForDcrByIdQuery(ProductNotListed?.company_product_id, {
     skip: !ProductNotListed?.company_product_id
   });
+
+  // console.log("New Product list", newProductList)
 
   const onProductPromotion = e => setProductPromotion(e.target.value);
 
@@ -102,7 +108,7 @@ const EditDoctorDCRProducts = ({ id, context, editApi, division }) => {
                       {
                         data?.map((key, index) => (
                           <Grid item xs={4}>
-                            <ProductData id={key.company_product_id} key={index} />
+                            <ProductData id={key?.company_product_id} key={index} />
                           </Grid>
                         ))
                       }

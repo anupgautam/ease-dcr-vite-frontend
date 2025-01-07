@@ -4,14 +4,15 @@ import {
     Typography, Button, Select, OutlinedInput, MenuItem, FormControl, InputLabel, CircularProgress, Autocomplete,
     TextField
 } from '@mui/material'
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import 'react-datepicker/dist/react-datepicker.css';
 import { useForm, Form } from '../../../../reusable/forms/useForm'
-import Controls from '../../../../reusable/components/forms/controls/Controls';
+
+import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../../validation';
 import {
     useGetShiftsQuery
@@ -30,11 +31,23 @@ import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/U
 import { ConstructionOutlined } from '@mui/icons-material';
 import { extractErrorMessage } from '../../../../reusable/extractErrorMessage';
 import { toast } from 'react-toastify';
+import { useGetAllDayStatusQuery } from "../../../../api/MPOSlices/UserSlice";
 
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     const { company_id, user_role, company_user_id, role, company_user_role_id } = useSelector((state) => state.cookie);
+
+    const location = useLocation();
+
+    const dayStatus = useGetAllDayStatusQuery();
+
+    const DayStatus = useMemo(() => {
+        if (dayStatus?.data) {
+            return dayStatus?.data.map(key => ({ id: key.id, title: key?.day_status }))
+        }
+        return [];
+    }, [dayStatus])
 
     const now = new BSDate().now();
     const [dateData, setDateData] = useState();
@@ -47,10 +60,10 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     useEffect(() => {
         AllMpoAreaData({ id: company_user_role_id })
             .then((res) => {
-                if (res.data) {
-                    const data = res.data.map((key) => ({
+                if (res?.data) {
+                    const data = res?.data.map((key) => ({
                         id: key.id,
-                        title: key.area_name
+                        title: key?.area_name
                     }));
                     setmpoAreaData(data)
                 }
@@ -84,6 +97,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     //! Getting TourPlan by ID
     const TourPlan = useGetHOTourPlansByIdQuery(idharu);
+    // console.log(TourPlan?.data)
 
     const [LowerExecutive] = usePostUserIdToGetLowerLevelExecutiveMutation();
 
@@ -174,10 +188,11 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
             typeof value === 'string' ? value.split(',') : value,
         );
     };
+    const [isApproved, setIsApproved] = useState(false)
 
     const [defaultVisitedWith, setDefaultVisitedWith] = useState([])
     useEffect(() => {
-        if (TourPlan.data) {
+        if (TourPlan?.data) {
 
             const selectedVisitedWith = TourPlan?.data?.visited_data?.map(visited => ({
                 id: visited?.id,
@@ -197,6 +212,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
             });
             setDateData(TourPlan?.data?.date ? TourPlan?.data?.date : now)
             setMultipleVisitedWith(selectedVisitedWith)
+            // setIsApproved(TourPlan?.data?.is_approved)
         }
     }, [TourPlan])
 
@@ -218,7 +234,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     useEffect(() => {
         if (values?.visited_data) {
-            const defaultVisitedWith = values.visited_data.map(item => item.visited_with);
+            const defaultVisitedWith = values?.visited_data?.map(item => item.visited_with);
             setCompanyRoles(defaultVisitedWith);
             setDefaultExecutives(defaultVisitedWith)
         }
@@ -247,8 +263,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     values.date,
     values.visited_with,
     values.is_dcr_added,
-    values.month,
-    values.is_approved])
+    values.month])
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -262,8 +277,8 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
             // const visitedIds = values?.visited_data?.map((item) => item.id)
             // setDefaultExecutives(visitedIds)
 
-            const defaultAreaData = values.visited_data.map((data) => ({
-                visited_with: data.visited_with,
+            const defaultAreaData = values?.visited_data.map((data) => ({
+                visited_with: data?.visited_with,
             }));
             setMpoAreaData(defaultAreaData);
         }
@@ -273,10 +288,23 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     const [updateTourPlans] = useUpdateHOTourPlansMutation();
     const history = useNavigate();
 
+
     const monthData = getNepaliMonthName(moment(dateData).month() + 1);
     const handleSubmit = async (e) => {
         setLoading(true)
-        const data = { visit_data: MpoAreaData, id: idharu, company_id: company_id, user_id: TourPlan?.data?.user_id?.id, shift: 1, date: typeof values.date === "string" ? values.date : DateToString(values.date), is_dcr_added: values.is_dcr_added === null ? false : values.is_dcr_added, is_approved: values.is_approved, hulting_station: values.hulting_station, day_status: values.day_status, month: monthData }
+        const data = {
+            visit_data: MpoAreaData,
+            id: idharu,
+            company_id: company_id,
+            user_id: TourPlan?.data?.user_id?.id,
+            shift: 1,
+            date: typeof values.date === "string" ? values.date : DateToString(values.date),
+            is_dcr_added: values.is_dcr_added === null ? false : values.is_dcr_added,
+            is_approved: values.is_approved ? values.is_approved : false,
+            hulting_station: values.hulting_station,
+            day_status: values.day_status,
+            month: monthData
+        }
         // const formData = new FormData();
         // formData.append("user_id", TourPlan?.data?.user_id?.id);
         // formData.append("shift", 1);
@@ -302,14 +330,15 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                         // }, 2000);
 
                         toast.success('Successfully Edited TourPlan')
-                        history("/dashboard/admin/tourplan")
+                        // history("/dashboard/admin/tourplan")
                         onClose();
                     }
                     else if (response?.error) {
+
                         // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                         // setLoading(false);
                         // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                        toast.error(`${response?.error}`)
+                        toast.error(`${response?.error?.data?.message}`)
                         setLoading(false);
                     }
                     else {
@@ -334,11 +363,6 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     // const visitedData = values?.visited_data?.map((visiteddata) => visiteddata.visited_with)
 
-    const dayStatus = [
-        { id: "Working Day", title: "Working Day" },
-        { id: "Meeting", title: "Meeting" },
-        { id: "Transit", title: "Transit" },
-    ]
     return (
         <>
             <Drawer
@@ -469,16 +493,75 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                 value={values.day_status}
                                 onChange={handleInputChange}
                                 placeholderText="Day Status"
-                                options={dayStatus}
+                                options={DayStatus}
                             />
                         </Box>
                         <Box marginBottom={2}>
-                            <Controls.Checkbox
+                            {/* <div style={{ display: "flex", alignItems: "center" }}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        width: "20px",
+                                        height: "20px",
+                                        border: "2px solid #2065d1",
+                                        borderRadius: "4px",
+                                        backgroundColor: "#fff",
+                                        cursor: "pointer",
+                                        transition: "all 0.2s ease",
+                                        position: "relative",
+                                    }}
+                                    tabIndex={0} // Allows focus
+                                    onClick={() => setIsApproved((prev) => !prev)}
+                                    onFocus={(e) => {
+                                        e.target.style.boxShadow = "0 0 5px #add8e6";
+                                    }}
+                                    onBlur={(e) => {
+                                        e.target.style.boxShadow = "none";
+                                    }}
+                                >
+                                    {isApproved && (
+                                        <span
+                                            style={{
+                                                width: "5px",
+                                                height: "15px",
+                                                borderBottom: "3px solid #103996",
+                                                borderRight: "3px solid #103996",
+                                                transform: "rotate(45deg)",
+                                            }}
+                                        ></span>
+                                    )}
+                                </div>
+                                <label
+                                    style={{
+                                        fontSize: "15px",
+                                        color: "black",
+                                        fontWeight: "600",
+                                        marginLeft: "8px",
+                                    }}
+                                >
+                                    Is Approved
+                                </label>
+                            </div> */}
+
+                            {/* <Controls.Checkbox
                                 name="is_approved"
                                 value={values.is_approved}
                                 onChange={handleInputChange}
                                 label="Is Approved"
-                            />
+                                type="checkbox"
+                            /> */}
+                            {
+                                (user_role === "admin" || higherCondition === "/dashboard/admin/executives/tp") &&
+                                <Controls.Checkbox
+                                    name="is_approved"
+                                    value={values.is_approved}
+                                    onChange={handleInputChange}
+                                    label="Is Approved"
+                                    type="checkbox"
+                                />
+                            }
                         </Box>
                         <Stack spacing={1} direction="row">
                             <Button

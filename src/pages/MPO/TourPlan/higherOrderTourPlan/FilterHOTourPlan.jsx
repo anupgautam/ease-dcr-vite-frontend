@@ -47,6 +47,7 @@ const TABLE_HEAD = [
     { id: 'visited_with', label: 'Visited With', alignRight: false },
     { id: 'approved', label: 'Approve TP', alignRight: false },
     { id: 'hulting_station', label: 'Hulting Station', alignRight: false },
+    { id: 'day_status', label: 'Day Status', alignRight: false },
     { id: '' },
 ];
 
@@ -82,7 +83,7 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
 
     const hoTourPlan = useGetHOTourPlansByUserIdQuery(
         {
-            user_id: user_role !== "admin" ? company_user_role_id : "",
+            user_id: user_role !== "admin" ? company_user_role_id : selectedUser,
             month: selectedMonth,
             date: selectedDate,
             page: page,
@@ -93,15 +94,17 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
         }
     );
 
+    console.log(hoTourPlan?.data?.results)
+
     const [deleteTourPlan] = useDeleteHOTourPlansByIdMutation()
 
     const handleDelete = async (id) => {
         try {
             const response = await deleteTourPlan(id);
             if (response?.data) {
-                toast.success(`${response?.data?.msg}`)
+                toast.success(`${response?.data?.message}`)
             } else if (response?.error) {
-                toast.error(`Error: ${response.error.data?.message || "Failed to delete Tourplan."}`);
+                toast.error(`Error: ${response?.error?.data?.message || "Failed to delete Tourplan."}`);
             }
         } catch (error) {
             toast.error("An unexpected error occurred during deletion.");
@@ -191,19 +194,24 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                                                                         <TableCell align="left">{moment(tourplan.date).format('DD')}</TableCell>
                                                                         <TableCell component="th" scope="row" padding="none">
                                                                             <Stack direction="row" alignItems="center" spacing={2}>
-                                                                                <TableCell align="left">
+                                                                                <Box align="left">
                                                                                     {
                                                                                         tourplan.visited_data.map((key, index) => (
-                                                                                            <Typography style={{ fontSize: '12px', color: "black", fontWeight: '600' }}>{key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name},</Typography>
+                                                                                            <Typography
+                                                                                                key={`${key?.user_name?.first_name}-${index}`} // Ensure a unique key for each child
+                                                                                                style={{ fontSize: '12px', color: "black", fontWeight: '600' }}
+                                                                                            >
+                                                                                                {key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name},
+                                                                                            </Typography>
                                                                                         ))
                                                                                     }
-                                                                                </TableCell>
+                                                                                </Box>
                                                                             </Stack>
                                                                         </TableCell>
                                                                         <TableCell>
                                                                             <Stack direction="row" alignItems="center" spacing={2}>
                                                                                 <Typography variant="subtitle2" noWrap>
-                                                                                    {tourplan.is_approved === true ? <>
+                                                                                    {tourplan?.is_approved === true ? <>
                                                                                         <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75, ml: 0.75 }}>
                                                                                             <Badge>
                                                                                                 <Iconify icon="fluent:text-change-accept-24-filled" width={30} height={20} />
@@ -225,9 +233,12 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                                                                         <TableCell>
                                                                             <Stack direction="row" alignItems="center" spacing={2}>
                                                                                 <Typography variant="subtitle2" noWrap>
-                                                                                    {tourplan.hulting_station ? tourplan.hulting_station : 'No Hulting Station'}
+                                                                                    {tourplan?.hulting_station ? tourplan?.hulting_station : 'No Hulting Station'}
                                                                                 </Typography>
                                                                             </Stack>
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                            {tourplan.day_status}
                                                                         </TableCell>
                                                                         <TableCell align="left">
                                                                             {/* //! Edit  */}
@@ -243,23 +254,31 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                                                                                 user_role === 'other_roles' &&
                                                                                 <>
                                                                                     {
-                                                                                        tourplan.is_approved === false ?
-                                                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
-                                                                                                <Badge>
-                                                                                                    <Iconify icon="eva:edit-fill" />
-                                                                                                </Badge>
-                                                                                            </IconButton> : null
+                                                                                        tourplan?.is_approved === false ?
+                                                                                            <>
+                                                                                                <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)}>
+                                                                                                    <Badge>
+                                                                                                        <Iconify icon="eva:edit-fill" />
+                                                                                                    </Badge>
+                                                                                                </IconButton>
+                                                                                            </>
+                                                                                            : null
                                                                                     }
                                                                                 </>
                                                                             }
                                                                             {/* //! Delete  */}
                                                                             {
                                                                                 user_role === 'admin' &&
-                                                                                <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
-                                                                                    <Badge>
-                                                                                        <Iconify icon="eva:trash-2-outline" />
-                                                                                    </Badge>
-                                                                                </IconButton>
+                                                                                <>
+                                                                                    {
+                                                                                        tourplan?.is_approved === false ?
+                                                                                            <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
+                                                                                                <Badge>
+                                                                                                    <Iconify icon="eva:trash-2-outline" />
+                                                                                                </Badge>
+                                                                                            </IconButton> : null
+                                                                                    }
+                                                                                </>
                                                                             }
                                                                         </TableCell>
                                                                         <Dialog
@@ -310,7 +329,7 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                             </Box>
                         </Card>
                     </> : <DefaultHOTourPlan />}
-            </Card>
+            </Card >
         </>
     )
 }

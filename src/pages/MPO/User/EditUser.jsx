@@ -16,7 +16,7 @@ import { returnValidation } from '../../../validation';
 import {
     useGetcompanyUserRolesByIdQuery,
 } from '@/api/CompanySlices/companyUserRoleSlice';
-import { useGetAllExecutiveLevelsMutation } from '@/api/CompanySlices/companyUserSlice';
+import { useGetAllExecutiveLevelsQuery } from '../../../api/MPOSlices/UserSlice';
 import { useGetAllCompanyRolesQuery } from '@/api/CompanySlices/companyRolesSlice';
 import {
     useGetCompanyDivisionsByCompanyIdQuery
@@ -55,8 +55,20 @@ const EditUser = ({ idharu, onClose }) => {
 
     //! Executive level
     // const [executiveLevels, setExecutiveLevels] = useState([]);
-    const [getExecLevel] = useGetAllExecutiveLevelsMutation();
-    const [execLoading, setExecLoading] = useState(false);
+    //! Executive level
+    const GetExecLevel = useGetAllExecutiveLevelsQuery(company_id);
+
+    const execLevelUsers = useMemo(() => {
+        if (GetExecLevel?.data) {
+            return GetExecLevel.data.map(key => ({
+                id: key.id,
+                title: `${key?.user_name?.first_name} ${key?.user_name?.middle_name} ${key?.user_name?.last_name}`
+            }));
+        }
+        return [];
+    }, [GetExecLevel]);
+
+    console.log(execLevelUsers)
 
     // const fetchExecutiveLevels = useCallback(async (companyId) => {
     //     if (!companyId) return;
@@ -400,7 +412,7 @@ const EditUser = ({ idharu, onClose }) => {
                         // )}
                         />
                     </Box>
-                    {/* <Box marginBottom={2}>
+                    <Box marginBottom={2}>
                         <Controls.Select
                             name="executive_level"
                             label="Executive Level*"
@@ -408,9 +420,9 @@ const EditUser = ({ idharu, onClose }) => {
                             value={values.executive_level}
                             onChange={handleInputChange}
                             error={errors.executive_level}
-                            options={executiveLevels}
+                            options={execLevelUsers}
                         />
-                    </Box> */}
+                    </Box>
                     <Box marginBottom={2}>
                         <Autocomplete
                             multiple

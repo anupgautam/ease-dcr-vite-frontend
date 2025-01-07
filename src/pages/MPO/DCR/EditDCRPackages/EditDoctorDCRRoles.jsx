@@ -10,6 +10,9 @@ import { useGetVisitedWithByDcrIdQuery } from "@/api/MPOSlices/companyRolesSlice
 import { useGetUsersByCompanyUserByIdQuery } from "@/api/MPOSlices/UserSlice";
 
 const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
+  
+  console.log(id)
+
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const mpo_id = useSelector(state => state.dcrData.selected_user);
   const [companyRoles, setCompanyRoles] = useState([]);
@@ -18,6 +21,7 @@ const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
   const { data } = useGetVisitedWithByDcrIdQuery(id, {
     skip: !id
   });
+
   useEffect(() => {
     companyRole({ id: mpoId }, {
       skip: !mpoId
@@ -25,7 +29,7 @@ const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
       .then((res) => {
         const roles = []
         res?.data?.forEach((key) => {
-          roles.push({ id: key.id, title: key.user_name.first_name + " " + key.user_name.last_name })
+          roles.push({ id: key.id, title: key?.user_name?.first_name + " " + key?.user_name?.last_name })
         })
         setCompanyRoles(roles);
       })
@@ -159,6 +163,7 @@ const VisitedWithData = ({ id }) => {
   const { data } = useGetUsersByCompanyUserByIdQuery(id, {
     skip: !id
   });
+  console.log(data)
   return (
     <Box>
       <Typography className="add-product-design">{data?.user_name?.first_name + ' ' + data?.user_name?.last_name}</Typography>

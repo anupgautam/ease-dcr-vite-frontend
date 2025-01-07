@@ -29,8 +29,8 @@ const DefaultStockistOrderedProduct = ({ data }) => {
     const [page, setPage] = useState(1)
 
     const handleChangePage = useCallback((e) => {
-        const data = e.target.ariaLabel
-        let thisArray = data.split(" ")
+        const data = e?.target?.ariaLabel
+        let thisArray = data?.split(" ")
         setPage(thisArray[3]);
     }, [])
 
@@ -60,18 +60,18 @@ const DefaultStockistOrderedProduct = ({ data }) => {
                                                     </TableRow>
                                                 ))}
                                         </> :
-                                            <>{data && data.map((key, index) => (
-                                                <TableRow hover tabIndex={-1} role="checkbox" key={key.stockist_name}>
+                                            <>{data && data?.map((key, index) => (
+                                                <TableRow hover tabIndex={-1} role="checkbox" key={key?.stockist_name}>
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {key.stockist_name}
+                                                            {key?.stockist_name}
                                                         </Typography>
                                                         {/* </Stack> */}
                                                     </TableCell>
-                                                    <TableCell align="left">{key.ordered_product}</TableCell>
-                                                    <TableCell align="left">{key.ordered_quantity}</TableCell>
+                                                    <TableCell align="left">{key?.ordered_product}</TableCell>
+                                                    <TableCell align="left">{key?.ordered_quantity}</TableCell>
                                                 </TableRow>
                                             ))
                                             }

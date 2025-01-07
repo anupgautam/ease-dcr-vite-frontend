@@ -197,7 +197,7 @@ const AddDCRForStockist = () => {
 
     const rewardsOptions = useMemo(() => {
         if (rewards !== undefined) {
-            if (rewards.status === 'fulfilled') {
+            if (rewards?.status === 'fulfilled') {
                 return rewards?.data?.map(key => ({ id: key.id, title: key.reward }))
             }
         }
@@ -212,8 +212,8 @@ const AddDCRForStockist = () => {
 
     const productOptions = useMemo(() => {
         if (companyProduct !== undefined) {
-            if (companyProduct.status === 'fulfilled') {
-                return companyProduct.data.map(key =>
+            if (companyProduct?.status === 'fulfilled') {
+                return companyProduct?.data?.map(key =>
                 ({
                     id: key.id,
                     title: key?.product_name?.product_name,

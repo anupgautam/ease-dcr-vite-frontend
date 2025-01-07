@@ -16,6 +16,7 @@ const DCRChemistDetail = () => {
     const selectedUser = searchParams.get('id');
 
     const { data, isLoading } = useGetChemistDcrByIdQuery(selectedUser);
+    console.log(data)
     return (
         <Container>
             <>
@@ -50,29 +51,29 @@ const DCRChemistDetail = () => {
                             <div className=" rounded-[1.1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg bg-white/80 backdrop-lg">
                                 <Typography variant="h6" style={{ marginBottom: '10px' }}>Dcr Detail</Typography>
                                 <Typography variant="body2" color="textSecondary">
-                                    Shift: {data?.dcr?.shift?.shift}
+                                    Shift: {data?.shift?.shift}
                                 </Typography>
                                 <Typography variant="body1" color="textSecondary">
-                                    Date: {data?.dcr?.dcr?.date}
+                                    Date: {data?.dcr?.date}
                                 </Typography>
                                 <Typography variant="body2" color="textSecondary">
-                                    Visited Area: {data?.dcr?.dcr?.visited_area?.area_name}
+                                    Visited Area: {data?.dcr?.visited_area?.area_name}
                                 </Typography>
                                 <Typography variant="body2" color="textSecondary">
-                                    Visited Chemist: {data?.dcr?.dcr?.visited_chemist?.chemist_name?.chemist_name}
+                                    Visited Chemist: {data?.dcr?.visited_chemist?.chemist_name?.chemist_name}
                                 </Typography>
                             </div>
 
                             <div className=" rounded-[1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg bg-white/80 backdrop-blur-lg ">
                                 <Typography variant="h6" style={{ marginBottom: '10px' }}>Expenses Detail</Typography>
                                 <Typography variant="body2" color="textSecondary">
-                                    Expense: {data?.dcr?.dcr?.expenses}
+                                    Expense: {data?.dcr?.expenses}
                                 </Typography>
                                 <Typography variant="body2" color="textSecondary">
-                                    Expense Name: {data?.dcr?.dcr?.expenses_name}
+                                    Expense Name: {data?.dcr?.expenses_name}
                                 </Typography>
                                 <Typography variant="body2" color="textSecondary">
-                                    Expense Reasoning: {data?.dcr?.dcr?.expenses_reasoning}
+                                    Expense Reasoning: {data?.dcr?.expenses_reasoning}
                                 </Typography>
                             </div>
                             <div className=" rounded-[1rem] px-4 hover:scale-105 hover:z-50 duration-500 py-3 drop-shadow-lg bg-white/80 backdrop-blur-lg ">
@@ -111,7 +112,7 @@ const DCRChemistDetail = () => {
                                 {
                                     data?.rewards.map((key, index) => (
                                         <Typography variant="body2" color="textSecondary">
-                                            Gift: {key?.reward}
+                                            Gift: {key?.rewards}
                                         </Typography>
                                     ))
                                 }

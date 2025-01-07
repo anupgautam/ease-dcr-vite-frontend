@@ -43,16 +43,16 @@ const AddProduct = () => {
         let temp = { ...errors }
         if ('product_name' in fieldValues)
             temp.product_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.product_name)
-        temp.product_molecular_name = returnValidation(['null'], values.product_molecular_name)
+        // temp.product_molecular_name = returnValidation(['null'], values.product_molecular_name)
         temp.division_name = returnValidation(['null'], values.division_name)
         temp.product_price_per_strip_in_mrp = returnValidation(['null'], values.product_price_per_strip_in_mrp)
         temp.product_price_for_stockist = returnValidation(['null'], values.product_price_for_stockist)
-        temp.product_description = returnValidation(['null'], values.product_description)
+        // temp.product_description = returnValidation(['null'], values.product_description)
         // temp.product_image = returnValidation(['null'], values.product_image)
         temp.product_type = returnValidation(['null'], values.product_type)
-        temp.bonus = returnValidation(['null'], values.bonus)
-        temp.primary_rate = returnValidation(['null'], values.primary_rate)
-        temp.secondary_rate = returnValidation(['null'], values.secondary_rate)
+        // temp.bonus = returnValidation(['null'], values.bonus)
+        // temp.primary_rate = returnValidation(['null'], values.primary_rate)
+        // temp.secondary_rate = returnValidation(['null'], values.secondary_rate)
 
         setErrors({
             ...temp
@@ -72,8 +72,8 @@ const AddProduct = () => {
         product_description: "",
         product_type: "",
         bonus: "",
-        primary_rate: "",
-        secondary_rate: "",
+        // primary_rate: "",
+        // secondary_rate: "",
     }
 
     const {
@@ -91,15 +91,15 @@ const AddProduct = () => {
     }, [
         // product_image,
         values.product_name,
-        values.product_molecular_name,
-        values.division_name,
+        values.product_type,
+        // values.product_molecular_name,
+        // values.product_description,
+        // values.bonus,
         values.product_price_per_strip_in_mrp,
         values.product_price_for_stockist,
-        values.product_description,
-        values.product_type,
-        values.bonus,
-        values.primary_rate,
-        values.secondary_rate
+        values.division_name,
+        // values.primary_rate,
+        // values.secondary_rate
     ]);
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -111,15 +111,15 @@ const AddProduct = () => {
     }, [
         // product_image,
         values.product_name,
-        values.product_molecular_name,
-        values.division_name,
+        values.product_type,
+        // values.product_molecular_name,
+        // values.product_description,
+        // values.bonus,
         values.product_price_per_strip_in_mrp,
         values.product_price_for_stockist,
-        values.product_description,
-        values.product_type,
-        values.bonus,
-        values.primary_rate,
-        values.secondary_rate
+        values.division_name,
+        // values.primary_rate,
+        // values.secondary_rate
     ]);
 
     const Division = useGetCompDivisionQuery(company_id, {
@@ -231,6 +231,7 @@ const AddProduct = () => {
 
     }, [createProducts, values])
 
+    console.log(errors)
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

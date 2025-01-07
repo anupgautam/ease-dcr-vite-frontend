@@ -10,7 +10,7 @@ import Close from "@mui/icons-material/Close";
 import { useForm } from '../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../validation';
-import { useGetAllExecutiveLevelsMutation } from '@/api/CompanySlices/companyUserSlice';
+import { useGetAllExecutiveLevelsQuery } from '../../../api/MPOSlices/UserSlice';
 import { useGetAllCompanyRolesQuery } from '@/api/CompanySlices/companyRolesSlice';
 import {
     usePostAllMPONamesNoPageMutation
@@ -75,23 +75,36 @@ const EditMpoArea = ({ idharu, onClose }) => {
         return [];
     }, [Divisions])
 
-    const [higherUserList] = useGetAllExecutiveLevelsMutation();
-    useEffect(() => {
-        if (User?.data) {
-            higherUserList(User?.data?.company_name?.company_id)
-                .then((res) => {
-                    const higherList = []
-                    res?.data?.forEach((key) => {
-                        higherList.push({
-                            id: key.id,
-                            title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
-                        })
-                    })
-                    setHigherUserOptions(higherList);
-                })
-        }
+    // const GetExecLevel = useGetAllExecutiveLevelsQuery(User?.data?.company_name?.company_id);
 
-    }, [User])
+    // useEffect(() => {
+    //     if (User?.data) {
+    //         higherUserList(User?.data?.company_name?.company_id)
+    //             .then((res) => {
+    //                 const higherList = []
+    //                 res?.data?.forEach((key) => {
+    //                     higherList.push({
+    //                         id: key.id,
+    //                         title: key.user_name.first_name + " " + key.user_name.middle_name + " " + key.user_name.last_name
+    //                     })
+    //                 })
+    //                 setHigherUserOptions(higherList);
+    //             })
+    //     }
+
+    // }, [User])
+
+    // const execLevelUsers = useMemo(() => {
+    //     if (GetExecLevel?.data) {
+    //         return GetExecLevel.data.map(key => ({
+    //             id: key.id,
+    //             title: `${key?.user_name?.first_name} ${key?.user_name?.middle_name} ${key?.user_name?.last_name}`
+    //         }));
+    //     }
+    //     return [];
+    // }, [GetExecLevel]);
+
+    // console.log(execLevelUsers)
 
     //! Get company wise area
     const { data: CompanyArea } = useGetAllCompanyAreasQuery(company_id, {

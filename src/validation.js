@@ -85,6 +85,11 @@ function isNumber(str) {
     return regex.test(str);
 }
 
+function OnlyNumber(str) {
+    let regex = /^\d+$/; // Matches one or more digits (0-9) only
+    return regex.test(str);
+}
+
 function isNumberOnly(str) {
     let regex = /^[0-9]+(\.[0-9]+)?$/;
     return regex.test(str);
@@ -169,6 +174,11 @@ export const returnValidation = (validationType, validationField) => {
     }
     if (validationType.includes('isNumber')) {
         if (isNumber(validationField)) {
+            err = "The value should be a number"
+        }
+    }
+    if (validationType.includes('OnlyNumber')) {
+        if (OnlyNumber(validationField)) {
             err = "The value should be a number"
         }
     }

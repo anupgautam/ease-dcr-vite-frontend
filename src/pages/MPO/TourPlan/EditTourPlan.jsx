@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import {
     Box, Grid, Typography, Button, Autocomplete, TextField, CircularProgress
 } from '@mui/material'
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
@@ -26,17 +26,15 @@ import DateToString from '@/reusable/forms/utils/dateToString';
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { toast } from 'react-toastify';
+import { useGetAllDayStatusQuery } from "../../../api/MPOSlices/UserSlice";
 
 import moment from 'moment';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 
 const EditTourPlan = ({ idharu, onClose }) => {
 
-    const dayStatus = [
-        { id: "Working Day", title: "Working Day" },
-        { id: "Meeting", title: "Meeting" },
-        { id: "Transit", title: "Transit" },
-    ]
+    const location = useLocation();
+
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const now = new Date();
@@ -49,6 +47,15 @@ const EditTourPlan = ({ idharu, onClose }) => {
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: TourPlan?.data?.mpo_name?.id }, {
         skip: !company_id || !TourPlan?.data?.mpo_name?.id
     });
+
+    const dayStatus = useGetAllDayStatusQuery();
+
+    const DayStatus = useMemo(() => {
+        if (dayStatus?.data) {
+            return dayStatus?.data.map(key => ({ id: key.id, title: key.day_status }))
+        }
+        return [];
+    }, [dayStatus])
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
@@ -153,27 +160,34 @@ const EditTourPlan = ({ idharu, onClose }) => {
             const response = await updateTourPlans({ id: idharu, value: data }).unwrap();
 
             if (response) {
-                setSuccessMessage({ show: true, message: 'Successfully Edited TourPlan' });
-                setTimeout(() => {
-                    // history("/dashboard/admin/tourplan");
-                    setSuccessMessage({ show: false, message: '' });
-                    onClose();
-                }, 2000);
+                // setSuccessMessage({ show: true, message: 'Successfully Edited TourPlan' });
+                // setTimeout(() => {
+                //     // history("/dashboard/admin/tourplan");
+                //     setSuccessMessage({ show: false, message: '' });
+                //     onClose();
+                // }, 2000);
+                toast.success('Successfully Edited TourPlan')
+                onClose();
             } else if (response?.error) {
-                setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                // setLoading(false);
+                // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                toast.error(`${response?.error?.message}`)
                 setLoading(false);
-                setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
             } else {
-                setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-                setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
-                }, 2000);
+                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+                // setTimeout(() => {
+                //     setErrorMessage({ show: false, message: '' });
+                // }, 2000);
+                toast.error(`Some Error Occurred. Try again later`)
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 2000);
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 2000);
+            toast.error(`Some Error Occurred. Try again later`)
+
         } finally {
             setLoading(false)
         }
@@ -240,12 +254,24 @@ const EditTourPlan = ({ idharu, onClose }) => {
                             </Grid>
                         </Grid>
                         <Box marginBottom={2}>
-                            <Controls.Input
+                            {/* <Controls.Input
                                 name="purpose_of_visit"
                                 label="Day Status"
                                 value={values.purpose_of_visit}
                                 onChange={handleInputChange}
                                 placeholdertext="Day Status"
+                            /> */}
+                            <Controls.Select
+                                name={`purpose_of_visit`}
+                                label="Day Status"
+                                value={values?.purpose_of_visit}
+                                // onChange={(event) => {
+                                //     handleFormChange('purpose_of_visit', event.target.value, false);
+                                // }}
+                                onChange={handleInputChange}
+                                options={DayStatus}
+                            // error={errors.purpose_of_visit}
+
                             />
                         </Box>
                         <Grid container spacing={2}>
@@ -263,7 +289,7 @@ const EditTourPlan = ({ idharu, onClose }) => {
                         </Grid>
                         <Box marginBottom={2}>
                             {
-                                user_role !== 'MPO' &&
+                                (user_role === "admin" || higherCondition === "/dashboard/admin/executives/tp") &&
                                 <Controls.Checkbox
                                     name="is_approved"
                                     value={values.is_approved}

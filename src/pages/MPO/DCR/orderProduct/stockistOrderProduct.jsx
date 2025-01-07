@@ -14,7 +14,7 @@ import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
-
+import { toast } from 'react-toastify';
 import { useForm } from '../../../../reusable/forms/useForm'
 import Controls from "@/reusable/forms/controls/Controls";
 import { returnValidation } from '../../../../validation';
@@ -53,103 +53,35 @@ const StockistOrderedProduct = ({ id, allData }) => {
     const [deleteOrderedProducts] = useDeleteStockistOrderedProductByIdMutation()
 
     const deleteProduct = (id) => {
-        deleteOrderedProducts({id})
+        deleteOrderedProducts({ id })
     }
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await deleteOrderedProducts({ id });
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response?.error?.data?.message || "Failed to delete Ordered Product"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        }
+    };
 
     // const stockistOrderedProducts = useGetStockistOrderedProductsByDCRIdQuery(id)
-
-
-    const [PostStockistOrderProduct] = usePostStockistOrderedProductMutation();
-
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: company_division_name }, {
-        skip: !company_id || !company_division_name
-    })
-
-    const handleOrderedProductChange = (e) => {
-        const { name, value } = e.target;
-        setOrderedProductState({ ...OrderedProductState, [name]: value });
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        PostStockistOrderProduct({ dcr_id: id, product_id: OrderedProductState.product_id, ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id })
-            .then((res) => {
-                if (res.data) {
-                    setSuccessMessage({ show: true, message: 'Successfully Order Product.' });
-                    setOrderedProductState({
-                        dcr_id: id,
-                        product_id: "",
-                        ordered_quantity: "",
-                        company_name: company_id,
-                        select_the_stockist: "",
-                        mpo_name:company_user_role_id,
-                    });
-                } else {
-                    setErrorMessage({ show: true, message: extractErrorMessage(res.error) });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 3000);
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    }
-
-    const [updateDcr] = useUpdateDcrForStockistValuesMutation();
-
-    useEffect(() => {
-        if (allData?.Formdata?.ordered_products?.length !== 0) {
-            let sendingData = { id: allData?.id, visited_stockist: "", visited_area: "", date: "", shift: "", company_roles: [], ordered_products: allData?.Formdata?.ordered_products, company_product: [], rewards: [] };
-            updateDcr({ id: allData?.id, value: sendingData }, {
-                skip: !allData?.id || !sendingData
-            })
-                .then((res) => {
-                })
-        }
-    }, [allData?.Formdata?.ordered_products, id])
-
-
-    const companyProducts = useMemo(() => {
-        if (productData !== undefined) {
-            return productData.map((key, index) => ({
-                id: key.id,
-                title: key.product_name.product_name
-            }))
-        }
-        return [];
-    }, [productData])
-
-    const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: company_area_id }, {
-        skip: !company_user_role_id || !company_area_id
-    })
-
-    const chemistList = useMemo(() => {
-        if (StockistsData !== undefined) {
-            return StockistsData.results?.map((key, index) => ({
-                id: key.id,
-                title: key.stockist_name.stockist_name
-            }))
-        }
-        return [];
-    }, [StockistsData])
-
-
-    const [OrderProduct] = useAddStockistOrderedProductMutation();
-    const [AddProduct, setAddProduct] = useState([]);
 
     //! Validation wala  
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
         if ('ordered_product' in fieldValues)
-            //     temp.ordered_product = returnValidation(['null'], values.ordered_product)
-            // temp.ordered_quantity = returnValidation(['null'], values.ordered_quantity)
-            // temp.selectedDates = returnValidation(['null'], selectedDates)
+            temp.ordered_product = returnValidation(['null'], values.ordered_product)
+        temp.ordered_quantity = returnValidation(['null','OnlyNumber'], values.ordered_quantity)
 
-            setErrors({
-                ...temp
-            })
+        setErrors({
+            ...temp
+        })
         // 
 
         if (fieldValues === values)
@@ -169,11 +101,107 @@ const StockistOrderedProduct = ({ id, allData }) => {
         setErrors,
         handleInputChange,
         resetForm,
-    } = useForm(initialFValues, true)
+    } = useForm(initialFValues, true, validate)
 
     useEffect(() => {
         validate();
-    }, [values.product_name, values.stockist_name])
+    }, [values.product_name, values.stockist_name, values.quantity])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.product_name,
+    values.stockist_name,
+    values.quantity]);
+
+    const [PostStockistOrderProduct] = usePostStockistOrderedProductMutation();
+
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: company_division_name }, {
+        skip: !company_id || !company_division_name
+    })
+
+    const handleOrderedProductChange = (e) => {
+        const { name, value } = e.target;
+        setOrderedProductState({ ...OrderedProductState, [name]: value });
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        PostStockistOrderProduct({ dcr_id: id, product_id: OrderedProductState.product_id, ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id })
+            .then((res) => {
+                if (res?.data) {
+                    toast.success("Successfully Order Product")
+                    // setSuccessMessage({ show: true, message: 'Successfully Order Product.' });
+                    setOrderedProductState({
+                        dcr_id: id,
+                        product_id: "",
+                        ordered_quantity: "",
+                        company_name: company_id,
+                        select_the_stockist: "",
+                        mpo_name: company_user_role_id,
+                    });
+                } else {
+                    // setErrorMessage({ show: true, message: extractErrorMessage(res.error) });
+                    // setTimeout(() => {
+                    //     setErrorMessage({ show: false, message: '' });
+                    // }, 3000);
+                    toast.error(`${res?.error?.message}`)
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // toast.error(error)
+            });
+    }
+
+    const [updateDcr] = useUpdateDcrForStockistValuesMutation();
+
+    useEffect(() => {
+        if (allData?.Formdata?.ordered_products?.length !== 0) {
+            let sendingData = { id: allData?.id, visited_stockist: "", visited_area: "", date: "", shift: "", company_roles: [], ordered_products: allData?.Formdata?.ordered_products, company_product: [], rewards: [] };
+            updateDcr({ id: allData?.id, value: sendingData }, {
+                skip: !allData?.id || !sendingData
+            })
+                .then((res) => {
+                })
+        }
+    }, [allData?.Formdata?.ordered_products, id])
+
+
+    const companyProducts = useMemo(() => {
+        if (productData !== undefined) {
+            return productData?.map((key, index) => ({
+                id: key.id,
+                title: key.product_name?.product_name
+            }))
+        }
+        return [];
+    }, [productData])
+
+    const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: company_area_id }, {
+        skip: !company_user_role_id || !company_area_id
+    })
+
+    const chemistList = useMemo(() => {
+        if (StockistsData !== undefined) {
+            return StockistsData?.results?.map((key, index) => ({
+                id: key.id,
+                title: key?.stockist_name?.stockist_name
+            }))
+        }
+        return [];
+    }, [StockistsData])
+
+
+    const [OrderProduct] = useAddStockistOrderedProductMutation();
+    const [AddProduct, setAddProduct] = useState([]);
+
+
+
+
 
 
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -220,36 +248,40 @@ const StockistOrderedProduct = ({ id, allData }) => {
             for (const product of AddProduct) {
                 const response = await OrderProduct(product);
                 if (response.data) {
-                    setSuccessMessage({ show: true, message: 'Successfully Order Product.' });
+                    toast.success("Successfully Order Product")
+                    // setSuccessMessage({ show: true, message: 'Successfully Order Product.' });
                     setTimeout(() => {
-                        setSuccessMessage({ show: false, message: '' });
+                        // setSuccessMessage({ show: false, message: '' });
                         setInitialFValues({
                             product_name: "",
                             stockist_name: "",
                             quantity: ""
                         });
                     }, 3000);
+
                 }
                 else if (response?.error) {
-                    setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                    // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
+                    toast.error(`${response?.error}`)
                     setLoading(false);
-                    setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                    // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                 }
                 else {
-                    setErrorMessage({ show: true, message: "Something went wrong." });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 3000);
+                    // setErrorMessage({ show: true, message: "Something went wrong." });
+                    // setTimeout(() => {
+                    //     setErrorMessage({ show: false, message: '' });
+                    // }, 3000);
+                    toast.error("Something went wrong!")
                 }
             }
         } catch (error) {
-            setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-            setTimeout(() => {
-                setErrorMessage({ show: false, message: '' });
-            }, 3000);
+            toast.error("Some Error Occured. Try again Later.")
+            // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+            // setTimeout(() => {
+            //     setErrorMessage({ show: false, message: '' });
+            // }, 3000);
         }
         setIsDrawerOpen(false);
-
     };
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -337,7 +369,7 @@ const StockistOrderedProduct = ({ id, allData }) => {
                                             <Box
                                                 onClick={(e) => {
                                                     e.stopPropagation(); // Prevent parent onClick from firing
-                                                    deleteProduct(key.id);
+                                                    handleDelete(key.id);
                                                 }}
                                                 style={{
                                                     position: "absolute",
@@ -452,16 +484,24 @@ const StockistOrderedProduct = ({ id, allData }) => {
                             label="Order Quantity*"
                             value={OrderedProductState.ordered_quantity}
                             onChange={handleOrderedProductChange}
+                            error={errors.ordered_quantity}
                         />
                     </Box>
                     <Stack spacing={1} direction="row">
-                        <Button
+                        {/* <Button
                             variant="contained"
                             className="summit-button"
                             onClick={handleSubmit}
                         >
                             Submit{" "}
-                        </Button>
+                        </Button> */}
+                        <Controls.SubmitButton
+                            variant="contained"
+                            className="submit-button"
+                            disabled={isButtonDisabled}
+                            onClick={(e) => handleSubmit(e)}
+                            text="Submit"
+                        />
                         <Button
                             variant="outlined"
                             className="cancel-button"

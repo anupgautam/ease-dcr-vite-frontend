@@ -184,7 +184,7 @@ const ListofAttendance = () => {
 
     const companyUserList = useMemo(() => {
         if (userList) {
-            return userList?.data?.map(key => ({ id: key.id, title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}` }))
+            return userList?.data?.map(key => ({ id: key.id, title: `${key?.user_name?.first_name} ${key?.user_name?.middle_name} ${key?.user_name?.last_name}` }))
         }
         return []
     }, [userList])

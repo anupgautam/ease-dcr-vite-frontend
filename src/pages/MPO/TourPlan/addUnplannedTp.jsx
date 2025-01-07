@@ -16,7 +16,8 @@ import { useGetUsersByCompanyRoleIdExecutativeLevelQuery, usePostUserIdToGetLowe
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { toast } from 'react-toastify';
-
+import { returnValidation } from "../../../validation";
+import { useGetAllDayStatusQuery } from "../../../api/MPOSlices/UserSlice";
 
 const AddUnplannedTp = () => {
     const { company_id, user_role, company_user_role_id, role } = useSelector((state) => state.cookie);
@@ -36,7 +37,15 @@ const AddUnplannedTp = () => {
 
     const [selectedDates, setSelectedDates] = useState(today);
 
+    const dayStatus = useGetAllDayStatusQuery();
+    // console.log(dayStatus?.data)
 
+    const DayStatus = useMemo(() => {
+        if (dayStatus?.data) {
+            return dayStatus?.data.map(key => ({ id: key.id, title: key.day_status }))
+        }
+        return [];
+    }, [dayStatus])
 
     const mpoAccordingToExecutiveLevel = usePostUserIdToGetLowerLevelExecutiveMutation(company_user_role_id,
         {
@@ -59,6 +68,8 @@ const AddUnplannedTp = () => {
         }
     }, [company_user_role_id])
 
+    console.log(executiveLevelOptions)
+
 
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_role_id }, {
         skip: !company_id || !company_user_role_id
@@ -72,9 +83,42 @@ const AddUnplannedTp = () => {
         return [];
     }, [MpoArea])
 
-    const initialFValues = {
+    const validate = (fieldValues = values) => {
+        let temp = { ...errors };
 
-    }
+        if (user_role.toString() === "MPO") {
+            if ("purpose_of_visit" in fieldValues) {
+                temp.purpose_of_visit = returnValidation(["null"], values.purpose_of_visit);
+            }
+            if ("select_the_area" in fieldValues) {
+                temp.select_the_area = returnValidation(["null"], values.select_the_area);
+            }
+        } else {
+            if ("visited_with" in fieldValues) {
+                temp.visited_with = returnValidation(["null"], values.visited_with);
+            }
+        }
+
+        setErrors({
+            ...temp,
+        });
+
+        if (fieldValues === values) {
+            return Object.values(temp).every((x) => x === "");
+        }
+    };
+
+    // const initialFValues = {
+    //     purpose_of_visit: user_role.toString() === "MPO" ? "" : undefined,
+    //     select_the_area: user_role.toString() === "MPO" ? "" : undefined,
+    //     visited_with: user_role.toString() === "MPO" ? undefined : "",
+    // };
+
+    const initialFValues = {
+        purpose_of_visit: "",
+        select_the_area: "",
+        visited_with: ""
+    };
 
     const {
         values,
@@ -84,6 +128,21 @@ const AddUnplannedTp = () => {
         handleInputChange,
         resetForm,
     } = useForm(initialFValues, true)
+
+    useEffect(() => {
+        validate();
+    }, [
+        values.purpose_of_visit,
+        values.select_the_area,
+        values.visited_with
+    ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+        setIsButtonDisabled(!valid);
+    }, [values]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -126,7 +185,7 @@ const AddUnplannedTp = () => {
                 ]
                 AddTourPlan(data)
                     .then(res => {
-                        if (res.data) {
+                        if (res?.data) {
                             // setSuccessMessage({ show: true, message: 'Successfully Added Unplanned Tourplan.' });
                             // setTimeout(() => {
                             //     setSuccessMessage({ show: false, message: '' });
@@ -138,7 +197,7 @@ const AddUnplannedTp = () => {
                         else if (response?.error) {
                             // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                             // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                            toast.error(`${response?.error}`)
+                            toast.error(`${response?.error?.data?.message}`)
                             setLoading(false);
                         } else {
                             // setErrorMessage({ show: true, message: response.error.data[0] });
@@ -227,7 +286,7 @@ const AddUnplannedTp = () => {
     return (
         <>
             <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={toggleDrawer} className=" text-[13px]" >
-                Add Unplanned TP
+                Add Unplanned TP {user_role}
             </Button>
             <Drawer
                 anchor="right"
@@ -259,7 +318,7 @@ const AddUnplannedTp = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Add Unplanned Tourplan
+                            Add Unplanned Tourplan {user_role}
                         </Typography>
                         <Box style={{ marginTop: '20px', textAlign: "left" }}>
                             <Box marginBottom={2}>
@@ -284,15 +343,18 @@ const AddUnplannedTp = () => {
                                                 value={values.select_the_area}
                                                 onChange={handleInputChange}
                                                 options={mpoAreaData}
+                                                error={errors.select_the_area}
                                             />
                                         </Box>
 
                                         <Box marginBottom={2}>
-                                            <Controls.Input
+                                            <Controls.Select
                                                 name={`purpose_of_visit`}
-                                                label="Remark"
-                                                value={values.name}
+                                                label="Day Status"
+                                                value={values.purpose_of_visit}
                                                 onChange={handleInputChange}
+                                                options={DayStatus}
+                                                error={errors.purpose_of_visit}
                                             />
                                         </Box>
                                         <Box marginBottom={2}>
@@ -301,6 +363,8 @@ const AddUnplannedTp = () => {
                                                 label="Hulting Station"
                                                 value={values.name}
                                                 onChange={handleInputChange}
+                                                error={errors.hulting_station}
+
                                             />
                                         </Box>
                                     </> : <>
@@ -311,6 +375,8 @@ const AddUnplannedTp = () => {
                                                 value={values.visited_with}
                                                 onChange={handleInputChange}
                                                 options={executiveLevelOptions}
+                                                error={errors.visited_with}
+
                                             />
                                         </Box>
                                         {/* {
@@ -325,19 +391,28 @@ const AddUnplannedTp = () => {
                                                 label="Hulting Station"
                                                 value={values.name}
                                                 onChange={handleInputChange}
+                                                error={errors.hulting_station}
                                             />
                                         </Box>
                                     </>
                             }
 
                             <Stack spacing={1} direction="row">
-                                <Button
+                                {/* <Button
                                     variant="contained"
                                     className="summit-button"
                                     onClick={addTourPlan}
                                 >
                                     Add TP{" "}
-                                </Button>
+                                </Button> */}
+
+                                <Controls.SubmitButton
+                                    variant="contained"
+                                    className="submit-button"
+                                    // disabled={isButtonDisabled}
+                                    onClick={addTourPlan}
+                                    text="Add TP"
+                                />
 
                                 <Button
                                     variant="outlined"

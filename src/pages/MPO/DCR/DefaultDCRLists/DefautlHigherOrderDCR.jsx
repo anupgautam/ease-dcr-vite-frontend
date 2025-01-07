@@ -97,9 +97,9 @@ const DefaultHODCR = () => {
         try {
             const response = await deleteTourPlan(id);
             if (response?.data) {
-                toast.success(`${response?.data?.msg}`)
+                toast.success(`${response?.data?.message}`)
             } else if (response?.error) {
-                toast.error(`Error: ${response.error.data?.message || "Failed to delete Tourplan."}`);
+                toast.error(`Error: ${response?.error?.data?.message || "Failed to delete Tourplan."}`);
             }
         } catch (error) {
             toast.error("An unexpected error occurred during deletion.");
@@ -132,27 +132,27 @@ const DefaultHODCR = () => {
                                                     </TableRow>
                                                 ))}
                                         </> :
-                                            <>{data && data.results.map((tourplan, index) => (
+                                            <>{data && data?.results?.map((tourplan, index) => (
                                                 <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}>
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {tourplan.user_id.user_name.first_name + " " + tourplan.user_id.user_name.last_name}
+                                                            {tourplan?.user_id?.user_name?.first_name + " " + tourplan?.user_id?.user_name?.last_name}
                                                         </Typography>
                                                         {/* </Stack> */}
                                                     </TableCell>
-                                                    <TableCell align="left">{tourplan.shift.shift}</TableCell>
-                                                    <TableCell align="left">{moment(tourplan.date).format('DD')}</TableCell>
+                                                    <TableCell align="left">{tourplan?.shift?.shift}</TableCell>
+                                                    <TableCell align="left">{moment(tourplan?.date).format('DD')}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {tourplan.visited_with.user_name.first_name + " " + tourplan.visited_with.user_name.last_name}
+                                                            {tourplan?.visited_with?.user_name?.first_name + " " + tourplan?.visited_with?.user_name?.last_name}
                                                         </Typography>
                                                     </TableCell>
                                                     <TableCell align="left">
                                                         {
                                                             user_role === 'admin' &&
-                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id, tourplan.user_id.id)}>
+                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan?.id, tourplan?.user_id?.id)}>
                                                                 <Badge>
                                                                     <Iconify icon="eva:edit-fill" />
                                                                 </Badge>
