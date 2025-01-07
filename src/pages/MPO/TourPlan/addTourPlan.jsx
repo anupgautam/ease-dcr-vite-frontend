@@ -1,18 +1,12 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import {
     Box,
     Typography,
     Button,
     Grid,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    OutlinedInput,
     Autocomplete,
     TextField,
     CircularProgress,
-    Badge
 } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Stack from "@mui/material/Stack";
@@ -37,7 +31,8 @@ import { useSelector } from 'react-redux';
 import {
     useDeleteTourPlansByIdMutation,
 } from '@/api/MPOSlices/TourPlanSlice';
-
+import { returnValidation } from "../../../validation";
+import { useGetAllDayStatusQuery } from "../../../api/MPOSlices/UserSlice";
 
 const AddTourPlan = () => {
     const { company_id, user_role, company_user_id, company_user_role_id, role } = useSelector((state) => state.cookie);
@@ -67,6 +62,15 @@ const AddTourPlan = () => {
         }
         return [];
     }, [MpoArea])
+
+    const dayStatus = useGetAllDayStatusQuery();
+
+    const DayStatus = useMemo(() => {
+        if (dayStatus?.data) {
+            return dayStatus?.data.map(key => ({ id: key.id, title: key.day_status }))
+        }
+        return [];
+    }, [dayStatus])
 
     const { data: ShiftData } = useGetShiftsQuery();
 
@@ -163,9 +167,6 @@ const AddTourPlan = () => {
 
     const [MpoAreaData, setMpoAreaData] = useState([]);
     const [visitedWithData, setVisitedWithData] = useState([]);
-
-
-
     useEffect(() => {
         if (CompanyRoles) {
             const data = CompanyRoles?.map((key) => {
@@ -176,6 +177,41 @@ const AddTourPlan = () => {
             setMpoAreaData(data);
         }
     }, [CompanyRoles])
+
+    //! Validation wala  
+    const validate = user_role === "MPO" ?
+        (fieldValues = values) => {
+            // 
+            let temp = { ...errors }
+            if ('purpose_of_visit' in fieldValues)
+                temp.purpose_of_visit = returnValidation(['null'], values.purpose_of_visit)
+
+            // temp.hulting_station = returnValidation(['null', 'lessThan50', 'validateUsername', 'minLength2'], values.hulting_station)
+
+            setErrors({
+                ...temp
+            })
+            // 
+
+            if (fieldValues === values)
+                return Object.values(temp).every(x => x == "")
+        }
+        : (fieldValues = values) => {
+            // 
+            let temp = { ...errors }
+            if ('day_status' in fieldValues)
+                temp.day_status = returnValidation(['null'], values.day_status)
+
+            // temp.hulting_station = returnValidation(['null', 'lessThan50', 'validateUsername', 'minLength2'], values.hulting_station)
+
+            setErrors({
+                ...temp
+            })
+            // 
+
+            if (fieldValues === values)
+                return Object.values(temp).every(x => x == "")
+        }
 
     //! Add MPO TP
     const addTodo = () => {
@@ -226,7 +262,6 @@ const AddTourPlan = () => {
         AddTourPlan(new_data)
             .then(res => {
                 if (res.data) {
-                    // setSuccessMessage({ show: true, message: 'Successfully Added Tourplan.' });
                     toast.success(`Successfully Added Tourplan.`)
                     const updatedData = res.data.data.map((item, index) => ({
                         ...item,
@@ -235,29 +270,19 @@ const AddTourPlan = () => {
 
                     setTpResponseData(prevData => [...prevData, ...updatedData]);
                     initialStates()
-                    // setTimeout(() => {
-                    //     setSuccessMessage({ show: false, message: '' });
-                    // }, 4000);
                 } else {
-                    // setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
-                    // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                    toast.error(`${res?.error}`)
+                    toast.error(`${res?.error?.data?.message}`)
                     setLoading(false);
 
                 }
             })
             .catch(err => {
-                // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                // setTimeout(() => {
-                //     setErrorMessage({ show: false, message: '' });
-                // }, 4000);
                 toast.error(`Some Error Occurred. Try again later.`)
             })
             .finally(() => {
                 setLoading(false);
             });
     };
-
 
     const [deleteTourPlan] = useDeleteTourPlansByIdMutation()
 
@@ -269,7 +294,6 @@ const AddTourPlan = () => {
                 );
             })
             .catch((error) => {
-                // console.error("Failed to delete tour plan:", error);
                 toast.error('Failed to delete tour plan')
             });
     };
@@ -286,6 +310,8 @@ const AddTourPlan = () => {
         visit_data: MpoAreaData,
         hulting_station: "",
         user_id: company_user_role_id,
+        purpose_of_visit: "",
+        day_status: ""
     })
 
     const {
@@ -296,6 +322,22 @@ const AddTourPlan = () => {
         handleInputChange,
         resetForm,
     } = useForm(initialFValues, true)
+
+
+    useEffect(() => {
+        validate();
+    }, [
+        formValuesArray.purpose_of_visit,
+        values.purpose_of_visit,
+        values.day_status
+    ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+        setIsButtonDisabled(!valid);
+    }, [values]);
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -337,7 +379,7 @@ const AddTourPlan = () => {
                     // setTimeout(() => {
                     //     setSuccessMessage({ show: false, message: '' });
                     // }, 5000);
-                    toast.success("Successfully Added Tourplan")
+                    toast.success(`${res?.data?.message}`)
                     setInitialFValues({
                         shift: "",
                         visit_data: MpoAreaData,
@@ -349,7 +391,7 @@ const AddTourPlan = () => {
                 else {
                     // setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
                     // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                    toast.error(`${res?.error}`)
+                    toast.error(`${res?.error?.data?.message}`)
                     setLoading(false);
                 }
             })
@@ -367,11 +409,7 @@ const AddTourPlan = () => {
             })
     }
 
-    const dayStatus = [
-        { id: "Working Day", title: "Working Day" },
-        { id: "Meeting", title: "Meeting" },
-        { id: "Transit", title: "Transit" },
-    ]
+
     return (
         <>
             <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={toggleDrawer}>
@@ -394,7 +432,6 @@ const AddTourPlan = () => {
                 <Box style={{ padding: "20px" }}>
                     <Box
                         p={1}
-                        // width="400px"
                         textAlign="center"
                         role="presentation"
                         className="drawer-box"
@@ -411,6 +448,7 @@ const AddTourPlan = () => {
                         </Typography>
 
                     </Box>
+                    {/*//! Selected TP Dates MPO Multiples  */}
                     {
                         TpResponseData.length !== 0 ?
                             <Box style={{ marginBottom: '20px' }}>
@@ -474,6 +512,7 @@ const AddTourPlan = () => {
                             format="YYYY-MM-DD"
                             onChange={(value) => setSelectedDates(value)} />
                     </Box>
+                    {/*//! MPO Wala Fields  */}
                     {
                         user_role === "MPO" ?
                             <>
@@ -498,51 +537,42 @@ const AddTourPlan = () => {
                                         />
                                     </Box>
                                     <Box marginBottom={2}>
-                                        <Controls.Input
+                                        <Controls.Select
                                             name={`purpose_of_visit`}
                                             label="Day Status"
-                                            value={formValuesArray?.purpose_of_visit || ""}
+                                            value={formValuesArray?.purpose_of_visit}
                                             onChange={(event) => {
                                                 handleFormChange('purpose_of_visit', event.target.value, false);
                                             }}
+                                            options={DayStatus}
+                                        // error={errors.purpose_of_visit}
+
                                         />
+                                        {/* <Box marginBottom={2}>
+                                            <Controls.Select
+                                                name={`day_status`}
+                                                label="Day Status"
+                                                value={values.day_status || ""}
+                                                onChange={handleInputChange}
+                                                options={DayStatus}
+                                            />
+                                        </Box> */}
                                     </Box>
                                     <Box marginBottom={2}>
                                         <Controls.Input
                                             name={`hulting_station`}
                                             label="Hulting Station"
-                                            value={formValuesArray?.hulting_station || ""}
+                                            value={formValuesArray?.hulting_station}
                                             onChange={(event) => {
                                                 handleFormChange('hulting_station', event.target.value, false);
                                             }}
+                                            error={errors.hulting_station}
                                         />
                                     </Box>
                                 </Box>
-                            </> : <Box>
+                            </> :
+                            <Box>
                                 <Box marginBottom={2}>
-                                    {/* <FormControl sx={{ m: 1, width: 300 }}>
-                                        <InputLabel>{"Select the Visited With*"}</InputLabel>
-                                        <Select
-                                            labelId="demo-multiple-name-label"
-                                            id="demo-multiple-name"
-                                            multiple
-                                            value={CompanyRoles}
-                                            onChange={handleRolesChange}
-                                            input={<OutlinedInput label="Select the Visited With*" />}
-                                            sx={{ width: '100%' }}
-                                            style={{
-                                                borderBlockColor: "white",
-                                                width: "100%",
-                                                textAlign: 'start'
-                                            }}
-                                        >
-                                            {executiveLevelOptions.map((item) => (
-                                                <MenuItem key={item.id} value={item.id}>
-                                                    {item.title}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl> */}
                                     <Autocomplete
                                         multiple
                                         options={filteredExecutiveOptions}
@@ -559,26 +589,22 @@ const AddTourPlan = () => {
                                         )}
                                     />
                                 </Box>
-                                {/* {
-                                    CompanyRoles?.map((key, index) => (
-                                        <MpoUserWiseArea id={key} key={index} setMpoAreaData={setMpoAreaData} MpoAreaData={MpoAreaData} />
-                                    ))
-                                } */}
-                                <Box marginBottom={2}>
-                                    <Controls.Input
-                                        name={`hulting_station`}
-                                        label="Hulting Station"
-                                        value={values.hulting_station || ""}
-                                        onChange={handleInputChange}
-                                    />
-                                </Box>
                                 <Box marginBottom={2}>
                                     <Controls.Select
                                         name={`day_status`}
                                         label="Day Status"
-                                        value={values.day_status || ""}
+                                        value={values.day_status}
                                         onChange={handleInputChange}
-                                        options={dayStatus}
+                                        options={DayStatus}
+                                        error={errors.day_status}
+                                    />
+                                </Box>
+                                <Box marginBottom={2}>
+                                    <Controls.Input
+                                        name={`hulting_station`}
+                                        label="Hulting Station"
+                                        value={values.hulting_station}
+                                        onChange={handleInputChange}
                                     />
                                 </Box>
                             </Box>
@@ -587,20 +613,11 @@ const AddTourPlan = () => {
                         <Button
                             variant="contained"
                             className="summit-button"
+                            // disabled={isButtonDisabled}
                             onClick={user_role === 'MPO' ? addTodo : handleSave}
                         >
                             Add TP{" "}
                         </Button>
-                        {/* {
-                            user_role === 'MPO' ?
-                                <Button
-                                    variant="contained"
-                                    className="summit-button"
-                                    onClick={handleSave}
-                                >
-                                    Submit All TP{" "}
-                                </Button> : null
-                        } */}
                         <Button
                             variant="outlined"
                             className="cancel-button"
@@ -634,132 +651,4 @@ const AddTourPlan = () => {
         </>
     )
 }
-
-// const MpoUserWiseArea = ({ id, setMpoAreaData, MpoAreaData }) => {
-//     const { company_id, user_role, company_user_id, company_user_role_id, role } = useSelector((state) => state.cookie);
-
-//     const [visitData, setVisitData] = useState([]);
-
-//     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: id },
-//         //     {
-//         //     skip: !company_id || !role || !id
-//         // }
-//     );
-
-
-//     const [MpoTpArea, setMpoTpArea] = useState([]);
-//     const [TPAreaName, setTPAreaName] = useState([])
-//     const [mpoAreaData, setmpoAreaData] = useState([]);
-//     const [AllMpoAreaData] = usePostUserIdToGetMpoAreaMutation();
-
-//     useEffect(() => {
-//         AllMpoAreaData({ id: company_user_role_id })
-//             .then((res) => {
-//                 if (res.data) {
-//                     const data = res.data.map((key) => ({
-//                         id: key.id,
-//                         title: key.area_name
-//                     }));
-//                     setmpoAreaData(data)
-//                 }
-//             })
-//     }, [id])
-
-//     //! Display value
-//     const [selectedAreas, setSelectedAreas] = useState(
-//         MpoTpArea.map((id) => mpoAreaData.find((option) => option.id === id) || {})
-//     )
-
-//     //! On Chnage
-//     const handleMpoTpArea = (event, value) => {
-//         const mpotparea = value.map(option => option.id)
-//         const mpotpareavalue = value.map(option => option.title)
-//         setMpoTpArea(mpotparea)
-//         setTPAreaName(mpotpareavalue)
-//         setSelectedAreas(value)
-//     }
-
-//     //! Filter Options
-//     const filteredOptions = mpoAreaData.filter(
-//         (option) => !selectedAreas.some((selected) => selected.id === option.id)
-//     );
-
-//     // const mpoAreaData = useMemo(() => {
-//     //     if (MpoArea?.data) {
-//     //         return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))
-//     //     }
-//     //     return [];
-//     // }, [MpoArea])
-
-//     const handleInputChange = (event) => {
-//         const selectedAreaId = event.target.value;
-//         // const newVisitData = [...MpoAreaData, { visited_with: id, area: selectedAreaId }];
-
-//         const newVisitData = [{ visited_with: id, area: selectedAreaId }];
-//         setMpoAreaData(newVisitData);
-//         setVisitData(selectedAreaId);
-//     }
-
-//     useEffect(() => {
-//         const newVisitData = [{ visited_with: id }];
-//         setMpoAreaData(newVisitData);
-//     }, [id])
-
-//     const [mulipleSelectedAreasId, setMultipleSelectedAreasId] = useState([])
-//     //! On Chnage
-//     // const handleMpoTpVisitedArea = (event, value) => {
-//     //     // const mpotparea = value.map(option => option.id)
-//     //     // const mpotpareavalue = value.map(option => option.title)
-//     //     // setMpoTpArea(mpotparea)
-//     //     // setTPAreaName(mpotpareavalue)
-//     //     setSelectedAreas(value)
-
-//     //     const selectedAreaId = value.map(option => option.id)
-//     //     // const newVisitData = [...MpoAreaData, { visited_with: id, area: selectedAreaId }];
-//     //     // const newVisitData = [{ visited_with: id, area: selectedAreaId }];
-//     //     const newVisitData = id.map(id => ({
-//     //         visited_with: id,
-//     //         area: selectedAreaId
-//     //     }))
-//     //     // setMpoAreaData(newVisitData);
-//     //     setMpoAreaData(prevState => {
-//     //         const updatedVisitData = [...prevState, ...newVisitData];
-//     //         return updatedVisitData;
-//     //     });
-//     //     setVisitData(selectedAreaId);
-//     // }
-//     // useEffect(() => {
-//     // }, [(MpoAreaData || id)]);
-
-//     return (
-//         <Box marginBottom={2}>
-//             {/* <Controls.Select
-//                 name={`select_the_area`}
-//                 label="Select the Area*"
-//                 value={visitData}
-//                 onChange={handleInputChange}
-//                 options={mpoAreaData}
-//             /> */}
-
-//             {/* <Autocomplete
-//                 multiple
-//                 options={filteredOptions}
-//                 value={selectedAreas}
-//                 // options={mpoAreaData}
-//                 // value={MpoTpArea.map(id => mpoAreaData.find(option => option.id === id) || {})}
-//                 getOptionLabel={(option) => option.title}
-//                 onChange={handleMpoTpVisitedArea}
-//                 renderInput={(params) => (
-//                     <TextField {...params} label="Select the Areas" />
-//                 )}
-//                 renderOption={(props, option) => (
-//                     <li {...props} key={option.id}>
-//                         {option.title}
-//                     </li>
-//                 )}
-//             /> */}
-//         </Box>
-//     )
-// }
-
 export default React.memo(AddTourPlan);

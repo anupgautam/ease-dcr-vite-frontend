@@ -131,39 +131,33 @@ const LoginFormInputs = () => {
                                     navigate('/dashboard/admin/tourplan');
                                 }
                                 else {
-                                    setErrorMessage({ show: true, message: 'User Does not exist.' });
-                                    setTimeout(() => {
-                                        setErrorMessage({ show: false, message: '' });
-                                    }, 2000);
+                                    toast.error('User Does not exist.')
                                 }
                             }
 
                             setLoading(false);
                         }, 1000);
 
-                    } else if (res.error) {
-                        setErrorMessage({ show: true, message: extractErrorMessage({ data: res.error }) });
+                    } else if (res?.error) {
+                        // setErrorMessage({ show: true, message: extractErrorMessage({ data: res.error }) });
+                        // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        toast.error(res?.error?.data?.msg)
                         setLoading(false);
-                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
                     }
                 } catch (err) {
-                    setErrorMessage({ show: true, message: 'Login Failed' });
+                    toast.error('Login Failed.')
                     setLoading(false);
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 2000);
                 }
             } else {
-                setErrorMessage({ show: true, message: 'Enter correct values' });
-                setLoading(false);
+                // setErrorMessage({ show: true, message: 'Enter correct values' });
                 setTimeout(() => {
-                    setErrorMessage({ show: false, message: '' });
+                    toast.error("Enter correct value.")
                 }, 2000);
+                setLoading(false);
             }
         },
         [email, password],
     );
-
 
     useEffect(() => {
         const handleKeyDown = e => {

@@ -51,6 +51,7 @@ const TABLE_HEAD = [
 
 const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
 
+
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch();
@@ -77,7 +78,14 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
     // 
 
     //! onSearch
-    const FilteredData = { company_name: company_id, user_id: user_role === "admin" ? selectedUser : company_user_role_id, month: user_role === "admin" ? "" : selectedMonth, date: user_role === "admin" ? "" : selectedDate, fullDate: user_role === "admin" ? dateOnly : "" }
+    const FilteredData = {
+        company_name: company_id,
+        user_id: user_role === "admin" ? selectedUser : company_user_role_id,
+        // month: user_role === "admin" ? "" : selectedMonth,
+        // date: user_role === "admin" ? "" : selectedDate,
+        fullDate: user_role === "admin" ? dateOnly : ""
+    }
+    // const FilteredData = { company_name: company_id, user_id: user_role === "admin" ? selectedUser : company_user_role_id, month: user_role === "admin" ? "" : selectedMonth, date: user_role === "admin" ? "" : selectedDate, fullDate: user_role === "admin" ? dateOnly : "" }
 
     //! Search Results 
     const results = useSearchDoctorsDCRQuery(FilteredData);
@@ -91,8 +99,8 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
 
     //! Copy array element 
     useEffect(() => {
-        if (results && results.data && results.data.results && Array.isArray(results.data.results)) {
-            const arrayWala = [...results.data.results];
+        if (results && results?.data && results?.data?.results && Array.isArray(results?.data?.results)) {
+            const arrayWala = [...results?.data?.results];
             setFilterArray(arrayWala);
         }
     }, [results]);
@@ -138,7 +146,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
                                 <TableBody>
                                     <>
                                         {
-                                            results.data === undefined ? <>
+                                            results?.data === undefined ? <>
                                                 {
                                                     eightArrays.map((key) => (
                                                         <TableRow key={key} >
@@ -152,7 +160,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
                                                     ))}
                                             </> :
                                                 <>
-                                                    {results.data && results.data.count == 0 ?
+                                                    {results?.data && results?.data?.count == 0 ?
                                                         <TableRow>
                                                             <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
                                                                 <Paper
@@ -178,12 +186,12 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
                                                             </TableCell>
                                                         </TableRow>
                                                         :
-                                                        results.data && currentPageData.map((tourplan, index) => (
+                                                        results?.data && currentPageData?.map((tourplan, index) => (
                                                             <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}>
                                                                 <TableCell>{index + 1}</TableCell>
                                                                 <TableCell component="th" scope="row" align="left">
                                                                     <Typography variant="subtitle2" noWrap>
-                                                                        {tourplan.mpo_name.user_name.first_name + " " + tourplan.mpo_name.user_name.last_name}
+                                                                        {tourplan?.mpo_name?.user_name?.first_name + " " + tourplan?.mpo_name?.user_name?.last_name}
                                                                     </Typography>
                                                                 </TableCell>
                                                                 <TableCell align="left">{tourplan?.shift?.shift}</TableCell>
@@ -204,7 +212,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
                                                                     </Link>
                                                                     {
                                                                         user_role === 'admin' &&
-                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id, tourplan.mpo_name.id)} >
+                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan?.id, tourplan?.mpo_name?.id)} >
                                                                             <Badge>
                                                                                 <Iconify icon="eva:edit-fill" />
                                                                             </Badge>

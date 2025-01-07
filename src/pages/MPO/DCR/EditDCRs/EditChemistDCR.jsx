@@ -48,11 +48,12 @@ const EditChemistDCR = ({ idharu, onClose }) => {
     const shiftWiseDCR = useGetShiftWiseChemistDCRByDCRIdQuery(idharu);
     const [updateShiftWiseDCR] = useUpdateShiftWiseChemistDCRMutation();
     const [dateData, setDateData] = useState()
+    
     //! Getting TourPlan by ID
-
     const DCRAll = useGetChemistAllDCRByIdQuery(idharu, {
         skip: !idharu
     });
+
     const dcrId = useGetChemistAllDCRByIdForMpoIdQuery(idharu);
 
     const [initialFValues, setInitialFValues] = useState({
@@ -69,27 +70,29 @@ const EditChemistDCR = ({ idharu, onClose }) => {
         ordered_products: []
     });
 
+    console.log("DCRAll", DCRAll?.data)
+
     useEffect(() => {
-        if (DCRAll.data) {
+        if (DCRAll?.data) {
             setInitialFValues({
                 edit: true,
-                date: DCRAll?.data?.date,
-                visited_area: DCRAll?.data?.visited_area,
-                visited_chemist: DCRAll?.data?.visited_chemist,
-                expenses_name: DCRAll?.data?.expenses_name,
-                expenses: DCRAll?.data?.expenses,
-                expenses_reasoning: DCRAll?.data?.expenses_reasoning,
+                date: DCRAll?.data?.dcr?.date,
+                visited_area: DCRAll?.data?.dcr?.visited_area?.id,
+                visited_chemist: DCRAll?.data?.dcr?.visited_chemist?.id,
+                expenses_name: DCRAll?.data?.dcr?.expenses_name,
+                expenses: DCRAll?.data?.dcr?.expenses,
+                expenses_reasoning: DCRAll?.data?.dcr?.expenses_reasoning,
                 company_product: DCRAll?.data?.company_product,
                 rewards: DCRAll?.data?.rewards,
                 company_roles: DCRAll?.data?.company_roles,
                 ordered_products: DCRAll?.data?.ordered_products
             });
-            setDateData(DCRAll?.data?.date);
+            setDateData(DCRAll?.data?.dcr?.date);
         }
         if (shiftWiseDCR.status == "fulfilled") {
-            setInitialShift(shiftWiseDCR?.data?.results[0]?.dcr?.shift.id)
+            setInitialShift(shiftWiseDCR?.data?.results[0]?.shift.id)
         }
-    }, [DCRAll.data, shiftWiseDCR])
+    }, [DCRAll?.data, shiftWiseDCR])
 
 
     const { values,

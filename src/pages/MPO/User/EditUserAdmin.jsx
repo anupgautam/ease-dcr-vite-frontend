@@ -16,7 +16,7 @@ import { returnValidation } from '../../../validation';
 import {
     useGetcompanyUserRolesByIdQuery,
 } from '@/api/CompanySlices/companyUserRoleSlice';
-import { useGetAllExecutiveLevelsMutation } from '@/api/CompanySlices/companyUserSlice';
+import { useGetAllExecutiveLevelsQuery } from '../../../api/MPOSlices/UserSlice';
 import { useGetAllCompanyRolesQuery } from '@/api/CompanySlices/companyRolesSlice';
 import {
     useGetCompanyDivisionsByCompanyIdQuery
@@ -52,33 +52,48 @@ const EditUserAdmin = ({ idharu, onClose }) => {
 
 
     //! Executive level
-    const [executiveLevels, setExecutiveLevels] = useState([]);
-    const [getExecLevel] = useGetAllExecutiveLevelsMutation();
-    const [execLoading, setExecLoading] = useState(false);
+    // const [executiveLevels, setExecutiveLevels] = useState([]);
+    // const [getExecLevel] = useGetAllExecutiveLevelsMutation();
+    // const [execLoading, setExecLoading] = useState(false);
 
-    const fetchExecutiveLevels = useCallback(async (companyId) => {
-        if (!companyId) return;
+    // const fetchExecutiveLevels = useCallback(async (companyId) => {
+    //     if (!companyId) return;
 
-        try {
-            setExecLoading(true);
-            const response = await getExecLevel(companyId).unwrap();
-            const levels = response.map(key => ({
+    //     try {
+    //         setExecLoading(true);
+    //         const response = await getExecLevel(companyId).unwrap();
+    //         const levels = response.map(key => ({
+    //             id: key.id,
+    //             title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`
+    //         }));
+    //         setExecutiveLevels(levels);
+    //     } catch (error) {
+    //         console.error('Failed to fetch executive levels:', error);
+    //     } finally {
+    //         setExecLoading(false);
+    //     }
+    // }, [company_id]);
+
+    // useEffect(() => {
+    //     if (!executiveLevels.length && company_id) {
+    //         fetchExecutiveLevels(company_id);
+    //     }
+    // }, [company_id]);
+
+
+    const GetExecLevel = useGetAllExecutiveLevelsQuery(company_id);
+
+    const execLevelUsers = useMemo(() => {
+        if (GetExecLevel?.data) {
+            return GetExecLevel.data.map(key => ({
                 id: key.id,
-                title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`
+                title: `${key?.user_name?.first_name} ${key?.user_name?.middle_name} ${key?.user_name?.last_name}`
             }));
-            setExecutiveLevels(levels);
-        } catch (error) {
-            console.error('Failed to fetch executive levels:', error);
-        } finally {
-            setExecLoading(false);
         }
-    }, [company_id]);
+        return [];
+    }, [GetExecLevel]);
 
-    useEffect(() => {
-        if (!executiveLevels.length && company_id) {
-            fetchExecutiveLevels(company_id);
-        }
-    }, [company_id]);
+    console.log(execLevelUsers)
 
     const [dateData, setDateData] = useState(now)
     const [dateFormat, setDateFormat] = useState(dateData?._date)
@@ -375,7 +390,7 @@ const EditUserAdmin = ({ idharu, onClose }) => {
                             value={values.executive_level}
                             onChange={handleInputChange}
                             error={errors.executive_level}
-                            options={executiveLevels}
+                            options={execLevelUsers}
                         />
                     </Box>
                     <Box marginBottom={2}>
@@ -397,7 +412,7 @@ const EditUserAdmin = ({ idharu, onClose }) => {
                             )}
                         />
                     </Box>
-                    <Box marginBottom={2}>
+                    {/* <Box marginBottom={2}>
                         <Controls.Input
                             name="station_type"
                             label="Station Type*"
@@ -406,7 +421,7 @@ const EditUserAdmin = ({ idharu, onClose }) => {
                             onChange={handleInputChange}
                             error={errors.station_type}
                         />
-                    </Box>
+                    </Box> */}
                     <Stack spacing={1} direction="row">
                         <Controls.SubmitButton
                             variant="contained"

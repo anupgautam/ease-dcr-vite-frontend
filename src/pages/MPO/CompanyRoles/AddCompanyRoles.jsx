@@ -51,7 +51,7 @@ const AddCompanyRoles = () => {
         temp.role_name = returnValidation(['null'], values.role_name)
         temp.company_name = returnValidation(['null'], values.company_name)
         temp.priority_value = returnValidation(['null', 'lessThan50'], values.priority_value)
-        temp.is_highest_priority = returnValidation(['null', 'lessThan50'], values.is_highest_priority)
+        // temp.is_highest_priority = returnValidation(['null', 'lessThan50'], values.is_highest_priority)
 
         setErrors({
             ...temp

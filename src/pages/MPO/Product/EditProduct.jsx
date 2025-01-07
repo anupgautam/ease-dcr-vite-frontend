@@ -90,16 +90,17 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
         // 
         let temp = { ...errors }
         if ('product_name' in fieldValues)
-            temp.product_name = returnValidation(['null', 'number'], values.product_name)
-        temp.product_molecular_name = returnValidation(['null'], values.product_molecular_name)
-        temp.product_description = returnValidation(['null', 'validateUsername'], values.product_description)
+            temp.product_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.product_name)
+        // temp.product_molecular_name = returnValidation(['null'], values.product_molecular_name)
         temp.division_name = returnValidation(['null'], values.division_name)
-        temp.company_name = returnValidation(['null'], values.company_name)
-        temp.product_price_per_strip_in_mrp = returnValidation(['null', 'isNumberEdit'], values.product_price_per_strip_in_mrp)
-        temp.product_price_for_stockist = returnValidation(['null', 'isNumberEdit'], values.product_price_for_stockist)
-
+        temp.product_price_per_strip_in_mrp = returnValidation(['null'], values.product_price_per_strip_in_mrp)
+        temp.product_price_for_stockist = returnValidation(['null'], values.product_price_for_stockist)
+        // temp.product_description = returnValidation(['null'], values.product_description)
+        // temp.product_image = returnValidation(['null'], values.product_image)
         temp.product_type = returnValidation(['null'], values.product_type)
-        temp.batch_no = returnValidation(['null'], values.batch_no)
+        // temp.bonus = returnValidation(['null'], values.bonus)
+        // temp.primary_rate = returnValidation(['null'], values.primary_rate)
+        // temp.secondary_rate = returnValidation(['null'], values.secondary_rate)
 
         setErrors({
             ...temp
@@ -111,14 +112,17 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
     }
 
     const [initialFValues, setInitialFValues] = useState({
+        // product_image: null,
         product_name: "",
         product_molecular_name: "",
-        product_description: '',
+        division_name: "",
         product_price_per_strip_in_mrp: "",
         product_price_for_stockist: "",
-        company_name: "",
-        division_name: "",
+        product_description: "",
         product_type: "",
+        bonus: "",
+        // primary_rate: "",
+        // secondary_rate: "",
     })
 
     useEffect(() => {
@@ -151,14 +155,17 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
     useEffect(() => {
         validate();
     }, [
+        // product_image,
         values.product_name,
-        values.product_molecular_name,
-        values.product_description,
+        values.product_type,
+        // values.product_molecular_name,
+        // values.product_description,
+        // values.bonus,
         values.product_price_per_strip_in_mrp,
         values.product_price_for_stockist,
         values.division_name,
-        values.product_type,
-        values.product_image
+        // values.primary_rate,
+        // values.secondary_rate
     ])
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -168,14 +175,17 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
 
         setIsButtonDisabled(!valid);
     }, [
+        // product_image,
         values.product_name,
-        values.product_molecular_name,
-        values.product_description,
+        values.product_type,
+        // values.product_molecular_name,
+        // values.product_description,
+        // values.bonus,
         values.product_price_per_strip_in_mrp,
         values.product_price_for_stockist,
         values.division_name,
-        values.product_type,
-        values.product_image
+        // values.primary_rate,
+        // values.secondary_rate
     ]);
 
     //! Edit user

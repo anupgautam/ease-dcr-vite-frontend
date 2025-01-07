@@ -18,7 +18,7 @@ import { returnValidation } from '../../../validation';
 import {
     useGetFilteredDivisionsQuery,
 } from "../../../api/DivisionSilces/companyDivisionSlice";
-import { useGetAllExecutiveLevelsMutation } from '../../../api/MPOSlices/UserSlice';
+import { useGetAllExecutiveLevelsQuery } from '../../../api/MPOSlices/UserSlice';
 import {
     useGetUsersRoleQuery,
     useCreateUsersMutation
@@ -92,26 +92,19 @@ const AddUser = () => {
     };
 
     //! Executive level
-    const [executiveLevels, setExecutiveLevels] = useState([]);
-    const [getExecLevel] = useGetAllExecutiveLevelsMutation();
-    // const companyId = company_id;
+    const GetExecLevel = useGetAllExecutiveLevelsQuery(company_id);
 
-    useEffect(() => {
-        const fetchExecutiveLevels = async () => {
-            try {
-                const response = await getExecLevel(company_id).unwrap();
-                const levels = response.map(key => ({
-                    id: key.id,
-                    title: `${key?.user_name?.first_name} ${key?.user_name?.middle_name} ${key?.user_name?.last_name}`
-                }));
-                setExecutiveLevels(levels);
-            } catch (error) {
-                console.error('Failed to fetch executive levels:', error);
-            }
-        };
+    const execLevelUsers = useMemo(() => {
+        if (GetExecLevel?.data) {
+            return GetExecLevel.data.map(key => ({
+                id: key.id,
+                title: `${key?.user_name?.first_name} ${key?.user_name?.middle_name} ${key?.user_name?.last_name}`
+            }));
+        }
+        return [];
+    }, [GetExecLevel]);
 
-        if (company_id) fetchExecutiveLevels();
-    }, [company_id]);
+    console.log(execLevelUsers)
 
     //! Format Date
     const now = new BSDate().now();
@@ -167,7 +160,7 @@ const AddUser = () => {
         temp.role_name = returnValidation(['null'], values.role_name);
         temp.address = returnValidation(['null'], values.address);
         temp.phone_number = returnValidation(['null', 'phonenumber', 'specialchracter'], values.phone_number);
-        
+
         // temp.station_type = returnValidation(['null'], values.station_type);
         // if ('company_area' in fieldValues)
         //     temp.company_area = returnValidation(['null'], values.company_area);
@@ -648,7 +641,7 @@ const AddUser = () => {
                                 className={"drawer-role-name-select"}
                                 value={values.name}
                                 onChange={handleInputChange}
-                                options={executiveLevels}
+                                options={execLevelUsers}
                                 error={errors.executive_level}
                             />
                         </Box>

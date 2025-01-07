@@ -15,6 +15,7 @@ export const ChemistDCRAllSlice = apiSlice.injectEndpoints({
         getAllChemistsAllDCR: builder.query({
             query: () => ({
                 url: 'dcr/dcr-for-chemist-product-rewards-roles/',
+                // url: 'dcr/dcr-for-chemist-company-product-map/',
                 method: 'GET'
             }),
             providesTags: ['ChemistAllDCR']
@@ -24,6 +25,7 @@ export const ChemistDCRAllSlice = apiSlice.injectEndpoints({
         getChemistAllDCRById: builder.query({
             query: (id) => ({
                 url: `dcr/dcr-for-chemist-product-rewards-roles/${id}/`,
+                // url: `dcr/dcr-for-chemist-company-product-map/dcr_id=${id}/`,
                 method: 'GET'
             }),
             providesTags: ['ChemistAllDCR']

@@ -40,7 +40,7 @@ const EditDCR = ({ idharu, onClose }) => {
     const mpo_id = useSelector(state => state.dcrData.selected_user);
     const DCRAll = useGetDoctorDcrByIdQuery(idharu);
     const shiftWiseDCR = useGetShiftWiseDoctorDCRByIdQuery(idharu);
-    
+
     //! Nepali Date format 
     const [dateData, setDateData] = useState()
     const context = { 'company_product': 'select', 'company_roles': 'select', 'rewards': 'normal' }
@@ -70,22 +70,22 @@ const EditDCR = ({ idharu, onClose }) => {
             setInitialFValues({
                 edit: true,
                 date: DCRAll?.data?.date,
-                shift: DCRAll?.data?.dcr?.shift.id,
+                shift: DCRAll?.data?.shift?.id,
                 mpo_name: DCRAll?.data?.mpo_name?.id,
-                visited_area: DCRAll?.data?.dcr?.dcr?.visited_area?.id,
-                visited_doctor: DCRAll?.data?.dcr?.dcr?.visited_doctor?.id,
-                expenses_name: DCRAll?.data?.dcr?.dcr?.expenses_name,
-                expenses: DCRAll?.data?.dcr?.dcr?.expenses,
-                expenses_reasoning: DCRAll?.data?.dcr?.dcr?.expenses_reasoning,
+                visited_area: DCRAll?.data?.dcr?.visited_area?.id,
+                visited_doctor: DCRAll?.data?.dcr?.visited_doctor?.id,
+                expenses_name: DCRAll?.data?.dcr?.expenses_name,
+                expenses: DCRAll?.data?.dcr?.expenses,
+                expenses_reasoning: DCRAll?.data?.dcr?.expenses_reasoning,
                 company_product: DCRAll?.data?.company_product,
                 rewards: DCRAll?.data?.rewards,
                 company_roles: DCRAll?.data?.company_roles,
                 // dcr_id: DCRAll?.data?.dcr?.dcr?.id
             });
-            setDateData(DCRAll?.data?.dcr?.dcr?.date);
+            setDateData(DCRAll?.data?.dcr?.date);
         }
         if (shiftWiseDCR.status == "fulfilled") {
-            setInitialShift(shiftWiseDCR?.data?.results?.dcr?.shift.id)
+            setInitialShift(shiftWiseDCR?.data?.results?.shift.id)
         }
     }, [DCRAll?.data, shiftWiseDCR])
 
@@ -106,7 +106,7 @@ const EditDCR = ({ idharu, onClose }) => {
 
     const doctors = useMemo(() => {
         if (doctorsdata !== undefined) {
-            return doctorsdata?.map((key) => ({ id: key.id, title: key.doctor_name.doctor_name }))
+            return doctorsdata?.map((key) => ({ id: key.id, title: key?.doctor_name?.doctor_name }))
         }
         return [];
     }, [doctorsdata])
@@ -118,7 +118,7 @@ const EditDCR = ({ idharu, onClose }) => {
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
-            return MpoArea?.data.map((key) => ({ id: key.id, title: key.area_name }))
+            return MpoArea?.data.map((key) => ({ id: key?.id, title: key?.area_name }))
         }
         return [];
     }, [MpoArea])
@@ -291,7 +291,7 @@ const EditDCR = ({ idharu, onClose }) => {
                                 name="company_product"
                                 value={values.company_product}
                                 onChange={handleInputChangeLoop}
-                                id={DCRAll?.data?.dcr?.dcr?.id}
+                                id={DCRAll?.data?.dcr?.id}
                                 division={DCRAll?.data?.mpo_name?.division_name}
                                 context={context}
                                 editApi={useAddDoctorsAllDCRMutation} />

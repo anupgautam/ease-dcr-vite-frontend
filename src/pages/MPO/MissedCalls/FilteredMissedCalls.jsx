@@ -102,7 +102,7 @@ const FilteredMissedCalls = () => {
     const [userSelect, setUserSelect] = useState()
     const handleUserSelect = useCallback((e, value) => {
         setUserSelect(value?.id || "")
-    }, [])
+    }, [userSelect])
 
     const [companyUserList, setCompanyUserList] = useState([]);
     useEffect(() => {
@@ -209,7 +209,7 @@ const FilteredMissedCalls = () => {
                                     getOptionLabel={(option) => option.title}
                                     onChange={handleRoleSelect}
                                     renderInput={(params) => (
-                                        <TextField {...params} label="Company Roles" />
+                                        <TextField {...params} label="Company Role" />
                                     )}
                                     renderOption={(props, option) => (
                                         <li {...props} key={option.id}>
@@ -226,7 +226,7 @@ const FilteredMissedCalls = () => {
                                     getOptionLabel={(option) => option.title}
                                     onChange={handleUserSelect}
                                     renderInput={(params) => (
-                                        <TextField {...params} label="User List" />
+                                        <TextField {...params} label="Users" />
                                     )}
                                     renderOption={(props, option) => (
                                         <li {...props} key={option.id}>
@@ -235,8 +235,8 @@ const FilteredMissedCalls = () => {
                                     )}
                                 />
                             </Grid>}
-
                     </Grid>
+
                 </Box>
                 <Card>
                     <Scrollbar>
@@ -280,7 +280,7 @@ const FilteredMissedCalls = () => {
                                                                     </Typography>
                                                                     <Typography variant="body2">
                                                                         <strong>Requested Data Not found</strong>.
-                                                                        <br /> Try checking for typos or using complete words.
+                                                                        <br /> Select company role and then select company users
                                                                     </Typography>
                                                                 </Paper>
                                                             </TableCell>

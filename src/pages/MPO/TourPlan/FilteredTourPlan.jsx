@@ -63,12 +63,18 @@ const TABLE_HEAD = [
     { id: 'date', label: 'Date', alignRight: false },
     { id: 'is_approved', label: 'Approve TP', alignRight: false },
     { id: 'hulting_station', label: 'Hulting Station', alignRight: false },
+    { id: 'day_status', label: 'Day Status', alignRight: false },
     { id: "unplanned_tp", label: "Unplanned Tourplan", alignRight: false },
     { id: "approved_by", label: "Approved By", alignRight: false },
     { id: "" }
 ];
 
 const FilteredTourPlan = () => {
+
+    const location = useLocation();
+
+    const higherCondition = location?.pathname
+
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const localData = JSON.parse(localStorage.getItem('user_login'));
@@ -86,7 +92,7 @@ const FilteredTourPlan = () => {
             sessionStorage.setItem('is_highest_priority', localData.is_highest_priority)
             if (localData.role === "ASM") {
                 sessionStorage.setItem('user_role', 'other-roles')
-            } else if (localData.role === "RSM" || localData.role === "SM" || localData.role === "MM" || localData.role === "CH") {
+            } else if (localData.role === "RSM" || localData?.role === "SM" || localData.role === "MM" || localData.role === "CH") {
                 sessionStorage.setItem('user_role', 'other-roles')
                 sessionStorage.setItem('role', 'other')
             }
@@ -95,7 +101,6 @@ const FilteredTourPlan = () => {
         }
     }, [localData])
 
-    const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get('id');
     const role = searchParams.get('role');
@@ -123,7 +128,7 @@ const FilteredTourPlan = () => {
         let dataList = []
         if (roleList?.data) {
             roleList?.data?.map((key) => {
-                dataList.push({ id: key.id, title: key.role_name.role_name })
+                dataList.push({ id: key.id, title: key?.role_name?.role_name })
             })
         }
         setCompanyRoleList(dataList);
@@ -146,8 +151,8 @@ const FilteredTourPlan = () => {
 
     if (userList !== undefined) {
         userList?.data?.map((key) => {
-            const roleName = key.role_name && key.role_name.role_name && key.role_name.role_name.role_name;
-            companyUserList.push({ id: key.id, title: `${key.user_name.first_name} ${key.user_name.middle_name} ${key.user_name.last_name}`, role: roleName });
+            const roleName = key?.role_name && key?.role_name?.role_name && key?.role_name?.role_name?.role_name;
+            companyUserList.push({ id: key.id, title: `${key?.user_name?.first_name} ${key?.user_name?.middle_name} ${key?.user_name?.last_name}`, role: roleName });
         })
     }
 
@@ -183,7 +188,7 @@ const FilteredTourPlan = () => {
         if (isSuccess) {
             return data?.results?.map((key) => ({
                 id: key.id,
-                title: key.user_name.email
+                title: key?.user_name?.email
             }));
         }
         return [];
@@ -283,9 +288,9 @@ const FilteredTourPlan = () => {
         try {
             const response = await deleteTourPlan(id);
             if (response?.data) {
-                toast.success(`${response?.data?.msg}`)
+                toast.success(`${response?.data?.message}`)
             } else if (response?.error) {
-                toast.error(`Error: ${response.error.data?.message || "Failed to delete Tourplan."}`);
+                toast.error(`Error: ${response?.error?.data?.message || "Failed to delete Tourplan."}`);
             }
         } catch (error) {
             toast.error("An unexpected error occurred during deletion.");
@@ -396,7 +401,7 @@ const FilteredTourPlan = () => {
                                                                             })})
                                                                     </> : (
                                                                         <>
-                                                                            {TourPlanSearch && TourPlanSearch.count == 0 ?
+                                                                            {TourPlanSearch && TourPlanSearch?.count == 0 ?
                                                                                 <TableRow>
                                                                                     <TableCell align="center" colSpan={7.5} sx={{ py: 3 }}>
                                                                                         <Paper
@@ -420,7 +425,7 @@ const FilteredTourPlan = () => {
                                                                                     </TableCell>
                                                                                 </TableRow>
                                                                                 :
-                                                                                TourPlanSearch.results.map((tourplan, index) => {
+                                                                                TourPlanSearch?.results.map((tourplan, index) => {
                                                                                     return (
                                                                                         <TableRow hover tabIndex={-1} role="checkbox" key={tourplan?.id}
                                                                                         >
@@ -437,7 +442,7 @@ const FilteredTourPlan = () => {
                                                                                                     ))
                                                                                                 }
                                                                                             </TableCell>
-                                                                                            <TableCell align="left">{moment(tourplan?.tour_plan.tour_plan?.select_the_date_id).format('DD')}</TableCell>
+                                                                                            <TableCell align="left">{moment(tourplan?.tour_plan?.tour_plan?.select_the_date_id).format('DD')}</TableCell>
                                                                                             <TableCell align="left">{tourplan?.is_approved === true ?
                                                                                                 <>
                                                                                                     <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75, ml: 0.75 }}>
@@ -453,6 +458,7 @@ const FilteredTourPlan = () => {
                                                                                                     </IconButton></>
                                                                                             }</TableCell>
                                                                                             <TableCell align="left">{tourplan?.tour_plan?.tour_plan?.hulting_station}</TableCell>
+                                                                                            <TableCell align="left">{tourplan?.tour_plan?.tour_plan?.day_status}</TableCell>
                                                                                             <TableCell align="left">{tourplan?.tour_plan?.tour_plan?.is_unplanned === true ?
                                                                                                 <>
                                                                                                     <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75, ml: 3 }}>
@@ -467,7 +473,7 @@ const FilteredTourPlan = () => {
                                                                                                 </IconButton>
                                                                                             }
                                                                                             </TableCell>
-                                                                                            <TableCell align="left">{tourplan.approved_by ? tourplan?.approved_by?.user_name?.first_name + " " + tourplan?.approved_by?.user_name?.middle_name + " " + tourplan?.approved_by?.user_name?.last_name : ""}</TableCell>
+                                                                                            <TableCell align="left">{tourplan?.approved_by ? tourplan?.approved_by?.user_name?.first_name + " " + tourplan?.approved_by?.user_name?.middle_name + " " + tourplan?.approved_by?.user_name?.last_name : ""}</TableCell>
                                                                                             <TableCell align="left">
                                                                                                 {
                                                                                                     user_role === 'admin' &&
@@ -481,7 +487,7 @@ const FilteredTourPlan = () => {
                                                                                                     user_role === "MPO" &&
                                                                                                     <>
                                                                                                         {
-                                                                                                            tourplan.is_approved === false ?
+                                                                                                            tourplan?.is_approved === false ?
                                                                                                                 <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
                                                                                                                     <Badge>
                                                                                                                         <Iconify icon="eva:edit-fill" />
@@ -493,11 +499,16 @@ const FilteredTourPlan = () => {
                                                                                                 {/* //! Delete  */}
                                                                                                 {
                                                                                                     user_role === 'admin' &&
-                                                                                                    <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
-                                                                                                        <Badge>
-                                                                                                            <Iconify icon="eva:trash-2-outline" />
-                                                                                                        </Badge>
-                                                                                                    </IconButton>
+                                                                                                    <>
+                                                                                                        {
+                                                                                                            tourplan.is_approved === false ?
+                                                                                                                <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
+                                                                                                                    <Badge>
+                                                                                                                        <Iconify icon="eva:trash-2-outline" />
+                                                                                                                    </Badge>
+                                                                                                                </IconButton> : null
+                                                                                                        }
+                                                                                                    </>
                                                                                                 }
                                                                                             </TableCell>
                                                                                             <Dialog
@@ -553,7 +564,7 @@ const FilteredTourPlan = () => {
                             />
                     }
                 </>
-            </Card>
+            </Card >
         </>
     )
 }

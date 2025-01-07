@@ -6,7 +6,7 @@ import Scrollbar from "@/components/scrollbar/Scrollbar";
 import { UserListHead } from "@/sections/@dashboard/user";
 import Controls from "@/reusable/forms/controls/Controls";
 import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
-import { useGetAllExecutiveLevelsMutation } from '@/api/CompanySlices/companyUserSlice';
+import { useGetAllExecutiveLevelsQuery } from '../../../api/MPOSlices/UserSlice';
 import { useGetFilteredDivisionsQuery } from "../../../api/DivisionSilces/companyDivisionSlice";
 import { Circles } from 'react-loader-spinner';
 import {
@@ -209,41 +209,34 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
     };
 
     //! Executive level
-    const [executiveLevels, setExecutiveLevels] = useState([]);
-    const [getExecLevel] = useGetAllExecutiveLevelsMutation();
-    // const companyId = company_id;
-
-    useEffect(() => {
-        const exce = [];
-        getExecLevel(company_id, {
-            skip: !company_id
-        }).then((res) => {
-            // 
-            res?.data?.map((key) => {
-                exce.push({ id: key?.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name })
-            })
-        })
-        setExecutiveLevels(exce);
-    }, [company_id])
+    // const [executiveLevels, setExecutiveLevels] = useState([]);
+    // const [getExecLevel] = useGetAllExecutiveLevelsMutation();
+    // // const companyId = company_id;
 
     // useEffect(() => {
-    //     const fetchExecutiveLevels = async () => {
-    //         try {
-    //             const response = await getExecLevel(company_id).unwrap();
-    //             const fetchedLevels = response?.map((key) => ({
-    //                 id: key?.id,
-    //                 title: `${key?.user_name?.first_name || ''} ${key?.user_name?.middle_name || ''} ${key?.user_name?.last_name || ''}`,
-    //             }));
-    //             setExecutiveLevels(fetchedLevels || []);
-    //         } catch (error) {
-    //         }
-    //     };
+    //     const exce = [];
+    //     getExecLevel(company_id, {
+    //         skip: !company_id
+    //     }).then((res) => {
+    //         // 
+    //         res?.data?.map((key) => {
+    //             exce.push({ id: key?.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name })
+    //         })
+    //     })
+    //     setExecutiveLevels(exce);
+    // }, [company_id])
 
-    //     if (company_id) {
-    //         fetchExecutiveLevels();
-    //     }
-    // }, []);
+    const GetExecLevel = useGetAllExecutiveLevelsQuery(company_id);
 
+    const execLevelUsers = useMemo(() => {
+        if (GetExecLevel?.data) {
+            return GetExecLevel.data.map(key => ({
+                id: key.id,
+                title: `${key?.user_name?.first_name} ${key?.user_name?.middle_name} ${key?.user_name?.last_name}`
+            }));
+        }
+        return [];
+    }, [GetExecLevel]);
 
     //! Format Date
     const now = new BSDate().now();
@@ -312,7 +305,7 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
         if ('company_area' in fieldValues)
             temp.company_area = returnValidation(['null'], values.company_area);
         // if ('station_type' in fieldValues)
-            // temp.station_type = returnValidation(['null'], values.station_type);
+        // temp.station_type = returnValidation(['null'], values.station_type);
 
 
         setErrors({
@@ -467,7 +460,7 @@ const MultipleUsers = ({ sn, setAllMutipleData, AllMutipleData }) => {
                     label="Executive Level*"
                     value={values.name}
                     onChange={handleInputChange}
-                    options={executiveLevels}
+                    options={execLevelUsers}
                     error={errors.executive_level}
                 />
             </TableCell>

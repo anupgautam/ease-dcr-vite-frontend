@@ -45,82 +45,83 @@ const UserRow = ({ user, index, handleChangeStatus, handleClickOpen, openDialogu
     };
 
     return (
-        <TableRow hover tabIndex={-1} role="checkbox" key={user.id}>
-            <TableCell>{index + 1}</TableCell>
-            <TableCell component="th" scope="row" align="left">
-                <Typography variant="subtitle2" noWrap>
-                    {user?.user_name?.first_name + ' ' + user?.user_name?.middle_name + ' ' + user?.user_name?.last_name}
-                </Typography>
-            </TableCell>
-            {/* Add other TableCell components as needed */}
-            <TableCell align="left">{user?.user_name?.email}</TableCell>
-            <TableCell align="left">{user?.user_name?.phone_number}</TableCell>
-            <TableCell align="left">{user?.role_name?.role_name_value}</TableCell>
-            <TableCell align="left">
-                {user?.company_area?.map((area, index) => (
-                    <div key={index}>
-                        {area.company_area}
-                    </div>
-                ))}
-            </TableCell>
-            <TableCell align="left">
-                {user?.division_name?.map((division, index) => (
-                    <div key={index}>
-                        {division.division_name}
-                    </div>
-                ))}
-            </TableCell>
-            <TableCell align="left">{user?.executive_level?.user_name === null ? "" : user?.executive_level?.user_name?.first_name + " " + user?.executive_level?.user_name?.middle_name + " " + user?.executive_level?.user_name?.last_name}</TableCell>
-            <TableCell align="left">
-                {
-                    user?.role_name?.role_name?.role_name === "admin" ?
-                        "Active" :
-                        <select onChange={(e) => handleChangeStatus(e, user)} defaultValue={user?.user_name?.is_active} className='select-styles'>
-                            <option value={true}>Active</option>
-                            <option value={false}>Inactive</option>
-                        </select>
-                }
-            </TableCell>
-            <TableCell align="left">
-                {user?.is_tp_locked === false ? (
-                    <IconButton
-                        color={'primary'}
-                        sx={{ width: 40, height: 40, mt: 0.75 }}
-                        onClick={() => handleClickOpen(user?.id)}
-                    >
-                        <Badge>
-                            <Iconify icon="dashicons:unlock" />
-                        </Badge>
-                    </IconButton>
-                ) : (
-                    <IconButton
-                        color={'error'}
-                        sx={{ width: 40, height: 40, mt: 0.75 }}
-                        onClick={() => handleClickOpen(user.id)}
-                    >
-                        <Badge>
-                            <Iconify icon="material-symbols:lock" />
-                        </Badge>
-                    </IconButton>
-                )}
-            </TableCell>
-            <TableCell align="right">
-                {/* //!User Login */}
-                {user?.user_name?.is_admin === false ? <>
-                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => UserLogin(user)}>
-                        <Badge>
-                            <Iconify icon="ic:sharp-login" />
-                        </Badge>
-                    </IconButton>
-                </> : <></>}
+        <>
+            <TableRow hover tabIndex={-1} role="checkbox" key={user.id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell component="th" scope="row" align="left">
+                    <Typography variant="subtitle2" noWrap>
+                        {user?.user_name?.first_name + ' ' + user?.user_name?.middle_name + ' ' + user?.user_name?.last_name}
+                    </Typography>
+                </TableCell>
+                {/* Add other TableCell components as needed */}
+                <TableCell align="left">{user?.user_name?.email}</TableCell>
+                <TableCell align="left">{user?.user_name?.phone_number}</TableCell>
+                <TableCell align="left">{user?.role_name?.role_name_value}</TableCell>
+                <TableCell align="left">
+                    {user?.company_area?.map((area, index) => (
+                        <Typography variant="body2" key={index}>
+                            {area.company_area}
+                        </Typography>
+                    ))}
+                </TableCell>
+                <TableCell align="left">
+                    {user?.division_name?.map((division, index) => (
+                        <Typography variant="body2" key={index}>
+                            {division.division_name}
+                        </Typography>
+                    ))}
+                </TableCell>
+                <TableCell align="left">{user?.executive_level?.user_name === null ? "" : user?.executive_level?.user_name?.first_name + " " + user?.executive_level?.user_name?.middle_name + " " + user?.executive_level?.user_name?.last_name}</TableCell>
+                <TableCell align="left">
+                    {
+                        user?.role_name?.role_name?.role_name === "admin" ?
+                            "Active" :
+                            <select onChange={(e) => handleChangeStatus(e, user)} defaultValue={user?.user_name?.is_active} className='select-styles'>
+                                <option value={true}>Active</option>
+                                <option value={false}>Inactive</option>
+                            </select>
+                    }
+                </TableCell>
+                <TableCell align="left">
+                    {user?.is_tp_locked === false ? (
+                        <IconButton
+                            color={'primary'}
+                            sx={{ width: 40, height: 40, mt: 0.75 }}
+                            onClick={() => handleClickOpen(user?.id)}
+                        >
+                            <Badge>
+                                <Iconify icon="dashicons:unlock" />
+                            </Badge>
+                        </IconButton>
+                    ) : (
+                        <IconButton
+                            color={'error'}
+                            sx={{ width: 40, height: 40, mt: 0.75 }}
+                            onClick={() => handleClickOpen(user.id)}
+                        >
+                            <Badge>
+                                <Iconify icon="material-symbols:lock" />
+                            </Badge>
+                        </IconButton>
+                    )}
+                </TableCell>
+                <TableCell align="right">
+                    {/* //!User Login */}
+                    {user?.user_name?.is_admin === false ? <>
+                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => UserLogin(user)}>
+                            <Badge>
+                                <Iconify icon="ic:sharp-login" />
+                            </Badge>
+                        </IconButton>
+                    </> : <></>}
 
-                {/* //!Edit */}
-                <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(user?.id)} >
-                    <Badge>
-                        <Iconify icon="eva:edit-fill" />
-                    </Badge>
-                </IconButton>
-                {/* <Dialog
+                    {/* //!Edit */}
+                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(user?.id)} >
+                        <Badge>
+                            <Iconify icon="eva:edit-fill" />
+                        </Badge>
+                    </IconButton>
+                    {/* <Dialog
                                     fullScreen={fullScreen}
                                     open={openDialogue}
                                     onClose={handleClose}
@@ -140,16 +141,16 @@ const UserRow = ({ user, index, handleChangeStatus, handleClickOpen, openDialogu
                                         </Button>
                                     </DialogActions>
                                 </Dialog> */}
-                {isDrawerOpen && selectedUpdateId && (<EditUserAdmin
-                    idharu={selectedUpdateId} onClose={onCloseDrawer}
-                />
-                )}
-                {/* {isDrawerOpen && <EditUser
+                    {isDrawerOpen && selectedUpdateId && (<EditUserAdmin
+                        idharu={selectedUpdateId} onClose={onCloseDrawer}
+                    />
+                    )}
+                    {/* {isDrawerOpen && <EditUser
                                     idharu={selectedUpdateId} onClose={onCloseDrawer}
                                 />
                                 } */}
-            </TableCell>
-
+                </TableCell>
+            </TableRow>
             <Dialog
                 open={openDialogues[user.id] || false}
                 onClose={() => handleClose(user.id)}
@@ -166,7 +167,7 @@ const UserRow = ({ user, index, handleChangeStatus, handleClickOpen, openDialogu
                     </Button>
                 </DialogActions>
             </Dialog>
-        </TableRow>
+        </>
     );
 };
 

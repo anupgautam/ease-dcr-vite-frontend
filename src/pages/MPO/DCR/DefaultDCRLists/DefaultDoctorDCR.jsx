@@ -100,9 +100,9 @@ const DefaultDoctorDCR = ({ selectedUser, dateOnly }) => {
         try {
             const response = await deleteTourPlan(id);
             if (response?.data) {
-                toast.success(`${response?.data?.msg}`)
+                toast.success(`${response?.data?.message}`)
             } else if (response?.error) {
-                toast.error(`Error: ${response.error.data?.message || "Failed to delete Tourplan."}`);
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete DCR."}`);
             }
         } catch (error) {
             toast.error("An unexpected error occurred during deletion.");
@@ -138,7 +138,7 @@ const DefaultDoctorDCR = ({ selectedUser, dateOnly }) => {
                                                     </TableRow>
                                                 ))}
                                         </> :
-                                            <>{data && data.results.map((tourplan, index) => (
+                                            <>{data && data?.results.map((tourplan, index) => (
                                                 <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}>
                                                     <TableCell>{index + 1}</TableCell>
                                                     <TableCell component="th" scope="row" align="left">

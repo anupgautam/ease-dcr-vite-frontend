@@ -49,6 +49,8 @@ const TABLE_HEAD = [
 
 const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
 
+    console.log("SelectedUser", selectedUser)
+
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     //! For drawer 
@@ -76,6 +78,8 @@ const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
         // }
     );
 
+    console.log("Filtered Wala", results?.data?.results)
+
     //!States
     const [fetchedResults, setFetchedResults] = useState(null);
     const [filterArray, setFilterArray] = useState([]);
@@ -84,8 +88,8 @@ const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
 
     //! Copy array element 
     useEffect(() => {
-        if (results && results.data && results.data.results && Array.isArray(results.data.results)) {
-            const arrayWala = [...results.data.results];
+        if (results && results?.data && results?.data?.results && Array.isArray(results?.data?.results)) {
+            const arrayWala = [...results?.data?.results];
             setFilterArray(arrayWala);
         }
     }, [results]);
@@ -132,7 +136,7 @@ const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
                                 <TableBody>
                                     <>
                                         {
-                                            results.data === undefined ? <>
+                                            results?.data === undefined ? <>
                                                 {
                                                     eightArrays.map((key) => (
                                                         <TableRow key={key} >
@@ -147,7 +151,7 @@ const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
                                                     ))}
                                             </> :
                                                 <>
-                                                    {results.data && results.data.count == 0 ?
+                                                    {results?.data && results?.data?.count == 0 ?
                                                         <TableRow>
                                                             <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
                                                                 <Paper
@@ -173,24 +177,24 @@ const HODCR = ({ selectedUser, selectedMonth, selectedDate }) => {
                                                             </TableCell>
                                                         </TableRow>
                                                         :
-                                                        results.data && results.data.results.map((tourplan, index) => (
+                                                        results?.data && results?.data?.results.map((tourplan, index) => (
                                                             <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}>
                                                                 <TableCell>{index + 1}</TableCell>
                                                                 <TableCell component="th" scope="row" align="left">
                                                                     <Typography variant="subtitle2" noWrap>
-                                                                        {tourplan.user_id.user_name.first_name + " " + tourplan.user_id.user_name.last_name}
+                                                                        {tourplan?.user_id?.user_name?.first_name + " " + tourplan?.user_id?.user_name?.last_name}
                                                                     </Typography>
                                                                 </TableCell>
-                                                                <TableCell align="left">{tourplan.shift.shift}</TableCell>
-                                                                <TableCell align="left">{moment(tourplan.date).format('DD')}</TableCell>
+                                                                <TableCell align="left">{tourplan?.shift?.shift}</TableCell>
+                                                                <TableCell align="left">{moment(tourplan?.date).format('DD')}</TableCell>
                                                                 <TableCell component="th" scope="row" align="left">
                                                                     {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                                     <Typography variant="subtitle2" noWrap>
-                                                                        {tourplan.visited_with.user_name.first_name + " " + tourplan.visited_with.user_name.last_name}
+                                                                        {tourplan?.visited_with?.user_name?.first_name + " " + tourplan?.visited_with?.user_name?.last_name}
                                                                     </Typography>
                                                                     {/* </Stack> */}
                                                                 </TableCell>
-                                                                <Link to={`/dashboard/admin/all/user/dcrhodetail?id=${tourplan.id}`}>
+                                                                <Link to={`/dashboard/admin/all/user/dcrhodetail?id=${tourplan?.id}`}>
                                                                     <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }}>
                                                                         <Badge>
                                                                             <Iconify icon="mdi:eye" sx={{ color: 'primary.main' }} />

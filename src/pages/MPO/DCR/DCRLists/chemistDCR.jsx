@@ -98,8 +98,8 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
 
     //! Copy array element 
     useEffect(() => {
-        if (results && results.data && results.data.results && Array.isArray(results.data.results)) {
-            const arrayWala = [...results.data.results];
+        if (results && results?.data && results?.data?.results && Array.isArray(results?.data?.results)) {
+            const arrayWala = [...results?.data?.results];
             setFilterArray(arrayWala);
         }
     }, [results]);
@@ -123,7 +123,7 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
             if (response?.data) {
                 toast.success(`${response?.data?.msg}`)
             } else if (response?.error) {
-                toast.error(`Error: ${response.error.data?.message || "Failed to delete Tourplan."}`);
+                toast.error(`Error: ${response?.error?.data?.message || "Failed to delete Tourplan."}`);
             }
         } catch (error) {
             toast.error("An unexpected error occurred during deletion.");
@@ -200,23 +200,23 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
                                                             </TableCell>
                                                         </TableRow>
                                                         :
-                                                        results.data && currentPageData.map((tourplan, index) => (
+                                                        results?.data && currentPageData.map((tourplan, index) => (
                                                             <TableRow hover tabIndex={-1} role="checkbox" key={tourplan.id}>
                                                                 <TableCell>{index + 1}</TableCell>
                                                                 <TableCell component="th" scope="row" align="left">
                                                                     {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                                     <Typography variant="subtitle2" noWrap>
-                                                                        {tourplan.mpo_name.user_name.first_name + " " + tourplan.mpo_name.user_name.last_name}
+                                                                        {tourplan?.mpo_name?.user_name?.first_name + " " + tourplan?.mpo_name?.user_name?.last_name}
                                                                     </Typography>
                                                                     {/* </Stack> */}
                                                                 </TableCell>
-                                                                <TableCell align="left">{tourplan.dcr.shift.shift}</TableCell>
-                                                                <TableCell align="left">{moment(tourplan.dcr.dcr.date).format('DD')}</TableCell>
-                                                                <TableCell align="left">{tourplan.dcr.dcr.visited_area.area_name}</TableCell>
+                                                                <TableCell align="left">{tourplan?.shift?.shift}</TableCell>
+                                                                <TableCell align="left">{moment(tourplan?.dcr?.dcr?.date).format('DD')}</TableCell>
+                                                                <TableCell align="left">{tourplan?.dcr?.visited_area?.area_name}</TableCell>
                                                                 <TableCell component="th" scope="row" align="left">
                                                                     {/* <Stack direction="row" alignItems="center" spacing={2}> */}
                                                                     <Typography variant="subtitle2" noWrap>
-                                                                        {tourplan.dcr.dcr.visited_chemist?.chemist_name?.chemist_name}
+                                                                        {tourplan?.dcr?.visited_chemist?.chemist_name?.chemist_name}
                                                                     </Typography>
                                                                     {/* </Stack> */}
                                                                 </TableCell>
@@ -232,7 +232,7 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
                                                                     {/* //! Edit  */}
                                                                     {
                                                                         user_role === 'admin' &&
-                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.dcr.dcr.id, tourplan.mpo_name.id)} >
+                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan?.dcr?.id, tourplan?.mpo_name?.id)} >
                                                                             <Badge>
                                                                                 <Iconify icon="eva:edit-fill" />
                                                                             </Badge>
@@ -241,7 +241,7 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
                                                                     {/* //! Delete  */}
                                                                     {
                                                                         user_role === 'admin' &&
-                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.dcr.dcr.id); handleClickOpen() }}>
+                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan?.dcr?.dcr?.id); handleClickOpen() }}>
                                                                             <Badge>
                                                                                 <Iconify icon="eva:trash-2-outline" />
                                                                             </Badge>

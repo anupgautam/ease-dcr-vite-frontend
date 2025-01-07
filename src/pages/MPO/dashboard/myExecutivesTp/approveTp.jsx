@@ -7,6 +7,7 @@ import { useBulkUpdateTourplanByHoMutation, useBulkUpdateTourplanByMpoMutation }
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify';
 
 const ApprovedTP = ({ mpoName, role }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -70,22 +71,24 @@ const ApprovedTP = ({ mpoName, role }) => {
                     console.log(res)
                     if (res.data) {
                         setIsDrawerOpen(false)
-                        setSuccessMessage({ show: true, message: 'Tour Plan Successfully Verified.' });
-                        setTimeout(() => {
-                            setSuccessMessage({ show: false, message: '' });
-                        }, 2000);
+                        // setSuccessMessage({ show: true, message: 'Tour Plan Successfully Verified.' });
+                        // setTimeout(() => {
+                        //     setSuccessMessage({ show: false, message: '' });
+                        // }, 2000);
+                        toast.success('Tour Plan Successfully Verified.')
                     } else {
-                        console.log(res?.error?.data?.message)
-                        setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
-                        // toast.error(res?.error?.data?.message?.toString() || 'An unexpected error occurred.');
-                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        // console.log(res?.error?.data?.message)
+                        // setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
+                        // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        toast.error(`${res?.error?.data?.message}`);
                     }
                 })
                 .catch((err) => {
-                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 2000);
+                    // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                    // setTimeout(() => {
+                    //     setErrorMessage({ show: false, message: '' });
+                    // }, 2000);
+                    toast.error('Some Error Occurred. Try again later.')
                 })
         } else {
             const data = {
@@ -98,22 +101,24 @@ const ApprovedTP = ({ mpoName, role }) => {
                 .then((res) => {
                     if (res.data) {
                         setIsDrawerOpen(false)
-                        setSuccessMessage({ show: true, message: 'Tour Plan Successfully Verified HO.' });
-                        setTimeout(() => {
-                            setSuccessMessage({ show: false, message: '' });
-                        }, 2000);
+                        // setSuccessMessage({ show: true, message: 'Tour Plan Successfully Verified HO.' });
+                        // setTimeout(() => {
+                        //     setSuccessMessage({ show: false, message: '' });
+                        // }, 2000);
+                        toast.success('Tour Plan Successfully Verified HO.')
                     } else {
-                        console.log("Here error 400")
+                        // console.log("Here error 400")
                         // setErrorMessage({ show: true, message: extractErrorMessage({ data: res?.error }) });
-                        toast.error({ show: true, message: extractErrorMessage(res?.error) });
-                        setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
+                        toast.error(`${res?.error?.data?.message}`);
                     }
                 })
                 .catch((err) => {
-                    setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 2000);
+                    // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
+                    // setTimeout(() => {
+                    //     setErrorMessage({ show: false, message: '' });
+                    // }, 2000);
+                    toast.error('Some Error Occurred. Try again later.')
                 })
         }
     }

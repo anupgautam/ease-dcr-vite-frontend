@@ -11,6 +11,9 @@ import { useGetAllRewardsByCompanyIdQuery } from "@/api/DCRs Api Slice/rewardsAP
 import { useSelector } from "react-redux";
 
 const EditDCRChemistRewards = ({ id, context, editApi }) => {
+
+  console.log("Rewards",id)
+  
   const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });

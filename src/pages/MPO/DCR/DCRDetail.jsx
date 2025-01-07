@@ -109,7 +109,7 @@ const DCRDetail = () => {
                 {
                   data?.rewards.map((key, index) => (
                     <Typography variant="body2" color="textSecondary">
-                      Gift: {key?.reward}
+                      Gift: {key?.rewards}
                     </Typography>
                   ))
                 }

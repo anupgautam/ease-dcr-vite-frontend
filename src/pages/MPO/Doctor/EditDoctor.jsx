@@ -37,7 +37,6 @@ const EditDoctor = ({ id, onClose, divisionId }) => {
         skip: !company_id
     })
 
-
     const doctorspecializations = useMemo(() => {
         if (DoctorSpecialization?.data) {
             return DoctorSpecialization?.data?.map(key => ({ id: key.id, title: key.category_name }))
