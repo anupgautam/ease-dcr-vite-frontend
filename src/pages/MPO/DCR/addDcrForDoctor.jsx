@@ -27,6 +27,7 @@ import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 import { BSDate } from "nepali-datepicker-react";
 import { useGetAllProductsOptionsQuery, useGetAllProductsQuery } from "../../../api/MPOSlices/ProductSlice";
 import { toast } from 'react-toastify';
+import { returnValidation } from "../../../validation";
 
 const TABLE_HEAD = [
     { id: 'doctor_name', label: 'Doctor Name', alignRight: false },
@@ -47,9 +48,11 @@ const AddDcrForDoctor = () => {
     const now = new BSDate().now();
 
     const monthData = getNepaliMonthName(now._date.month);
-    const yearData = now._date.year;
+    const yearData = now?._date?.year;
 
     const { data: tourplanData } = usePostToGetTheTourPlanQuery({ mpo_name: company_user_role_id, year: yearData, month: monthData });
+    console.log(tourplanData)
+
     const [updateDcr] = useUpdateDcrForDoctorValuesMutation();
     const [createMpoDcr] = useCreateMpoShiftWiseDcrForDoctorMutation();
     const [DcrForDoctor] = useCreateDcrWithNullValuesForDoctorMutation();
@@ -124,6 +127,26 @@ const AddDcrForDoctor = () => {
         return [];
     }, [ShiftData])
 
+    const validate = (fieldValues = values) => {
+        // 
+        let temp = { ...errors }
+        // if ('chemist_name' in fieldValues)
+        //     temp.chemist_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.chemist_name)
+
+        temp.shift = returnValidation(['null'], values.shift)
+        temp.date = returnValidation(['null'], values.date)
+        temp.visited_area = returnValidation(['null'], values.visited_area)
+        temp.visited_doctor = returnValidation(['null'], values.visited_doctor)
+
+        setErrors({
+            ...temp
+        })
+
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x == "")
+    }
+
     const [initialFValues, setInitialFvalues] = useState({
         edit: false,
         tour_id: "",
@@ -142,8 +165,6 @@ const AddDcrForDoctor = () => {
     const dcrForDoctor = useGetShiftWiseDoctorDCRByIdQuery(id);
 
     const [NewTourPlanData, setNewTourPlanData] = useState('');
-
-
 
     const selectTourPlanById = (key) => {
         setNewTourPlanData(key);
@@ -170,6 +191,7 @@ const AddDcrForDoctor = () => {
                 expenses: dcrForDoctor?.data?.expenses,
                 expenses_name: dcrForDoctor?.data?.expenses_name,
                 expenses_reasoning: dcrForDoctor?.data?.expenses_reasoning,
+                day_status: tourplanData?.tour_plan?.tour_plan?.day_status
             });
         }
     }, [dcrForDoctor?.data, NewTourPlanData]);
@@ -187,12 +209,35 @@ const AddDcrForDoctor = () => {
         true
     )
 
+    useEffect(() => {
+        validate();
+
+    }, [
+        values.shift,
+        values.visited_area,
+        values.visited_doctor,
+        values.date,
+    ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [
+        values.shift,
+        values.visited_area,
+        values.visited_doctor,
+        values.date,
+    ]);
+
     const doctors = useGetAllVisitedMpoWiseDoctorQuery({ company_name: company_id, mpo_area: values.visited_area, mpo_name: company_user_role_id });
 
     const doctorOptions = useMemo(() => {
         if (doctors !== undefined) {
             if (doctors.status === 'fulfilled') {
-                return doctors.data.map(key => ({ id: key.id, title: key.doctor_name.doctor_name }));
+                return doctors.data.map(key => ({ id: key.id, title: key?.doctor_name?.doctor_name }));
             }
         }
         return [];
@@ -310,7 +355,7 @@ const AddDcrForDoctor = () => {
                     sendingData['year'] = moment(sendingData.date).year();
                     sendingData['mpo_name'] = company_user_role_id;
                     sendingData['company_name'] = company_id;
-
+                    sendingData['day_status'] = tourplanData[0]?.tour_plan?.tour_plan?.day_status;
                 } else {
                     sendingData['visited_area'] = null;
                     sendingData['visited_doctor'] = null;
@@ -348,7 +393,7 @@ const AddDcrForDoctor = () => {
                             // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                             // setLoading(false);
                             // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                            toast.error(`${res?.error}`)
+                            toast.error(`${res?.error?.data?.message}`)
                             setLoading(false);
                         } else {
                             // setErrorMessage({ show: true, message: 'This TP is not allowed to create DCR.' });
@@ -432,6 +477,7 @@ const AddDcrForDoctor = () => {
                                             value={values.date}
                                             onChange={handleInputChange}
                                             disable={true}
+                                        // error={errors.date}
                                         />
                                     </Box>
                                     <Box marginBottom={2}>
@@ -442,6 +488,7 @@ const AddDcrForDoctor = () => {
                                             value={values.shift}
                                             onChange={handleInputChange}
                                             options={shiftAllData}
+                                        // error={errors.shift}
                                         />
                                     </Box>
                                     <Box marginBottom={2}>
@@ -452,25 +499,28 @@ const AddDcrForDoctor = () => {
                                             value={values.visited_area}
                                             onChange={handleInputChange}
                                             options={areaOptions}
+                                        // error={errors.visited_area}
                                         />
                                     </Box>
-                                    <Box marginBottom={2}>
-                                        {/* //! Autocomplete */}
-                                        <Autocomplete
-                                            multiple
-                                            options={doctorOptions}
-                                            getOptionLabel={(option) => option.title}
-                                            onChange={handleDoctorChange}
-                                            renderInput={(params) => (
-                                                <TextField {...params} label="Select Doctors" />
-                                            )}
-                                            renderOption={(props, option) => (
-                                                <li {...props} key={option.id}>
-                                                    {option.title}
-                                                </li>
-                                            )}
-                                        />
-                                    </Box>
+                                    {values?.visited_area && (
+                                        <Box marginBottom={2}>
+                                            <Autocomplete
+                                                multiple
+                                                options={doctorOptions}
+                                                getOptionLabel={(option) => option.title}
+                                                onChange={handleDoctorChange}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} label="Select Doctors" />
+                                                )}
+                                                renderOption={(props, option) => (
+                                                    <li {...props} key={option.id}>
+                                                        {option.title}
+                                                    </li>
+                                                )}
+                                            />
+                                        </Box>
+                                    )}
+
                                 </Box>
                             </Box>
                         </Card>
@@ -505,6 +555,14 @@ const AddDcrForDoctor = () => {
                     <label style={{ textAlign: 'start', flex: 1, fontWeight: "600", marginLeft: "4px", fontSize: "14px" }}>Last DCR for Doctor</label>
                 </Box>
                 <Box style={{ marginTop: "10px" }}>
+                    {/* <Controls.SubmitButton
+                        variant="contained"
+                        className="summit-button"
+                        disabled={isButtonDisabled}
+                        onClick={(e) => handlePostDcr(e)}
+                        text="Submit DCR"
+                    /> */}
+
                     <Button
                         variant="contained"
                         className="summit-button"
@@ -580,8 +638,8 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
 
     const productOptions = useMemo(() => {
         if (companyProduct !== undefined) {
-            if (companyProduct.status === 'fulfilled') {
-                return companyProduct.data.map(key =>
+            if (companyProduct?.status === 'fulfilled') {
+                return companyProduct?.data.map(key =>
                 ({
                     id: key.id,
                     title: key?.product_name?.product_name,
@@ -722,7 +780,7 @@ const DoctorDcr = ({ sn, data, setAllMutipleData, AllMutipleData, values }) => {
             <TableCell align="left">
                 <Controls.Input
                     name="expenses"
-                    label="Expenses"
+                    label="Expenses Cost"
                     value={Formdata.expenses || ""}
                     onChange={handleInputChange}
                     disable={false}

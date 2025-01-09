@@ -68,9 +68,6 @@ const AddUnplannedTp = () => {
         }
     }, [company_user_role_id])
 
-    console.log(executiveLevelOptions)
-
-
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: company_user_role_id }, {
         skip: !company_id || !company_user_role_id
     });
@@ -86,7 +83,7 @@ const AddUnplannedTp = () => {
     const validate = (fieldValues = values) => {
         let temp = { ...errors };
 
-        if (user_role.toString() === "MPO") {
+        if (user_role?.toString() === "MPO") {
             if ("purpose_of_visit" in fieldValues) {
                 temp.purpose_of_visit = returnValidation(["null"], values.purpose_of_visit);
             }

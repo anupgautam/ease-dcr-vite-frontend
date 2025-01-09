@@ -231,8 +231,6 @@ const AddProduct = () => {
 
     }, [createProducts, values])
 
-    console.log(errors)
-
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     useEffect(() => {

@@ -32,10 +32,13 @@ export const ChemistOrderedProductSlices = apiSlice.injectEndpoints({
 
         //! Get Secondary Sales by Company Id
         getSecondarySalesByCompanyId: builder.query({
-            query: (id) => ({
-                url: `dcr/chemist-ordered-products-map/?company_name=${id}`,
-                method: 'GET'
-            }),
+            query: (id) => {
+                console.log(id)
+                return {
+                    url: `dcr/chemist-ordered-products-map/?company_name=${id.company_id}&select_the_stockist=${id.stockist_id}&month=${id.month}&year=${id.year}`,
+                    method: 'GET'
+                }
+            },
             providesTags: ['ChemistOrderedProduct']
         }),
 
@@ -100,6 +103,7 @@ export const {
     useUpdateChemistOrderedProductsMutation,
     useDeleteChemistOrderedProductsByIdMutation,
     useGetChemistOrderedProductsByChemistIdMutation,
+
     useGetSecondarySalesByCompanyIdQuery
 } = ChemistOrderedProductSlices
 

@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import {
-    Box, Grid,
-    Typography, CircularProgress
+    Box,
+    Grid,
+    Typography,
+    CircularProgress,
+    Autocomplete
 } from '@mui/material'
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -28,6 +31,15 @@ import { useGetShiftWiseDoctorDCRByIdQuery, useUpdateShiftWiseDoctorDCRMutation 
 import { useGetAllVisitedMpoWiseDoctorQuery } from '@/api/MPOSlices/doctorApiSlice';
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 
+//! Multiple Wala
+import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSlices/companyProductSlice";
+import { useGetVisitedWithByDcrIdQuery } from "@/api/MPOSlices/companyRolesSlice";
+import {
+    useGetAllRewardsByCompanyIdQuery,
+    useGetRewardsByDcrIdQuery,
+    useGetRewardsByIdQuery,
+    usePostRewardForDcrMutation
+} from "@/api/DCRs Api Slice/rewardsAPISlice"
 
 const EditDCR = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -45,8 +57,27 @@ const EditDCR = ({ idharu, onClose }) => {
     const [dateData, setDateData] = useState()
     const context = { 'company_product': 'select', 'company_roles': 'select', 'rewards': 'normal' }
 
-    //! Getting TourPlan by ID
+    //! Promoted Products wala 
+    const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
+        skip: !company_id
+    });
+    // console.log(productData)
 
+    const promotedArray = useMemo(() => {
+        if (productData) {
+            return productData?.map(key => ({ id: key.id, title: key.product_name?.product_name }));
+        }
+        return [];
+    }, [productData]);
+
+    console.log("PromotedArray",promotedArray)
+
+    const [multipleProducts, setMultipleProducts] = useState([])
+    const handleMultipleProducts = (e, value) => {
+        setMultipleProducts(value);
+    }
+
+    //! Getting TourPlan by ID
     const [initialFValues, setInitialFValues] = useState({
         edit: false,
         mpo_name: "",
@@ -62,7 +93,6 @@ const EditDCR = ({ idharu, onClose }) => {
         company_roles: [],
         // dcr_id: [],
     });
-
 
 
     useEffect(() => {
@@ -114,7 +144,6 @@ const EditDCR = ({ idharu, onClose }) => {
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: mpo_id }, {
         skip: !company_id || !mpo_id
     });
-
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
@@ -286,6 +315,7 @@ const EditDCR = ({ idharu, onClose }) => {
                             />
                             {/* <NepaliDatePicker disable={true} value={dateData} format="YYYY-MM-DD" onChange={(value) => setDateData(value)} /> */}
                         </Box>
+
                         <Box marginBottom={2}>
                             <EditDoctorDCRProducts
                                 name="company_product"
@@ -315,8 +345,61 @@ const EditDCR = ({ idharu, onClose }) => {
                                 id={idharu}
                                 context={context}
                                 editApi={useAddDoctorsAllDCRMutation} />
-
                         </Box>
+
+
+                        {/* //! New Multiple Wala  */}
+                        <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                options={promotedArray}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleProducts}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Promoted Products" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+
+                        {/* <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                // options={divisionList}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleDivision}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Visited With" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box> */}
+
+                        {/* <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                // options={divisionList}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleDivision}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Rewards" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box> */}
+
                     </Form>
                 </Box>
                 {loading && (

@@ -26,9 +26,9 @@ import {
 import { useGetStockistsByCompanyAreaQuery } from '@/api/MPOSlices/StockistSlice';
 import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
+import { toast } from 'react-toastify'
 
-
-const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) => {
+const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData, mpo_name }) => {
     const { company_id, company_area_id, company_user_role_id, company_division_name } = useSelector((state) => state.cookie);
 
     const newId = allData?.id;
@@ -38,6 +38,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
         ordered_quantity: "",
         company_name: company_id,
         select_the_stockist: "",
+        mpo_name: company_user_role_id
     });
 
 
@@ -45,8 +46,17 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
 
     const [deleteOrderedProducts] = useDeleteChemistOrderedProductByDCRIdMutation()
 
-    const deleteProduct = (id) => {
-        deleteOrderedProducts({ id })
+    const deleteProduct = async (id) => {
+        try {
+            const response = await deleteOrderedProducts({ id });
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+            } else if (response?.error) {
+                toast.error(`Error: ${response.error.data?.message || "Failed to delete chemist ordered product"}`);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred during deletion.");
+        }
     }
 
     const handleOrderedProductChange = (e) => {
@@ -61,7 +71,8 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
         PostChemistOrderProduct({ dcr_id: allData.id, product_id: OrderedProductState.product_id, ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id, select_the_stockist: OrderedProductState.select_the_stockist, mpo_name: company_user_role_id })
             .then((res) => {
                 if (res.data) {
-                    setSuccessMessage({ show: true, message: 'Successfully Order Product.' });
+                    toast.success(`${res?.data?.message}`)
+                    // setSuccessMessage({ show: true, message: 'Successfully Order Product.' });
                     setOrderedProductState({
                         dcr_id: allData.id,
                         product_id: "",
@@ -71,10 +82,11 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
                         mpo_name: company_user_role_id,
                     });
                 } else {
-                    setErrorMessage({ show: true, message: extractErrorMessage(res.error) });
-                    setTimeout(() => {
-                        setErrorMessage({ show: false, message: '' });
-                    }, 3000);
+                    toast.error(`${res?.error?.data?.message}`)
+                    // setErrorMessage({ show: true, message: extractErrorMessage(res.error) });
+                    // setTimeout(() => {
+                    //     setErrorMessage({ show: false, message: '' });
+                    // }, 3000);
                 }
             })
             .catch((error) => {
@@ -181,8 +193,11 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData }) =>
         try {
             for (const product of AddProduct) {
                 const response = await OrderProduct(product);
-                if (response.data) {
+
+                if (response?.data) {
+
                     setSuccessMessage({ show: true, message: 'Successfully Order Product.' });
+                    // toast.success(`${response?.data?.message}`)
                     setTimeout(() => {
                         setSuccessMessage({ show: false, message: '' });
                         setInitialFValues({

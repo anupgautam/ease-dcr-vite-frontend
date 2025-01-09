@@ -60,6 +60,11 @@ const MpoNavConfig = [
         icon: <Icon icon="mdi:application-edit-outline" style={{ fontSize: '20px' }} />,
     },
     {
+        title: 'Analytics',
+        path: 'admin/analytics',
+        icon: <Icon icon="tdesign:chart-analytics" style={{ fontSize: '20px' }} />,
+    },
+    {
         title: 'Doctor Events',
         path: 'admin/doctorevent',
         icon: <Icon icon="simple-line-icons:event" style={{ fontSize: '20px' }} />,

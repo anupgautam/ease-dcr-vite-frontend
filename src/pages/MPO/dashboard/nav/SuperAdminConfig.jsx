@@ -24,6 +24,11 @@ const SuperAdminConfig = [
         path: 'superadmin/companyusers',
         icon: <Icon icon="mdi:user" style={{ fontSize: '20px' }} />,
     },
+    {
+        title: 'Contact Details',
+        path: 'superadmin/contacts',
+        icon: <Icon icon="mdi:user" style={{ fontSize: '20px' }} />,
+    },
 
 ];
 

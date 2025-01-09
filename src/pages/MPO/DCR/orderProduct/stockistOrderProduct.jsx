@@ -42,6 +42,7 @@ const StockistOrderedProduct = ({ id, allData }) => {
         product_id: "",
         ordered_quantity: "",
         company_name: company_id,
+        mpo_name: company_user_role_id
     })
 
     // const { data: mpoArea } = useGetUsersByIdQuery(company_user_role_id, {
@@ -77,7 +78,7 @@ const StockistOrderedProduct = ({ id, allData }) => {
         let temp = { ...errors }
         if ('ordered_product' in fieldValues)
             temp.ordered_product = returnValidation(['null'], values.ordered_product)
-        temp.ordered_quantity = returnValidation(['null','OnlyNumber'], values.ordered_quantity)
+        temp.ordered_quantity = returnValidation(['null', 'OnlyNumber'], values.ordered_quantity)
 
         setErrors({
             ...temp
@@ -130,7 +131,7 @@ const StockistOrderedProduct = ({ id, allData }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        PostStockistOrderProduct({ dcr_id: id, product_id: OrderedProductState.product_id, ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id })
+        PostStockistOrderProduct({ dcr_id: id, product_id: OrderedProductState.product_id, ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id, mpo_name: company_user_role_id, })
             .then((res) => {
                 if (res?.data) {
                     toast.success("Successfully Order Product")
@@ -141,7 +142,6 @@ const StockistOrderedProduct = ({ id, allData }) => {
                         ordered_quantity: "",
                         company_name: company_id,
                         select_the_stockist: "",
-                        mpo_name: company_user_role_id,
                     });
                 } else {
                     // setErrorMessage({ show: true, message: extractErrorMessage(res.error) });

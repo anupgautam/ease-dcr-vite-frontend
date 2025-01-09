@@ -32,7 +32,7 @@ import { toast } from 'react-toastify';
 
 const TABLE_HEAD = [
     { id: 'chemist_name', label: ' Name', alignRight: false },
-    { id: 'select_the_ordered_product', label: 'Select Ordered Product', alignRight: false },
+    { id: 'select_the_ordered_product', label: 'Select Visited With', alignRight: false },
     { id: 'promoted_product', label: 'Promoted Product', alignRight: false },
     { id: 'rewards', label: 'Rewards', alignRight: false },
     { id: 'ordered_product', label: 'Ordered Products', alignRight: false },
@@ -55,6 +55,7 @@ const AddDCRforChemist = () => {
     // 
 
     const { data: tourplanData } = usePostToGetTheTourPlanQuery({ mpo_name: company_user_role_id, year: yearData, month: monthData });
+
     const [updateDcr] = useUpdateDcrForChemistValuesMutation();
     const [createMpoDcr] = useCreateMpoShiftWiseDcrForChemistMutation();
     const [DcrForChemist] = useCreateDcrForChemistWithNullValuesMutation();
@@ -77,7 +78,6 @@ const AddDCRforChemist = () => {
 
     const [CompanyChemist, setCompanyChemist] = useState([]);
     const [ChemistData, setChemistData] = useState([]);
-
 
     useEffect(() => {
         setChemistData([]);
@@ -182,6 +182,7 @@ const AddDCRforChemist = () => {
                 expenses: dcrForChemist?.data?.expenses,
                 expenses_name: dcrForChemist?.data?.expenses_name,
                 expenses_reasoning: dcrForChemist?.data?.expenses_reasoning,
+                day_status: tourplanData?.tour_plan?.tour_plan?.day_status
             });
         }
     }, [dcrForChemist?.data, NewTourPlanData]);
@@ -205,7 +206,7 @@ const AddDCRforChemist = () => {
 
     const chemistOptions = useMemo(() => {
         if (chemists !== undefined) {
-            if (chemists.status === 'fulfilled') {
+            if (chemists?.status === 'fulfilled') {
                 return chemists?.data.map(key => ({ id: key.id, title: key.chemist_name.chemist_name }))
             }
         }
@@ -272,8 +273,11 @@ const AddDCRforChemist = () => {
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
     const navigate = useNavigate();
 
+    // console.log('AllMutipleData', AllMutipleData);
 
-    console.log('AllMutipleData', AllMutipleData);
+    // console.log(values.visited_area)
+
+    // console.log('tourplanData?.tour_plan?.tour_plan?.day_status',tourplanData?.tour_plan?.tour_plan?.day_status)
 
 
     const handlePostDcr = () => {
@@ -337,6 +341,8 @@ const AddDCRforChemist = () => {
                 sendingData['year'] = moment(sendingData.date).year();
                 sendingData['mpo_name'] = company_user_role_id;
                 sendingData['company_name'] = company_id;
+                sendingData['day_status'] = tourplanData[0]?.tour_plan?.tour_plan?.day_status;
+                
             } else {
                 sendingData['visited_area'] = null;
                 sendingData['visited_chemist'] = null;
@@ -347,7 +353,7 @@ const AddDCRforChemist = () => {
                 shift: allData.shift,
                 dcr_id: allData.id,
             };
-            updateDcr({ id: sendingData['id'], value: sendingData })
+            updateDcr({ id: sendingData.id, value: sendingData })
                 .then(res => {
                     setLoading(false);
                     if (res.data) {
@@ -390,7 +396,7 @@ const AddDCRforChemist = () => {
                         // setLoading(false);
                         // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
 
-                        toast.error(`${res?.error}`)
+                        toast.error(`${res?.error?.data?.message}`)
                         setLoading(false);
                     }
                     else {
@@ -496,23 +502,43 @@ const AddDCRforChemist = () => {
                                             options={areaOptions}
                                         />
                                     </Box>
-                                    <Box marginBottom={2}>
-                                        <Autocomplete
-                                            multiple
-                                            options={chemistOptions}
-                                            getOptionLabel={(option) => option.title}
-                                            onChange={handleChemistChange}
-                                            renderInput={(params) => (
-                                                <TextField {...params} label="Select Chemists" />
-                                            )}
-                                            renderOption={(props, option) => (
-                                                <li {...props} key={option.id}>
-                                                    {option.title}
-                                                </li>
-                                            )}
-                                        />
 
-                                    </Box>
+                                    {/* <Box marginBottom={2}>
+                                            <Autocomplete
+                                                multiple
+                                                options={chemistOptions}
+                                                getOptionLabel={(option) => option.title}
+                                                onChange={handleChemistChange}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} label="Select Chemists" />
+                                                )}
+                                                renderOption={(props, option) => (
+                                                    <li {...props} key={option.id}>
+                                                        {option.title}
+                                                    </li>
+                                                )}
+                                            />
+                                        </Box> */}
+
+                                    {values?.visited_area && (
+                                        <Box marginBottom={2}>
+                                            <Autocomplete
+                                                multiple
+                                                options={chemistOptions}
+                                                getOptionLabel={(option) => option.title}
+                                                onChange={handleChemistChange}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} label="Select Chemists" />
+                                                )}
+                                                renderOption={(props, option) => (
+                                                    <li {...props} key={option.id}>
+                                                        {option.title}
+                                                    </li>
+                                                )}
+                                            />
+                                        </Box>
+                                    )}
+
                                 </Box>
                             </Box>
                         </Card>

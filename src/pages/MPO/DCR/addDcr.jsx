@@ -93,7 +93,7 @@ const AddDcrForHo = () => {
             LowerExecutive({ id: company_user_id })
                 .then((res) => {
                     if (res.data) {
-                        const data = res.data.map(key => ({ id: key.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name }));
+                        const data = res?.data.map(key => ({ id: key.id, title: key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name }));
                         setExecutiveLevelOptions(data);
                     }
                 })
@@ -103,6 +103,8 @@ const AddDcrForHo = () => {
     // const [higherOrderTourplans, setHigherOrderTourplans] = useState([]);
 
     const { data: higherOrderTourplans } = useGetHigherOrderTourPlanUsingIdQuery({ user_id: company_user_role_id, year: yearData, month: monthData });
+
+    // console.log(higherOrderTourplans)
 
     // useEffect(() => {
     //     GethingherOrder({ user_id: company_user_role_id })
@@ -121,7 +123,7 @@ const AddDcrForHo = () => {
         if (MpoList?.data) {
             return MpoList?.data?.map(key => ({
                 id: key.id,
-                title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name
+                title: key?.user_name?.first_name + ' ' + key?.user_name?.middle_name + ' ' + key?.user_name?.last_name
             }))
         }
         return [];
@@ -139,6 +141,24 @@ const AddDcrForHo = () => {
                 })
         }
     }, [company_id])
+
+    const validate = (fieldValues = values) => {
+        // 
+        let temp = { ...errors }
+        if ('chemist_name' in fieldValues)
+            temp.chemist_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.chemist_name)
+
+        temp.shift = returnValidation(['null'], values.shift)
+        temp.visited_with = returnValidation(['null'], values.visited_with)
+
+        setErrors({
+            ...temp
+        })
+
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x == "")
+    }
 
     const [initialFValues, setInitialFvalues] = useState({
         id: "",
@@ -227,12 +247,13 @@ const AddDcrForHo = () => {
         const data = {
             // date: values.date,
             date: formattedDate,
+            // day_status:
             visited_with: values.visited_with,
             shift: values.shift,
             user_id: company_user_role_id,
             company_id: company_id,
             year: moment(values.date).year(),
-            month: getNepaliMonthName(moment(values.date).month() + 1)
+            month: getNepaliMonthName(moment(values.date).month() + 1),
         }
         await createDCR(data)
             .then((res) => {
@@ -261,9 +282,9 @@ const AddDcrForHo = () => {
 
                 toast.error(`Some Error Occurred. Try again later.`)
             })
-        .finally(() => {
-            setLoading(false)
-        })
+            .finally(() => {
+                setLoading(false)
+            })
 
         setIsDrawerOpen(false)
     }

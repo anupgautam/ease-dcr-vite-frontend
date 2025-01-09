@@ -47,7 +47,9 @@ const EditUserAdmin = ({ idharu, onClose }) => {
     const CompanyAreas = useGetAllCompanyAreasQuery(company_id, { skip: !company_id });
 
     const rolesharu = data?.data?.map(key => ({ id: key.id, title: key.role_name_value })) || [];
+
     const divisions = Divisions?.data?.map(key => ({ id: key.id, title: key.division_name })) || [];
+    
     const companyAreas = CompanyAreas?.data?.map(key => ({ id: key.id, title: key.company_area })) || [];
 
 
@@ -80,7 +82,6 @@ const EditUserAdmin = ({ idharu, onClose }) => {
     //     }
     // }, [company_id]);
 
-
     const GetExecLevel = useGetAllExecutiveLevelsQuery(company_id);
 
     const execLevelUsers = useMemo(() => {
@@ -98,6 +99,37 @@ const EditUserAdmin = ({ idharu, onClose }) => {
     const [dateData, setDateData] = useState(now)
     const [dateFormat, setDateFormat] = useState(dateData?._date)
     const [nepaliDate, setNepaliDate] = useState(dateFormat)
+
+    //! Validation wala  
+    const validate = (fieldValues = values) => {
+        let temp = { ...errors }
+        if ('first_name' in fieldValues)
+            temp.first_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.first_name);
+        temp.middle_name = returnValidation(['number', 'lessThan50', 'specialcharacter'], values.middle_name);
+        if ('last_name' in fieldValues)
+            temp.last_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.last_name);
+        if ('address' in fieldValues)
+            temp.address = returnValidation(['null'], values.address);
+        if ('role_name' in fieldValues)
+            temp.role_name = returnValidation(['null'], values.role_name);
+        if ('division_name' in fieldValues)
+            temp.division_name = returnValidation(['null'], values.division_name);
+        if ('executive_level' in fieldValues)
+            temp.executive_level = returnValidation(['null'], values.executive_level);
+        if ('phone_number' in fieldValues)
+            temp.phone_number = returnValidation(['null', 'phonenumber', 'specialchracter'], values.phone_number);
+        if ('email' in fieldValues)
+            temp.email = returnValidation(['null', 'email'], values.email);
+        if ('company_area' in fieldValues)
+            temp.company_area = returnValidation(['null'], values.company_area);
+
+        setErrors({
+            ...temp
+        })
+
+        setErrors(temp);
+        return Object.values(temp).every(x => x === "");
+    };
 
     const [initialFValues, setInitialFValues] = useState({
         first_name: "",
@@ -123,53 +155,27 @@ const EditUserAdmin = ({ idharu, onClose }) => {
         setMultipleCompanyAreas(value);
     }
 
+    const [initialMultipleArea, setInitialMultipleArea] = useState([])
+    console.log("InitialMultipleArea", initialMultipleArea)
 
-    const { values,
-        errors,
-        setErrors,
-        handleInputChange
-    } = useForm(
-        initialFValues,
-        true,
-        false,
-        true
-    )
+    const [selectedOptions, setSelectedOptions] = useState(initialMultipleArea);
 
-    //! Validation wala  
-    const validate = (fieldValues = values) => {
-        let temp = { ...errors }
-        if ('first_name' in fieldValues)
-            temp.first_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.first_name);
-        temp.middle_name = returnValidation(['number', 'lessThan50', 'specialcharacter'], values.middle_name);
-        if ('last_name' in fieldValues)
-            temp.last_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.last_name);
-        if ('address' in fieldValues)
-            temp.address = returnValidation(['null'], values.address);
-        if ('role_name' in fieldValues)
-            temp.role_name = returnValidation(['null'], values.role_name);
-        if ('division_name' in fieldValues)
-            temp.division_name = returnValidation(['null'], values.division_name);
-        if ('executive_level' in fieldValues)
-            temp.executive_level = returnValidation(['null'], values.executive_level);
-        if ('phone_number' in fieldValues)
-            temp.phone_number = returnValidation(['null', 'phonenumber', 'specialchracter'], values.phone_number);
-        if ('email' in fieldValues)
-            temp.email = returnValidation(['null', 'email'], values.email);
-        if ('company_area' in fieldValues)
-            temp.company_area = returnValidation(['null'], values.company_area);
 
-        setErrors(temp);
-        return Object.values(temp).every(x => x === "");
-    };
 
-    useEffect(() => {
-        validate();
-    }, [values.first_name, values.middle_name, values.last_name, values.division, values.company_area, values.executive_level, values.role_name, values.phone_number, values.station_type]);
+
+    // const initialAreaSelected = User?.data?.company_area?.map(area => ({ id: area.id })) || [];
+    // setInitialMultipleArea(initialAreaSelected)
+
 
     useEffect(() => {
         if (User?.data) {
-            const selectedDivisions = User.data.division_name?.map(division => ({ id: division.id, title: division.division_name })) || [];
-            const selectedCompanyAreas = User.data.company_area?.map(area => ({ id: area.id, title: area.company_area })) || [];
+
+            const selectedDivisions = User?.data?.division_name?.map(division => ({ id: division.id, title: division.division_name })) || [];
+            const selectedCompanyAreas = User?.data?.company_area?.map(area => ({ id: area.id, title: area.company_area })) || [];
+
+            const initialAreaSelected = User?.data?.company_area?.map(area => (area.id)) || [];
+            setInitialMultipleArea(initialAreaSelected)
+
             setInitialFValues({
                 first_name: User.data.user_name?.first_name || '',
                 middle_name: User.data.user_name?.middle_name || '',
@@ -187,6 +193,68 @@ const EditUserAdmin = ({ idharu, onClose }) => {
             setMultipleCompanyAreas(selectedCompanyAreas);
         }
     }, [User])
+
+    const { values,
+        errors,
+        setErrors,
+        handleInputChange
+    } = useForm(
+        initialFValues,
+        true,
+        false,
+        true
+    )
+
+    useEffect(() => {
+        validate();
+
+    }, [
+        values.first_name,
+        values.last_name,
+        values.middle_name,
+        values.role_name,
+        values.address,
+        values.executive_level,
+        values.phone_number,
+        values.email,
+        values.company_area,
+
+        // values.station_type
+        // values.company_area,
+        // values.division_name,
+    ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+        setIsButtonDisabled(!valid);
+    }, [
+        values.first_name,
+        values.last_name,
+        values.middle_name,
+        values.role_name,
+        values.address,
+        values.executive_level,
+        values.phone_number,
+        values.email,
+        values.company_areas
+
+        // values.station_type,
+        // values.company_area,
+        // values.division_name,
+    ]);
+
+    const handleSelectionChange = (selectedIds) => {
+        setSelectedOptions(selectedIds);
+
+        // Example validation: At least one option must be selected
+        if (selectedIds.length === 0) {
+            setError('At least one option must be selected.');
+        } else {
+            setError(null);
+        }
+    };
 
     //! Edit user
     const [updateUsers] = useUpdateUsersMutation();
@@ -413,6 +481,18 @@ const EditUserAdmin = ({ idharu, onClose }) => {
                         />
                     </Box>
                     {/* <Box marginBottom={2}>
+                        <Controls.MultiSelectAutocomplete
+                            options={companyAreas}
+                            label="Company Areas"
+                            initialSelected={selectedOptions} // Pass default values
+                            onChange={handleMultpleCompanyAreas} // Handle changes
+                            error={errors.company_area}
+                        />
+                        <div>
+                            <strong>Selected IDs:</strong> {JSON.stringify(selectedOptions)}
+                        </div>
+                    </Box> */}
+                    {/* <Box marginBottom={2}>
                         <Controls.Input
                             name="station_type"
                             label="Station Type*"
@@ -426,6 +506,7 @@ const EditUserAdmin = ({ idharu, onClose }) => {
                         <Controls.SubmitButton
                             variant="contained"
                             className="submit-button"
+                            disabled={isButtonDisabled}
                             onClick={(e) => handleSubmit(e)}
                             text="Submit"
                         />

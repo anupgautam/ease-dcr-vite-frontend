@@ -23,7 +23,8 @@ export const DoctorDCRAllSlice = apiSlice.injectEndpoints({
         //! Get all Doctor DCRs by ID 
         getDoctorAllDCRById: builder.query({
             query: (id) => ({
-                url: `dcr/dcr-for-doctor-company-product-map/?dcr_id=${id}`,
+                // url: `dcr/dcr-for-doctor-company-product-map/?dcr_id=${id}`,
+                url: `dcr/mpo-shift-wise-dcr-for-doctor/${id}`,
                 method: 'GET'
             }),
             providesTags: ['DoctorAllDCR']
@@ -43,7 +44,7 @@ export const DoctorDCRAllSlice = apiSlice.injectEndpoints({
             providesTags: ['DoctorAllDCR']
         }),
 
-        //! CREATE chemist DCR by id
+        //! CREATE doctor DCR by id
         addDoctorsAllDCR: builder.mutation({
             query: (addDoctorsDCR) => {
 

@@ -45,7 +45,7 @@ const FilterDCR = () => {
     const role = searchParams.get('role');
     const date = searchParams.get('date');
     const dateOnly = date?.split('T')[0];
-    
+
     const dispatch = useDispatch();
 
     const [selectedId, setSelectedId] = useState(null);
@@ -429,7 +429,9 @@ const FilterDCR = () => {
                                             <StockistDCR
                                                 selectedUser={selectedId ? selectedId : id}
                                                 selectedMonth={selectedMonth}
-                                                selectedDate={selectedYear} />
+                                                selectedDate={selectedYear}
+                                                dateOnly={dateOnly}
+                                            />
                                             : <DefaultStockistDCR />
                                         }
                                     </> :
@@ -443,7 +445,9 @@ const FilterDCR = () => {
                                     <HODCR
                                         selectedUser={selectedId ? selectedId?.id : id}
                                         selectedMonth={selectedMonth}
-                                        selectedDate={selectedYear} />
+                                        selectedDate={selectedYear}
+                                        dateOnly={dateOnly}
+                                    />
                                     : <DefaultHODCR />
                                 }
                             </>
@@ -454,6 +458,7 @@ const FilterDCR = () => {
                                 selectedUser={selectedId ? selectedId?.id : id}
                                 selectedMonth={selectedMonth}
                                 selectedDate={selectedYear}
+                                dateOnly={dateOnly}
                             />
                             : <DefaultHODCR />
                         }

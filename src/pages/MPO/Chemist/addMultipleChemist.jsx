@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { usePostAllMPONamesNoPageMutation } from "@/api/MPOSlices/DoctorSlice";
 import Scrollbar from "@/components/scrollbar/Scrollbar";
 import { UserListHead } from "@/sections/@dashboard/user";
+import { useForm } from "../../../reusable/forms/useForm";
+import { returnValidation } from '../../../validation';
 import Controls from "@/reusable/forms/controls/Controls";
 import { useGetMpoAreaQuery } from "@/api/MPOSlices/TourPlanSlice";
 import { Circles } from 'react-loader-spinner';
@@ -45,7 +47,7 @@ const AddMultipleChemist = () => {
         for (const addData of AllMutipleData) {
             try {
                 const response = await createChemist(addData)
-                if (response.data) {
+                if (response?.data) {
                     setSuccessMessage({ show: true, message: 'Successfully Added Chemist.' });
 
                     setTimeout(() => {
@@ -160,7 +162,7 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
         MpoList.map((key) => {
             mpoNames.push({
                 id: key.id,
-                title: key.user_name.first_name + ' ' + key.user_name.middle_name + ' ' + key.user_name.last_name
+                title: key?.user_name?.first_name + ' ' + key?.user_name?.middle_name + ' ' + key?.user_name?.last_name
             })
         })
     }
@@ -178,7 +180,30 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
         }
     }, [company_id])
 
-    const [Formdata, setFormData] = useState({
+    //! Validation wala  
+    const validate = (fieldValues = values) => {
+        // 
+        let temp = { ...errors }
+        if ('chemist_name' in fieldValues)
+            temp.chemist_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.chemist_name)
+        temp.chemist_category = returnValidation(['null'], values.chemist_category)
+        temp.mpo_name = returnValidation(['null'], values.mpo_name)
+        temp.chemist_territory = returnValidation(['null'], values.chemist_territory)
+        temp.chemist_contact_person = returnValidation(['null', 'lessThan50', 'specialcharacter', 'minLength3'], values.chemist_contact_person)
+        temp.chemist_phone_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.chemist_phone_number)
+        temp.chemist_pan_number = returnValidation(['null', 'minLength3', 'specialcharacter'], values.chemist_pan_number)
+        temp.chemist_address = returnValidation(['null', 'minLength3', 'specialcharacter'], values.chemist_address)
+
+        setErrors({
+            ...temp
+        })
+
+
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x == "")
+    }
+
+    const [initialFValues, setInitialFValues] = useState({
         chemist_name: "",
         chemist_phone_number: "",
         chemist_address: "",
@@ -190,11 +215,57 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
         company_name: company_id,
         is_investment: false,
     })
+    // const [Formdata, setFormData] = useState({
+    //     chemist_name: "",
+    //     chemist_phone_number: "",
+    //     chemist_address: "",
+    //     chemist_category: "",
+    //     chemist_pan_number: "",
+    //     chemist_contact_person: "",
+    //     mpo_name: user_role === 'MPO' ? company_user_role_id : "",
+    //     chemist_territory: "",
+    //     company_name: company_id,
+    //     is_investment: false,
+    // })
 
+    const {
+        values,
+        errors,
+        setErrors,
+    } = useForm(initialFValues, true, validate)
+
+    useEffect(() => {
+        validate();
+
+    }, [values.chemist_name,
+    values.chemist_category,
+    values.chemist_address,
+    values.mpo_name,
+    values.chemist_territory,
+    values.chemist_contact_person,
+    values.chemist_phone_number,
+    values.chemist_pan_number,
+    ])
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        const valid = validate(values);
+
+        setIsButtonDisabled(!valid);
+    }, [values.chemist_name,
+    values.chemist_category,
+    values.chemist_address,
+    values.mpo_name,
+    values.chemist_territory,
+    values.chemist_contact_person,
+    values.chemist_phone_number,
+    values.chemist_pan_number,]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        const newData = { ...Formdata, [name]: value };
+        // const newData = { ...Formdata, [name]: value };
+        const newData = { ...values, [name]: value };
 
         setFormData(newData);
 
@@ -226,16 +297,18 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                     autoFocus
                     name="chemist_name"
                     label="Chemist Name*"
-                    value={Formdata.chemist_name}
+                    // value={Formdata.chemist_name}
+                    value={values.chemist_name}
                     onChange={handleInputChange}
-                // error={errors.doctor_name}
+                    error={errors.chemist_name}
                 />
             </TableCell>
             <TableCell align="left">
                 <Controls.Input
                     name="chemist_phone_number"
                     label="Chemist Phone Number"
-                    value={Formdata.chemist_phone_number}
+                    // value={Formdata.chemist_phone_number}
+                    value={values.chemist_phone_number}
                     onChange={handleInputChange}
                 // error={errors.doctor_phone_number}
                 />
@@ -257,7 +330,8 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 <Controls.Select
                     name="chemist_territory"
                     label="Chemist Territory*"
-                    value={Formdata.chemist_territory}
+                    // value={Formdata.chemist_territory}
+                    value={values.chemist_territory}
                     onChange={handleInputChange}
                     // error={errors.doctor_territory}
                     options={mpoAreaData}
@@ -268,7 +342,8 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 <Controls.Select
                     name="chemist_category"
                     label="Chemist Category*"
-                    value={Formdata.chemist_category}
+                    // value={Formdata.chemist_category}
+                    value={values.chemist_category}
                     options={doctorcategories}
                     onChange={handleInputChange}
                 // error={errors.doctorDCRId}
@@ -278,7 +353,8 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 <Controls.Input
                     name="chemist_pan_number"
                     label="Chemist PAN Number"
-                    value={Formdata.chemist_pan_number}
+                    // value={Formdata.chemist_pan_number}
+                    value={values.chemist_pan_number}
                     onChange={handleInputChange}
                 // error={errors.doctor_name}
                 />
@@ -287,7 +363,8 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 <Controls.Input
                     name="chemist_contact_person"
                     label="Chemist Contact Person"
-                    value={Formdata.chemist_contact_person}
+                    // value={Formdata.chemist_contact_person}
+                    value={values.chemist_contact_person}
                     onChange={handleInputChange}
                 // error={errors.doctor_name}
                 />
@@ -306,7 +383,8 @@ const MultipleChemist = ({ sn, setAllMutipleData, AllMutipleData }) => {
                 <Controls.Input
                     name="chemist_address"
                     label="Chemist Address"
-                    value={Formdata.chemist_address}
+                    // value={Formdata.chemist_address}
+                    value={values.chemist_address}
                     onChange={handleInputChange}
                 // error={errors.doctor_address}
                 />
