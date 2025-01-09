@@ -11,29 +11,60 @@ const contactAdapter = createEntityAdapter();
 
 const initialState = contactAdapter.getInitialState();
 
-const contact = 'contact/'
+// const contact = 'contact/'
 
 export const contactApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
+
         //! GET all the chemist
         getAllContacts: builder.query({
-            query: (page) => ({
-                url: `contact/`,
+            query: () => ({
+                url: `support/contact-us`,
                 method: 'GET'
             }),
             providesTags: ['Contact']
         }),
-        //! POST the contactus
-        createContact: builder.mutation({   
-            query: (createContact) => {
-                
+
+        //! Get Analytics By MPO
+        getAnalyticsByMPO: builder.query({
+            query: (id) => ({
+                url: `analytics/?user_to=${id.selectedOption}&year_from=${id.selectedYearFrom}&month_from=${id.selectedMonthFrom}&year_to=${id.selectedYearTo}&month_to=${id.selectedMonthTo}`,
+                method: 'GET'
+            }),
+            providesTags: ['Contact']
+        }),
+
+        //! Get Analytics By Other Role 
+        getAnalyticsByOtherRole: builder.query({
+            query: (id) => ({
+                url: `analytics/?user_to=${id.selectedOption}&year_from=${id.selectedYearFrom}&month_from=${id.selectedMonthFrom}&year_to=${id.selectedYearTo}&month_to=${id.selectedMonthTo}`,
+                method: 'GET'
+            }),
+            providesTags: ['Contact']
+        }),
+
+        //! DELETE doctor DCR by id
+        deleteContactById: builder.mutation({
+            query: (id) => {
+                // console.log('Deleting contact with ID:', id); // Log ID here
                 return {
-                    url: contact,
+                    url: `support/contact-us/${id}`,
+                    method: 'DELETE',
+                    body: id,
+                };
+            },
+            invalidatesTags: ['Contact'],
+        }),
+
+
+        //! POST the contactus
+        createContact: builder.mutation({
+            query: (createContact) => {
+
+                return {
+                    url: "support/contact-us/",
                     method: 'POST',
                     body: createContact,
-                    headers: {
-                        'Content-type': 'application/json; charset = UTF-8',
-                    }
                 }
             },
             invalidatesTags: ['Contact']
@@ -42,7 +73,11 @@ export const contactApiSlice = apiSlice.injectEndpoints({
 })
 
 export const {
-    useCreateContactMutation
+    useGetAllContactsQuery,
+    useDeleteContactByIdMutation,
+    useCreateContactMutation,
+    useGetAnalyticsByMPOQuery,
+    useGetAnalyticsByOtherRoleQuery,
 } = contactApiSlice
 
 

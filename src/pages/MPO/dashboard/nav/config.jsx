@@ -134,6 +134,11 @@ const navConfig = [
     icon: <Icon icon="ri:organization-chart" style={{ fontSize: '20px' }} />,
   },
   {
+    title: 'Analytics',
+    path: 'admin/analytics',
+    icon: <Icon icon="tdesign:chart-analytics" style={{ fontSize: '20px' }} />,
+  },
+  {
     title: 'Doctor Events',
     path: 'admin/doctorevent',
     icon: <Icon icon="simple-line-icons:event" style={{ fontSize: '20px' }} />,

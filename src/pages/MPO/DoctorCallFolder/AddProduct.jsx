@@ -92,7 +92,7 @@ const AddProduct = () => {
         try {
             await createProducts(formData).unwrap()
                 .then((response) => {
-                    console.log(response)
+                    // console.log(response)
                     if (response) {
                         // setSuccessMessage({ show: true, message: 'Successfully Added Doctor Call' });
                         // setTimeout((e) => {

@@ -13,8 +13,8 @@ import ChatContainer from "./chatMessageList";
 import { useSelector } from 'react-redux';
 import { io } from "socket.io-client";
 import UserList from "./UserList"
-import ChatTestMessage from "./chatTestMessage";
 import { useGetGroupWsConnectionQuery } from "../../../api/newChatSlices/groupSlice";
+import ChatTestMessage from "./ChatTestMessage";
 
 
 const TestChat = () => {
@@ -26,6 +26,8 @@ const TestChat = () => {
     const [typingMsg, setTypingMsg] = useState({ 'msg': '' })
     const [userId, setUserId] = useState(0);
     const [chatMessage, setChatMessage] = useState([]);
+
+    console.log(chatMessage)
 
     const changeTypingMsg = (e) => {
         setTypingMsg({ 'msg': e.target.value })
@@ -41,9 +43,6 @@ const TestChat = () => {
         transports: ['websocket'],
         withCredentials: true,
     });
-
-
-
 
     const scrollRef = useRef();
 
@@ -61,14 +60,13 @@ const TestChat = () => {
             setChatMessage((prevMessages) => [
                 ...prevMessages,
                 {
-                    chat_from: data.chat_from,
-                    chat_to: data.chat_to,
-                    chat_message: data.chat_message,
-                    message_from: data.message_from,
+                    chat_from: data?.chat_from,
+                    chat_to: data?.chat_to,
+                    chat_message: data?.chat_message,
+                    message_from: data?.message_from,
                 }
             ]);
         });
-
 
         return () => {
             socket.off('receiveMessage');
@@ -76,6 +74,31 @@ const TestChat = () => {
             console.log('Disconnected from Socket.io server');
         };
     }, [company_user_role_id, userId]);
+
+    // const submitMessage = () => {
+    //     const dynamicRoomId = 'room_' + Math.random().toString(36).substring(7);
+
+    //     const data = {
+    //         room_id: dynamicRoomId,
+    //         chat_to: userId,
+    //         chat_from: Number(company_user_role_id),
+    //         company_name: company_id,
+    //         message: typingMsg.msg,
+    //     };
+
+    //     socket.emit('sendMessage', data);
+
+    //     setTypingMsg({ msg: '' });
+    //     setChatMessage((prevMessages) => [
+    //         ...prevMessages,
+    //         {
+    //             chat_to: userId,
+    //             chat_from: Number(company_user_role_id),
+    //             chat_message: typingMsg.msg,
+    //             message_from: company_user_role_id,
+    //         }
+    //     ]);
+    // };
 
     const submitMessage = () => {
         const dynamicRoomId = 'room_' + Math.random().toString(36).substring(7);
@@ -91,6 +114,7 @@ const TestChat = () => {
         socket.emit('sendMessage', data);
 
         setTypingMsg({ msg: '' });
+
         setChatMessage((prevMessages) => [
             ...prevMessages,
             {
@@ -98,7 +122,7 @@ const TestChat = () => {
                 chat_from: Number(company_user_role_id),
                 chat_message: typingMsg.msg,
                 message_from: company_user_role_id,
-            }
+            },
         ]);
     };
 
@@ -120,7 +144,7 @@ const TestChat = () => {
     useEffect(() => {
         if (getUserWSConnection?.data) {
             if (userId && company_user_role_id) {
-                setChatMessage(getUserWSConnection.data);
+                setChatMessage(getUserWSConnection?.data);
             }
         }
     }, [userId, company_user_role_id, getUserWSConnection])

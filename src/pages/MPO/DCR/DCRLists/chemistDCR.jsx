@@ -104,6 +104,8 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
         }
     }, [results]);
 
+    console.log(results?.data?.results)
+
     //! Corrected
     const handlePageChange = (event, newPage) => {
         setCurrentPage(newPage);
@@ -211,7 +213,7 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
                                                                     {/* </Stack> */}
                                                                 </TableCell>
                                                                 <TableCell align="left">{tourplan?.shift?.shift}</TableCell>
-                                                                <TableCell align="left">{moment(tourplan?.dcr?.dcr?.date).format('DD')}</TableCell>
+                                                                <TableCell align="left">{moment(tourplan?.dcr?.date).format('DD')}</TableCell>
                                                                 <TableCell align="left">{tourplan?.dcr?.visited_area?.area_name}</TableCell>
                                                                 <TableCell component="th" scope="row" align="left">
                                                                     {/* <Stack direction="row" alignItems="center" spacing={2}> */}

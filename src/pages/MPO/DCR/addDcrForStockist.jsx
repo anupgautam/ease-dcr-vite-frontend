@@ -150,6 +150,8 @@ const AddDCRForStockist = () => {
                 rewards: RewardOptions,
                 company_roles: dcrForDoctor?.data?.company_roles,
                 company_product: dcrForDoctor?.data?.company_product,
+                day_status: tourplanData?.tour_plan?.tour_plan?.day_status
+
             });
         }
     }, [dcrForDoctor?.data, NewTourPlanData, companyUserArea?.data]);
@@ -284,6 +286,8 @@ const AddDCRForStockist = () => {
                 sendingData['visited_area'] = null;
                 sendingData['visited_doctor'] = null;
                 sendingData['shift'] = null;
+                sendingData['day_status'] = tourplanData[0]?.tour_plan?.tour_plan?.day_status;
+
             }
             updateDcr({ id: id, value: sendingData })
                 .then((res) => {
@@ -359,7 +363,7 @@ const AddDCRForStockist = () => {
                         // setErrorMessage({ show: true, message: extractErrorMessage({ data: response?.error }) });
                         // setLoading(false);
                         // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                        toast.error(`${res?.error}`)
+                        toast.error(`${res?.error?.data?.message}`)
                         setLoading(false);
                     } else {
                         // setErrorMessage({ show: true, message: 'Some Error Occurred. Try again later.' });
@@ -630,7 +634,7 @@ const AddDCRForStockist = () => {
                                     <Box marginBottom={2}>
                                         <Controls.Input
                                             name="expenses_reasoning"
-                                            label="Expenses Resoning*"
+                                            label="Expenses Reasoning*"
                                             value={values.expenses_reasoning}
                                             onChange={handleInputChange}
                                             // error={errors.select_the_date}

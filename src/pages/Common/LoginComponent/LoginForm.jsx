@@ -138,10 +138,11 @@ const LoginFormInputs = () => {
                             setLoading(false);
                         }, 1000);
 
-                    } else if (res?.error) {
+                    } else if (res) {
+                        console.log("Error message", res)
                         // setErrorMessage({ show: true, message: extractErrorMessage({ data: res.error }) });
                         // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                        toast.error(res?.error?.data?.msg)
+                        toast.error(res?.error?.data?.message)
                         setLoading(false);
                     }
                 } catch (err) {
@@ -186,7 +187,7 @@ const LoginFormInputs = () => {
                     <Stack spacing={2.5}>
                         <Box marginBottom={0.25}>
                             <TextField
-                                label="Email"
+                                label="Email Or Phonenumber"
                                 type="email"
                                 value={email}
                                 onChange={handleEmailChange}

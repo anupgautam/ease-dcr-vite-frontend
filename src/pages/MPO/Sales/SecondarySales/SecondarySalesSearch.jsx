@@ -44,6 +44,7 @@ import Scrollbar from '@/components/scrollbar/Scrollbar';
 import { useGetUsersByIdQuery } from "@/api/DemoUserSlice";
 import { useSelector } from 'react-redux';
 import DefaultList from './DefaultList';
+import { useGetSecondarySalesByCompanyIdQuery } from '../../../../api/OrderedProductslices/chemistOrderedProductSlice';
 
 const TABLE_HEAD = [
     { id: 'product_name', label: 'Product Name', alignRight: false },
@@ -97,7 +98,7 @@ const SecondarySalesSearch = () => {
         if (Stockist?.data) {
             return Stockist?.data?.map((key) => ({
                 id: key.id,
-                title: key.stockist_name.stockist_name
+                title: key?.stockist_name?.stockist_name
             }))
         }
         return [];
@@ -201,17 +202,19 @@ const SecondarySalesSearch = () => {
     }, []);
 
     //! onSearch
-    const FilteredData = { companyId: company_id, selectedOption: selectedOption, selectedMonth: selectedMonth, dateData: selectedYear }
+    // const FilteredData = { companyId: company_id, selectedOption: selectedOption, selectedMonth: selectedMonth, dateData: selectedYear }
 
-    useEffect(() => {
-        if (selectedOption || selectedMonth || selectedYear) {
-            searchSecondarySales(FilteredData, {
-                skip: !selectedOption || !company_id || !selectedYear || !selectedMonth
-            })
-                .then((res) => {
-                })
-        }
-    }, [selectedOption, selectedMonth, selectedYear])
+    const { data } = useGetSecondarySalesByCompanyIdQuery({ company_id: company_id, stockist_id: selectedOption, month: selectedMonth, year: selectedYear });
+
+    // useEffect(() => {
+    //     if (selectedOption || selectedMonth || selectedYear) {
+    //         searchSecondarySales(FilteredData, {
+    //             skip: !selectedOption || !company_id || !selectedYear || !selectedMonth
+    //         })
+    //             .then((res) => {
+    //             })
+    //     }
+    // }, [selectedOption, selectedMonth, selectedYear])
 
     // !Delete chemists
     const [deleteSecondarySales] = useDeleteSecondarySalesByIdMutation()
@@ -319,7 +322,7 @@ const SecondarySalesSearch = () => {
                                         :
                                         <>
                                             {
-                                                results && results?.data?.length == 0 ?
+                                                data && data?.length == 0 ?
                                                     <>
                                                         <TableRow>
                                                             <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
@@ -341,7 +344,7 @@ const SecondarySalesSearch = () => {
                                                     </> :
                                                     <>
                                                         {
-                                                            results?.data && results?.data?.map((secondarysales, index) => (
+                                                            data && data?.map((secondarysales, index) => (
                                                                 <TableRow hover tabIndex={-1} key={secondarysales.id}>
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell TableCell component="th" scope="row" align="left">
@@ -351,7 +354,7 @@ const SecondarySalesSearch = () => {
                                                                         </Typography>
                                                                         {/* </Stack> */}
                                                                     </TableCell>
-                                                                    <TableCell align="left">{secondarysales.dcr_id.dcr.visited_chemist.chemist_name.chemist_name}</TableCell>
+                                                                    {/* <TableCell align="left">{secondarysales.dcr_id.dcr.visited_chemist.chemist_name.chemist_name}</TableCell> */}
                                                                     <TableCell align="left">{secondarysales.select_the_stockist.stockist_name.stockist_name}</TableCell>
                                                                     <TableCell align="left">Rs. {parseInt(secondarysales.ordered_quantity) * parseInt(secondarysales.product_id.product_name.product_price_per_strip_in_mrp)}</TableCell>
                                                                     <TableCell align="left">{secondarysales.ordered_quantity}</TableCell>

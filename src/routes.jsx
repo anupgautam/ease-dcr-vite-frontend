@@ -80,6 +80,8 @@ import ListOfCompanyWiseUsers from './pages/MPO/CompanyUsers/ListOfCompanyWiseUs
 import DefaultCompanyUsers from './pages/MPO/CompanyUsers/DefaultCompanyUsers';
 import TestChat from './pages/MPO/Chat/TestChat';
 import ResetPassword from './pages/ResetPassword';
+import ListOfAnalyticsController from './pages/MPO/Analytics/ListOfAnalyticsController';
+import ListOfContactController from './pages/MPO/Contacts/ListOfContactController';
 
 export default function Router() {
   const routes = useRoutes([
@@ -159,7 +161,7 @@ export default function Router() {
         {
           path: 'admin/add/mutiple/product',
           element: <Authentication component={AddMultipleProduct} allowRoles={['admin', 'MPO']} />,
-        },  
+        },
         {
           path: 'admin/add/mutiple/mpo/area',
           element: <Authentication component={AddMultipleMpoArea} allowRoles={['admin', 'MPO']} />,
@@ -241,11 +243,13 @@ export default function Router() {
           element: <Authentication component={ListOfUploadController} allowRoles={['admin', 'MPO']} />,
         },
         {
+          path: 'admin/analytics',
+          element: <Authentication component={ListOfAnalyticsController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        {
           path: 'admin/mpoareas',
           element: <Authentication component={ListOfMPOAreasController} allowRoles={['admin', 'MPO']} />,
         },
-
-
 
         //! Sales
         {
@@ -357,6 +361,10 @@ export default function Router() {
         {
           path: 'superadmin/companywiseusers',
           element: <Authentication component={ListOfCompanyWiseUsers} allowRoles={['SuperAdmin']} />,
+        },
+        {
+          path: 'superadmin/contacts',
+          element: <Authentication component={ListOfContactController} allowRoles={['SuperAdmin']} />,
         },
         // {
         //   path: 'superadmin/companywiseusers',

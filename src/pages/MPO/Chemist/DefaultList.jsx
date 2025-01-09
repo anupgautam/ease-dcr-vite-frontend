@@ -66,7 +66,7 @@ const DefaultList = () => {
             try {
                 const response = await deleteChemist(id);
                 if (response?.data) {
-                    toast.success(`${response?.data?.msg}`)
+                    toast.success(`${response?.data?.message}`)
                 } else if (response?.error) {
                     toast.error(`Error: ${response.error.data?.message || "Failed to delete Chemist"}`);
                 }

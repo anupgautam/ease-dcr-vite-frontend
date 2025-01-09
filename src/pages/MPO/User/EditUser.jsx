@@ -113,8 +113,8 @@ const EditUser = ({ idharu, onClose }) => {
         temp.phone_number = returnValidation(['null', 'phonenumber', 'specialchracter'], values.phone_number);
 
         // temp.station_type = returnValidation(['null'], values.station_type);
-        // if ('company_area' in fieldValues)
-        //     temp.company_area = returnValidation(['null'], values.company_area);
+        if ('company_area' in fieldValues)
+            temp.company_area = returnValidation(['null'], values.company_area);
         // if ('division_name' in fieldValues)
         //     temp.division_name = returnValidation(['null'], values.division_name);
 
@@ -132,27 +132,33 @@ const EditUser = ({ idharu, onClose }) => {
         executive_level: "",
 
         // division_name: "",
-        // company_area: "",
+        company_area: "",
         // station_type: "",
     })
 
+    const [initialMultipleArea, setInitialMultipleArea] = useState([])
+    console.log("InitialMultipleArea", initialMultipleArea)
     useEffect(() => {
         if (User?.data) {
             const selectedDivisions = User.data.division_name?.map(division => ({ id: division.id, title: division.division_name })) || [];
             const selectedCompanyAreas = User.data.company_area?.map(area => ({ id: area.id, title: area.company_area })) || [];
+
+            const initialAreaSelected = User.data.company_area?.map(area => ({ id: area.id })) || [];
+            setInitialMultipleArea(initialAreaSelected)
+
             setInitialFValues({
-                first_name: User.data.user_name?.first_name || '',
-                middle_name: User.data.user_name?.middle_name || '',
-                last_name: User.data.user_name?.last_name || '',
-                email: User.data.user_name?.email || '',
-                phone_number: User.data.user_name?.phone_number || '',
-                role_name: User.data.role_name?.id || '',
-                executive_level: User.data.executive_level?.user_name?.id || '',
-                station_type: User.data.station_type || '',
+                first_name: User?.data?.user_name?.first_name || '',
+                middle_name: User?.data?.user_name?.middle_name || '',
+                last_name: User?.data?.user_name?.last_name || '',
+                email: User?.data?.user_name?.email || '',
+                phone_number: User?.data?.user_name?.phone_number || '',
+                role_name: User?.data?.role_name?.id || '',
+                executive_level: User?.data?.executive_level?.user_name?.id || '',
+                station_type: User?.data?.station_type || '',
                 division_name: selectedDivisions || null,
                 company_area: selectedCompanyAreas || null
             });
-            setDateData(User.data.user_name?.date_of_joining || now);
+            setDateData(User?.data?.user_name?.date_of_joining || now);
             setMultipleDivisions(selectedDivisions);
             setMultipleCompanyAreas();
         }
@@ -423,6 +429,7 @@ const EditUser = ({ idharu, onClose }) => {
                             options={execLevelUsers}
                         />
                     </Box>
+                    
                     <Box marginBottom={2}>
                         <Autocomplete
                             multiple

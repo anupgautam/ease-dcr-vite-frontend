@@ -47,10 +47,10 @@ const TABLE_HEAD = [
     { id: 'month', label: 'Month', alignRight: false },
     { id: 'stockist_name', label: 'Stockist Name', alignRight: false },
     { id: '' },
-
 ];
 
-const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
+const StockistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
+
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
     const dispatch = useDispatch()
@@ -72,7 +72,7 @@ const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
         setIsDrawerOpen(false);
     }
 
-    const FilteredData = { company_name: company_id, user_id: user_role === "admin" ? selectedUser : company_user_role_id, month: selectedMonth, date: selectedDate }
+    const FilteredData = { company_name: company_id, user_id: user_role === "admin" ? selectedUser : company_user_role_id, month: selectedMonth, date: selectedDate, dateOnly: dateOnly }
 
     //! Search Results 
     const results = useSearchStockistsDCRQuery(FilteredData);
@@ -132,7 +132,7 @@ const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
                                 <TableBody>
                                     <>
                                         {
-                                            results.data === undefined ? <>
+                                            results?.data === undefined ? <>
                                                 {
                                                     eightArrays.map((key) => (
                                                         <TableRow key={key} >
@@ -147,7 +147,7 @@ const StockistDCR = ({ selectedUser, selectedMonth, selectedDate }) => {
                                                     ))}
                                             </> :
                                                 <>
-                                                    {results.data && results.data.count == 0 ?
+                                                    {results?.data && results?.data?.count == 0 ?
                                                         <TableRow>
                                                             <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
                                                                 <Paper

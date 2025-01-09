@@ -36,6 +36,7 @@ export const ChemistDCRSlice = apiSlice.injectEndpoints({
                 return {
                     // url: `dcr/mpo-shift-wise-dcr-for-chemist/?company_name=${searchChemistsDCR.company_name}&mpo_name=${searchChemistsDCR.user_id}&month=${searchChemistsDCR.month}&year=${searchChemistsDCR.date}&date=${searchChemistsDCR.fullDate}`,
                     url: `dcr/mpo-shift-wise-dcr-for-chemist/?company_name=${searchChemistsDCR.company_name}&mpo_name=${searchChemistsDCR.user_id}&month=${searchChemistsDCR.month}&year=${searchChemistsDCR.date}`,
+                    // url: `dcr/mpo-shift-wise-dcr-for-chemist/?company_name=${searchChemistsDCR.company_name}&mpo_name=${searchChemistsDCR.user_id}&month=${searchChemistsDCR.month}&year=${searchChemistsDCR.date}&date=${searchChemistsDCR.dateOnly}`,
                     method: 'GET',
                 }
             },

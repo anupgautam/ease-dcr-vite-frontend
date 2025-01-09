@@ -49,6 +49,11 @@ const OtherRoleConfig = [
         path: 'admin/travelallowances',
         icon: <Icon icon="tabler:map-pin-dollar" style={{ fontSize: '20px' }} />,
     },
+    {
+        title: 'Analytics',
+        path: 'admin/analytics',
+        icon: <Icon icon="tdesign:chart-analytics" style={{ fontSize: '20px' }} />,
+    },
 ];
 
 export default OtherRoleConfig;
