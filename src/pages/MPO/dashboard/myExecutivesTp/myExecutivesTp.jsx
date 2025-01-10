@@ -473,14 +473,14 @@ const MyExecutiveTp = () => {
                                                                                     </>}
                                                                                     </TableCell>
                                                                                     <TableCell align="left">{tourplan.tour_plan.tour_plan.hulting_station}</TableCell>
-                                                                                    {
-                                                                                        tourplan.is_approved === false &&
-                                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
-                                                                                            <Badge>
-                                                                                                <Iconify icon="eva:edit-fill" />
-                                                                                            </Badge>
-                                                                                        </IconButton>
-                                                                                    }
+                                                                                    {/* {
+                                                                                        tourplan.is_approved === false && */}
+                                                                                    <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)} >
+                                                                                        <Badge>
+                                                                                            <Iconify icon="eva:edit-fill" />
+                                                                                        </Badge>
+                                                                                    </IconButton>
+                                                                                    {/* } */}
 
                                                                                     {/* //! Delete  */}
                                                                                     {

@@ -40,7 +40,6 @@ const DefaultList = () => {
     const [selectedUpdateId, setSelectedUpdateId] = useState(null);
     const [open, setOpen] = useState(false);
 
-
     const onEdit = useCallback((id) => {
         setSelectedUpdateId(id);
         setIsDrawerOpen(true);
@@ -109,7 +108,7 @@ const DefaultList = () => {
                                                         <TableCell align="left">{index + 1}</TableCell>
                                                         <TableCell component="th" scope="row" align="left">
                                                             <Typography variant="subtitle2" noWrap>
-                                                                {tpdays.company_roles.role_name_value}
+                                                                {tpdays?.company_roles?.role_name_value}
                                                             </Typography>
                                                         </TableCell>
                                                         <TableCell align="left">{tpdays.tp_lock_days}</TableCell>

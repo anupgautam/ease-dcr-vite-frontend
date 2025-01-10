@@ -21,7 +21,8 @@ import {
     useCreateDcrForChemistWithNullValuesMutation,
     useCreateDcrForStockistWithNullValuesMutation,
     useCreateDcrWithNullValuesForDoctorMutation,
-    useGetHigherOrderTourPlanUsingIdQuery
+    useGetHigherOrderTourPlanUsingIdQuery,
+    useGetAllVisitedWithAreaQuery
 } from '@/api/MPOSlices/tourPlan&Dcr';
 import { useNavigate } from 'react-router-dom';
 import { useGetcompanyUserRolesByIdQuery } from '@/api/CompanySlices/companyUserRoleSlice';
@@ -104,7 +105,7 @@ const AddDcrForHo = () => {
 
     const { data: higherOrderTourplans } = useGetHigherOrderTourPlanUsingIdQuery({ user_id: company_user_role_id, year: yearData, month: monthData });
 
-    // console.log(higherOrderTourplans)
+    console.log(higherOrderTourplans)
 
     // useEffect(() => {
     //     GethingherOrder({ user_id: company_user_role_id })
@@ -141,6 +142,17 @@ const AddDcrForHo = () => {
                 })
         }
     }, [company_id])
+
+    //! Get visited Area
+    const VisitedArea = useGetAllVisitedWithAreaQuery(company_user_role_id)
+
+    const visitedAreas = useMemo(() => {
+        if (VisitedArea?.data) {
+            return VisitedArea?.data.map((key => ({
+                id: key.id, title: key.area_name + " " + `( ${key.station_type})`
+            })))
+        }
+    })
 
     const validate = (fieldValues = values) => {
         // 
@@ -249,6 +261,7 @@ const AddDcrForHo = () => {
             date: formattedDate,
             // day_status:
             visited_with: values.visited_with,
+            visited_area: values.visited_area,
             shift: values.shift,
             user_id: company_user_role_id,
             company_id: company_id,
@@ -270,8 +283,9 @@ const AddDcrForHo = () => {
                     // setTimeout(() => {
                     //     setErrorMessage({ show: false, message: '' });
                     // }, 2000);
-                    toast.error(`${res?.error}`)
+                    toast.error(`${res?.error?.data?.message}`)
                     setLoading(false);
+                    setInitialFvalues(initialFValues)
                 }
             })
             .catch((err) => {
@@ -326,7 +340,7 @@ const AddDcrForHo = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Add DCR
+                            Add {user_role} DCR
                         </Typography>
                     </Box>
                     {
@@ -354,7 +368,7 @@ const AddDcrForHo = () => {
                                                                                 <span style={{ backgroundColor: "#2d8960", padding: "4px", fontSize: "12px", color: "white", borderRadius: '15px', fontWeight: '600', paddingLeft: "10px", paddingRight: "10px" }}>
                                                                                     {key.month}
                                                                                 </span>
-                                                                                <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.visited_data.map((key) => key?.user_name?.first_name + " " + " " + key?.user_name?.middle_name + key?.user_name?.last_name)
+                                                                                <Typography style={{ marginTop: '5px', color: 'black', width: "150px", overflow: 'hidden', fontSize: "12px", fontWeight: "600", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{key.visited_data.map((key) => key?.area_name + " " + `( ${key.station_type})`)
                                                                                     .join(', ')}</Typography>
                                                                             </Box>
                                                                         </Grid>
@@ -393,6 +407,16 @@ const AddDcrForHo = () => {
                                     value={values.shift}
                                     onChange={handleInputChange}
                                     options={shiftAllData}
+                                />
+                            </Box>
+                            <Box marginBottom={2}>
+                                <Controls.Select
+                                    name={`visited_area`}
+                                    disable={true}
+                                    label="Select the Visited Area*"
+                                    value={values.visited_area}
+                                    onChange={handleInputChange}
+                                    options={visitedAreas}
                                 />
                             </Box>
                             <Box marginBottom={2}>

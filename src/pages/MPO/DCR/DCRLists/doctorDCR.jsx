@@ -89,7 +89,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
 
     //! Search Results 
     const results = useSearchDoctorsDCRQuery(FilteredData);
-
+    console.log(results?.data)
 
     //!States
     const [fetchedResults, setFetchedResults] = useState(null);
@@ -220,7 +220,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
                                                                     }
                                                                     {
                                                                         user_role === 'admin' &&
-                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan.id); handleClickOpen() }}>
+                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan?.id); handleClickOpen() }}>
                                                                             <Badge>
                                                                                 <Iconify icon="eva:trash-2-outline" />
                                                                             </Badge>
@@ -238,7 +238,7 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
                                                                     </DialogTitle>
                                                                     <DialogActions>
                                                                         <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
-                                                                            Yes
+                                                                            Yes{selectedId}
                                                                         </Button>
                                                                         <Button
                                                                             onClick={handleClose}

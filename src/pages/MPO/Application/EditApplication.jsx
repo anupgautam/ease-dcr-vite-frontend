@@ -28,6 +28,7 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
 
     //! Getting Application by ID
     const Application = useGetApplicationsByIdQuery(idharu);
+    console.log(Application)
 
     const validate = (fieldValues = values) => {
         // 
@@ -63,30 +64,12 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
 
     const leaves = [
         { id: "CL", title: "Casual Leave" },
-        { id: "SP", title: "Sick Leave" },
+        { id: "SL", title: "Sick Leave" },
         { id: "PL", title: "Paid Leave" },
         { id: "LWP", title: "Leave Without Pay" }
     ]
 
-    const [submittedto, setSubmittedTo] = useState([]);
-    useEffect(() => {
-        HigherLevelUser({ "id": company_user_role })
-            .then((Submitted) => {
-                setHigherUser(Submitted);
-            })
-            .catch((err) => {
-            });
-    }, [HigherLevelUser]);
 
-    useEffect(() => {
-        if (HigherUser) {
-            const updatedSubmittedTo = HigherUser?.data?.map((key) => ({
-                id: key?.id,
-                title: key?.user_name?.first_name + " " + key?.user_name?.last_name,
-            }));
-            setSubmittedTo(updatedSubmittedTo);
-        }
-    }, [HigherUser]);
 
     const { values,
         errors,
@@ -137,8 +120,29 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
 
     //! Get Higher level user roles
     const company_user_role = 3;
-    const [HigherUser, setHigherUser] = useState();
     const [HigherLevelUser] = useGetUpperLevelCompanyUserRoleByIdMutation();
+
+    const [HigherUser, setHigherUser] = useState();
+
+    useEffect(() => {
+        if (HigherUser) {
+            const updatedSubmittedTo = HigherUser?.data?.map((key) => ({
+                id: key?.id,
+                title: key?.user_name?.first_name + " " + key?.user_name?.last_name,
+            }));
+            setSubmittedTo(updatedSubmittedTo);
+        }
+    }, [HigherUser]);
+
+    const [submittedto, setSubmittedTo] = useState([]);
+    useEffect(() => {
+        HigherLevelUser({ "id": company_user_role })
+            .then((Submitted) => {
+                setHigherUser(Submitted);
+            })
+            .catch((err) => {
+            });
+    }, [HigherLevelUser]);
 
     const [dateData, setDateData] = useState();
     const [dateDataAnother, setDateDataAnother] = useState();
@@ -178,7 +182,6 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
         };
         try {
             const response = await updateApplications(formData).unwrap();
-
             if (response?.data) {
                 // setSuccessMessage({ show: true, message: 'Successfully Edited Application' });
                 // setTimeout(() => {
@@ -187,7 +190,7 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
                 //     setSuccessMessage({ show: false, message: '' });
                 // }, 2000);
 
-                toast.success(`${response?.data?.msg}`)
+                toast.success(`${response?.message}`)
                 setIsButtonDisabled(true)
                 setLoading(false);
                 onClose();
@@ -197,7 +200,6 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
                 // setLoading(false);
                 // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
 
-                console.log(response?.error)
                 toast.error(`${response?.error?.data?.msg}`)
                 setLoading(false);
             }
@@ -217,7 +219,6 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
             //     setErrorMessage({ show: false, message: '' });
             // }, 2000);
 
-            console.log(error)
             toast.error('Backend Error')
         }
         finally {

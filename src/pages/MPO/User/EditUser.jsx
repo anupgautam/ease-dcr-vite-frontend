@@ -140,7 +140,7 @@ const EditUser = ({ idharu, onClose }) => {
     console.log("InitialMultipleArea", initialMultipleArea)
     useEffect(() => {
         if (User?.data) {
-            const selectedDivisions = User.data.division_name?.map(division => ({ id: division.id, title: division.division_name })) || [];
+            const selectedDivisions = User?.data?.division_name?.map(division => ({ id: division.id, title: division?.division_name })) || [];
             const selectedCompanyAreas = User.data.company_area?.map(area => ({ id: area.id, title: area.company_area })) || [];
 
             const initialAreaSelected = User.data.company_area?.map(area => ({ id: area.id })) || [];

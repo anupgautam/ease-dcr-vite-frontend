@@ -13,6 +13,17 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
             },
             invalidatesTags: ['Tourplan', 'User'],
         }),
+
+        getAllVisitedWithArea: builder.query({
+            query: (value) => {
+                return {
+                    url: `/mpo/lower-level/area/?id=${value}`,
+                    method: 'GET',
+                };
+            },
+            invalidatesTags: ['PostTourplan'],
+        }),
+
         addHigherTourPlan: builder.mutation({
             query: value => {
                 return {
@@ -106,7 +117,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                     body: value.value,
                 }
             },
-            invalidatesTags: ['PostTourplan','StockistDCR']
+            invalidatesTags: ['PostTourplan', 'StockistDCR']
         }),
         createMpoShiftWiseDcrForDoctor: builder.mutation({
             query: value => ({
@@ -143,7 +154,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: value
             }),
-            invalidatesTags: ['PostTourplan', 'ChemistDCR','ChemistOrderedProduct']
+            invalidatesTags: ['PostTourplan', 'ChemistDCR', 'ChemistOrderedProduct']
         }),
         postStockistOrderedProduct: builder.mutation({
             query: (value) =>
@@ -152,7 +163,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: value
             }),
-            invalidatesTags: ['PostTourplan', 'StockistDCR','ChemistOrderedProduct']
+            invalidatesTags: ['PostTourplan', 'StockistDCR', 'ChemistOrderedProduct']
         }),
         createDcrForChemistwithShiftMpo: builder.mutation({
             query: (value) => ({
@@ -235,4 +246,7 @@ export const {
     useGetStatDataofDcrByHigherUserMutation,
     usePostChemistOrderedProductMutation,
     usePostStockistOrderedProductMutation,
+
+    //! Get All visited with Area
+    useGetAllVisitedWithAreaQuery 
 } = NewTourplanSlice;

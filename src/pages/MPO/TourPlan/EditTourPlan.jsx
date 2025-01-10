@@ -18,6 +18,8 @@ import {
     useUpdateTourPlansMutation,
     useGetMpoAreaQuery,
 } from '@/api/MPOSlices/TourPlanSlice'
+import { useGetAllVisitedWithAreaQuery } from '@/api/MPOSlices/tourPlan&Dcr';
+
 import {
     useGetShiftsQuery
 } from '@/api/MPOSlices/TourPlanSlice'
@@ -34,6 +36,7 @@ import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
 const EditTourPlan = ({ idharu, onClose }) => {
 
     const location = useLocation();
+    const higherCondition = location.pathname;
 
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
@@ -44,6 +47,9 @@ const EditTourPlan = ({ idharu, onClose }) => {
     const TourPlan = useGetTourPlansByIdQuery(idharu, {
         skip: !idharu
     });
+
+    console.log(TourPlan?.data)
+
     const MpoArea = useGetMpoAreaQuery({ company_name: company_id, mpo_name: TourPlan?.data?.mpo_name?.id }, {
         skip: !company_id || !TourPlan?.data?.mpo_name?.id
     });
@@ -59,10 +65,26 @@ const EditTourPlan = ({ idharu, onClose }) => {
 
     const areas = useMemo(() => {
         if (MpoArea?.data) {
-            return MpoArea?.data.map((key) => ({ id: key.id, title: key.area_name }));
+            return MpoArea?.data.map((key) => ({ id: key.id, title: key.area_name + " " + `( ${key.station_type})` }));
         }
         return [];
     }, [MpoArea]);
+
+    //! Get visited Area
+    const VisitedArea = useGetAllVisitedWithAreaQuery(company_user_role_id)
+
+    const visitedAreas = useMemo(() => {
+        if (VisitedArea?.data) {
+            return VisitedArea?.data.map((key => ({
+                id: key.id, title: key.area_name + " " + `( ${key.station_type})`
+            })))
+        }
+    })
+
+    const [multipleVisitedArea, setMultipleVisitedArea] = useState([])
+    const handleMultipleVisitedArea = (e, value) => {
+        setMultipleVisitedArea(value);
+    }
 
     const [initialFValues, setInitialFValues] = useState({
         mpo_name: "",
@@ -252,6 +274,25 @@ const EditTourPlan = ({ idharu, onClose }) => {
                                     />
                                 </Box>
                             </Grid>
+                            {/* <Grid item xs={12}>
+                                <Box marginBottom={2}>
+                                    <Autocomplete
+                                        value={multipleVisitedArea}
+                                        multiple
+                                        options={visitedAreas}
+                                        getOptionLabel={(option) => option.title}
+                                        onChange={handleMultipleVisitedArea}
+                                        renderInput={(params) => (
+                                            <TextField {...params} label="Select the Visited Area*" />
+                                        )}
+                                        renderOption={(props, option) => (
+                                            <li {...props} key={option.id}>
+                                                {option.title}
+                                            </li>
+                                        )}
+                                    />
+                                </Box>
+                            </Grid> */}
                         </Grid>
                         <Box marginBottom={2}>
                             {/* <Controls.Input

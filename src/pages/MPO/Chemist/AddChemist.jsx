@@ -28,7 +28,6 @@ import { toast } from 'react-toastify';
 const AddChemist = () => {
     const { company_id, user_role, company_user_role_id, company_user_id } = useSelector((state) => state.cookie);
 
-
     const chemistcategories = [
         { id: "A", title: "A" },
         { id: "B", title: "B" },

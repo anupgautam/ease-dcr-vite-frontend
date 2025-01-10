@@ -105,8 +105,8 @@ const UserSearch = () => {
   useEffect(() => {
     let dataList = [{ id: "", title: "None" }];
     if (roleList?.data) {
-      roleList.data.map((key) => {
-        dataList.push({ id: key.id, title: key.role_name_value });
+      roleList?.data.map((key) => {
+        dataList.push({ id: key.id, title: key?.role_name_value });
       });
     }
     setCompanyRoleList(dataList);
@@ -125,14 +125,13 @@ const UserSearch = () => {
     searchUser(searchResults, {
       skip: !company_id
     });
-    //
   };
 
   const [filterValue, setFilterValue] = useState(true);
 
-  const onFilterChange = useCallback((e) => {
+  const onFilterChange = (e) => {
     setFilterValue(e.target.value);
-  }, []);
+  };
 
   const initialFValues = {
     search: " ",
@@ -201,20 +200,19 @@ const UserSearch = () => {
   const [AdminUserLogin] = useLoginUserByAdminMutation();
   const navigate = useNavigate();
 
-
   const UserLogin = (id) => {
     AdminUserLogin({ user_id: id.user_name.id })
       .then((res) => {
         if (res.data) {
           localStorage.setItem('user_login', JSON.stringify(res.data));
           localStorage.setItem('email', id.user_name.email)
-          if (res.data.role === 'admin' || res.data.role === 'ADMIN') {
+          if (res?.data?.role === 'admin' || res.data.role === 'ADMIN') {
             setErrorMessage({ show: true, message: 'Admin Cannot be logged in.' });
           } else if (res.data.role === 'MPO' || res.data.role === 'mpo') {
             window.open('/dashboard/admin/listofdoctor', '_blank')
           } else if (res.data.role === "ASM") {
             window.open(`/dashboard/admin/tourplan`, '_blank');
-          } else if (res.data.role === "RSM" || res.data.role === "SM" || res.data.role === "MM" || res.data.role === "CH") {
+          } else if (res.data.role === "RSM" || res?.data?.role === "SM" || res.data.role === "MM" || res.data.role === "CH") {
             window.open(`/dashboard/admin/tourplan`, '_blank');
           }
           else {
@@ -428,7 +426,7 @@ const UserSearch = () => {
                                         aria-labelledby="responsive-dialog-title"
                                       >
                                         <DialogTitle id="responsive-dialog-title">
-                                          {"Do you want to unlock this usersearch?"}
+                                          {`Do you want to ${usersearch?.is_tp_locked ? 'unlock' : 'lock'} this user?`}
                                         </DialogTitle>
                                         <DialogActions>
                                           <Button
@@ -732,9 +730,9 @@ const UserSearch = () => {
                               display="flex"
                               margin="8px 0px"
                             >
-                              {results && typeof results.count === 'number' ? (
+                              {results && typeof results?.count === 'number' ? (
                                 <Pagination
-                                  count={Math.max(1, Math.ceil(results.count / 200))}
+                                  count={Math.max(1, Math.ceil(results?.count / 200))}
                                   onChange={handleChangePage}
                                 />
                               ) : (

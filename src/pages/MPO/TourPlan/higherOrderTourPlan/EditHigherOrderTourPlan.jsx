@@ -32,7 +32,7 @@ import { ConstructionOutlined } from '@mui/icons-material';
 import { extractErrorMessage } from '../../../../reusable/extractErrorMessage';
 import { toast } from 'react-toastify';
 import { useGetAllDayStatusQuery } from "../../../../api/MPOSlices/UserSlice";
-
+import { useGetAllVisitedWithAreaQuery } from '@/api/MPOSlices/tourPlan&Dcr';
 
 const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
@@ -97,7 +97,6 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     //! Getting TourPlan by ID
     const TourPlan = useGetHOTourPlansByIdQuery(idharu);
-    // console.log(TourPlan?.data)
 
     const [LowerExecutive] = usePostUserIdToGetLowerLevelExecutiveMutation();
 
@@ -131,6 +130,21 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                 })
         }
     }, [company_user_id])
+
+
+    //! Get visited Area
+    const VisitedArea = useGetAllVisitedWithAreaQuery(company_user_role_id)
+
+    console.log(VisitedArea)
+
+    const visitedAreas = useMemo(() => {
+        if (VisitedArea?.data) {
+            return VisitedArea?.data.map((key => ({
+                id: key.id, title: key.area_name + " " + `( ${key.station_type})`
+            })))
+        }
+        return [];
+    })
 
     // //! Get selected area
     const shiftData = useGetShiftsQuery();
@@ -191,12 +205,19 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
     const [isApproved, setIsApproved] = useState(false)
 
     const [defaultVisitedWith, setDefaultVisitedWith] = useState([])
+
+    console.log(TourPlan?.data)
     useEffect(() => {
         if (TourPlan?.data) {
 
-            const selectedVisitedWith = TourPlan?.data?.visited_data?.map(visited => ({
+            // const selectedVisitedWith = TourPlan?.data?.visited_data?.map(visited => ({
+            //     id: visited?.id,
+            //     title: visited?.user_name?.first_name + " " + visited?.user_name?.middle_name + " " + visited?.user_name?.last_name
+            // }))
+
+            const selectedVisitedArea = TourPlan?.data?.visited_data?.map(visited => ({
                 id: visited?.id,
-                title: visited?.user_name?.first_name + " " + visited?.user_name?.middle_name + " " + visited?.user_name?.last_name
+                title: visited?.area_name + " " + `( ${visited.station_type})`
             }))
 
             setInitialFValues({
@@ -211,7 +232,8 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                 visited_data: TourPlan?.data?.visited_data
             });
             setDateData(TourPlan?.data?.date ? TourPlan?.data?.date : now)
-            setMultipleVisitedWith(selectedVisitedWith)
+            // setMultipleVisitedWith(selectedVisitedWith)
+            setMultipleVisitedArea(selectedVisitedArea)
             // setIsApproved(TourPlan?.data?.is_approved)
         }
     }, [TourPlan])
@@ -242,6 +264,10 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
 
     const [VisitedData, setVisitedData] = useState('');
 
+    const [multipleVisitedArea, setMultipleVisitedArea] = useState([])
+    const handleMultipleVisitedArea = (e, value) => {
+        setMultipleVisitedArea(value);
+    }
 
     useEffect(() => {
         if (CompanyRoles) {
@@ -415,7 +441,6 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                 </Box>
                             </Grid>
                             <Grid item xs={12}>
-
                             </Grid>
                         </Grid>
                         <Box marginBottom={2}>
@@ -447,7 +472,8 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                 </Select>
                             </FormControl> */}
 
-                            <Autocomplete
+                            {/*//! Visited With  */}
+                            {/* <Autocomplete
                                 multiple
                                 options={users}
                                 getOptionLabel={(option) => option.title}
@@ -462,7 +488,7 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                         {option.title}
                                     </li>
                                 )}
-                            />
+                            /> */}
                         </Box>
                         {/* {Array.isArray(values?.visited_data) &&
                             values.visited_data.map((key, index) => (
@@ -477,6 +503,26 @@ const EditHOTourPlan = ({ idharu, onClose, setEdited }) => {
                                 />
                             ))
                         } */}
+
+                        {/*//! Visited Area  */}
+                        <Box marginBottom={2}>
+                            <Autocomplete
+                                value={multipleVisitedArea}
+                                multiple
+                                options={visitedAreas}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleVisitedArea}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Select the Visited Name*" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
                         <Box marginBottom={2}>
                             <Controls.Input
                                 name="hulting_station"

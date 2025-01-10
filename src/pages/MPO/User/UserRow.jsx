@@ -24,19 +24,15 @@ const UserRow = ({ user, index, handleChangeStatus, handleClickOpen, openDialogu
         setSelectedUpdateId(null);
     };
 
-
-
-
     const [locks, setLocks] = useState();
     const [unlockUser] = useUnlockUsersMutation();
 
     const onUnlockClick = async (userId, isTpLocked) => {
         const newLockStatus = !isTpLocked;
         setLocks(newLockStatus);
-
         try {
-            const response = await unlockUser({ id: userId, is_tp_locked: newLockStatus }).unwrap();
-            if (response.data) {
+            const response = await unlockUser({ id: userId, is_tp_locked: newLockStatus, is_active: true }).unwrap();
+            if (response?.data) {
                 UserLocks({ userId, isTpLocked: newLockStatus });
             }
         } catch (error) {
@@ -155,7 +151,9 @@ const UserRow = ({ user, index, handleChangeStatus, handleClickOpen, openDialogu
                 open={openDialogues[user.id] || false}
                 onClose={() => handleClose(user.id)}
             >
-                <DialogTitle>Do you want to unlock this user?</DialogTitle>
+                <DialogTitle>
+                    {`Do you want to ${user?.is_tp_locked ? 'unlock' : 'lock'} this user?`}
+                </DialogTitle>
                 <DialogActions>
                     <Button
                         onClick={() => onUnlockClick(user?.id, user?.is_tp_locked)}

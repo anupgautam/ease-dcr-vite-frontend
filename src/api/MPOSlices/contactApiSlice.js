@@ -28,7 +28,7 @@ export const contactApiSlice = apiSlice.injectEndpoints({
         //! Get Analytics By MPO
         getAnalyticsByMPO: builder.query({
             query: (id) => ({
-                url: `analytics/?user_to=${id.selectedOption}&year_from=${id.selectedYearFrom}&month_from=${id.selectedMonthFrom}&year_to=${id.selectedYearTo}&month_to=${id.selectedMonthTo}`,
+                url: `analytics/?user_id=${id.selectedOption}&year_from=${id.selectedYearFrom}&month_from=${id.selectedMonthFrom}&year_to=${id.selectedYearTo}&month_to=${id.selectedMonthTo}`,
                 method: 'GET'
             }),
             providesTags: ['Contact']
@@ -37,7 +37,7 @@ export const contactApiSlice = apiSlice.injectEndpoints({
         //! Get Analytics By Other Role 
         getAnalyticsByOtherRole: builder.query({
             query: (id) => ({
-                url: `analytics/?user_to=${id.selectedOption}&year_from=${id.selectedYearFrom}&month_from=${id.selectedMonthFrom}&year_to=${id.selectedYearTo}&month_to=${id.selectedMonthTo}`,
+                url: `analytics/?user_id=${id.selectedOption}&year_from=${id.selectedYearFrom}&month_from=${id.selectedMonthFrom}&year_to=${id.selectedYearTo}&month_to=${id.selectedMonthTo}`,
                 method: 'GET'
             }),
             providesTags: ['Contact']

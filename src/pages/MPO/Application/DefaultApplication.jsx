@@ -43,7 +43,7 @@ const TABLE_HEAD = [
     { id: 'leave_cause', label: 'Leave Cause', alignRight: false },
     { id: 'leave_from', label: 'Leave From', alignRight: false },
     { id: 'leave_to', label: 'Leave To', alignRight: false },
-    { id: 'leave_status', label: 'Leave Status', alignRight: false },
+    // { id: 'leave_status', label: 'Leave Status', alignRight: false },
     { id: 'submission_date', label: 'Submission Date', alignRight: false },
     { id: 'is_approved', label: 'Is Approved', alignRight: false },
     { id: '' }
@@ -86,6 +86,7 @@ const DefaultApplication = () => {
     // !Get Tour Plans
     const { data } = useGetApplicationsQuery({ company_name: company_id, mpo_name: user_role === "admin" ? "" : company_user_id });
 
+    console.log(data)
 
     // !Delete TourPlan
     const [deleteApplication] = useDeleteApplicationsByIdMutation();
@@ -175,12 +176,25 @@ const DefaultApplication = () => {
                                 <TableCell align="left">{application?.leave_cause}</TableCell>
                                 <TableCell align="left">{application?.leave_from}</TableCell>
                                 <TableCell align="left">{application?.leave_to}</TableCell>
-                                <TableCell align="left">{application?.is_approved === true ? "Approved" : "Pending"}</TableCell>
+                                {/* <TableCell align="left">{application?.is_approved === true ? "Approved" : "Pending"}</TableCell> */}
+
                                 <TableCell align="left">{moment(application.created_at).format('DD MMM YYYY')}</TableCell>
-                                <TableCell align="left">
-                                    <Label color={(application?.is_approved === true ? 'green' : 'red')}>
-                                        {sentenceCase(application?.is_approved.toString())}</Label>
+
+                                <TableCell align="left">{application?.is_approved === true ?
+                                    <>
+                                        <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75, ml: 3 }}>
+                                            <Badge>
+                                                <Iconify icon="mdi:tick-circle" />
+                                            </Badge>
+                                        </IconButton>
+                                    </> : <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75, ml: 3 }}>
+                                        <Badge>
+                                            <Iconify icon="mdi:cross-circle" />
+                                        </Badge>
+                                    </IconButton>
+                                }
                                 </TableCell>
+
                                 <TableCell align="left">
                                     {/*//! Edit  */}
                                     {

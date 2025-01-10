@@ -29,6 +29,7 @@ export const StockistDCRAllSlice = apiSlice.injectEndpoints({
             providesTags: ['StockistAllDCR']
         }),
 
+        
         getStockistDcrById: builder.query({
             query: (id) => ({
                 url: `dcr/mpo-shift-wise-dcr-for-stockist/${id}/`,

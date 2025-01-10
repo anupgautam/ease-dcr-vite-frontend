@@ -31,6 +31,7 @@ import "nepali-datepicker-reactjs/dist/index.css"
 
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import moment from 'moment';
 
 import Iconify from '@/components/iconify/Iconify';
 import Label from '@/components/iconify/Iconify';
@@ -54,7 +55,7 @@ const TABLE_HEAD = [
     { id: 'leave_cause', label: 'Leave Cause', alignRight: false },
     { id: 'leave_from', label: 'Leave From', alignRight: false },
     { id: 'leave_to', label: 'Leave To', alignRight: false },
-    { id: 'leave_status', label: 'Leave Status', alignRight: false },
+    // { id: 'leave_status', label: 'Leave Status', alignRight: false },
     { id: 'submission_date', label: 'Submission Date', alignRight: false },
     { id: 'is_approved', label: 'Is Approved', alignRight: false },
     { id: '' },
@@ -153,7 +154,7 @@ const FilteredApplication = () => {
     //! Date format
     const [actualDate, setActualDate] = useState("");
     useEffect(() => {
-        if (data && data.length > 0) {
+        if (data && data?.length > 0) {
             // const { submission_date } = data[0].application_id;
             // setDateFormat(submission_date);
         }
@@ -232,7 +233,7 @@ const FilteredApplication = () => {
                                                         ))}
                                                 </> :
                                                     <>
-                                                        {results?.data && results?.data?.length == 0 ?
+                                                        {results?.data && results?.data?.length === 0 ?
                                                             <TableRow>
                                                                 <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
                                                                     <Paper
@@ -261,18 +262,34 @@ const FilteredApplication = () => {
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell component="th" scope="row" align="left">
                                                                         <Typography variant="subtitle2" noWrap>
-                                                                            {application?.application_id?.leave_type}
+                                                                            {application?.user_id?.user_name?.first_name + " " + application?.user_id?.user_name?.middle_name + " " + application?.user_id?.user_name?.last_name}
                                                                         </Typography>
                                                                     </TableCell>
-                                                                    <TableCell align="left">{application?.application_id?.leave_cause}</TableCell>
-                                                                    <TableCell align="left">{application?.application_id?.leave_from}</TableCell>
-                                                                    <TableCell align="left">{application?.application_id?.leave_to}</TableCell>
-                                                                    <TableCell align="left">{application?.application_id?.is_approved === true ? "Approved" : "Pending"}</TableCell>
-                                                                    <TableCell align="left">{actualDate}</TableCell>
-                                                                    <TableCell align="left">
-                                                                        <Label color={(application?.application_id?.is_approved === true ? 'green' : 'red')}>
-                                                                            {sentenceCase(application?.application_id?.is_approved.toString())}</Label>
+                                                                    <TableCell align="left">{application?.leave_type}</TableCell>
+                                                                    <TableCell align="left">{application?.leave_cause}</TableCell>
+                                                                    <TableCell align="left">{application?.leave_from}</TableCell>
+                                                                    <TableCell align="left">{application?.leave_to}</TableCell>
+                                                                    <TableCell align="left">{moment(application.created_at).format('DD MMM YYYY')}</TableCell>
+
+                                                                    <TableCell align="left">{application?.is_approved === true ?
+                                                                        <>
+                                                                            <IconButton color={'success'} sx={{ width: 40, height: 40, mt: 0.75, ml: 3 }}>
+                                                                                <Badge>
+                                                                                    <Iconify icon="mdi:tick-circle" />
+                                                                                </Badge>
+                                                                            </IconButton>
+                                                                        </> : <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75, ml: 3 }}>
+                                                                            <Badge>
+                                                                                <Iconify icon="mdi:cross-circle" />
+                                                                            </Badge>
+                                                                        </IconButton>
+                                                                    }
                                                                     </TableCell>
+                                                                    <TableCell align="left">{actualDate}</TableCell>
+                                                                    {/* <TableCell align="left">
+                                                                        <Label color={(application?.is_approved === true ? 'green' : 'red')}>
+                                                                            {sentenceCase(application?.application_id?.is_approved.toString())}</Label>
+                                                                    </TableCell> */}
                                                                     <TableCell align="left">
                                                                         {
                                                                             user_role === 'admin' &&

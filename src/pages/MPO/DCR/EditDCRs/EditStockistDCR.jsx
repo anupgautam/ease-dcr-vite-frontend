@@ -1,7 +1,13 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import {
-    Box, Grid,
-    Typography, CircularProgress
+    Box,
+    Grid,
+    Typography,
+    CircularProgress,
+    Autocomplete,
+    TextField,
+    Stack,
+    Button
 } from '@mui/material'
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -14,6 +20,7 @@ import Controls from '../../../../reusable/components/forms/controls/Controls';
 //! Api Slices 
 import {
     useGetStockistAllDCRByIdQuery,
+    useGetStockistDcrByIdQuery,
     useUpdateStockistsAllDCRMutation,
 } from '@/api/DCRs Api Slice/stockistDCR/stockistDCRAllSlice';
 import editWithoutImage from '@/reusable/components/forms/utils/editUtils/editWithoutImage';
@@ -30,12 +37,13 @@ import { useGetAllCompanyAreasQuery } from '@/api/CompanySlices/companyAreaSlice
 import { useGetAllStockistsWithoutPaginationQuery } from '@/api/MPOSlices/StockistSlice';
 import { useGetUsersByIdQuery } from '@/api/MPOSlices/UserSlice';
 import { useSelector } from 'react-redux';
-
+import {
+    useGetAllRewardsByCompanyIdQuery,
+} from "@/api/DCRs Api Slice/rewardsAPISlice"
 
 const EditStockistDCR = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
-    console.log("Id", idharu)
     const [noLoop, setNoLoop] = useState(true);
     const [initialShift, setInitialShift] = useState("");
     // const areas = useSelector(state => state.dcrData.company_areas);
@@ -66,24 +74,41 @@ const EditStockistDCR = ({ idharu, onClose }) => {
 
     //! Getting TourPlan by ID
 
-    const DCRAll = useGetStockistAllDCRByIdQuery(idharu);
+    const DCRAll = useGetStockistDcrByIdQuery(idharu);
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
         skip: !mpo_id
     });
 
+    console.log("Stockist DCR", DCRAll?.data)
+
     const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id ? mpoArea?.company_area?.id : "" }, {
-        skip: !company_id || !mpoArea?.company_area?.id,
+        skip: !company_id
     })
 
     const stockists = useMemo(() => {
         if (StockistData !== undefined) {
             return StockistData.map((key) => ({
                 id: key.id,
-                title: key.stockist_name.stockist_name
+                title: key?.stockist_name?.stockist_name
             }))
         }
         return []
     }, [StockistData])
+
+    //! Rewards Options
+    const { data: rewardAllData } = useGetAllRewardsByCompanyIdQuery(company_id);
+
+    const rewardsOptions = useMemo(() => {
+        if (rewardAllData) {
+            return rewardAllData?.map(key => ({ id: key.id, title: key.reward }));
+        }
+        return [];
+    }, [rewardAllData]);
+
+    const [multipleRewards, setMultipleRewards] = useState([])
+    const handleMultipleRewards = (e, value) => {
+        setMultipleRewards(value);
+    }
 
     const [initialFValues, setInitialFValues] = useState({
         edit: false,
@@ -97,26 +122,31 @@ const EditStockistDCR = ({ idharu, onClose }) => {
         company_roles: [],
     });
 
-    console.log("DCRAll", DCRAll?.data)
     useEffect(() => {
         if (DCRAll?.data) {
+
+            //! Initial Rewards 
+            const selectedRewards = DCRAll?.data?.rewards?.map(visited => ({
+                id: visited.id, title: visited.rewards
+            })) || []
             setInitialFValues({
                 edit: true,
                 date: DCRAll?.data?.dcr?.date,
-                visited_area: DCRAll?.data?.dcr?.visited_area?.id,
-                visited_stockist: DCRAll?.data?.dcr?.visited_stockist?.id,
+                visited_area: DCRAll?.data?.visited_area?.id,
+                visited_stockist: DCRAll?.data?.dcr?.visited_stockist?.stockist_name?.id,
                 expenses_name: DCRAll?.data?.dcr?.expenses_name,
                 expenses: DCRAll?.data?.dcr?.expenses,
-                expenses_reasoning: DCRAll?.data?.expenses_reasoning,
+                expenses_reasoning: DCRAll?.data?.dcr?.expenses_reasoning,
                 rewards: DCRAll?.data?.rewards,
                 company_roles: DCRAll?.data?.company_roles
             });
-            setDateData(DCRAll?.data?.date);
+            setDateData(DCRAll?.data?.dcr?.date);
+            setMultipleRewards(selectedRewards)
         }
         if (shiftWiseDCR.status == "fulfilled") {
             setInitialShift(shiftWiseDCR?.data?.results[0]?.shift.id)
         }
-    }, [DCRAll.data, shiftWiseDCR])
+    }, [DCRAll?.data, shiftWiseDCR])
 
     const { values,
         errors,
@@ -289,7 +319,7 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                                 editApi={useUpdateStockistsAllDCRMutation} />
                         </Box>
 
-                        <Box marginBottom={2}>
+                        {/* <Box marginBottom={2}>
                             <EditDCRStockistRewards
                                 name="rewards"
                                 value={values.rewards}
@@ -298,7 +328,7 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                                 context={context}
                                 editApi={useUpdateStockistsAllDCRMutation} />
 
-                        </Box>
+                        </Box> */}
                         <Box marginBottom={2}>
                             <EditStockistDCRProducts
                                 name="company_product"
@@ -309,6 +339,41 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                                 context={context}
                                 editApi={useUpdateStockistsAllDCRMutation} />
                         </Box>
+
+                        {/* //! New Multiple Wala  */}
+                        <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                value={multipleRewards || []}
+                                options={rewardsOptions}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleRewards}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Rewards" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+                        <Stack spacing={1} direction="row">
+                            <Controls.SubmitButton
+                                variant="contained"
+                                className="submit-button"
+                                // disabled={isButtonDisabled}
+                                onClick={(e) => handleSubmit(e)}
+                                text="Submit"
+                            />
+                            <Button
+                                variant="outlined"
+                                className="cancel-button"
+                                onClick={onClose}
+                            >
+                                Cancel
+                            </Button>
+                        </Stack>
                     </Form>
                 </Box>
                 {loading && (
