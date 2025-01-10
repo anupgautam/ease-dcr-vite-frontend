@@ -118,7 +118,7 @@ const ListOfAnalytics = () => {
         setSelectedMonthTo(event.target.value);
     }, [])
 
-    const [selectedYearTo, setSelectedYearTo] = useState(yearData);
+    const [selectedYearTo, setSelectedYearTo] = useState(yearData + 1);
 
     const handleSelectedYearTo = useCallback((event) => {
         setSelectedYearTo(event.target.value);
@@ -138,11 +138,10 @@ const ListOfAnalytics = () => {
     const [companyId, setCompanyId] = useState();
     const [selectedOption, setSelectedOption] = useState('');
 
-    const handleOptionChange = useCallback((value) => {
+    const handleOptionChange = (event, value) => {
         setCompanyId(company_id);
         setSelectedOption(value?.id || "");
-    }, [])
-
+    }
 
     //! Search results
     // const [searchApplicationFilter, results] = useSearchApplicationMutation()
@@ -158,7 +157,7 @@ const ListOfAnalytics = () => {
     // }, [companyId, selectedOption, selectedYearTo, selectedYearFrom, selectedMonthFrom, selectedMonthTo])
 
     const Analytics = useGetAnalyticsByMPOQuery({
-        selectedOption: user_role !== "admin" ? selectedOption : company_user_role_id,
+        selectedOption: user_role === "admin" ? selectedOption : company_user_role_id,
         selectedYearTo: selectedYearTo,
         selectedYearFrom: selectedYearFrom,
         selectedMonthFrom: selectedMonthFrom,
@@ -169,7 +168,7 @@ const ListOfAnalytics = () => {
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
-    console.log(Analytics)
+    console.log(Analytics?.data)
 
     //! Excel Wala
     // const headers = [

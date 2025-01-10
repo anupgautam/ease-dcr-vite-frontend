@@ -22,7 +22,7 @@ import {
 import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetMpoAreaQuery, usePostUserIdToGetMpoAreaMutation } from '@/api/MPOSlices/TourPlanSlice';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
-import { useAddHigherTourPlanMutation, useAddTourplanMutation } from '@/api/MPOSlices/tourPlan&Dcr';
+import { useAddHigherTourPlanMutation, useAddTourplanMutation, useGetAllVisitedWithAreaQuery } from '@/api/MPOSlices/tourPlan&Dcr';
 import { usePostUserIdToGetLowerLevelExecutiveMutation } from '@/api/MPOSlices/UserSlice';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { toast } from 'react-toastify';
@@ -62,6 +62,18 @@ const AddTourPlan = () => {
         }
         return [];
     }, [MpoArea])
+
+    //! Get visited Area
+    const VisitedArea = useGetAllVisitedWithAreaQuery(company_user_role_id)
+
+    const visitedAreas = useMemo(() => {
+        if (VisitedArea?.data) {
+            return VisitedArea?.data.map((key => ({
+                id: key.id, title: key.area_name + " " + `( ${key.station_type})`
+            })))
+        }
+        return [];
+    })
 
     const dayStatus = useGetAllDayStatusQuery();
 
@@ -160,10 +172,16 @@ const AddTourPlan = () => {
         setSelectedExecutiveOptions(value)
         setCompanyRoles(visitedWith)
     }
+
     //! Filter option executive
     const filteredExecutiveOptions = executiveLevelOptions.filter(
         (option) => !selectedExecutiveOptions.some((selected) => selected.id === option.id)
     )
+
+    const [multipleVisitedArea, setMultipleVisitedArea] = useState([])
+    const handleMultipleVisitedArea = (e, value) => {
+        setMultipleVisitedArea(value);
+    }
 
     const [MpoAreaData, setMpoAreaData] = useState([]);
     const [visitedWithData, setVisitedWithData] = useState([]);
@@ -289,6 +307,7 @@ const AddTourPlan = () => {
     const deleteTourPlans = (dataToDelete) => {
         deleteTourPlan(dataToDelete)
             .then((res) => {
+
                 setTpResponseData((prevTourPlans) =>
                     prevTourPlans.filter((tour) => tour.id !== dataToDelete)
                 );
@@ -359,7 +378,7 @@ const AddTourPlan = () => {
         const data = {
             date: selectedDates,
             shift: 1,
-            visited_data: MpoAreaData,
+            visited_data: multipleVisitedArea.map(key => ({ visited_area: key.id })),
             hulting_station: values.hulting_station,
             day_status: values.day_status,
             is_admin_opened: false,
@@ -581,6 +600,23 @@ const AddTourPlan = () => {
                                         onChange={handleVisitedWith}
                                         renderInput={(params) => (
                                             <TextField {...params} label="Select the Visited With*" />
+                                        )}
+                                        renderOption={(props, option) => (
+                                            <li {...props} key={option.id}>
+                                                {option.title}
+                                            </li>
+                                        )}
+                                    />
+                                </Box>
+                                <Box marginBottom={2}>
+                                    <Autocomplete
+                                        value={multipleVisitedArea}
+                                        multiple
+                                        options={visitedAreas}
+                                        getOptionLabel={(option) => option.title}
+                                        onChange={handleMultipleVisitedArea}
+                                        renderInput={(params) => (
+                                            <TextField {...params} label="Select the Visited Area*" />
                                         )}
                                         renderOption={(props, option) => (
                                             <li {...props} key={option.id}>

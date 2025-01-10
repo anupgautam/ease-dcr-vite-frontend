@@ -29,8 +29,6 @@ const DefaultUser = ({ filterValue, handleChangeStatus, UserLogin }) => {
         }
     );
 
-
-
     const totalPages = useMemo(() => Math.ceil((data?.count || 0) / 200), [data]);
 
     return (

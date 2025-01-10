@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { Box, Button, Drawer, Grid, IconButton, Stack, Typography, CircularProgress } from "@mui/material";
+import { Box, Button, Drawer, Grid, IconButton, Stack, Typography, CircularProgress, Autocomplete, TextField } from "@mui/material";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Iconify from "@/components/iconify/Iconify";
 import {
@@ -9,7 +9,7 @@ import { NepaliDatePicker, BSDate } from "nepali-datepicker-react";
 import { useGetMpoAreaQuery, usePostUserIdToGetMpoAreaMutation } from "@/api/MPOSlices/TourPlanSlice";
 import Controls from "@/reusable/forms/controls/Controls";
 import { useForm } from '../../../reusable/forms/useForm'
-import { useAddHigherTourPlanMutation, useAddTourplanMutation } from "@/api/MPOSlices/tourPlan&Dcr";
+import { useAddHigherTourPlanMutation, useAddTourplanMutation, useGetAllVisitedWithAreaQuery } from "@/api/MPOSlices/tourPlan&Dcr";
 import { getNepaliMonthName } from "@/reusable/utils/reuseableMonth";
 import moment from "moment";
 import { useGetUsersByCompanyRoleIdExecutativeLevelQuery, usePostUserIdToGetLowerLevelExecutiveMutation } from "@/api/MPOSlices/UserSlice";
@@ -72,13 +72,28 @@ const AddUnplannedTp = () => {
         skip: !company_id || !company_user_role_id
     });
 
-
     const mpoAreaData = useMemo(() => {
         if (MpoArea?.data) {
             return MpoArea?.data.map(key => ({ id: key.id, title: key.area_name }))
         }
         return [];
     }, [MpoArea])
+
+    //! Get visited Area
+    const VisitedArea = useGetAllVisitedWithAreaQuery(company_user_role_id)
+
+    const visitedAreas = useMemo(() => {
+        if (VisitedArea?.data) {
+            return VisitedArea?.data.map((key => ({
+                id: key.id, title: key.area_name + " " + `( ${key.station_type})`
+            })))
+        }
+    })
+
+    const [multipleVisitedArea, setMultipleVisitedArea] = useState([])
+    const handleMultipleVisitedArea = (e, value) => {
+        setMultipleVisitedArea(value);
+    }
 
     const validate = (fieldValues = values) => {
         let temp = { ...errors };
@@ -221,7 +236,8 @@ const AddUnplannedTp = () => {
                     user_id: company_user_role_id,
                     dates: selectedDates,
                     shift: 1,
-                    visit_data: [{ visited_with: values.visited_with }],
+                    // visit_data: [{ visited_with: values.visited_with }],
+                    visited_data: multipleVisitedArea.map(key => ({ visited_area: key.id })),
                     hulting_station: values.hulting_station,
                     is_admin_opened: false,
                     is_unplanned: true,
@@ -365,7 +381,7 @@ const AddUnplannedTp = () => {
                                             />
                                         </Box>
                                     </> : <>
-                                        <Box marginBottom={2}>
+                                        {/* <Box marginBottom={2}>
                                             <Controls.Select
                                                 name={`visited_with`}
                                                 label="Select the Visited With*"
@@ -374,6 +390,24 @@ const AddUnplannedTp = () => {
                                                 options={executiveLevelOptions}
                                                 error={errors.visited_with}
 
+                                            />
+                                        </Box> */}
+                                        {/* //! Multiple Area */}
+                                        <Box marginBottom={2}>
+                                            <Autocomplete
+                                                value={multipleVisitedArea}
+                                                multiple
+                                                options={visitedAreas}
+                                                getOptionLabel={(option) => option.title}
+                                                onChange={handleMultipleVisitedArea}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} label="Select the Visited Area*" />
+                                                )}
+                                                renderOption={(props, option) => (
+                                                    <li {...props} key={option.id}>
+                                                        {option.title}
+                                                    </li>
+                                                )}
                                             />
                                         </Box>
                                         {/* {

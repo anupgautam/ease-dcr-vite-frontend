@@ -44,7 +44,7 @@ import { useSelector } from 'react-redux';
 const TABLE_HEAD = [
     { id: 'user_id', label: 'Name', alignRight: false },
     { id: 'date', label: 'Date', alignRight: false },
-    { id: 'visited_with', label: 'Visited With', alignRight: false },
+    { id: 'visited_area', label: 'Visited Area', alignRight: false },
     { id: 'approved', label: 'Approve TP', alignRight: false },
     { id: 'hulting_station', label: 'Hulting Station', alignRight: false },
     { id: 'day_status', label: 'Day Status', alignRight: false },
@@ -93,8 +93,6 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
             skip: !user_role || !company_user_role_id || !selectedMonth || !selectedDate || !page || !company_id
         }
     );
-
-    console.log(hoTourPlan?.data?.results)
 
     const [deleteTourPlan] = useDeleteHOTourPlansByIdMutation()
 
@@ -196,12 +194,13 @@ const FilteredHOTourPlan = ({ selectedUser, selectedMonth, selectedDate, role })
                                                                             <Stack direction="row" alignItems="center" spacing={2}>
                                                                                 <Box align="left">
                                                                                     {
-                                                                                        tourplan.visited_data.map((key, index) => (
+                                                                                        tourplan?.visited_data.map((key, index) => (
                                                                                             <Typography
                                                                                                 key={`${key?.user_name?.first_name}-${index}`} // Ensure a unique key for each child
                                                                                                 style={{ fontSize: '12px', color: "black", fontWeight: '600' }}
                                                                                             >
-                                                                                                {key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name},
+                                                                                                {/* {key?.user_name?.first_name + " " + key?.user_name?.middle_name + " " + key?.user_name?.last_name}, */}
+                                                                                                {key?.area_name + " " + `(${key.station_type})`},
                                                                                             </Typography>
                                                                                         ))
                                                                                     }

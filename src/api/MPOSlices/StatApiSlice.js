@@ -12,24 +12,22 @@ const initialState = statAdapter.getInitialState();
 export const StatApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
 
-        //! POST chemist 
-        getAllStats: builder.mutation({
+        //! Get STats 
+        getAllStats: builder.query({
             query: (newStat) => {
-                // newStat.company_id = Cookies.get("company_id")
                 return {
-                    url: `stat/get-stat/`,
-                    method: 'POST',
-                    body: newStat,
+                    url: `stat/get-stat/?company_name=${newStat.company_id}&month=${newStat.month}&year=${newStat.year}`,
+                    method: 'GET',
                 }
             },
-            invalidatesTags: ['Stat']
+            providesTags: ['Stat']
         }),
 
     })
 })
 
 export const {
-    useGetAllStatsMutation,
+    useGetAllStatsQuery,
 } = StatApiSlice
 
 //! returns the query result object

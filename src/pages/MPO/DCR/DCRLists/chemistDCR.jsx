@@ -243,7 +243,7 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
                                                                     {/* //! Delete  */}
                                                                     {
                                                                         user_role === 'admin' &&
-                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan?.dcr?.dcr?.id); handleClickOpen() }}>
+                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan?.dcr?.id); handleClickOpen() }}>
                                                                             <Badge>
                                                                                 <Iconify icon="eva:trash-2-outline" />
                                                                             </Badge>
@@ -261,7 +261,7 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
                                                                     </DialogTitle>
                                                                     <DialogActions>
                                                                         <Button autoFocus onClick={() => { handleDelete(selectedId); handleClose() }}>
-                                                                            Yes
+                                                                            Yes{selectedId}
                                                                         </Button>
                                                                         <Button
                                                                             onClick={handleClose}

@@ -89,6 +89,8 @@ const DefaultHOTourPlan = () => {
         skip: !page || !company_id
     })
 
+    console.log("HigherTP", data?.results)
+
     // !Delete TourPlan
     const [deleteTourPlan] = useDeleteHOTourPlansByIdMutation()
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]

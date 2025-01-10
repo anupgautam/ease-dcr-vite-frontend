@@ -4,7 +4,10 @@ import {
     Grid,
     Typography,
     CircularProgress,
-    Autocomplete
+    Autocomplete,
+    TextField,
+    Stack, 
+    Button
 } from '@mui/material'
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -51,6 +54,9 @@ const EditDCR = ({ idharu, onClose }) => {
     const shifts = useSelector(state => state.dcrData.shifts);
     const mpo_id = useSelector(state => state.dcrData.selected_user);
     const DCRAll = useGetDoctorDcrByIdQuery(idharu);
+
+    console.log("DCRAll Doctor", DCRAll?.data)
+
     const shiftWiseDCR = useGetShiftWiseDoctorDCRByIdQuery(idharu);
 
     //! Nepali Date format 
@@ -61,7 +67,6 @@ const EditDCR = ({ idharu, onClose }) => {
     const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
         skip: !company_id
     });
-    // console.log(productData)
 
     const promotedArray = useMemo(() => {
         if (productData) {
@@ -70,11 +75,29 @@ const EditDCR = ({ idharu, onClose }) => {
         return [];
     }, [productData]);
 
-    console.log("PromotedArray",promotedArray)
+    //! Rewards Options
+    const { data: rewardAllData } = useGetAllRewardsByCompanyIdQuery(company_id);
+
+    const rewardsOptions = useMemo(() => {
+        if (rewardAllData) {
+            return rewardAllData?.map(key => ({ id: key.id, title: key.reward }));
+        }
+        return [];
+    }, [rewardAllData]);
 
     const [multipleProducts, setMultipleProducts] = useState([])
     const handleMultipleProducts = (e, value) => {
         setMultipleProducts(value);
+    }
+
+    const [multipleVisitedWith, setMultipleVisitedWith] = useState([])
+    const handleMultipleVisitedWith = (e, value) => {
+        setMultipleVisitedWith(value);
+    }
+
+    const [multipleRewards, setMultipleRewards] = useState([])
+    const handleMultipleRewards = (e, value) => {
+        setMultipleRewards(value);
     }
 
     //! Getting TourPlan by ID
@@ -97,6 +120,22 @@ const EditDCR = ({ idharu, onClose }) => {
 
     useEffect(() => {
         if (DCRAll?.data) {
+
+            //! Initial Promoted Products 
+            const selectedPromotedProducts = DCRAll?.data?.promoted_product?.map(promoted => ({
+                id: promoted.id, title: promoted?.product_name?.product_name
+            })) || []
+
+            //! Initial Promoted Products 
+            const selectedVisitedWith = DCRAll?.data?.visited_with?.map(visited => ({
+                id: visited.id, title: `${visited.user_name?.first_name} ${visited.user_name?.middle_name} ${visited.user_name?.last_name}`
+            })) || []
+
+            //! Initial Rewards 
+            const selectedRewards = DCRAll?.data?.rewards?.map(visited => ({
+                id: visited.id, title: visited.rewards
+            })) || []
+
             setInitialFValues({
                 edit: true,
                 date: DCRAll?.data?.date,
@@ -113,6 +152,9 @@ const EditDCR = ({ idharu, onClose }) => {
                 // dcr_id: DCRAll?.data?.dcr?.dcr?.id
             });
             setDateData(DCRAll?.data?.dcr?.date);
+            setMultipleProducts(selectedPromotedProducts)
+            setMultipleVisitedWith(selectedVisitedWith)
+            setMultipleRewards(selectedRewards)
         }
         if (shiftWiseDCR.status == "fulfilled") {
             setInitialShift(shiftWiseDCR?.data?.results?.shift.id)
@@ -196,6 +238,16 @@ const EditDCR = ({ idharu, onClose }) => {
         }
         else {
             handleInputChange(e);
+        }
+    }
+
+    const handleSubmit = async (e) => {
+        setLoading(true)
+        const jsonData = {
+            date: values.date,
+            promoted_product: multipleProducts.map(key => key.id),
+            rewards: multipleRewards.map(key => key.id),
+            visited_with: multipleVisitedWith.map(key => key.id),
         }
     }
 
@@ -352,6 +404,7 @@ const EditDCR = ({ idharu, onClose }) => {
                         <Box marginBottom={2}>
                             <Autocomplete
                                 multiple
+                                value={multipleProducts || []}
                                 options={promotedArray}
                                 getOptionLabel={(option) => option.title}
                                 onChange={handleMultipleProducts}
@@ -366,12 +419,14 @@ const EditDCR = ({ idharu, onClose }) => {
                             />
                         </Box>
 
-                        {/* <Box marginBottom={2}>
+                        {/* //! New Multiple Wala  */}
+                        <Box marginBottom={2}>
                             <Autocomplete
                                 multiple
-                                // options={divisionList}
+                                value={multipleVisitedWith || []}
+                                options={promotedArray}
                                 getOptionLabel={(option) => option.title}
-                                onChange={handleMultipleDivision}
+                                onChange={handleMultipleVisitedWith}
                                 renderInput={(params) => (
                                     <TextField {...params} label="Visited With" />
                                 )}
@@ -381,14 +436,16 @@ const EditDCR = ({ idharu, onClose }) => {
                                     </li>
                                 )}
                             />
-                        </Box> */}
+                        </Box>
 
-                        {/* <Box marginBottom={2}>
+                        {/* //! New Multiple Wala  */}
+                        <Box marginBottom={2}>
                             <Autocomplete
                                 multiple
-                                // options={divisionList}
+                                value={multipleRewards || []}
+                                options={rewardsOptions}
                                 getOptionLabel={(option) => option.title}
-                                onChange={handleMultipleDivision}
+                                onChange={handleMultipleRewards}
                                 renderInput={(params) => (
                                     <TextField {...params} label="Rewards" />
                                 )}
@@ -398,8 +455,23 @@ const EditDCR = ({ idharu, onClose }) => {
                                     </li>
                                 )}
                             />
-                        </Box> */}
-
+                        </Box>
+                        <Stack spacing={1} direction="row">
+                            <Controls.SubmitButton
+                                variant="contained"
+                                className="submit-button"
+                                // disabled={isButtonDisabled}
+                                onClick={(e) => handleSubmit(e)}
+                                text="Submit"
+                            />
+                            <Button
+                                variant="outlined"
+                                className="cancel-button"
+                                onClick={onClose}
+                            >
+                                Cancel
+                            </Button>
+                        </Stack>
                     </Form>
                 </Box>
                 {loading && (

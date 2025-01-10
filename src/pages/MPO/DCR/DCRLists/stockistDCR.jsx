@@ -206,7 +206,7 @@ const StockistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) =>
                                                                     {/* //! Edit  */}
                                                                     {
                                                                         user_role === 'admin' &&
-                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan?.dcr?.dcr?.id, tourplan?.mpo_name?.id)} >
+                                                                        <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan?.dcr?.id, tourplan?.mpo_name?.id)} >
                                                                             <Badge>
                                                                                 <Iconify icon="eva:edit-fill" />
                                                                             </Badge>
@@ -215,7 +215,7 @@ const StockistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) =>
                                                                     {/* //! Delete  */}
                                                                     {
                                                                         user_role === 'admin' &&
-                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan?.dcr?.dcr?.id); handleClickOpen() }}>
+                                                                        <IconButton color={'error'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={() => { setSelectedId(tourplan?.dcr?.id); handleClickOpen() }}>
                                                                             <Badge>
                                                                                 <Iconify icon="eva:trash-2-outline" />
                                                                             </Badge>
@@ -233,7 +233,7 @@ const StockistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) =>
                                                                     </DialogTitle>
                                                                     <DialogActions>
                                                                         <Button autoFocus onClick={() => { deleteTourPlan(selectedId); handleClose() }}>
-                                                                            Yes
+                                                                            Yes{selectedId}
                                                                         </Button>
                                                                         <Button
                                                                             onClick={handleClose}

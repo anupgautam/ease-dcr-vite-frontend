@@ -14,7 +14,7 @@ export const ApplicationSlices = apiSlice.injectEndpoints({
         //! Get all Applications
         getApplications: builder.query({
             query: (page) => ({
-                url: `expenses/mpo-leave-application/?application_id__company_name=${page.company_name}&mpo_name=${page.mpo_name}`,
+                url: `expenses/mpo-leave-application/?company_name=${page.company_name}&mpo_name=${page.mpo_name}`,
                 method: 'GET'
             }),
             providesTags: ['Application']

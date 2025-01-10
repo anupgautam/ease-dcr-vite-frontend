@@ -137,7 +137,7 @@ const DefaultList = () => {
                                                     </TableRow>
                                                 ))}
                                         </> :
-                                            <>{data && data.results.map((tourplan, index) => {
+                                            <>{data && data?.results.map((tourplan, index) => {
                                                 const { id, name, role, status, company, avatarUrl, isVerified } = data?.results;
                                                 const selectedUser = selected.indexOf(id) !== -1;
                                                 return (
@@ -167,14 +167,11 @@ const DefaultList = () => {
                                                         <TableCell align="left">{tourplan?.approved_by?.user_name?.first_name + " " + tourplan?.approved_by?.user_name?.middle_name + " " + tourplan?.approved_by?.user_name?.last_name}</TableCell>
                                                         <TableCell align="left">
                                                             {/*//! Edit  */}
-                                                            {
-                                                                user_role === 'admin' &&
-                                                                <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)}>
-                                                                    <Badge>
-                                                                        <Iconify icon="eva:edit-fill" />
-                                                                    </Badge>
-                                                                </IconButton>
-                                                            }
+                                                            <IconButton color={'primary'} sx={{ width: 40, height: 40, mt: 0.75 }} onClick={(e) => onEdit(tourplan.id)}>
+                                                                <Badge>
+                                                                    <Iconify icon="eva:edit-fill" />
+                                                                </Badge>
+                                                            </IconButton>
                                                             {/*//! Delete  */}
                                                             {
                                                                 user_role === 'admin' &&

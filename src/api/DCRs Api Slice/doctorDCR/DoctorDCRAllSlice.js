@@ -36,6 +36,8 @@ export const DoctorDCRAllSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ['DoctorAllDCR']
         }),
+        
+        //! By Id Tanni wala 
         getDoctorDcrById: builder.query({
             query: (id) => ({
                 url: `dcr/mpo-shift-wise-dcr-for-doctor/${id}/`,

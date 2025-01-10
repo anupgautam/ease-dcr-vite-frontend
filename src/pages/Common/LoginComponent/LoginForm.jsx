@@ -142,7 +142,7 @@ const LoginFormInputs = () => {
                         console.log("Error message", res)
                         // setErrorMessage({ show: true, message: extractErrorMessage({ data: res.error }) });
                         // setTimeout(() => setErrorMessage({ show: false, message: '' }), 2000);
-                        toast.error(res?.error?.data?.message)
+                        toast.error(res?.error?.data?.msg)
                         setLoading(false);
                     }
                 } catch (err) {

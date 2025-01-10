@@ -11,8 +11,6 @@ import { useGetUsersByCompanyUserByIdQuery } from "@/api/MPOSlices/UserSlice";
 
 const EditDoctorDCRRoles = ({ id, context, editApi, mpoId }) => {
   
-  console.log(id)
-
   const [state, toggle] = useTransition({ timeout: 750, preEnter: true });
   // const mpo_id = useSelector(state => state.dcrData.selected_user);
   const [companyRoles, setCompanyRoles] = useState([]);

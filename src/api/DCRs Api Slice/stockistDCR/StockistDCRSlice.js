@@ -34,8 +34,8 @@ export const StockistDCRSlice = apiSlice.injectEndpoints({
             query: (searchChemistsDCR) => {
 
                 return {
-                    // url: `dcr/mpo-shift-wise-dcr-for-stockist/?dcr__dcr__visited_stockist__company_name=${searchChemistsDCR.company_name}&mpo_name=${searchChemistsDCR.user_id}&dcr__dcr__month=${searchChemistsDCR.month}&dcr__dcr__year=${searchChemistsDCR.date}`,
-                    url: `dcr/mpo-shift-wise-dcr-for-stockist/?company_name=${searchChemistsDCR.company_name}&mpo_name=${searchChemistsDCR.user_id}&month=${searchChemistsDCR.month}&year=${searchChemistsDCR.date}&date=${searchChemistsDCR.dateOnly}`,
+                    url: `dcr/mpo-shift-wise-dcr-for-stockist/?dcr__dcr__visited_stockist__company_name=${searchChemistsDCR.company_name}&mpo_name=${searchChemistsDCR.user_id}&dcr__dcr__month=${searchChemistsDCR.month}&dcr__dcr__year=${searchChemistsDCR.date}`,
+                    // url: `dcr/mpo-shift-wise-dcr-for-stockist/?company_name=${searchChemistsDCR.company_name}&mpo_name=${searchChemistsDCR.user_id}&month=${searchChemistsDCR.month}&year=${searchChemistsDCR.date}&date=${searchChemistsDCR.dateOnly}`,
                     method: 'GET',
                 }
             },

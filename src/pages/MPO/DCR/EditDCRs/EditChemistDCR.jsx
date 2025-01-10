@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import {
     Box, Grid,
-    Typography, CircularProgress
+    Typography, CircularProgress,
+    Autocomplete,
+    TextField,
+    Stack, 
+    Button
 } from '@mui/material'
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -33,8 +37,10 @@ import {
 import { useGetMpoAreaQuery } from '@/api/MPOSlices/TourPlanSlice';
 import { useGetAllVisitedMpoWiseChemistQuery } from '@/api/MPOSlices/doctorApiSlice';
 import { toast } from 'react-toastify';
-
-
+import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSlices/companyProductSlice";
+import {
+    useGetAllRewardsByCompanyIdQuery,
+} from "@/api/DCRs Api Slice/rewardsAPISlice"
 const EditChemistDCR = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
 
@@ -48,11 +54,50 @@ const EditChemistDCR = ({ idharu, onClose }) => {
     const shiftWiseDCR = useGetShiftWiseChemistDCRByDCRIdQuery(idharu);
     const [updateShiftWiseDCR] = useUpdateShiftWiseChemistDCRMutation();
     const [dateData, setDateData] = useState()
-    
+
     //! Getting TourPlan by ID
     const DCRAll = useGetChemistAllDCRByIdQuery(idharu, {
         skip: !idharu
     });
+
+    console.log("Chemist DCRAll", DCRAll?.data)
+
+    //! Promoted Products wala 
+    const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
+        skip: !company_id
+    });
+
+    const promotedArray = useMemo(() => {
+        if (productData) {
+            return productData?.map(key => ({ id: key.id, title: key.product_name?.product_name }));
+        }
+        return [];
+    }, [productData]);
+
+    //! Rewards Options
+    const { data: rewardAllData } = useGetAllRewardsByCompanyIdQuery(company_id);
+
+    const rewardsOptions = useMemo(() => {
+        if (rewardAllData) {
+            return rewardAllData?.map(key => ({ id: key.id, title: key.reward }));
+        }
+        return [];
+    }, [rewardAllData]);
+
+    const [multipleProducts, setMultipleProducts] = useState([])
+    const handleMultipleProducts = (e, value) => {
+        setMultipleProducts(value);
+    }
+
+    const [multipleVisitedWith, setMultipleVisitedWith] = useState([])
+    const handleMultipleVisitedWith = (e, value) => {
+        setMultipleVisitedWith(value);
+    }
+
+    const [multipleRewards, setMultipleRewards] = useState([])
+    const handleMultipleRewards = (e, value) => {
+        setMultipleRewards(value);
+    }
 
     const dcrId = useGetChemistAllDCRByIdForMpoIdQuery(idharu);
 
@@ -70,10 +115,24 @@ const EditChemistDCR = ({ idharu, onClose }) => {
         ordered_products: []
     });
 
-    console.log("DCRAll", DCRAll?.data)
-
     useEffect(() => {
         if (DCRAll?.data) {
+
+            //! Initial Promoted Products 
+            const selectedPromotedProducts = DCRAll?.data?.promoted_product?.map(promoted => ({
+                id: promoted.id, title: promoted?.product_name?.product_name
+            })) || []
+
+            //! Initial Promoted Products 
+            const selectedVisitedWith = DCRAll?.data?.visited_with?.map(visited => ({
+                id: visited.id, title: `${visited.user_name?.first_name} ${visited.user_name?.middle_name} ${visited.user_name?.last_name}`
+            })) || []
+
+            //! Initial Rewards 
+            const selectedRewards = DCRAll?.data?.rewards?.map(visited => ({
+                id: visited.id, title: visited.rewards
+            })) || []
+
             setInitialFValues({
                 edit: true,
                 date: DCRAll?.data?.dcr?.date,
@@ -88,6 +147,9 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                 ordered_products: DCRAll?.data?.ordered_products
             });
             setDateData(DCRAll?.data?.dcr?.date);
+            setMultipleProducts(selectedPromotedProducts)
+            setMultipleVisitedWith(selectedVisitedWith)
+            setMultipleRewards(selectedRewards)
         }
         if (shiftWiseDCR.status == "fulfilled") {
             setInitialShift(shiftWiseDCR?.data?.results[0]?.shift.id)
@@ -172,6 +234,15 @@ const EditChemistDCR = ({ idharu, onClose }) => {
         }
     }
 
+    const handleSubmit = async (e) => {
+        setLoading(true)
+        const jsonData = {
+            date: values.date,
+            promoted_product: multipleProducts.map(key => key.id),
+            rewards: multipleRewards.map(key => key.id),
+            visited_with: multipleVisitedWith.map(key => key.id),
+        }
+    }
 
     return (
         <>
@@ -308,6 +379,79 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                                 editApi={useUpdateChemistsAllDCRMutation} />
 
                         </Box>
+
+                        {/* //! New Multiple Wala  */}
+                        <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                value={multipleProducts || []}
+                                options={promotedArray}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleProducts}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Promoted Products" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+
+                        {/* //! New Multiple Wala  */}
+                        <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                value={multipleVisitedWith || []}
+                                options={promotedArray}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleVisitedWith}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Visited With" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+
+                        {/* //! New Multiple Wala  */}
+                        <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                value={multipleRewards || []}
+                                options={rewardsOptions}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleRewards}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Rewards" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+                        <Stack spacing={1} direction="row">
+                            <Controls.SubmitButton
+                                variant="contained"
+                                className="submit-button"
+                                // disabled={isButtonDisabled}
+                                onClick={(e) => handleSubmit(e)}
+                                text="Submit"
+                            />
+                            <Button
+                                variant="outlined"
+                                className="cancel-button"
+                                onClick={onClose}
+                            >
+                                Cancel
+                            </Button>
+                        </Stack>
                     </Form>
                 </Box>
                 {loading && (

@@ -213,14 +213,15 @@ const DefaultList = ({ filterValue, handleChangeStatus, UserLogin }) => {
                                             aria-labelledby="responsive-dialog-title"
                                         >
                                             <DialogTitle id="responsive-dialog-title">
-                                                {"Do you want to unlock this user?"}
+                                                {`Do you want to ${user?.is_tp_locked} this user?`}
+                                                {/* {"Do you want to unlock this user?"} */}
                                             </DialogTitle>
                                             <DialogActions>
                                                 <Button
                                                     autoFocus
                                                     onClick={() => UserLocks({ userId: user?.id, isTpLocked: user?.is_tp_locked })}
                                                 >
-                                                    Yes
+                                                    Yes{user?.is_tp_locked}
                                                 </Button>
                                                 <Button
                                                     onClick={() => handleClose(user.id)}
