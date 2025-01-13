@@ -174,7 +174,7 @@ export const TourPlanSlice = apiSlice.injectEndpoints({
 
                 return {
                     url: `mpo/company-mpo-area/${id.id}/`,
-                    method: 'PUT',
+                    method: 'PATCH',
                     body: id
                 }
             },

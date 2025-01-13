@@ -27,7 +27,6 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
     const { company_id, user_role, company_user_id, access, refresh } = useSelector((state) => state.cookie);
 
     const [File, setFile] = useState(null);
-    console.log(File)
 
     //!  Getting Users by ID
     const Product = useGetProductsByIdQuery(idharu);
@@ -203,10 +202,11 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
         const formData = new FormData();
         // const file = BlobToFile(File, "product_image");
 
-        // if (file && file.size !== 0) {
-        //     formData.append("product_image", file, "productImage.jpg");
-        // }
-        formData.append("product_image", File[0]);
+        const file = Array.isArray(File) && File.length > 0 ? File[0] : null;
+
+        if (file) {
+            formData.append("product_image", file);
+        }
         formData.append("product_name", values.product_name);
         formData.append("product_molecular_name", values.product_molecular_name);
         formData.append("product_description", values.product_description);
@@ -220,14 +220,15 @@ const EditProduct = ({ idharu, onClose, mpoGet }) => {
         formData.append('access', access);
         try {
             const response = await updateProducts(formData).unwrap();
-            if (response?.data) {
+            console.log(response)
+            if (response?.msg) {
                 // setSuccessMessage({ show: true, message: 'Successfully Edited Products' });
                 // setTimeout(() => {
                 //     onClose();
                 //     setSuccessMessage({ show: false, message: '' });
                 // }, 2000);
 
-                toast.success(`${response?.data?.msg}`)
+                toast.success(`${response?.msg}`)
                 setIsButtonDisabled(true)
                 setLoading(false);
                 onClose();

@@ -19,14 +19,17 @@ import {
     useGetCompanyDivisionsByCompanyIdQuery
 } from '@/api/CompanySlices/companyDivisionSlice';
 import {
-    useGetAllCompanyAreasQuery, useUpdateMpoAreasMutation
+    useGetAllCompanyAreasQuery,
+    // useUpdateMpoAreasMutation
 } from '@/api/CompanySlices/companyAreaSlice'
+
 // import {
 //     useUpdateAreaofMPOMutation
 // } from '@/api/MPOSlices/TourPlanSlice'
 import {
     useGetAreaMPOByIdQuery,
-} from '@/api/MPOSlices/TourPlanSlice.js';
+    useUpdateAreaofMPOMutation
+} from '@/api/MPOSlices/TourPlanSlice';
 import { useSelector } from 'react-redux';
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { toast } from 'react-toastify';
@@ -214,7 +217,7 @@ const EditMpoArea = ({ idharu, onClose }) => {
 
     //! Edit user
     // const [updateUsers] = useUpdatecompanyUserRolesMutation();
-    const [updateUsers] = useUpdateMpoAreasMutation();
+    const [updateUsers] = useUpdateAreaofMPOMutation();
 
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
