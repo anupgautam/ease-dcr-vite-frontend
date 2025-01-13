@@ -45,14 +45,11 @@ import ExportToExcel from "@/reusable/utils/exportSheet";
 import { useGetAnalyticsByMPOQuery, useGetAnalyticsByOtherRoleQuery } from '../../../api/MPOSlices/contactApiSlice';
 
 const TABLE_HEAD = [
-    { id: 'user_id', label: 'User Name', alignRight: false },
-    { id: 'leave_type', label: 'Leave Type', alignRight: false },
-    { id: 'leave_cause', label: 'Leave Cause', alignRight: false },
-    { id: 'leave_from', label: 'Leave From', alignRight: false },
-    { id: 'leave_to', label: 'Leave To', alignRight: false },
-    { id: 'leave_status', label: 'Leave Status', alignRight: false },
-    { id: 'submission_date', label: 'Submission Date', alignRight: false },
-    { id: 'is_approved', label: 'Is Approved', alignRight: false },
+    { id: 'year', label: 'Year', alignRight: false },
+    { id: 'month', label: 'Month', alignRight: false },
+    { id: 'call_data', label: 'Call Data', alignRight: false },
+    { id: 'mis_call', label: 'Missed Call', alignRight: false },
+
     { id: '' },
 ];
 
@@ -388,11 +385,11 @@ const ListOfAnalytics = () => {
                                     headLabel={TABLE_HEAD}
                                 />
                                 <TableBody>
-                                    {/* {results?.data ?
+                                    {Analytics?.data ?
                                         <>
                                             <>
                                                 {
-                                                    results?.data === undefined ? <>
+                                                    Analytics?.data === undefined ? <>
                                                         {
                                                             eightArrays.map((key) => (
                                                                 <TableRow key={key} >
@@ -407,7 +404,7 @@ const ListOfAnalytics = () => {
                                                             ))}
                                                     </> :
                                                         <>
-                                                            {results?.data && results?.data?.length == 0 ?
+                                                            {Analytics?.data && Analytics?.data?.length == 0 ?
                                                                 <TableRow>
                                                                     <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
                                                                         <Paper
@@ -431,25 +428,24 @@ const ListOfAnalytics = () => {
                                                                     </TableCell>
                                                                 </TableRow>
                                                                 :
-                                                                results?.data && results?.data?.map((application, index) => (
+                                                                Analytics?.data && Analytics?.data?.map((application, index) => (
                                                                     <TableRow hover tabIndex={-1} role="checkbox" key={application.id}>
                                                                         <TableCell>{index + 1}</TableCell>
-                                                                        <TableCell component="th" scope="row" align="left">
+                                                                        {/* <TableCell component="th" scope="row" align="left">
                                                                             <Typography variant="subtitle2" noWrap>
                                                                                 {application?.application_id?.leave_type}
                                                                             </Typography>
-                                                                        </TableCell>
-                                                                        <TableCell align="left">{application?.application_id?.leave_cause}</TableCell>
-                                                                        <TableCell align="left">{application?.application_id?.leave_from}</TableCell>
-                                                                        <TableCell align="left">{application?.application_id?.leave_to}</TableCell>
+                                                                        </TableCell> */}
+                                                                        <TableCell align="left">{application?.year}</TableCell>
+                                                                        <TableCell align="left">{application?.month}</TableCell>
+                                                                        <TableCell align="left">{application?.call_data}</TableCell>
+                                                                        <TableCell align="left">{application?.mis_call}</TableCell>
                                                                     </TableRow>
                                                                 ))
-
                                                             }
                                                         </>}
                                             </>
                                         </>
-
                                         :
                                         <TableRow>
                                             <TableCell align="center" colSpan={12} sx={{ py: 3 }}>
@@ -473,7 +469,7 @@ const ListOfAnalytics = () => {
                                                 </Paper>
                                             </TableCell>
                                         </TableRow>
-                                    } */}
+                                    }
                                 </TableBody>
                             </Table>
                         </TableContainer>

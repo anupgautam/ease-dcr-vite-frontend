@@ -14,6 +14,7 @@ import {
 } from '../../../api/MPOSlices/rewardsApiSlice'
 import ExportToExcel from '@/reusable/utils/exportSheet';
 import { useSelector } from 'react-redux';
+import FlowbiteTable from './FlowbiteTable';
 
 const ListOfRewards = () => {
     const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
@@ -64,7 +65,8 @@ const ListOfRewards = () => {
                         </Grid>
                     </Grid>
                 </Box>
-                <DefaultList />
+                {/* <DefaultList /> */}
+                <FlowbiteTable/>
             </Container>
         </>
     )
