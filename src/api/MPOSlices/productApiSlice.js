@@ -96,11 +96,13 @@ export const productApiSlice = apiSlice.injectEndpoints({
 
 
         getAllProductsOptionsWithDivision: builder.query({
-            query: (id) =>
-            ({
-                url: `product/company-division-product-without-pagination/?company_name=${id.company_name}&division_name=${id.division_name}`,
-                method: 'GET'
-            }),
+            query: (id) => {
+                console.log("Params Wala",id)
+                return {
+                    url: `product/company-division-product-without-pagination/?company_name=${id.company_name}&division_name=${id.division_name}`,
+                    method: 'GET'
+                }
+            },
             providesTags: ['Product']
         }),
         //! GET products by id

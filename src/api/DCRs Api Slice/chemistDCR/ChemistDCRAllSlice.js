@@ -41,7 +41,7 @@ export const ChemistDCRAllSlice = apiSlice.injectEndpoints({
 
         getChemistAllDCRByIdForMpoId: builder.query({
             query: (id) => ({
-                url: `dcr/mpo-shift-wise-dcr-for-chemist/?dcr__dcr__id=${id}`,
+                url: `dcr/mpo-shift-wise-dcr-for-chemist/${id}`,
                 method: 'GET'
             }),
             providesTags: ['ChemistAllDCR']

@@ -29,6 +29,7 @@ const EditChemistDCROrderedProducts = ({ id, context, editApi }) => {
         skip: !company_id || !mpoArea?.division_name?.id
     })
 
+    // console.log(productData)
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {
             return productData.map((key) => ({
@@ -38,6 +39,8 @@ const EditChemistDCROrderedProducts = ({ id, context, editApi }) => {
         }
         return [];
     }, [productData])
+
+    // console.log("Ordered Products", companyProducts)
 
     const handleClick = (e, id) => {
         setProductID(id);

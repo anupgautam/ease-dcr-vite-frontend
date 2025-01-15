@@ -4,13 +4,15 @@ import {
     Typography, CircularProgress,
     Autocomplete,
     TextField,
-    Stack, 
+    Stack,
     Button
 } from '@mui/material'
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import 'react-datepicker/dist/react-datepicker.css';
+import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
+import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
 
 //! Reusable Component
 import { useForm, Form } from '../../../../reusable/forms/useForm'
@@ -41,8 +43,43 @@ import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSli
 import {
     useGetAllRewardsByCompanyIdQuery,
 } from "@/api/DCRs Api Slice/rewardsAPISlice"
+import ChemistOrderProduct from '../orderProduct/chemistOrderProduct';
 const EditChemistDCR = ({ idharu, onClose }) => {
+
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+
+    //! Chemist Ordered Product
+    const id = new URLSearchParams(window.location.search).get('id');
+
+    const [Formdata, setFormData] = useState({
+        expenses_name: "",
+        expenses: "",
+        expenses_reasoning: "",
+        ordered_products: [],
+    })
+
+    const handleChemistOrderChange = (event) => {
+        const { name, value } = event.target;
+        const newData = { ...Formdata, [name]: value };
+        setFormData(newData);
+    }
+
+    //! Ordered Product
+    const [OrderProduct, setOrderedProduct] = useState([]);
+
+    const handleOrderedProducts = (e) => {
+        setOrderedProduct(e.target.value);
+        if (!Formdata.ordered_products.includes(e.target.value)) {
+            setFormData(prevFormdata => ({
+                ...prevFormdata,
+                ordered_products: e.target.value.map((key) => ({
+                    id: key
+                })),
+            }));
+        }
+    };
+
+
 
     const [noLoop, setNoLoop] = useState(true);
     const [initialShift, setInitialShift] = useState("");
@@ -59,8 +96,6 @@ const EditChemistDCR = ({ idharu, onClose }) => {
     const DCRAll = useGetChemistAllDCRByIdQuery(idharu, {
         skip: !idharu
     });
-
-    console.log("Chemist DCRAll", DCRAll?.data)
 
     //! Promoted Products wala 
     const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
@@ -84,6 +119,44 @@ const EditChemistDCR = ({ idharu, onClose }) => {
         return [];
     }, [rewardAllData]);
 
+    //! Visited With Options
+    const [executiveOptions, setExecutiveOptions] = useState([]);
+    const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
+    useEffect(() => {
+        executiveUsers({ id: DCRAll?.data?.mpo_name?.id }, {
+            skip: !DCRAll?.data?.mpo_name?.id
+        })
+            .then(res => {
+                if (res.data) {
+                    const executive = [];
+                    res.data.forEach(keyData => {
+                        executive.push({
+                            id: keyData.id,
+                            title: keyData?.user_name?.first_name + " " + keyData?.user_name?.middle_name + " " + keyData?.user_name?.last_name,
+                        });
+                    });
+                    setExecutiveOptions(executive);
+                }
+            })
+            .catch(err => {
+
+            });
+    }, [DCRAll?.data?.mpo_name?.id]);
+
+    //! Ordered Products ko options 
+    const { data: orderedProducts } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: DCRAll?.data?.mpo_name?.division_name?.id })
+
+    console.log(orderedProducts)
+
+    // const orderedProductOptions = useMemo(() => {
+    //     if (orderedProducts) {
+    //         return orderedProducts?.map(key => ({ id: key.id, title: key.reward }));
+    //     }
+    //     return [];
+    // }, [orderedProducts]);
+
+    // console.log(orderedProductOptions)
+
     const [multipleProducts, setMultipleProducts] = useState([])
     const handleMultipleProducts = (e, value) => {
         setMultipleProducts(value);
@@ -97,6 +170,11 @@ const EditChemistDCR = ({ idharu, onClose }) => {
     const [multipleRewards, setMultipleRewards] = useState([])
     const handleMultipleRewards = (e, value) => {
         setMultipleRewards(value);
+    }
+
+    const [multipleOrderedProducts, setMultipleOrderedProducts] = useState([])
+    const handleMultipleChemistOrderedProducts = (e, value) => {
+        setMultipleOrderedProducts(value);
     }
 
     const dcrId = useGetChemistAllDCRByIdForMpoIdQuery(idharu);
@@ -123,7 +201,7 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                 id: promoted.id, title: promoted?.product_name?.product_name
             })) || []
 
-            //! Initial Promoted Products 
+            //! Initial Visited With 
             const selectedVisitedWith = DCRAll?.data?.visited_with?.map(visited => ({
                 id: visited.id, title: `${visited.user_name?.first_name} ${visited.user_name?.middle_name} ${visited.user_name?.last_name}`
             })) || []
@@ -132,6 +210,12 @@ const EditChemistDCR = ({ idharu, onClose }) => {
             const selectedRewards = DCRAll?.data?.rewards?.map(visited => ({
                 id: visited.id, title: visited.rewards
             })) || []
+
+            //! Initial Chemist Ordered Products 
+            const selectedChemistOrderedProducts = DCRAll?.data?.ordered_products?.map(visited => ({
+                id: visited.id, title: visited?.product_id?.product_name?.product_name + " " + `(${visited?.ordered_quantity})`
+            })) || []
+
 
             setInitialFValues({
                 edit: true,
@@ -152,7 +236,8 @@ const EditChemistDCR = ({ idharu, onClose }) => {
             setMultipleRewards(selectedRewards)
         }
         if (shiftWiseDCR.status == "fulfilled") {
-            setInitialShift(shiftWiseDCR?.data?.results[0]?.shift.id)
+            // setInitialShift(shiftWiseDCR?.data?.results[0]?.shift.id)
+            setInitialShift(shiftWiseDCR?.data?.shift.id)
         }
     }, [DCRAll?.data, shiftWiseDCR])
 
@@ -241,6 +326,7 @@ const EditChemistDCR = ({ idharu, onClose }) => {
             promoted_product: multipleProducts.map(key => key.id),
             rewards: multipleRewards.map(key => key.id),
             visited_with: multipleVisitedWith.map(key => key.id),
+            ordered_products: multipleOrderedProducts.map(key => key.id),
         }
     }
 
@@ -377,8 +463,33 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                                 id={idharu}
                                 context={context}
                                 editApi={useUpdateChemistsAllDCRMutation} />
-
                         </Box>
+
+                        {/* //! New Multiple Ordered Products Wala  */}
+                        {/* <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                value={multipleOrderedProducts || []}
+                                options={}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleChemistOrderedProducts}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Ordered Products" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box> */}
+
+                        <ChemistOrderProduct
+                            id={id}
+                            data={OrderProduct}
+                            allData={AllMultiple[sn]}
+                            handleOrderProductChange={handleOrderedProducts}
+                        />
 
                         {/* //! New Multiple Wala  */}
                         <Box marginBottom={2}>
@@ -404,7 +515,7 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                             <Autocomplete
                                 multiple
                                 value={multipleVisitedWith || []}
-                                options={promotedArray}
+                                options={executiveOptions}
                                 getOptionLabel={(option) => option.title}
                                 onChange={handleMultipleVisitedWith}
                                 renderInput={(params) => (

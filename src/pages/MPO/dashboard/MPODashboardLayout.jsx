@@ -18,6 +18,7 @@ import {
   AppCurrentSubject,
   AppConversionRates,
 } from '../../../sections/@dashboard/app';
+import PrelineSidenav from './nav/PrelineSidenav';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -260,6 +261,7 @@ export default function DashboardLayout() {
     <StyledRoot>
       <Header onOpenNav={() => setOpen(true)} />
       <Nav openNav={open} onCloseNav={() => setOpen(false)} />
+      {/* <PrelineSidenav/> */}
       <Main>
         <Outlet />
       </Main>

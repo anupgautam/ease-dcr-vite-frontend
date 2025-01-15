@@ -1,0 +1,464 @@
+import { lazy, Suspense } from 'react';
+import { Outlet, Navigate, useRoutes } from 'react-router-dom';
+import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import { Box } from '@mui/material'
+
+//! Root Layout 
+export const Page404 = lazy(() => import('./pages/Common/Page404'));
+export const Login = lazy(() => import('./pages/Common/LoginComponent/LoginPage'));
+export const ForgotPassword = lazy(() => import('./pages/Common/ForgotPassword'));
+export const NewPassword = lazy(() => import('./pages/Common/NewPassword'));
+
+export const MPODashboardLayout = lazy(() => import('./pages/MPO/dashboard/MPODashboardLayout'));
+export const MPOSettingsLayout = lazy(() => import('./pages/MPO/dashboard/MPOSettingsLayout'));
+export const DashboardAppPage = lazy(() => import('./pages/MPO/dashboard/DashboardAppPage'));
+export const ListofChemistController = lazy(() => import('./pages/MPO/Chemist/ListOfChemistController'));
+export const ListofDoctorController = lazy(() => import('./pages/MPO/Doctor/ListOfDoctorController'));
+export const ListofStockistController = lazy(() => import('./pages/MPO/Stockist/ListOfStockistController'));
+export const ListofUserController = lazy(() => import('./pages/MPO/User/ListOfUserController'));
+export const ListofProductController = lazy(() => import('./pages/MPO/Product/ListOfProductController'));
+export const ListofApplicationController = lazy(() => import('./pages/MPO/Application/ListofApplicationController'));
+export const Authentication = lazy(() => import('./routing/Authentication'));
+export const TargetController = lazy(() => import('./pages/MPO/Target/TargetController'));
+export const ListOfExpensesController = lazy(() => import('./pages/MPO/Expenses/ListOfExpensesContoller'));
+export const ListOfTourPlanController = lazy(() => import('./pages/MPO/TourPlan/ListOfTourPlanController'));
+export const ChatController = lazy(() => import('./pages/MPO/Chat/ChatController'));
+export const ListOfDCRController = lazy(() => import('./pages/MPO/DCR/ListofDCRController'));
+export const ListOfUploadController = lazy(() => import('./pages/MPO/Upload/ListOfUploadController'));
+export const ListOfCompanyAreaController = lazy(() => import('./pages/MPO/CompanyAreas/ListOfCompanyAreaController'));
+export const ListOfDivisionController = lazy(() => import('./pages/MPO/Division/ListOfDivisionController'));
+export const StructureController = lazy(() => import('./pages/MPO/OrganizationalStructure/structureController'));
+export const HolidayController = lazy(() => import('./pages/MPO/Holiday/HolidayController'));
+export const CompanyAreaWiseExpensesController = lazy(() => import('./pages/MPO/Daily Allowances/ListOfCompanyAreaWiseExpensesController'));
+export const ListOfOrderedProductController = lazy(() => import('./pages/MPO/OrderedProduct/ListOfOrderedProduct'));
+export const NotificationController = lazy(() => import('./pages/MPO/Notification/NotificationController'));
+
+
+export const ListofLeaveUserController = lazy(() => import('./pages/MPO/Leaves/ListofLeaveUserController'));
+export const ListOfSalesController = lazy(() => import('./pages/MPO/Sales/ListOfSalesController'));
+export const UploadsDetail = lazy(() => import('./sections/@dashboard/uploads/UploadsDetail'));
+export const ListOfRewardsController = lazy(() => import('./pages/MPO/Rewards/ListOfRewardsController'));
+export const ListOfCompanyRolesController = lazy(() => import('./pages/MPO/CompanyRoles/ListOfCompanyRolesController'));
+export const LandingController = lazy(() => import('./pages/Common/Landing/LandingController'));
+export const OTP = lazy(() => import('./pages/Common/OTP'));
+export const ChangePassword = lazy(() => import('./pages/Common/ChangePassword'));
+export const Profile = lazy(() => import('./pages/Common/Profile/Profile'));
+export const ListOfMissedCallsController = lazy(() => import('./pages/MPO/MissedCalls/ListOfMissedCallsController'));
+export const ListOfPrimarySalesController = lazy(() => import('./pages/MPO/Sales/PrimarySales/ListOfPrimarySalesController'));
+export const ListOfSecondarySalesController = lazy(() => import('./pages/MPO/Sales/SecondarySales/ListOfSecondarySalesController'));
+export const ListOfCollectionsController = lazy(() => import('./pages/MPO/Collections/ListOfCollectionsController'));
+export const ListofDoctorEventsController = lazy(() => import('./pages/MPO/DoctorEvents/ListofDoctorEventsController'));
+export const ListOfDoctorSpecialization = lazy(() => import('./pages/MPO/Category/Doctor/ListOfDoctorSpecialization'));
+export const ListOfTravelAllowancesController = lazy(() => import('./pages/MPO/Travel Allowances/ListOfTravelAllowancesController'));
+export const ListofLockedUserController = lazy(() => import('./pages/MPO/dashboard/lockeduser/listOfLockedUserController'));
+export const ListOfMPOAreasController = lazy(() => import('./pages/MPO/MPOAreas/ListOfMPOAreasController'));
+export const AddDcrForDoctor = lazy(() => import('./pages/MPO/DCR/addDcrForDoctor'));
+export const AddDCRforChemist = lazy(() => import('./pages/MPO/DCR/addDcrForChemist'));
+export const AddDCRForStockist = lazy(() => import('./pages/MPO/DCR/addDcrForStockist'));
+export const MyExecutives = lazy(() => import('./pages/MPO/dashboard/myExecutives/myExecutives'));
+export const MyExecutiveTp = lazy(() => import('./pages/MPO/dashboard/myExecutivesTp/myExecutivesTp'));
+export const MyExecutivesDcr = lazy(() => import('./pages/MPO/dashboard/myExecutivesDcr/myExecutivesDcr'));
+export const ListofAttendance = lazy(() => import('./pages/attendance/listofAttendance'));
+export const AllUserTp = lazy(() => import('./pages/MPO/TourPlan/allUserTp'));
+export const AllUserDcr = lazy(() => import('./pages/MPO/DCR/allUserDcr'));
+export const AddMutipleDoctor = lazy(() => import('./pages/MPO/Doctor/addMutipleDoctor'));
+export const AddMultipleChemist = lazy(() => import('./pages/MPO/Chemist/addMultipleChemist'));
+export const AddMultipleStockist = lazy(() => import('./pages/MPO/Stockist/addMultipleStockist'));
+export const AddMultipleProduct = lazy(() => import('./pages/MPO/Product/addMultipleProduct'));
+export const AddMultipleMpoArea = lazy(() => import('./pages/MPO/MPOAreas/addMultipleMpoArea'));
+export const DcrListData = lazy(() => import('./pages/MPO/DCR/dcrListData'));
+export const HolidayAreaController = lazy(() => import('./pages/MPO/HolidayArea/HolidayAreaController'));
+export const ListOfMpoController = lazy(() => import('./pages/MPO/DoctorEvents/ListOfMpoController'));
+export const ListOfTourPlanLock = lazy(() => import('./pages/MPO/TP_Lock/ListOfTourPlanLock'));
+export const NewLogin = lazy(() => import('./pages/Common/LoginComponent/NewLogin'));
+export const Attendance = lazy(() => import('./pages/attendance/Attendance'));
+export const DCRDetail = lazy(() => import('./pages/MPO/DCR/DCRDetail'));
+export const DCRChemistDetail = lazy(() => import('./pages/MPO/DCR/DCRChemistDetail'));
+export const DCRStockistDetail = lazy(() => import('./pages/MPO/DCR/DCRStockistDetail'));
+export const DCRHODetail = lazy(() => import('./pages/MPO/DCR/DCRHODetail'));
+export const AddMultipleUser = lazy(() => import('./pages/MPO/User/addMultipleUser'));
+export const FilterTravelAllowances = lazy(() => import('./pages/MPO/Travel Allowances/FilterTravelAllowances'));
+export const ListOfCompanyController = lazy(() => import('./pages/MPO/Company/ListOfCompanyController'));
+export const ListOfCompanyUsersController = lazy(() => import('./pages/MPO/CompanyUsers/ListOfCompanyUsersController'));
+export const ListOfDoctorCallFolderController = lazy(() => import('./pages/MPO/DoctorCallFolder/ListOfDoctorCallFolderController'));
+export const ListOfRolesController = lazy(() => import('./pages/MPO/Roles/ListOfRolesController'));
+export const ListOfRolesSuperAdminController = lazy(() => import('./pages/MPO/RolesSuperAdmin/ListOfCompanyRolesController'));
+export const ListOfCompanyWiseUsers = lazy(() => import('./pages/MPO/CompanyUsers/ListOfCompanyWiseUsers'));
+export const DefaultCompanyUsers = lazy(() => import('./pages/MPO/CompanyUsers/DefaultCompanyUsers'));
+export const TestChat = lazy(() => import('./pages/MPO/Chat/TestChat'));
+export const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+export const ListOfAnalyticsController = lazy(() => import('./pages/MPO/Analytics/ListOfAnalyticsController'));
+export const ListOfContactController = lazy(() => import('./pages/MPO/Contacts/ListOfContactController'));
+
+
+// const renderFallback = (
+//   <Box display="flex" alignItems="center" justifyContent="center" flex="1 1 auto">
+//     <LinearProgress
+//       sx={{
+//         width: 1,
+//         maxWidth: 320,
+//         bgcolor: (theme) => varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+//         [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' },
+//       }}
+//     />
+//   </Box>
+// );
+
+// const renderFallback = <div>Loading...</div>;
+
+// const AdminDashboardLayout = () => (
+//   <MPODashboardLayout>
+//     <Suspense fallback={renderFallback}>
+//       <Outlet />
+//     </Suspense>
+//   </MPODashboardLayout>
+// );
+
+export default function Router() {
+  const routes = useRoutes([
+    {
+      path: '/',
+      element: <LandingController />,
+    },
+    {
+      path: '/login',
+      // element: <Login />,
+      element: <NewLogin />,
+    },
+    {
+      path: '/forgetpassword',
+      element: <ForgotPassword />,
+    },
+    {
+      path: '/changepassword',
+      element: <ChangePassword />,
+    },
+    {
+      path: '/otp',
+      element: <OTP />,
+    },
+    {
+      path: '/newpassword',
+      element: <NewPassword />,
+    },
+    {
+      path: '/uploadnewtab/:id',
+      element: <UploadsDetail />,
+    },
+
+    {
+      path: '/dashboard',
+      element: <Authentication component={MPODashboardLayout} allowRoles={['admin', 'MPO', 'other-roles', 'SuperAdmin']} />,
+      children: [
+        {
+          path: 'admin', element: <Authentication component={DashboardAppPage} allowRoles={['admin']} />
+        },
+        {
+          path: 'superadmin', element: <Authentication component={DashboardAppPage} allowRoles={['SuperAdmin']} />
+        },
+        {
+          path: 'admin/listofuser',
+          element: <Authentication component={ListofUserController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/add/multiple/user',
+          element: <Authentication component={AddMultipleUser} allowRoles={['admin']} />,
+        },
+        // //!  Company
+        {
+          path: 'admin/listofdoctor',
+          element: <Authentication component={ListofDoctorController} allowRoles={['admin', 'MPO']} />,
+        },
+        {
+          path: 'admin/add/mutiple/doctor',
+          element: <Authentication component={AddMutipleDoctor} allowRoles={['admin', 'MPO']} />,
+        },
+        {
+          path: 'admin/listofchemist',
+          element: <Authentication component={ListofChemistController} allowRoles={['admin', 'MPO', 'ASM']} />,
+        },
+        {
+          path: 'admin/add/mutiple/chemist',
+          element: <Authentication component={AddMultipleChemist} allowRoles={['admin', 'MPO', 'ASM']} />,
+        },
+        {
+          path: 'admin/listofstockist',
+          element: <Authentication component={ListofStockistController} allowRoles={['admin', 'MPO', 'ASM']} />,
+        },
+        {
+          path: 'admin/doctorcallfolder',
+          element: <Authentication component={ListOfDoctorCallFolderController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/add/mutiple/product',
+          element: <Authentication component={AddMultipleProduct} allowRoles={['admin', 'MPO']} />,
+        },
+        {
+          path: 'admin/add/mutiple/mpo/area',
+          element: <Authentication component={AddMultipleMpoArea} allowRoles={['admin', 'MPO']} />,
+        },
+        {
+          path: 'admin/add/mutiple/stockist',
+          element: <Authentication component={AddMultipleStockist} allowRoles={['admin', 'MPO']} />,
+        },
+        {
+          path: 'admin/my/executives',
+          element: <Authentication component={MyExecutives} allowRoles={['other-roles']} />,
+        },
+        {
+          path: 'admin/my/executives/tp',
+          element: <Authentication component={MyExecutiveTp} allowRoles={['other-roles']} />,
+        },
+        {
+          path: 'admin/my/executives/dcr',
+          element: <Authentication component={MyExecutivesDcr} allowRoles={['other-roles']} />,
+        },
+        {
+          path: 'admin/listofproduct',
+          element: <Authentication component={ListofProductController} allowRoles={['admin', 'MPO']} />,
+        },
+        {
+          path: 'admin/tourplan',
+          element: <Authentication component={ListOfTourPlanController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        {
+          path: 'admin/all/user/tourplan',
+          element: <Authentication component={AllUserTp} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/all/user/dcrdoctordetail',
+          element: <Authentication component={DCRDetail} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        {
+          path: 'admin/all/user/dcrchemistdetail',
+          element: <Authentication component={DCRChemistDetail} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        {
+          path: 'admin/all/user/dcrstockistdetail',
+          element: <Authentication component={DCRStockistDetail} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        {
+          path: 'admin/all/user/dcrhodetail',
+          element: <Authentication component={DCRHODetail} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        {
+          path: 'admin/all/user/dcr',
+          element: <Authentication component={AllUserDcr} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        {
+          path: 'admin/user/wise/dcr',
+          element: <Authentication component={DcrListData} allowRoles={['admin', 'other-roles']} />,
+        },
+        {
+          path: 'admin/dcr',
+          element: <Authentication component={ListOfDCRController} allowRoles={['admin', 'MPO', , 'other-roles']} />,
+        },
+        {
+          path: 'admin/missedcalls',
+          element: <Authentication component={ListOfMissedCallsController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        {
+          path: 'admin/target',
+          element: <Authentication component={TargetController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        {
+          path: 'admin/application',
+          element: <Authentication component={ListofApplicationController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        {
+          path: 'admin/travelallowances',
+          element: <Authentication component={ListOfTravelAllowancesController} allowRoles={['MPO', 'other-roles', 'admin']} />,
+        },
+        {
+          path: 'admin/upload',
+          element: <Authentication component={ListOfUploadController} allowRoles={['admin', 'MPO']} />,
+        },
+        {
+          path: 'admin/analytics',
+          element: <Authentication component={ListOfAnalyticsController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        {
+          path: 'admin/mpoareas',
+          element: <Authentication component={ListOfMPOAreasController} allowRoles={['admin', 'MPO']} />,
+        },
+
+        //! Sales
+        {
+          path: 'admin/sales',
+          element: <Authentication component={ListOfSalesController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/primarysales',
+          element: <Authentication component={ListOfPrimarySalesController} allowRoles={['admin']} />,
+        },
+
+        {
+          path: 'admin/secondarysales',
+          element: <Authentication component={ListOfSecondarySalesController} allowRoles={['admin']} />,
+        },
+
+        //! Others 
+        {
+          path: 'admin/collections',
+          element: <Authentication component={ListOfCollectionsController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/ordered-product',
+          element: <Authentication component={ListOfOrderedProductController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/organization',
+          element: <Authentication component={StructureController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/expenses',
+          element: <Authentication component={ListOfExpensesController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/expenses/user',
+          element: <Authentication component={FilterTravelAllowances} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/leave',
+          element: <Authentication component={ListofLeaveUserController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/chattest',
+          element: <Authentication component={ChatController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/chat',
+          element: <Authentication component={TestChat} allowRoles={['admin', 'MPO', 'other-roles', 'SuperAdmin']} />,
+        },
+        {
+          path: 'admin/notification',
+          element: <Authentication component={NotificationController} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        },
+        // {
+        //   path: 'admin/changepassword',
+        //   element: <Authentication component={ChangePassword} allowRoles={['admin', 'MPO', 'other-roles']} />,
+        // },
+        {
+          path: 'admin/user/attendance',
+          // element: <Authentication component={ListofAttendance} allowRoles={['admin']} />,
+          element: <Authentication component={Attendance} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/doctorevent',
+          element: <Authentication component={ListOfMpoController} allowRoles={['admin', "MPO"]} />,
+        },
+        {
+          path: 'admin/mpo/doctorevents',
+          element: <Authentication component={ListofDoctorEventsController} allowRoles={['admin', "MPO"]} />,
+        },
+        {
+          path: 'admin/locked/user',
+          element: <Authentication component={ListofLockedUserController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/dcr/for/doctor',
+          element: <Authentication component={AddDcrForDoctor} allowRoles={['MPO']} />,
+        },
+        {
+          path: 'admin/dcr/for/chemist',
+          element: <Authentication component={AddDCRforChemist} allowRoles={['MPO']} />,
+        },
+        {
+          path: 'admin/dcr/for/stockist',
+          element: <Authentication component={AddDCRForStockist} allowRoles={['MPO']} />,
+        },
+        {
+          path: 'admin/profile',
+          element: <Profile />,
+        },
+
+        //! SuperAdmin 
+        {
+          path: 'superadmin/company',
+          element: <Authentication component={ListOfCompanyController} allowRoles={['SuperAdmin']} />,
+        },
+        {
+          path: 'superadmin/roles',
+          element: <Authentication component={ListOfRolesSuperAdminController} allowRoles={['SuperAdmin']} />,
+        },
+        {
+          path: 'superadmin/companyroles',
+          element: <Authentication component={ListOfCompanyRolesController} allowRoles={['SuperAdmin']} />,
+        },
+        {
+          path: 'superadmin/companyusers',
+          element: <Authentication component={ListOfCompanyUsersController} allowRoles={['SuperAdmin']} />,
+        },
+        {
+          path: 'superadmin/companywiseusers',
+          element: <Authentication component={ListOfCompanyWiseUsers} allowRoles={['SuperAdmin']} />,
+        },
+        {
+          path: 'superadmin/contacts',
+          element: <Authentication component={ListOfContactController} allowRoles={['SuperAdmin']} />,
+        },
+        // {
+        //   path: 'superadmin/companywiseusers',
+        //   element: <Authentication component={DefaultCompanyUsers} allowRoles={['SuperAdmin']} />,
+        // },
+      ],
+    },
+
+    // //!Settings 
+    {
+      path: '/dashboard/settings',
+      element: <Authentication component={MPOSettingsLayout} allowRoles={['admin']} />,
+      // element: <MPOSettingsLayout />,
+      children: [
+        // {
+        //   path: 'admin/chemistcategory',
+        //   element: <Authentication component={ListOfChemistCategory} allowRoles={['mpo']} />,
+        // },
+        {
+          path: 'admin/companyareas',
+          element: <Authentication component={ListOfCompanyAreaController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/companyareawiseexpense',
+          element: <Authentication component={CompanyAreaWiseExpensesController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/doctorspecialization',
+          element: <Authentication component={ListOfDoctorSpecialization} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/divisions',
+          element: <Authentication component={ListOfDivisionController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/roles',
+          element: <Authentication component={ListOfRolesController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/holiday',
+          element: <Authentication component={HolidayController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/holidayarea',
+          element: <Authentication component={HolidayAreaController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/rewards',
+          element: <Authentication component={ListOfRewardsController} allowRoles={['admin']} />,
+        },
+        {
+          path: 'admin/dcrlockdays',
+          element: <Authentication component={ListOfTourPlanLock} allowRoles={['admin']} />,
+        },
+
+      ]
+    },
+
+    {
+      path: '*',
+      element: <Authentication component={Page404} />,
+    },
+  ]);
+
+  return routes;
+}

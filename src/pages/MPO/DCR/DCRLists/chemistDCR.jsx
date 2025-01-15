@@ -104,8 +104,6 @@ const ChemistDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => 
         }
     }, [results]);
 
-    console.log(results?.data?.results)
-
     //! Corrected
     const handlePageChange = (event, newPage) => {
         setCurrentPage(newPage);

@@ -6,13 +6,14 @@ import {
     CircularProgress,
     Autocomplete,
     TextField,
-    Stack, 
+    Stack,
     Button
 } from '@mui/material'
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import 'react-datepicker/dist/react-datepicker.css';
+import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
 
 //! Reusable Component
 import { useForm, Form } from '../../../../reusable/forms/useForm'
@@ -55,8 +56,6 @@ const EditDCR = ({ idharu, onClose }) => {
     const mpo_id = useSelector(state => state.dcrData.selected_user);
     const DCRAll = useGetDoctorDcrByIdQuery(idharu);
 
-    console.log("DCRAll Doctor", DCRAll?.data)
-
     const shiftWiseDCR = useGetShiftWiseDoctorDCRByIdQuery(idharu);
 
     //! Nepali Date format 
@@ -84,6 +83,30 @@ const EditDCR = ({ idharu, onClose }) => {
         }
         return [];
     }, [rewardAllData]);
+
+    //! Visited With Options
+    const [executiveOptions, setExecutiveOptions] = useState([]);
+    const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
+    useEffect(() => {
+        executiveUsers({ id: DCRAll?.data?.mpo_name?.id }, {
+            skip: !DCRAll?.data?.mpo_name?.id
+        })
+            .then(res => {
+                if (res.data) {
+                    const executive = [];
+                    res.data.forEach(keyData => {
+                        executive.push({
+                            id: keyData.id,
+                            title: keyData?.user_name?.first_name + " " + keyData?.user_name?.middle_name + " " + keyData?.user_name?.last_name,
+                        });
+                    });
+                    setExecutiveOptions(executive);
+                }
+            })
+            .catch(err => {
+
+            });
+    }, [DCRAll?.data?.mpo_name?.id]);
 
     const [multipleProducts, setMultipleProducts] = useState([])
     const handleMultipleProducts = (e, value) => {
@@ -368,7 +391,7 @@ const EditDCR = ({ idharu, onClose }) => {
                             {/* <NepaliDatePicker disable={true} value={dateData} format="YYYY-MM-DD" onChange={(value) => setDateData(value)} /> */}
                         </Box>
 
-                        <Box marginBottom={2}>
+                        {/* <Box marginBottom={2}>
                             <EditDoctorDCRProducts
                                 name="company_product"
                                 value={values.company_product}
@@ -397,7 +420,7 @@ const EditDCR = ({ idharu, onClose }) => {
                                 id={idharu}
                                 context={context}
                                 editApi={useAddDoctorsAllDCRMutation} />
-                        </Box>
+                        </Box> */}
 
 
                         {/* //! New Multiple Wala  */}
@@ -424,7 +447,7 @@ const EditDCR = ({ idharu, onClose }) => {
                             <Autocomplete
                                 multiple
                                 value={multipleVisitedWith || []}
-                                options={promotedArray}
+                                options={executiveOptions}
                                 getOptionLabel={(option) => option.title}
                                 onChange={handleMultipleVisitedWith}
                                 renderInput={(params) => (

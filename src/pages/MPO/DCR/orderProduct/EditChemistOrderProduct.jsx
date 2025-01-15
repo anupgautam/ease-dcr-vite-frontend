@@ -28,7 +28,7 @@ import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/produ
 import { extractErrorMessage } from '@/reusable/extractErrorMessage';
 import { toast } from 'react-toastify'
 
-const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData, mpo_name }) => {
+const EditChemistOrderProduct = ({ id, data, handleOrderProductChange, allData, mpo_name }) => {
     const { company_id, company_area_id, company_user_role_id, company_division_name } = useSelector((state) => state.cookie);
 
     const newId = allData?.id;
@@ -68,12 +68,7 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData, mpo_
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        PostChemistOrderProduct({
-            dcr_id: allData.id,
-            product_id: OrderedProductState.product_id,
-            ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id,
-            select_the_stockist: OrderedProductState.select_the_stockist, mpo_name: company_user_role_id
-        })
+        PostChemistOrderProduct({ dcr_id: allData.id, product_id: OrderedProductState.product_id, ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id, select_the_stockist: OrderedProductState.select_the_stockist, mpo_name: company_user_role_id })
             .then((res) => {
                 if (res.data) {
                     toast.success(`${res?.data?.message}`)
@@ -567,4 +562,4 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData, mpo_
 
 
 
-export default React.memo(ChemistOrderProduct); 
+export default React.memo(EditChemistOrderProduct); 
