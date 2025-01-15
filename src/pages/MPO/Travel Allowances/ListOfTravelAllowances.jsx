@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import TravelRolePage from './TravelRolePage';
 
 const ListOfTravelAllowances = () => {
-    const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+    const { user_role } = useSelector((state) => state.cookie);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));

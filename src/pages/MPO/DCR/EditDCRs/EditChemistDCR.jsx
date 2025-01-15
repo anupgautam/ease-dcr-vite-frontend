@@ -44,6 +44,8 @@ import {
     useGetAllRewardsByCompanyIdQuery,
 } from "@/api/DCRs Api Slice/rewardsAPISlice"
 import ChemistOrderProduct from '../orderProduct/chemistOrderProduct';
+import EditChemistOrderProduct from '../orderProduct/EditChemistOrderProduct';
+
 const EditChemistDCR = ({ idharu, onClose }) => {
 
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -146,16 +148,12 @@ const EditChemistDCR = ({ idharu, onClose }) => {
     //! Ordered Products ko options 
     const { data: orderedProducts } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: DCRAll?.data?.mpo_name?.division_name?.id })
 
-    console.log(orderedProducts)
-
-    // const orderedProductOptions = useMemo(() => {
-    //     if (orderedProducts) {
-    //         return orderedProducts?.map(key => ({ id: key.id, title: key.reward }));
-    //     }
-    //     return [];
-    // }, [orderedProducts]);
-
-    // console.log(orderedProductOptions)
+    const orderedProductOptions = useMemo(() => {
+        if (orderedProducts) {
+            return orderedProducts?.map(key => ({ id: key.id, title: key.reward }));
+        }
+        return [];
+    }, [orderedProducts]);
 
     const [multipleProducts, setMultipleProducts] = useState([])
     const handleMultipleProducts = (e, value) => {
@@ -234,6 +232,7 @@ const EditChemistDCR = ({ idharu, onClose }) => {
             setMultipleProducts(selectedPromotedProducts)
             setMultipleVisitedWith(selectedVisitedWith)
             setMultipleRewards(selectedRewards)
+            setMultipleOrderedProducts(selectedChemistOrderedProducts)
         }
         if (shiftWiseDCR.status == "fulfilled") {
             // setInitialShift(shiftWiseDCR?.data?.results[0]?.shift.id)
@@ -308,11 +307,9 @@ const EditChemistDCR = ({ idharu, onClose }) => {
     }
 
     const handleInputChangeLoop = (e) => {
-
         if (!noLoop) {
             setNoLoop(true)
             handleInputChange(e);
-
         }
         else {
             handleInputChange(e);
@@ -320,13 +317,35 @@ const EditChemistDCR = ({ idharu, onClose }) => {
     }
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         setLoading(true)
-        const jsonData = {
+        const data = {
             date: values.date,
             promoted_product: multipleProducts.map(key => key.id),
             rewards: multipleRewards.map(key => key.id),
             visited_with: multipleVisitedWith.map(key => key.id),
             ordered_products: multipleOrderedProducts.map(key => key.id),
+        }
+        try {
+            const response = await updateDCRAll(data)
+            if (response) {
+                toast.success(`${response?.data?.msg}`)
+                setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
+            } else if (response?.error) {
+                console.log(response?.error)
+                toast.error(`${response?.error?.data?.msg}`)
+                setLoading(false);
+            } else {
+                toast.error(`Some Error Occured`)
+            }
+        }
+        catch (error) {
+            console.log(error)
+            toast.error('Backend Error')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -425,7 +444,7 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                             // className={"drawer-first-name-input"}
                             />
                         </Box>
-                        <Box marginBottom={2}>
+                        {/* <Box marginBottom={2}>
                             <EditChemistDCRProducts
                                 name="company_product"
                                 value={values.company_product}
@@ -454,8 +473,8 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                                 context={context}
                                 editApi={useUpdateChemistsAllDCRMutation} />
 
-                        </Box>
-                        <Box marginBottom={2}>
+                        </Box> */}
+                        {/* <Box marginBottom={2}>
                             <EditChemistDCROrderedProducts
                                 name="ordered_products"
                                 value={values.ordered_products}
@@ -463,7 +482,7 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                                 id={idharu}
                                 context={context}
                                 editApi={useUpdateChemistsAllDCRMutation} />
-                        </Box>
+                        </Box> */}
 
                         {/* //! New Multiple Ordered Products Wala  */}
                         {/* <Box marginBottom={2}>
@@ -483,13 +502,14 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                                 )}
                             />
                         </Box> */}
-
-                        <ChemistOrderProduct
-                            id={id}
-                            data={OrderProduct}
-                            allData={AllMultiple[sn]}
-                            handleOrderProductChange={handleOrderedProducts}
-                        />
+                        <Box marginBottom={2}>
+                            <EditChemistOrderProduct
+                                id={id}
+                                data={OrderProduct}
+                                allData={DCRAll}
+                                handleOrderProductChange={handleOrderedProducts}
+                            />
+                        </Box>
 
                         {/* //! New Multiple Wala  */}
                         <Box marginBottom={2}>

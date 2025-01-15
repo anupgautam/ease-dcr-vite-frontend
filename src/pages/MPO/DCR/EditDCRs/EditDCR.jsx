@@ -44,6 +44,7 @@ import {
     useGetRewardsByIdQuery,
     usePostRewardForDcrMutation
 } from "@/api/DCRs Api Slice/rewardsAPISlice"
+import { toast } from 'react-toastify';
 
 const EditDCR = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -104,7 +105,7 @@ const EditDCR = ({ idharu, onClose }) => {
                 }
             })
             .catch(err => {
-
+                console.log(err)
             });
     }, [DCRAll?.data?.mpo_name?.id]);
 
@@ -172,7 +173,9 @@ const EditDCR = ({ idharu, onClose }) => {
                 company_product: DCRAll?.data?.company_product,
                 rewards: DCRAll?.data?.rewards,
                 company_roles: DCRAll?.data?.company_roles,
-                // dcr_id: DCRAll?.data?.dcr?.dcr?.id
+                year: DCRAll?.data?.dcr?.year,
+                month: DCRAll?.data?.dcr?.month,
+                id: DCRAll?.data?.id
             });
             setDateData(DCRAll?.data?.dcr?.date);
             setMultipleProducts(selectedPromotedProducts)
@@ -227,30 +230,30 @@ const EditDCR = ({ idharu, onClose }) => {
 
     const [updateDCRAll] = useAddDoctorsAllDCRMutation();
 
-    useEffect(() => {
-        if (DCRAll.data) {
-            editWithoutImage(noLoop, setNoLoop, updateDCRAll, values, idharu, context);
-        }
-    }, [
-        values.date,
-        values.visited_area,
-        values.visited_doctor,
-        useDebounce(values.expenses_name, 3000),
-        useDebounce(values.expenses, 3000),
-        useDebounce(values.expenses_reasoning, 3000),
-        values.company_product,
-        values.rewards,
-        values.company_roles,
+    // useEffect(() => {
+    //     if (DCRAll.data) {
+    //         editWithoutImage(noLoop, setNoLoop, updateDCRAll, values, idharu, context);
+    //     }
+    // }, [
+    //     values.date,
+    //     values.visited_area,
+    //     values.visited_doctor,
+    //     useDebounce(values.expenses_name, 3000),
+    //     useDebounce(values.expenses, 3000),
+    //     useDebounce(values.expenses_reasoning, 3000),
+    //     values.company_product,
+    //     values.rewards,
+    //     values.company_roles,
 
-    ]);
-    const changeShift = (e) => {
-        const form = new FormData();
-        form.append('id', shiftWiseDCR?.data?.results[0]?.id)
-        form.append('shift', e.target.value);
-        form.append('dcr_id', idharu);
-        form.append('mpo_name', mpo_id);
-        updateShiftWiseDCR(form);
-    }
+    // ]);
+    // const changeShift = (e) => {
+    //     const form = new FormData();
+    //     form.append('id', shiftWiseDCR?.data?.results[0]?.id)
+    //     form.append('shift', e.target.value);
+    //     form.append('dcr_id', idharu);
+    //     form.append('mpo_name', mpo_id);
+    //     updateShiftWiseDCR(form);
+    // }
 
     const handleInputChangeLoop = (e) => {
 
@@ -265,14 +268,46 @@ const EditDCR = ({ idharu, onClose }) => {
     }
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         setLoading(true)
-        const jsonData = {
-            date: values.date,
-            promoted_product: multipleProducts.map(key => key.id),
+        const data = {
+            date: dateData,
+            company_product: multipleProducts.map(key => key.id),
             rewards: multipleRewards.map(key => key.id),
-            visited_with: multipleVisitedWith.map(key => key.id),
+            company_roles: multipleVisitedWith.map(key => key.id),
+            expenses: values.expenses,
+            expenses_name: values.expenses_name,
+            expenses_reasoning: values.expenses_reasoning,
+            mpo_name: values.mpo_name,
+            shift: values.shift,
+            visited_area: values.visited_area,
+            visited_doctor: values.visited_doctor,
+            year: values.year,
+            month: values.month,
+            id: values.id
+        }
+        try {
+            const response = await updateDCRAll(data)
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+                // setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
+            } else if (response?.error) {
+                toast.error(`${response?.error?.data?.message}`)
+                setLoading(false);
+            } else {
+                toast.error(`Some Error Occured`)
+            }
+        }
+        catch (error) {
+            console.log(error)
+            toast.error('Backend Error')
+        } finally {
+            setLoading(false)
         }
     }
+
 
     return (
         <>

@@ -104,8 +104,6 @@ const AddUser = () => {
         return [];
     }, [GetExecLevel]);
 
-    console.log(execLevelUsers)
-
     //! Format Date
     const now = new BSDate().now();
     const [dateData, setDateData] = useState(now);

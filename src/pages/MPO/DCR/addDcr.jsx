@@ -105,8 +105,6 @@ const AddDcrForHo = () => {
 
     const { data: higherOrderTourplans } = useGetHigherOrderTourPlanUsingIdQuery({ user_id: company_user_role_id, year: yearData, month: monthData });
 
-    console.log(higherOrderTourplans)
-
     // useEffect(() => {
     //     GethingherOrder({ user_id: company_user_role_id })
     //         .then((res) => {

@@ -17,6 +17,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 //! Reusable Component
 import { useForm, Form } from '../../../../reusable/forms/useForm'
 import Controls from '../../../../reusable/components/forms/controls/Controls';
+import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
+
 //! Api Slices 
 import {
     useGetStockistAllDCRByIdQuery,
@@ -40,6 +42,7 @@ import { useSelector } from 'react-redux';
 import {
     useGetAllRewardsByCompanyIdQuery,
 } from "@/api/DCRs Api Slice/rewardsAPISlice"
+import EditStockistOrderProduct from '../orderProduct/EditStockistOrderProduct';
 
 const EditStockistDCR = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -48,6 +51,37 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     const [initialShift, setInitialShift] = useState("");
     // const areas = useSelector(state => state.dcrData.company_areas);
     // const stockists = useSelector(state => state.dcrData.visited_stockist);
+
+    //! Stockist Ordered Product
+    const id = new URLSearchParams(window.location.search).get('id');
+
+    const [Formdata, setFormData] = useState({
+        expenses_name: "",
+        expenses: "",
+        expenses_reasoning: "",
+        ordered_products: [],
+    })
+
+    const handleChemistOrderChange = (event) => {
+        const { name, value } = event.target;
+        const newData = { ...Formdata, [name]: value };
+        setFormData(newData);
+    }
+
+    //! Ordered Product
+    const [OrderProduct, setOrderedProduct] = useState([]);
+
+    const handleOrderedProducts = (e) => {
+        setOrderedProduct(e.target.value);
+        if (!Formdata.ordered_products.includes(e.target.value)) {
+            setFormData(prevFormdata => ({
+                ...prevFormdata,
+                ordered_products: e.target.value.map((key) => ({
+                    id: key
+                })),
+            }));
+        }
+    };
 
     const shifts = useSelector(state => state.dcrData.shifts);
     const mpo_id = useSelector(state => state.dcrData.selected_user);
@@ -75,11 +109,11 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     //! Getting TourPlan by ID
 
     const DCRAll = useGetStockistDcrByIdQuery(idharu);
+    console.log("DCRAll Edit Page", DCRAll?.data)
+
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
         skip: !mpo_id
     });
-
-    console.log("Stockist DCR", DCRAll?.data)
 
     const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id ? mpoArea?.company_area?.id : "" }, {
         skip: !company_id
@@ -110,6 +144,35 @@ const EditStockistDCR = ({ idharu, onClose }) => {
         setMultipleRewards(value);
     }
 
+    //! Visited With Options
+    const [executiveOptions, setExecutiveOptions] = useState([]);
+    const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
+    useEffect(() => {
+        executiveUsers({ id: DCRAll?.data?.mpo_name?.id }, {
+            skip: !DCRAll?.data?.mpo_name?.id
+        })
+            .then(res => {
+                if (res.data) {
+                    const executive = [];
+                    res.data.forEach(keyData => {
+                        executive.push({
+                            id: keyData.id,
+                            title: keyData?.user_name?.first_name + " " + keyData?.user_name?.middle_name + " " + keyData?.user_name?.last_name,
+                        });
+                    });
+                    setExecutiveOptions(executive);
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            });
+    }, [DCRAll?.data?.mpo_name?.id]);
+
+    const [multipleVisitedWith, setMultipleVisitedWith] = useState([])
+    const handleMultipleVisitedWith = (e, value) => {
+        setMultipleVisitedWith(value);
+    }
+
     const [initialFValues, setInitialFValues] = useState({
         edit: false,
         date: "",
@@ -129,6 +192,11 @@ const EditStockistDCR = ({ idharu, onClose }) => {
             const selectedRewards = DCRAll?.data?.rewards?.map(visited => ({
                 id: visited.id, title: visited.rewards
             })) || []
+
+            //! Initial Promoted Products 
+            const selectedVisitedWith = DCRAll?.data?.visited_with?.map(visited => ({
+                id: visited.id, title: `${visited.user_name?.first_name} ${visited.user_name?.middle_name} ${visited.user_name?.last_name}`
+            })) || []
             setInitialFValues({
                 edit: true,
                 date: DCRAll?.data?.dcr?.date,
@@ -142,6 +210,8 @@ const EditStockistDCR = ({ idharu, onClose }) => {
             });
             setDateData(DCRAll?.data?.dcr?.date);
             setMultipleRewards(selectedRewards)
+            setMultipleVisitedWith(selectedVisitedWith)
+
         }
         if (shiftWiseDCR.status == "fulfilled") {
             setInitialShift(shiftWiseDCR?.data?.results[0]?.shift.id)
@@ -228,7 +298,7 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                                 <Close />
                             </IconButton>
                             <Typography variant="h6">
-                                Edit DCR
+                                Edit Stockist DCR
                             </Typography>
                         </Typography>
                     </Box>
@@ -309,7 +379,7 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                             // className={"drawer-first-name-input"}
                             />
                         </Box>
-                        <Box marginBottom={2}>
+                        {/* <Box marginBottom={2}>
                             <EditStockistDCRRoles
                                 name="company_roles"
                                 value={values.company_roles}
@@ -317,30 +387,37 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                                 id={idharu}
                                 context={context}
                                 editApi={useUpdateStockistsAllDCRMutation} />
-                        </Box>
-
-                        {/* <Box marginBottom={2}>
-                            <EditDCRStockistRewards
-                                name="rewards"
-                                value={values.rewards}
-                                onChange={handleInputChangeLoop}
-                                id={idharu}
-                                context={context}
-                                editApi={useUpdateStockistsAllDCRMutation} />
-
                         </Box> */}
+
+                        {/*//! Order Product   */}
                         <Box marginBottom={2}>
-                            <EditStockistDCRProducts
-                                name="company_product"
-                                division={mpoArea?.division_name}
-                                value={values.company_product}
-                                onChange={handleInputChangeLoop}
-                                id={idharu}
-                                context={context}
-                                editApi={useUpdateStockistsAllDCRMutation} />
+                            <EditStockistOrderProduct
+                                id={id}
+                                data={OrderProduct}
+                                allData={DCRAll}
+                                handleOrderProductChange={handleOrderedProducts}
+                            />
                         </Box>
 
-                        {/* //! New Multiple Wala  */}
+                        {/* //! Multiple Visited With  */}
+                        <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                value={multipleVisitedWith || []}
+                                options={executiveOptions}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleVisitedWith}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Visited With" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+                        {/* //! Multiple Rewards  */}
                         <Box marginBottom={2}>
                             <Autocomplete
                                 multiple

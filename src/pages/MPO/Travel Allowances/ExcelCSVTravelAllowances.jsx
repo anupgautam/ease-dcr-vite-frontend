@@ -29,9 +29,11 @@ import {
 } from '@/api/MPOSlices/companyRolesSlice';
 import { BSDate } from 'nepali-datepicker-react';
 import { getNepaliMonthName } from '@/reusable/utils/reuseableMonth';
-import ExportToExcel from '@/reusable/utils/exportSheet';
+// import ExportToExcel from '@/reusable/utils/exportSheet';
+import ExportToExcel from '@/reusable/utils/exportExcelExpenses';
 import { useGetHOTourPlansByUserIdQuery } from '@/api/HighOrderSlices/hoTourPlanSlice';
 import { useSelector } from 'react-redux';
+import ChatExpenses from '../../../reusable/utils/ChatExpenses';
 
 function useAreaData(areaId) {
     const { data } = useGetAreaMPOByIdQuery(areaId, {
@@ -231,7 +233,7 @@ const ExcelCSVTourPlan = () => {
                             <Close />
                         </IconButton>
                         <Typography variant="h6" >
-                            Export Tour Plan
+                            Export Expenses
                         </Typography>
 
                     </Box>
@@ -289,7 +291,7 @@ const ExcelCSVTourPlan = () => {
                                     <ExportToExcel
                                         headers={selectedUser?.role === "MPO" ? headers1 : headers}
                                         fileName={`${selectedUser?.role === "MPO" ? selectedUser.title + ' ' + 'Tour Plan' : 'All Tour Plan'}`}
-                                        data={selectedUser?.role === "MPO" ? templateData1 : templateData} />
+                                        data={selectedUser?.role === "MPO" ? templateData1 : templateData1} />
                                 </Box>
                             </>
                         }
