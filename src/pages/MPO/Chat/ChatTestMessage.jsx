@@ -15,8 +15,8 @@ const ChatTestMessage = ({ messages }) => {
         <div className="flex flex-col h-full overflow-x-auto mb-4">
             <div className="flex flex-col h-full">
                 <div className="grid grid-cols-12 gap-y-2">
-                    {messages.length > 0 ? (
-                        messages.map((data, index) => {
+                    {messages.count > 0 ? (
+                        messages.results.map((data, index) => {
                             const dataCondition = Number(company_user_role_id) === Number(data?.chat_from);
                             return (
                                 <div

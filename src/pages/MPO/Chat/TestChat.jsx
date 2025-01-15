@@ -56,16 +56,17 @@ const TestChat = () => {
         });
 
         socket.on('receiveMessage', (data) => {
-            console.log('New message received:', data);
-            setChatMessage((prevMessages) => [
-                ...prevMessages,
-                {
-                    chat_from: data?.chat_from,
-                    chat_to: data?.chat_to,
-                    chat_message: data?.chat_message,
-                    message_from: data?.message_from,
-                }
-            ]);
+            const newMessage = {
+                chat_to: Number(data.chat_to),
+                chat_from: Number(data.chat_from),
+                chat_message: data.chat_message,
+                message_from: Number(data.message_from),
+                created_at: new Date().toISOString(),
+            };
+            setChatMessage((prevChatMessage) => ({
+                ...prevChatMessage,
+                results: [...prevChatMessage.results, newMessage],
+            }));
         });
 
         return () => {
@@ -112,18 +113,18 @@ const TestChat = () => {
         };
 
         socket.emit('sendMessage', data);
-
+        const newMessage = {
+            chat_to: Number(userId),
+            chat_from: Number(company_user_role_id),
+            chat_message: typingMsg.msg,
+            message_from: Number(company_user_role_id),
+            created_at: new Date().toISOString(),
+        };
         setTypingMsg({ msg: '' });
-
-        setChatMessage((prevMessages) => [
-            ...prevMessages,
-            {
-                chat_to: userId,
-                chat_from: Number(company_user_role_id),
-                chat_message: typingMsg.msg,
-                message_from: company_user_role_id,
-            },
-        ]);
+        setChatMessage((prevChatMessage) => ({
+            ...prevChatMessage,
+            results: [...prevChatMessage.results, newMessage],
+        }));
     };
 
     const handleKeyPress = (e) => {
