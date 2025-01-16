@@ -303,7 +303,7 @@ const AddDCRForStockist = () => {
                         //     navigate('/dashboard/admin/dcr');
                         // }, 2000);
 
-                        toast.success(`Successfully Added Tourplan.`)
+                        toast.success(`${res?.data?.message}`)
                         navigate('/dashboard/admin/dcr');
 
                         // if (LastData === true) {
@@ -610,7 +610,7 @@ const AddDCRForStockist = () => {
                                 <Typography style={{ color: "black", fontSize: '15px', fontWeight: "600" }}>Ordered Product & Expenses</Typography>
                                 <Box style={{ marginTop: "15px" }}>
                                     <Box marginBottom={2}>
-                                        <StockistOrderedProduct id={id} />
+                                        <StockistOrderedProduct id={id}/>
                                     </Box>
                                     <Box marginBottom={2}>
                                         <Controls.Input

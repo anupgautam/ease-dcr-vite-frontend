@@ -128,16 +128,18 @@ const AddDCRforChemist = () => {
 
     const [initialFValues, setInitialFvalues] = useState({
         edit: false,
-        tour_id: "",
+
         id: "",
-        shift: '',
         date: "",
-        visited_area: '',
-        visited_chemist: '',
         expenses: '',
-        order_product: '',
         expenses_name: '',
         expenses_reasoning: '',
+
+        tour_id: "",
+        shift: '',
+        visited_area: '',
+        visited_chemist: '',
+        order_product: '',
         company_product: [],
         rewards: [],
         company_roles: [],

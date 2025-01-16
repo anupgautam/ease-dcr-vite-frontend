@@ -109,7 +109,6 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     //! Getting TourPlan by ID
 
     const DCRAll = useGetStockistDcrByIdQuery(idharu);
-    console.log("DCRAll Edit Page", DCRAll?.data)
 
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
         skip: !mpo_id
@@ -185,6 +184,8 @@ const EditStockistDCR = ({ idharu, onClose }) => {
         company_roles: [],
     });
 
+    console.log(DCRAll?.data?.visited_with)
+
     useEffect(() => {
         if (DCRAll?.data) {
 
@@ -197,6 +198,7 @@ const EditStockistDCR = ({ idharu, onClose }) => {
             const selectedVisitedWith = DCRAll?.data?.visited_with?.map(visited => ({
                 id: visited.id, title: `${visited.user_name?.first_name} ${visited.user_name?.middle_name} ${visited.user_name?.last_name}`
             })) || []
+
             setInitialFValues({
                 edit: true,
                 date: DCRAll?.data?.dcr?.date,
@@ -237,40 +239,87 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     //! Edit tourplan
 
     const [updateDCRAll] = useUpdateStockistsAllDCRMutation();
-    useEffect(() => {
-        if (DCRAll.data) {
-            editWithoutImage(noLoop, setNoLoop, updateDCRAll, values, idharu, context);
+
+    // useEffect(() => {
+    //     if (DCRAll.data) {
+    //         editWithoutImage(noLoop, setNoLoop, updateDCRAll, values, idharu, context);
+    //     }
+    // }, [
+    //     values.date,
+    //     values.visited_area,
+    //     values.visited_stockist,
+    //     useDebounce(values.expenses_name, 3000),
+    //     useDebounce(values.expenses, 3000),
+    //     useDebounce(values.expenses_reasoning, 3000),
+    //     values.rewards,
+    //     values.company_roles
+    // ]);
+    // const changeShift = (e) => {
+    //     const form = new FormData();
+    //     form.append('id', shiftWiseDCR?.data?.results[0]?.id)
+    //     form.append('shift', e.target.value);
+    //     form.append('dcr_id', idharu);
+    //     form.append('mpo_name', mpo_id);
+    //     updateShiftWiseDCR(form);
+    // }
+
+    // const handleInputChangeLoop = (e) => {
+
+    //     if (!noLoop) {
+    //         setNoLoop(true)
+    //         handleInputChange(e);
+
+    //     }
+    //     else {
+    //         handleInputChange(e);
+    //     }
+    // }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true)
+        const data = {
+            id: values.id,
+            date: values.date,
+            expenses: values.expenses,
+            expenses_name: values.expenses_name,
+            expenses_reasoning: values.expenses_reasoning,
+
+            // company_product: multipleProducts.map(key => key.id),
+            rewards: multipleRewards.map(key => key.id),
+            company_roles: multipleVisitedWith.map(key => key.id),
+            // ordered_products: multipleOrderedProducts.map(key => key.id),
+
+            mpo_name: values.mpo_name,
+            shift: values.shift,
+            visited_area: values.visited_area,
+            visited_doctor: values.visited_doctor,
+            year: values.year,
+            month: values.month,
+            visited_stockist: values.visited_stockist
         }
-    }, [
-        values.date,
-        values.visited_area,
-        values.visited_stockist,
-        useDebounce(values.expenses_name, 3000),
-        useDebounce(values.expenses, 3000),
-        useDebounce(values.expenses_reasoning, 3000),
-        values.rewards,
-        values.company_roles
-    ]);
-    const changeShift = (e) => {
-        const form = new FormData();
-        form.append('id', shiftWiseDCR?.data?.results[0]?.id)
-        form.append('shift', e.target.value);
-        form.append('dcr_id', idharu);
-        form.append('mpo_name', mpo_id);
-        updateShiftWiseDCR(form);
+        try {
+            const response = await updateDCRAll(data)
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+                // setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
+            } else if (response?.error) {
+                toast.error(`${response?.error?.data?.message}`)
+                setLoading(false);
+            } else {
+                toast.error(`Some Error Occured`)
+            }
+        }
+        catch (error) {
+            console.log(error)
+            toast.error('Backend Error')
+        } finally {
+            setLoading(false)
+        }
     }
 
-    const handleInputChangeLoop = (e) => {
-
-        if (!noLoop) {
-            setNoLoop(true)
-            handleInputChange(e);
-
-        }
-        else {
-            handleInputChange(e);
-        }
-    }
     return (
         <>
             <Drawer
@@ -305,60 +354,6 @@ const EditStockistDCR = ({ idharu, onClose }) => {
 
                     <Form>
                         <Box marginBottom={2}>
-                            <Controls.Select
-                                name="visited_area"
-                                label="Visited Area"
-                                value={values.visited_area}
-                                onChange={(e) => handleInputChangeLoop(e)}
-                                options={areas}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
-                            <Controls.Select
-                                name="visited_stockist"
-                                label="Visited Stockist*"
-                                value={values.visited_stockist}
-                                onChange={(e) => handleInputChangeLoop(e)}
-                                options={stockists}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
-                            <Controls.Select
-                                name="shifts"
-                                label="Shift*"
-                                value={initialShift}
-                                onChange={(e) => changeShift(e)}
-                                options={shifts}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
-                            <Controls.Input
-                                name="expenses"
-                                label="Expenses*"
-                                value={values.expenses}
-                                onChange={(e) => handleInputChangeLoop(e)}
-                            />
-                        </Box>
-
-                        <Box marginBottom={2}>
-                            <Controls.Input
-                                name="expenses_name"
-                                label="Expenses Name*"
-                                value={values.expenses_name}
-                                onChange={(e) => handleInputChangeLoop(e)}
-                            />
-                        </Box>
-
-                        <Box marginBottom={2}>
-                            <Controls.Input
-                                name="expenses_reasoning"
-                                label="Expenses Reasoning*"
-                                value={values.expenses_reasoning}
-                                onChange={(e) => handleInputChangeLoop(e)}
-                            />
-                        </Box>
-
-                        <Box marginBottom={2}>
                             {/* <InputLabel style={{ fontSize: '15px', color: 'black', marginBottom: "12px" }}>{"Date*"}</InputLabel>
                             <Controls.DatePicker
                                 name="date"
@@ -379,26 +374,34 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                             // className={"drawer-first-name-input"}
                             />
                         </Box>
-                        {/* <Box marginBottom={2}>
-                            <EditStockistDCRRoles
-                                name="company_roles"
-                                value={values.company_roles}
-                                onChange={handleInputChangeLoop}
-                                id={idharu}
-                                context={context}
-                                editApi={useUpdateStockistsAllDCRMutation} />
-                        </Box> */}
-
-                        {/*//! Order Product   */}
                         <Box marginBottom={2}>
-                            <EditStockistOrderProduct
-                                id={id}
-                                data={OrderProduct}
-                                allData={DCRAll}
-                                handleOrderProductChange={handleOrderedProducts}
+                            <Controls.Select
+                                name="visited_area"
+                                label="Visited Area"
+                                value={values.visited_area}
+                                onChange={(e) => handleInputChangeLoop(e)}
+                                options={areas}
+                                disabled
                             />
                         </Box>
-
+                        <Box marginBottom={2}>
+                            <Controls.Select
+                                name="shifts"
+                                label="Shift*"
+                                value={initialShift}
+                                onChange={(e) => changeShift(e)}
+                                options={shifts}
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <Controls.Select
+                                name="visited_stockist"
+                                label="Visited Stockist*"
+                                value={values.visited_stockist}
+                                onChange={(e) => handleInputChangeLoop(e)}
+                                options={stockists}
+                            />
+                        </Box>
                         {/* //! Multiple Visited With  */}
                         <Box marginBottom={2}>
                             <Autocomplete
@@ -435,6 +438,54 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                                 )}
                             />
                         </Box>
+                        {/*//! Order Product   */}
+                        <Box marginBottom={2}>
+                            <EditStockistOrderProduct
+                                id={id}
+                                data={OrderProduct}
+                                allData={DCRAll}
+                                handleOrderProductChange={handleOrderedProducts}
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <Controls.Input
+                                name="expenses"
+                                label="Expenses*"
+                                value={values.expenses}
+                                onChange={(e) => handleInputChangeLoop(e)}
+                            />
+                        </Box>
+
+                        <Box marginBottom={2}>
+                            <Controls.Input
+                                name="expenses_name"
+                                label="Expenses Name*"
+                                value={values.expenses_name}
+                                onChange={(e) => handleInputChangeLoop(e)}
+                            />
+                        </Box>
+
+                        <Box marginBottom={2}>
+                            <Controls.Input
+                                name="expenses_reasoning"
+                                label="Expenses Reasoning*"
+                                value={values.expenses_reasoning}
+                                onChange={(e) => handleInputChangeLoop(e)}
+                            />
+                        </Box>
+
+
+                        {/* <Box marginBottom={2}>
+                            <EditStockistDCRRoles
+                                name="company_roles"
+                                value={values.company_roles}
+                                onChange={handleInputChangeLoop}
+                                id={idharu}
+                                context={context}
+                                editApi={useUpdateStockistsAllDCRMutation} />
+                        </Box> */}
+
+
                         <Stack spacing={1} direction="row">
                             <Controls.SubmitButton
                                 variant="contained"

@@ -52,8 +52,8 @@ export const ChemistDCRAllSlice = apiSlice.injectEndpoints({
             query: (addChemistsDCR) => {
 
                 return {
-                    url: `dcr/dcr-for-chemist-product-rewards-roles/`,
-                    method: 'POST',
+                    url: `dcr/dcr-for-chemist-product-rewards-roles/${addChemistsDCR.id}`,
+                    method: 'PATCH',
                     body: addChemistsDCR,
                     // headers: {
                     //     'Content-type': 'multipart/form-data; charset = UTF-8',

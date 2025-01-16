@@ -49,7 +49,7 @@ const StockistOrderedProduct = ({ id, allData }) => {
     //     skip: !company_user_role_id
     // });
 
-    const { data: stockistOrderedProducts } = useGetStockistOrderedProductsByDCRIdQuery(id)
+    const { data: stockistOrderedProducts } = useGetStockistOrderedProductsByDCRIdQuery({ dcr_id: id, company_name: company_id })
 
     const [deleteOrderedProducts] = useDeleteStockistOrderedProductByIdMutation()
 

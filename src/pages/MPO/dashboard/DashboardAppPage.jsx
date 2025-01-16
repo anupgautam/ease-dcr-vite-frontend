@@ -140,6 +140,41 @@ export default function DashboardAppPage() {
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
+
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200" width="100" height="200">
+            {/* Tooth Crown (Simplified) */}
+            <path
+              d="M50,10 Q60,30 70,50 Q80,80 60,90 Q50,80 40,60 Q30,40 50,10"
+              fill="white"
+              stroke="black"
+              strokeWidth="2"
+            />
+
+            {/* Roots */}
+            <path
+              d="M40,60 Q30,120 50,140"
+              fill="none"
+              stroke="brown"
+              strokeWidth="6"
+            />
+            <path
+              d="M60,60 Q70,120 50,140"
+              fill="none"
+              stroke="brown"
+              strokeWidth="6"
+            />
+
+            {/* Tooth Neck */}
+            <rect
+              x="45"
+              y="60"
+              width="10"
+              height="10"
+              fill="lightgray"
+              stroke="black"
+              strokeWidth="2"
+            />
+          </svg>
         </Typography>
 
         {/*//! Total Stats  */}

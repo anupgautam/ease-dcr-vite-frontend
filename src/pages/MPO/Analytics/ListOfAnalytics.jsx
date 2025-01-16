@@ -165,8 +165,6 @@ const ListOfAnalytics = () => {
 
     const eightArrays = [0, 1, 2, 3, 4, 5, 6, 7]
 
-    console.log(Analytics?.data)
-
     //! Excel Wala
     // const headers = [
     //     { label: 'S.No.', key: 'sno' },

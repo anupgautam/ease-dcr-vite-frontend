@@ -51,7 +51,6 @@ const AddDcrForDoctor = () => {
     const yearData = now?._date?.year;
 
     const { data: tourplanData } = usePostToGetTheTourPlanQuery({ mpo_name: company_user_role_id, year: yearData, month: monthData });
-    console.log(tourplanData)
 
     const [updateDcr] = useUpdateDcrForDoctorValuesMutation();
     const [createMpoDcr] = useCreateMpoShiftWiseDcrForDoctorMutation();

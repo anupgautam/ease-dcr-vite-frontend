@@ -164,6 +164,7 @@ const EditDCR = ({ idharu, onClose }) => {
                 edit: true,
                 date: DCRAll?.data?.date,
                 shift: DCRAll?.data?.shift?.id,
+                
                 mpo_name: DCRAll?.data?.mpo_name?.id,
                 visited_area: DCRAll?.data?.dcr?.visited_area?.id,
                 visited_doctor: DCRAll?.data?.dcr?.visited_doctor?.id,
@@ -275,6 +276,7 @@ const EditDCR = ({ idharu, onClose }) => {
             company_product: multipleProducts.map(key => key.id),
             rewards: multipleRewards.map(key => key.id),
             company_roles: multipleVisitedWith.map(key => key.id),
+            
             expenses: values.expenses,
             expenses_name: values.expenses_name,
             expenses_reasoning: values.expenses_reasoning,

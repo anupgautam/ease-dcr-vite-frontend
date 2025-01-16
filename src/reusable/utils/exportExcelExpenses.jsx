@@ -23,24 +23,39 @@ const ExportToExcel = ({ headers, data, fileName }) => {
 
         additionalFields.forEach((field, index) => {
             const row = sheet.getRow(index + 1);
-
-            // Add label (without border)
+        
+            // Merge cells to increase the width of the label
+            sheet.mergeCells(index + 1, 1, index + 1, 2); // Merges cells from column 1 to 2 for the label
+        
+            // Add label
             row.getCell(1).value = `${field.label}:`;
             row.getCell(1).font = {
-                size: fontSize + 2, // Slightly larger font for additional fields
+                size: fontSize + 2,
                 bold: true,
             };
             row.getCell(1).alignment = { vertical: 'middle', horizontal: 'left' };
-
-            // Add value (without border)
-            row.getCell(2).value = field.value;
-            row.getCell(2).font = {
+        
+            // Merge cells to increase the width of the value
+            sheet.mergeCells(index + 1, 3, index + 1, 6); // Merges cells from column 3 to 6 for the value
+        
+            // Add value
+            row.getCell(3).value = field.value;
+            row.getCell(3).font = {
                 size: fontSize + 2,
             };
-            row.getCell(2).alignment = { vertical: 'middle', horizontal: 'left' };
-
-            row.height = 20; // Adjust row height
+            row.getCell(3).alignment = { vertical: 'middle', horizontal: 'left' };
+        
+            // Remove borders for merged cells
+            row.getCell(1).border = {};
+            row.getCell(3).border = {};
+        
+            // Adjust row height for better spacing
+            row.height = 20;
         });
+        
+        // Optional: Hide gridlines for the entire sheet
+        sheet.properties.showGridLines = false;
+        
 
         // Adjust header starting position after additional fields
         const headerStartRow = additionalFields.length + 1;
