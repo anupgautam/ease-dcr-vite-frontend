@@ -28,14 +28,14 @@ const EditApplication = ({ mpoId, idharu, onClose }) => {
 
     //! Getting Application by ID
     const Application = useGetApplicationsByIdQuery(idharu);
-    console.log(Application)
 
     const validate = (fieldValues = values) => {
         // 
         let temp = { ...errors }
         if ('leave_type' in fieldValues)
             temp.leave_type = returnValidation(['null'], values.leave_type)
-        temp.leave_cause = returnValidation(['null', 'lessThan50', 'specialcharacter', 'minLength3'], values.leave_cause)
+            temp.leave_cause = returnValidation(['null'], values.leave_cause)
+        // temp.leave_cause = returnValidation(['null', 'lessThan50', 'specialcharacter', 'minLength3'], values.leave_cause)
 
         temp.leave_status = returnValidation(['null'], values.leave_status)
 

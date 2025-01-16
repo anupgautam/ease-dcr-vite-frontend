@@ -41,7 +41,7 @@ export const ChemistDCRAllSlice = apiSlice.injectEndpoints({
 
         getChemistAllDCRByIdForMpoId: builder.query({
             query: (id) => ({
-                url: `dcr/mpo-shift-wise-dcr-for-chemist/?dcr__dcr__id=${id}`,
+                url: `dcr/mpo-shift-wise-dcr-for-chemist/${id}`,
                 method: 'GET'
             }),
             providesTags: ['ChemistAllDCR']
@@ -52,8 +52,8 @@ export const ChemistDCRAllSlice = apiSlice.injectEndpoints({
             query: (addChemistsDCR) => {
 
                 return {
-                    url: `dcr/dcr-for-chemist-product-rewards-roles/`,
-                    method: 'POST',
+                    url: `dcr/dcr-for-chemist-product-rewards-roles/${addChemistsDCR.id}`,
+                    method: 'PATCH',
                     body: addChemistsDCR,
                     // headers: {
                     //     'Content-type': 'multipart/form-data; charset = UTF-8',

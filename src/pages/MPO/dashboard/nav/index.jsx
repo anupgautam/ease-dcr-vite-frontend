@@ -13,6 +13,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { setCookie } from '../../../../reducers/cookieReducer';
 import SuperAdminConfig from './SuperAdminConfig';
+import PrelineSidenav from './PrelineSidenav';
+import ReusablePrelineNav from './Reusable/ReusablePrelineNav';
+import ReusableConfig from './Reusable/ReusableConfig';
 
 
 const NAV_WIDTH = 270;
@@ -31,7 +34,9 @@ Nav.propTypes = {
 };
 
 export default function Nav({ openNav, onCloseNav }) {
+
   const { company_id, user_role, company_user_id } = useSelector((state) => state.cookie);
+
   const [cookieData, setCookieData] = useState({
     User_id: sessionStorage.getItem('User_id') ? sessionStorage.getItem('User_id') : Cookies.get('User_id'),
     access: sessionStorage.getItem('access') ? sessionStorage.getItem('access') : Cookies.get('access'),
@@ -49,6 +54,7 @@ export default function Nav({ openNav, onCloseNav }) {
     OTPgmail: sessionStorage.getItem('OTPgmail') ? sessionStorage.getItem('OTPgmail') : Cookies.get('OTPgmail'),
     otp: sessionStorage.getItem('otp') ? sessionStorage.getItem('otp') : Cookies.get('otp'),
   });
+
   const roles = useSelector(state => state.cookie?.roles);
 
   useEffect(() => {
@@ -97,7 +103,7 @@ export default function Nav({ openNav, onCloseNav }) {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
-      <Box sx={{ px: 1.5, py: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box sx={{ px: 1.5, py: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <img src="/assets/ease.png" height='180px' width='180px' alt="Ease SFA Logo" />
         {/* <Typography style={{ fontSize: "20px", color: "black", fontWeight: '700', letterSpacing: '.7px', marginTop: '7px' }}>Ease SFA</Typography> */}
       </Box>
@@ -105,9 +111,15 @@ export default function Nav({ openNav, onCloseNav }) {
         user_role === "SuperAdmin" &&
         <NavSection data={SuperAdminConfig} />
       }
+      {/* {
+        user_role === "admin" &&
+        <ReusableConfig/>
+      } */}
       {
         user_role === "admin" &&
-        <NavSection data={navConfig} />
+        (
+          <NavSection data={navConfig} />
+        )
       }
       {
         user_role === "MPO" &&

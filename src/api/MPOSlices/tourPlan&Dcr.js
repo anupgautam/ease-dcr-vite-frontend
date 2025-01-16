@@ -171,7 +171,7 @@ export const NewTourplanSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: value
             }),
-            invalidatesTags: ['PostTourplan', 'ChemistDCR']
+            invalidatesTags: ['PostTourplan', 'ChemistDCR', 'ChemistOrderedProduct']
         }),
         updateDcrForStockist: builder.mutation({
             query: (IdValue) => {
@@ -248,5 +248,5 @@ export const {
     usePostStockistOrderedProductMutation,
 
     //! Get All visited with Area
-    useGetAllVisitedWithAreaQuery 
+    useGetAllVisitedWithAreaQuery
 } = NewTourplanSlice;

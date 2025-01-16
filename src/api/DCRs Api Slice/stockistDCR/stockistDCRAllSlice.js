@@ -23,7 +23,8 @@ export const StockistDCRAllSlice = apiSlice.injectEndpoints({
         //! Get all Stockist DCRs by ID 
         getStockistAllDCRById: builder.query({
             query: (id) => ({
-                url: `dcr/dcr-for-stockist-product-rewards-roles/${id}/`,
+                // url: `dcr/dcr-for-stockist-product-rewards-roles/${id}/`,
+                url: `dcr/mpo-shift-wise-dcr-for-stockist/${id}/`,
                 method: 'GET'
             }),
             providesTags: ['StockistAllDCR']
@@ -43,8 +44,8 @@ export const StockistDCRAllSlice = apiSlice.injectEndpoints({
             query: (addStockistsDCR) => {
 
                 return {
-                    url: `dcr/dcr-for-stockist-product-rewards-roles/`,
-                    method: 'POST',
+                    url: `dcr/dcr-for-stockist-product-rewards-roles/${addStockistsDCR?.id}`,
+                    method: 'PATCH',
                     body: addStockistsDCR,
                     // headers: {
                     //     'Content-type': 'multipart/form-data; charset = UTF-8',

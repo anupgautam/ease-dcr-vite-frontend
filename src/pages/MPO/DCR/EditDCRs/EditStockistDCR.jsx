@@ -17,6 +17,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 //! Reusable Component
 import { useForm, Form } from '../../../../reusable/forms/useForm'
 import Controls from '../../../../reusable/components/forms/controls/Controls';
+import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
+
 //! Api Slices 
 import {
     useGetStockistAllDCRByIdQuery,
@@ -40,6 +42,7 @@ import { useSelector } from 'react-redux';
 import {
     useGetAllRewardsByCompanyIdQuery,
 } from "@/api/DCRs Api Slice/rewardsAPISlice"
+import EditStockistOrderProduct from '../orderProduct/EditStockistOrderProduct';
 
 const EditStockistDCR = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -48,6 +51,37 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     const [initialShift, setInitialShift] = useState("");
     // const areas = useSelector(state => state.dcrData.company_areas);
     // const stockists = useSelector(state => state.dcrData.visited_stockist);
+
+    //! Stockist Ordered Product
+    const id = new URLSearchParams(window.location.search).get('id');
+
+    const [Formdata, setFormData] = useState({
+        expenses_name: "",
+        expenses: "",
+        expenses_reasoning: "",
+        ordered_products: [],
+    })
+
+    const handleChemistOrderChange = (event) => {
+        const { name, value } = event.target;
+        const newData = { ...Formdata, [name]: value };
+        setFormData(newData);
+    }
+
+    //! Ordered Product
+    const [OrderProduct, setOrderedProduct] = useState([]);
+
+    const handleOrderedProducts = (e) => {
+        setOrderedProduct(e.target.value);
+        if (!Formdata.ordered_products.includes(e.target.value)) {
+            setFormData(prevFormdata => ({
+                ...prevFormdata,
+                ordered_products: e.target.value.map((key) => ({
+                    id: key
+                })),
+            }));
+        }
+    };
 
     const shifts = useSelector(state => state.dcrData.shifts);
     const mpo_id = useSelector(state => state.dcrData.selected_user);
@@ -75,11 +109,10 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     //! Getting TourPlan by ID
 
     const DCRAll = useGetStockistDcrByIdQuery(idharu);
+
     const { data: mpoArea } = useGetUsersByIdQuery(mpo_id, {
         skip: !mpo_id
     });
-
-    console.log("Stockist DCR", DCRAll?.data)
 
     const { data: StockistData } = useGetAllStockistsWithoutPaginationQuery({ company_name: company_id, company_area: mpoArea?.company_area?.id ? mpoArea?.company_area?.id : "" }, {
         skip: !company_id
@@ -110,6 +143,35 @@ const EditStockistDCR = ({ idharu, onClose }) => {
         setMultipleRewards(value);
     }
 
+    //! Visited With Options
+    const [executiveOptions, setExecutiveOptions] = useState([]);
+    const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
+    useEffect(() => {
+        executiveUsers({ id: DCRAll?.data?.mpo_name?.id }, {
+            skip: !DCRAll?.data?.mpo_name?.id
+        })
+            .then(res => {
+                if (res.data) {
+                    const executive = [];
+                    res.data.forEach(keyData => {
+                        executive.push({
+                            id: keyData.id,
+                            title: keyData?.user_name?.first_name + " " + keyData?.user_name?.middle_name + " " + keyData?.user_name?.last_name,
+                        });
+                    });
+                    setExecutiveOptions(executive);
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            });
+    }, [DCRAll?.data?.mpo_name?.id]);
+
+    const [multipleVisitedWith, setMultipleVisitedWith] = useState([])
+    const handleMultipleVisitedWith = (e, value) => {
+        setMultipleVisitedWith(value);
+    }
+
     const [initialFValues, setInitialFValues] = useState({
         edit: false,
         date: "",
@@ -122,6 +184,8 @@ const EditStockistDCR = ({ idharu, onClose }) => {
         company_roles: [],
     });
 
+    console.log(DCRAll?.data?.visited_with)
+
     useEffect(() => {
         if (DCRAll?.data) {
 
@@ -129,6 +193,12 @@ const EditStockistDCR = ({ idharu, onClose }) => {
             const selectedRewards = DCRAll?.data?.rewards?.map(visited => ({
                 id: visited.id, title: visited.rewards
             })) || []
+
+            //! Initial Promoted Products 
+            const selectedVisitedWith = DCRAll?.data?.visited_with?.map(visited => ({
+                id: visited.id, title: `${visited.user_name?.first_name} ${visited.user_name?.middle_name} ${visited.user_name?.last_name}`
+            })) || []
+
             setInitialFValues({
                 edit: true,
                 date: DCRAll?.data?.dcr?.date,
@@ -142,6 +212,8 @@ const EditStockistDCR = ({ idharu, onClose }) => {
             });
             setDateData(DCRAll?.data?.dcr?.date);
             setMultipleRewards(selectedRewards)
+            setMultipleVisitedWith(selectedVisitedWith)
+
         }
         if (shiftWiseDCR.status == "fulfilled") {
             setInitialShift(shiftWiseDCR?.data?.results[0]?.shift.id)
@@ -167,40 +239,87 @@ const EditStockistDCR = ({ idharu, onClose }) => {
     //! Edit tourplan
 
     const [updateDCRAll] = useUpdateStockistsAllDCRMutation();
-    useEffect(() => {
-        if (DCRAll.data) {
-            editWithoutImage(noLoop, setNoLoop, updateDCRAll, values, idharu, context);
+
+    // useEffect(() => {
+    //     if (DCRAll.data) {
+    //         editWithoutImage(noLoop, setNoLoop, updateDCRAll, values, idharu, context);
+    //     }
+    // }, [
+    //     values.date,
+    //     values.visited_area,
+    //     values.visited_stockist,
+    //     useDebounce(values.expenses_name, 3000),
+    //     useDebounce(values.expenses, 3000),
+    //     useDebounce(values.expenses_reasoning, 3000),
+    //     values.rewards,
+    //     values.company_roles
+    // ]);
+    // const changeShift = (e) => {
+    //     const form = new FormData();
+    //     form.append('id', shiftWiseDCR?.data?.results[0]?.id)
+    //     form.append('shift', e.target.value);
+    //     form.append('dcr_id', idharu);
+    //     form.append('mpo_name', mpo_id);
+    //     updateShiftWiseDCR(form);
+    // }
+
+    // const handleInputChangeLoop = (e) => {
+
+    //     if (!noLoop) {
+    //         setNoLoop(true)
+    //         handleInputChange(e);
+
+    //     }
+    //     else {
+    //         handleInputChange(e);
+    //     }
+    // }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true)
+        const data = {
+            id: values.id,
+            date: values.date,
+            expenses: values.expenses,
+            expenses_name: values.expenses_name,
+            expenses_reasoning: values.expenses_reasoning,
+
+            // company_product: multipleProducts.map(key => key.id),
+            rewards: multipleRewards.map(key => key.id),
+            company_roles: multipleVisitedWith.map(key => key.id),
+            // ordered_products: multipleOrderedProducts.map(key => key.id),
+
+            mpo_name: values.mpo_name,
+            shift: values.shift,
+            visited_area: values.visited_area,
+            visited_doctor: values.visited_doctor,
+            year: values.year,
+            month: values.month,
+            visited_stockist: values.visited_stockist
         }
-    }, [
-        values.date,
-        values.visited_area,
-        values.visited_stockist,
-        useDebounce(values.expenses_name, 3000),
-        useDebounce(values.expenses, 3000),
-        useDebounce(values.expenses_reasoning, 3000),
-        values.rewards,
-        values.company_roles
-    ]);
-    const changeShift = (e) => {
-        const form = new FormData();
-        form.append('id', shiftWiseDCR?.data?.results[0]?.id)
-        form.append('shift', e.target.value);
-        form.append('dcr_id', idharu);
-        form.append('mpo_name', mpo_id);
-        updateShiftWiseDCR(form);
+        try {
+            const response = await updateDCRAll(data)
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+                // setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
+            } else if (response?.error) {
+                toast.error(`${response?.error?.data?.message}`)
+                setLoading(false);
+            } else {
+                toast.error(`Some Error Occured`)
+            }
+        }
+        catch (error) {
+            console.log(error)
+            toast.error('Backend Error')
+        } finally {
+            setLoading(false)
+        }
     }
 
-    const handleInputChangeLoop = (e) => {
-
-        if (!noLoop) {
-            setNoLoop(true)
-            handleInputChange(e);
-
-        }
-        else {
-            handleInputChange(e);
-        }
-    }
     return (
         <>
             <Drawer
@@ -228,12 +347,33 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                                 <Close />
                             </IconButton>
                             <Typography variant="h6">
-                                Edit DCR
+                                Edit Stockist DCR
                             </Typography>
                         </Typography>
                     </Box>
 
                     <Form>
+                        <Box marginBottom={2}>
+                            {/* <InputLabel style={{ fontSize: '15px', color: 'black', marginBottom: "12px" }}>{"Date*"}</InputLabel>
+                            <Controls.DatePicker
+                                name="date"
+                                showIcon
+                                date={values.date ? values.date : new Date()}
+                                onChange={handleInputChange}
+                                dateFormat="yyyy-MM-dd"
+                                placeholderText="Select the Date"
+                            /> */}
+                            <Controls.Input
+                                disabled={true}
+                                name="date"
+                                // label=""
+                                value={dateData}
+                                onChange={(e) => handleInputChangeLoop(e)}
+                                // options={userList}
+                                error={errors.date}
+                            // className={"drawer-first-name-input"}
+                            />
+                        </Box>
                         <Box marginBottom={2}>
                             <Controls.Select
                                 name="visited_area"
@@ -241,6 +381,16 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                                 value={values.visited_area}
                                 onChange={(e) => handleInputChangeLoop(e)}
                                 options={areas}
+                                disabled
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <Controls.Select
+                                name="shifts"
+                                label="Shift*"
+                                value={initialShift}
+                                onChange={(e) => changeShift(e)}
+                                options={shifts}
                             />
                         </Box>
                         <Box marginBottom={2}>
@@ -252,13 +402,49 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                                 options={stockists}
                             />
                         </Box>
+                        {/* //! Multiple Visited With  */}
                         <Box marginBottom={2}>
-                            <Controls.Select
-                                name="shifts"
-                                label="Shift*"
-                                value={initialShift}
-                                onChange={(e) => changeShift(e)}
-                                options={shifts}
+                            <Autocomplete
+                                multiple
+                                value={multipleVisitedWith || []}
+                                options={executiveOptions}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleVisitedWith}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Visited With" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+                        {/* //! Multiple Rewards  */}
+                        <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                value={multipleRewards || []}
+                                options={rewardsOptions}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleRewards}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Rewards" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+                        {/*//! Order Product   */}
+                        <Box marginBottom={2}>
+                            <EditStockistOrderProduct
+                                id={id}
+                                data={OrderProduct}
+                                allData={DCRAll}
+                                handleOrderProductChange={handleOrderedProducts}
                             />
                         </Box>
                         <Box marginBottom={2}>
@@ -288,28 +474,8 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                             />
                         </Box>
 
-                        <Box marginBottom={2}>
-                            {/* <InputLabel style={{ fontSize: '15px', color: 'black', marginBottom: "12px" }}>{"Date*"}</InputLabel>
-                            <Controls.DatePicker
-                                name="date"
-                                showIcon
-                                date={values.date ? values.date : new Date()}
-                                onChange={handleInputChange}
-                                dateFormat="yyyy-MM-dd"
-                                placeholderText="Select the Date"
-                            /> */}
-                            <Controls.Input
-                                disabled={true}
-                                name="date"
-                                // label=""
-                                value={dateData}
-                                onChange={(e) => handleInputChangeLoop(e)}
-                                // options={userList}
-                                error={errors.date}
-                            // className={"drawer-first-name-input"}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
+
+                        {/* <Box marginBottom={2}>
                             <EditStockistDCRRoles
                                 name="company_roles"
                                 value={values.company_roles}
@@ -317,47 +483,9 @@ const EditStockistDCR = ({ idharu, onClose }) => {
                                 id={idharu}
                                 context={context}
                                 editApi={useUpdateStockistsAllDCRMutation} />
-                        </Box>
-
-                        {/* <Box marginBottom={2}>
-                            <EditDCRStockistRewards
-                                name="rewards"
-                                value={values.rewards}
-                                onChange={handleInputChangeLoop}
-                                id={idharu}
-                                context={context}
-                                editApi={useUpdateStockistsAllDCRMutation} />
-
                         </Box> */}
-                        <Box marginBottom={2}>
-                            <EditStockistDCRProducts
-                                name="company_product"
-                                division={mpoArea?.division_name}
-                                value={values.company_product}
-                                onChange={handleInputChangeLoop}
-                                id={idharu}
-                                context={context}
-                                editApi={useUpdateStockistsAllDCRMutation} />
-                        </Box>
 
-                        {/* //! New Multiple Wala  */}
-                        <Box marginBottom={2}>
-                            <Autocomplete
-                                multiple
-                                value={multipleRewards || []}
-                                options={rewardsOptions}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleMultipleRewards}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Rewards" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        </Box>
+
                         <Stack spacing={1} direction="row">
                             <Controls.SubmitButton
                                 variant="contained"

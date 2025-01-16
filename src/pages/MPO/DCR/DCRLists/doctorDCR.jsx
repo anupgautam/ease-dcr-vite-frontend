@@ -89,7 +89,6 @@ const DoctorDCR = ({ selectedUser, selectedMonth, selectedDate, dateOnly }) => {
 
     //! Search Results 
     const results = useSearchDoctorsDCRQuery(FilteredData);
-    console.log(results?.data)
 
     //!States
     const [fetchedResults, setFetchedResults] = useState(null);

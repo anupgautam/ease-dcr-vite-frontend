@@ -32,7 +32,7 @@ export const shiftWiseChemistDCRSlice = apiSlice.injectEndpoints({
         //! Get all Dcotor DCRs by DCRId
         getShiftWiseChemistDCRByDCRId: builder.query({
             query: (id) => ({
-                url: `/dcr/mpo-shift-wise-dcr-for-chemist/?dcr__dcr__id=${id}`,
+                url: `/dcr/mpo-shift-wise-dcr-for-chemist/${id}`,
                 method: 'GET'
             }),
             providesTags: ['ShiftWiseChemistDCR']

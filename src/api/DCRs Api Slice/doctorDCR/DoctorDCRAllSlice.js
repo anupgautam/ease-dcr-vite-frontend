@@ -51,8 +51,8 @@ export const DoctorDCRAllSlice = apiSlice.injectEndpoints({
             query: (addDoctorsDCR) => {
 
                 return {
-                    url: `dcr/dcr-for-doctor-company-product-map/`,
-                    method: 'POST',
+                    url: `dcr/dcr-for-doctor-product-reward-role/${addDoctorsDCR.id}`,
+                    method: 'PATCH',
                     body: addDoctorsDCR,
                     // headers: {
                     //     'Content-type': 'multipart/form-data; charset = UTF-8',

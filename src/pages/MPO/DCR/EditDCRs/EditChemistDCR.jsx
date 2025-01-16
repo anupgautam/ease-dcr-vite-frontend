@@ -4,13 +4,15 @@ import {
     Typography, CircularProgress,
     Autocomplete,
     TextField,
-    Stack, 
+    Stack,
     Button
 } from '@mui/material'
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import 'react-datepicker/dist/react-datepicker.css';
+import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
+import { useGetAllProductsOptionsWithDivisionQuery } from "@/api/MPOSlices/productApiSlice";
 
 //! Reusable Component
 import { useForm, Form } from '../../../../reusable/forms/useForm'
@@ -41,8 +43,46 @@ import { useGetAllCompanyProductsWithoutPaginationQuery } from "@/api/productSli
 import {
     useGetAllRewardsByCompanyIdQuery,
 } from "@/api/DCRs Api Slice/rewardsAPISlice"
+import ChemistOrderProduct from '../orderProduct/chemistOrderProduct';
+import EditChemistOrderProduct from '../orderProduct/EditChemistOrderProduct';
+import { useAddChemistsAllDCRMutation } from '../../../../api/DCRs Api Slice/chemistDCR/ChemistDCRAllSlice';
+
 const EditChemistDCR = ({ idharu, onClose }) => {
+
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
+
+    //! Chemist Ordered Product
+    const id = new URLSearchParams(window.location.search).get('id');
+
+    const [Formdata, setFormData] = useState({
+        expenses_name: "",
+        expenses: "",
+        expenses_reasoning: "",
+        ordered_products: [],
+    })
+
+    const handleChemistOrderChange = (event) => {
+        const { name, value } = event.target;
+        const newData = { ...Formdata, [name]: value };
+        setFormData(newData);
+    }
+
+    //! Ordered Product
+    const [OrderProduct, setOrderedProduct] = useState([]);
+
+    const handleOrderedProducts = (e) => {
+        setOrderedProduct(e.target.value);
+        if (!Formdata.ordered_products.includes(e.target.value)) {
+            setFormData(prevFormdata => ({
+                ...prevFormdata,
+                ordered_products: e.target.value.map((key) => ({
+                    id: key
+                })),
+            }));
+        }
+    };
+
+
 
     const [noLoop, setNoLoop] = useState(true);
     const [initialShift, setInitialShift] = useState("");
@@ -59,8 +99,6 @@ const EditChemistDCR = ({ idharu, onClose }) => {
     const DCRAll = useGetChemistAllDCRByIdQuery(idharu, {
         skip: !idharu
     });
-
-    console.log("Chemist DCRAll", DCRAll?.data)
 
     //! Promoted Products wala 
     const { data: productData } = useGetAllCompanyProductsWithoutPaginationQuery(company_id, {
@@ -84,6 +122,40 @@ const EditChemistDCR = ({ idharu, onClose }) => {
         return [];
     }, [rewardAllData]);
 
+    //! Visited With Options
+    const [executiveOptions, setExecutiveOptions] = useState([]);
+    const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
+    useEffect(() => {
+        executiveUsers({ id: DCRAll?.data?.mpo_name?.id }, {
+            skip: !DCRAll?.data?.mpo_name?.id
+        })
+            .then(res => {
+                if (res.data) {
+                    const executive = [];
+                    res.data.forEach(keyData => {
+                        executive.push({
+                            id: keyData.id,
+                            title: keyData?.user_name?.first_name + " " + keyData?.user_name?.middle_name + " " + keyData?.user_name?.last_name,
+                        });
+                    });
+                    setExecutiveOptions(executive);
+                }
+            })
+            .catch(err => {
+
+            });
+    }, [DCRAll?.data?.mpo_name?.id]);
+
+    //! Ordered Products ko options 
+    const { data: orderedProducts } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: DCRAll?.data?.mpo_name?.division_name?.id })
+
+    const orderedProductOptions = useMemo(() => {
+        if (orderedProducts) {
+            return orderedProducts?.map(key => ({ id: key.id, title: key.reward }));
+        }
+        return [];
+    }, [orderedProducts]);
+
     const [multipleProducts, setMultipleProducts] = useState([])
     const handleMultipleProducts = (e, value) => {
         setMultipleProducts(value);
@@ -97,6 +169,11 @@ const EditChemistDCR = ({ idharu, onClose }) => {
     const [multipleRewards, setMultipleRewards] = useState([])
     const handleMultipleRewards = (e, value) => {
         setMultipleRewards(value);
+    }
+
+    const [multipleOrderedProducts, setMultipleOrderedProducts] = useState([])
+    const handleMultipleChemistOrderedProducts = (e, value) => {
+        setMultipleOrderedProducts(value);
     }
 
     const dcrId = useGetChemistAllDCRByIdForMpoIdQuery(idharu);
@@ -123,7 +200,7 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                 id: promoted.id, title: promoted?.product_name?.product_name
             })) || []
 
-            //! Initial Promoted Products 
+            //! Initial Visited With 
             const selectedVisitedWith = DCRAll?.data?.visited_with?.map(visited => ({
                 id: visited.id, title: `${visited.user_name?.first_name} ${visited.user_name?.middle_name} ${visited.user_name?.last_name}`
             })) || []
@@ -132,6 +209,14 @@ const EditChemistDCR = ({ idharu, onClose }) => {
             const selectedRewards = DCRAll?.data?.rewards?.map(visited => ({
                 id: visited.id, title: visited.rewards
             })) || []
+
+
+
+            //! Initial Chemist Ordered Products 
+            const selectedChemistOrderedProducts = DCRAll?.data?.ordered_products?.map(visited => ({
+                id: visited.id, title: visited?.product_id?.product_name?.product_name + " " + `(${visited?.ordered_quantity})`
+            })) || []
+
 
             setInitialFValues({
                 edit: true,
@@ -144,15 +229,19 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                 company_product: DCRAll?.data?.company_product,
                 rewards: DCRAll?.data?.rewards,
                 company_roles: DCRAll?.data?.company_roles,
-                ordered_products: DCRAll?.data?.ordered_products
+                ordered_products: DCRAll?.data?.ordered_products,
+                id: DCRAll?.data?.id,
+                mpo_name: DCRAll?.data?.mpo_name?.id,
             });
             setDateData(DCRAll?.data?.dcr?.date);
             setMultipleProducts(selectedPromotedProducts)
             setMultipleVisitedWith(selectedVisitedWith)
             setMultipleRewards(selectedRewards)
+            setMultipleOrderedProducts(selectedChemistOrderedProducts)
         }
         if (shiftWiseDCR.status == "fulfilled") {
-            setInitialShift(shiftWiseDCR?.data?.results[0]?.shift.id)
+            // setInitialShift(shiftWiseDCR?.data?.results[0]?.shift.id)
+            setInitialShift(shiftWiseDCR?.data?.shift.id)
         }
     }, [DCRAll?.data, shiftWiseDCR])
 
@@ -196,51 +285,86 @@ const EditChemistDCR = ({ idharu, onClose }) => {
 
     //! Edit tourplan
 
-    const [updateDCRAll] = useUpdateChemistsAllDCRMutation();
-    useEffect(() => {
-        if (DCRAll.data) {
-            editWithoutImage(noLoop, setNoLoop, updateDCRAll, values, idharu, context);
-        }
-    }, [
-        values.date,
-        values.visited_area,
-        values.visited_chemist,
-        useDebounce(values.expenses_name, 3000),
-        useDebounce(values.expenses, 3000),
-        useDebounce(values.expenses_reasoning, 3000),
-        values.company_product,
-        values.rewards,
-        values.company_roles,
-        values.ordered_products
-    ]);
-    const changeShift = (e) => {
-        const form = new FormData();
-        form.append('id', shiftWiseDCR?.data?.results[0]?.id)
-        form.append('shift', e.target.value);
-        form.append('dcr_id', idharu);
-        form.append('mpo_name', mpo_id);
-        updateShiftWiseDCR(form);
-    }
+    // const [updateDCRAll] = useUpdateChemistsAllDCRMutation();
+    const [updateDCRAll] = useAddChemistsAllDCRMutation();
 
-    const handleInputChangeLoop = (e) => {
+    // useEffect(() => {
+    //     if (DCRAll.data) {
+    //         editWithoutImage(noLoop, setNoLoop, updateDCRAll, values, idharu, context);
+    //     }
+    // }, [
+    //     values.date,
+    //     values.visited_area,
+    //     values.visited_chemist,
+    //     useDebounce(values.expenses_name, 3000),
+    //     useDebounce(values.expenses, 3000),
+    //     useDebounce(values.expenses_reasoning, 3000),
+    //     values.company_product,
+    //     values.rewards,
+    //     values.company_roles,
+    //     values.ordered_products
+    // ]);
+    // const changeShift = (e) => {
+    //     const form = new FormData();
+    //     form.append('id', shiftWiseDCR?.data?.results[0]?.id)
+    //     form.append('shift', e.target.value);
+    //     form.append('dcr_id', idharu);
+    //     form.append('mpo_name', mpo_id);
+    //     updateShiftWiseDCR(form);
+    // }
 
-        if (!noLoop) {
-            setNoLoop(true)
-            handleInputChange(e);
-
-        }
-        else {
-            handleInputChange(e);
-        }
-    }
+    // const handleInputChangeLoop = (e) => {
+    //     if (!noLoop) {
+    //         setNoLoop(true)
+    //         handleInputChange(e);
+    //     }
+    //     else {
+    //         handleInputChange(e);
+    //     }
+    // }
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         setLoading(true)
-        const jsonData = {
+        const data = {
+            id: values.id,
             date: values.date,
-            promoted_product: multipleProducts.map(key => key.id),
+            expenses: values.expenses,
+            expenses_name: values.expenses_name,
+            expenses_reasoning: values.expenses_reasoning,
+
+            company_product: multipleProducts.map(key => key.id),
             rewards: multipleRewards.map(key => key.id),
-            visited_with: multipleVisitedWith.map(key => key.id),
+            company_roles: multipleVisitedWith.map(key => key.id),
+            ordered_products: multipleOrderedProducts.map(key => key.id),
+
+            mpo_name: values.mpo_name,
+            shift: values.shift,
+            visited_area: values.visited_area,
+            visited_doctor: values.visited_doctor,
+            year: values.year,
+            month: values.month,
+            visited_chemist: values.visited_chemist
+        }
+        try {
+            const response = await updateDCRAll(data)
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+                // setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
+            } else if (response?.error) {
+                toast.error(`${response?.error?.data?.message}`)
+                setLoading(false);
+            } else {
+                toast.error(`Some Error Occured`)
+            }
+        }
+        catch (error) {
+            console.log(error)
+            toast.error('Backend Error')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -273,6 +397,19 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                     </Box>
 
                     <Form>
+
+                        <Box marginBottom={2}>
+                            <Controls.Input
+                                disabled={true}
+                                name="date"
+                                // label=""
+                                value={dateData}
+                                onChange={(e) => handleInputChangeLoop(e)}
+                                // options={userList}
+                                error={errors.date}
+                            // className={"drawer-first-name-input"}
+                            />
+                        </Box>
                         <Box marginBottom={2}>
                             <Controls.Select
                                 name="visited_area"
@@ -280,15 +417,7 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                                 value={values.visited_area}
                                 onChange={(e) => handleInputChangeLoop(e)}
                                 options={areas}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
-                            <Controls.Select
-                                name="visited_chemist"
-                                label="Visited Chemist*"
-                                value={values.visited_chemist}
-                                onChange={(e) => handleInputChangeLoop(e)}
-                                options={chemists}
+                                disabled
                             />
                         </Box>
                         <Box marginBottom={2}>
@@ -300,6 +429,81 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                                 options={shifts}
                             />
                         </Box>
+
+                        <Box marginBottom={2}>
+                            <Controls.Select
+                                name="visited_chemist"
+                                label="Visited Chemist*"
+                                value={values.visited_chemist}
+                                onChange={(e) => handleInputChangeLoop(e)}
+                                options={chemists}
+                            />
+                        </Box>
+
+                        {/* //! Promoted Products  */}
+                        <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                value={multipleProducts || []}
+                                options={promotedArray}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleProducts}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Promoted Products" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+
+                        {/* //! Visited With  */}
+                        <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                value={multipleVisitedWith || []}
+                                options={executiveOptions}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleVisitedWith}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Visited With" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+                        {/* //! Multiple Rewards  */}
+                        <Box marginBottom={2}>
+                            <Autocomplete
+                                multiple
+                                value={multipleRewards || []}
+                                options={rewardsOptions}
+                                getOptionLabel={(option) => option.title}
+                                onChange={handleMultipleRewards}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Rewards" />
+                                )}
+                                renderOption={(props, option) => (
+                                    <li {...props} key={option.id}>
+                                        {option.title}
+                                    </li>
+                                )}
+                            />
+                        </Box>
+                        <Box marginBottom={2}>
+                            <EditChemistOrderProduct
+                                id={id}
+                                data={OrderProduct}
+                                allData={DCRAll}
+                                handleOrderProductChange={handleOrderedProducts}
+                            />
+                        </Box>
+
                         <Box marginBottom={2}>
                             <Controls.Input
                                 name="expenses"
@@ -327,19 +531,8 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                             />
                         </Box>
 
-                        <Box marginBottom={2}>
-                            <Controls.Input
-                                disabled={true}
-                                name="date"
-                                // label=""
-                                value={dateData}
-                                onChange={(e) => handleInputChangeLoop(e)}
-                                // options={userList}
-                                error={errors.date}
-                            // className={"drawer-first-name-input"}
-                            />
-                        </Box>
-                        <Box marginBottom={2}>
+
+                        {/* <Box marginBottom={2}>
                             <EditChemistDCRProducts
                                 name="company_product"
                                 value={values.company_product}
@@ -368,8 +561,8 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                                 context={context}
                                 editApi={useUpdateChemistsAllDCRMutation} />
 
-                        </Box>
-                        <Box marginBottom={2}>
+                        </Box> */}
+                        {/* <Box marginBottom={2}>
                             <EditChemistDCROrderedProducts
                                 name="ordered_products"
                                 value={values.ordered_products}
@@ -377,19 +570,18 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                                 id={idharu}
                                 context={context}
                                 editApi={useUpdateChemistsAllDCRMutation} />
+                        </Box> */}
 
-                        </Box>
-
-                        {/* //! New Multiple Wala  */}
-                        <Box marginBottom={2}>
+                        {/* //! New Multiple Ordered Products Wala  */}
+                        {/* <Box marginBottom={2}>
                             <Autocomplete
                                 multiple
-                                value={multipleProducts || []}
-                                options={promotedArray}
+                                value={multipleOrderedProducts || []}
+                                options={}
                                 getOptionLabel={(option) => option.title}
-                                onChange={handleMultipleProducts}
+                                onChange={handleMultipleChemistOrderedProducts}
                                 renderInput={(params) => (
-                                    <TextField {...params} label="Promoted Products" />
+                                    <TextField {...params} label="Ordered Products" />
                                 )}
                                 renderOption={(props, option) => (
                                     <li {...props} key={option.id}>
@@ -397,45 +589,8 @@ const EditChemistDCR = ({ idharu, onClose }) => {
                                     </li>
                                 )}
                             />
-                        </Box>
+                        </Box> */}
 
-                        {/* //! New Multiple Wala  */}
-                        <Box marginBottom={2}>
-                            <Autocomplete
-                                multiple
-                                value={multipleVisitedWith || []}
-                                options={promotedArray}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleMultipleVisitedWith}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Visited With" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        </Box>
-
-                        {/* //! New Multiple Wala  */}
-                        <Box marginBottom={2}>
-                            <Autocomplete
-                                multiple
-                                value={multipleRewards || []}
-                                options={rewardsOptions}
-                                getOptionLabel={(option) => option.title}
-                                onChange={handleMultipleRewards}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Rewards" />
-                                )}
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.title}
-                                    </li>
-                                )}
-                            />
-                        </Box>
                         <Stack spacing={1} direction="row">
                             <Controls.SubmitButton
                                 variant="contained"

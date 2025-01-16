@@ -68,7 +68,12 @@ const ChemistOrderProduct = ({ id, data, handleOrderProductChange, allData, mpo_
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        PostChemistOrderProduct({ dcr_id: allData.id, product_id: OrderedProductState.product_id, ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id, select_the_stockist: OrderedProductState.select_the_stockist, mpo_name: company_user_role_id })
+        PostChemistOrderProduct({
+            dcr_id: allData.id,
+            product_id: OrderedProductState.product_id,
+            ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id,
+            select_the_stockist: OrderedProductState.select_the_stockist, mpo_name: company_user_role_id
+        })
             .then((res) => {
                 if (res.data) {
                     toast.success(`${res?.data?.message}`)

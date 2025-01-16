@@ -107,7 +107,7 @@ const AddDCRForStockist = () => {
         expenses_reasoning: '',
         rewards: [],
         company_roles: [],
-        company_product: [],
+        // company_product: [],
     })
 
     const dcrForDoctor = useGetStockistAllDCRByIdQuery(id);
@@ -148,8 +148,10 @@ const AddDCRForStockist = () => {
                 expenses_name: dcrForDoctor?.data?.expenses_name,
                 expenses_reasoning: dcrForDoctor?.data?.expenses_reasoning,
                 rewards: RewardOptions,
-                company_roles: dcrForDoctor?.data?.company_roles,
-                company_product: dcrForDoctor?.data?.company_product,
+
+                company_roles: dcrForDoctor?.data?.visited_with,
+                // company_product: dcrForDoctor?.data?.company_product,
+                
                 day_status: tourplanData?.tour_plan?.tour_plan?.day_status
 
             });
@@ -240,17 +242,18 @@ const AddDCRForStockist = () => {
     const handlePostDcr = () => {
         setLoading(true)
         let sendingData = { ...values };
+        console.log('sendingData',sendingData)
         if (id) {
             sendingData['id'] = id;
-            if (sendingData['company_product']) {
-                let companyProduct = sendingData['company_product'];
-                sendingData['company_product'] = [];
-                companyProduct.map(key => {
-                    sendingData['company_product'].push({ id: key });
-                });
-            } else {
-                sendingData['company_product'] = [];
-            }
+            // if (sendingData['company_product']) {
+            //     let companyProduct = sendingData['company_product'];
+            //     sendingData['company_product'] = [];
+            //     companyProduct.map(key => {
+            //         sendingData['company_product'].push({ id: key });
+            //     });
+            // } else {
+            //     sendingData['company_product'] = [];
+            // }
             if (sendingData['rewards']) {
                 let rewards = RewardOptions;
 
@@ -300,7 +303,7 @@ const AddDCRForStockist = () => {
                         //     navigate('/dashboard/admin/dcr');
                         // }, 2000);
 
-                        toast.success(`Successfully Added Tourplan.`)
+                        toast.success(`${res?.data?.message}`)
                         navigate('/dashboard/admin/dcr');
 
                         // if (LastData === true) {
@@ -607,7 +610,7 @@ const AddDCRForStockist = () => {
                                 <Typography style={{ color: "black", fontSize: '15px', fontWeight: "600" }}>Ordered Product & Expenses</Typography>
                                 <Box style={{ marginTop: "15px" }}>
                                     <Box marginBottom={2}>
-                                        <StockistOrderedProduct id={id} />
+                                        <StockistOrderedProduct id={id}/>
                                     </Box>
                                     <Box marginBottom={2}>
                                         <Controls.Input

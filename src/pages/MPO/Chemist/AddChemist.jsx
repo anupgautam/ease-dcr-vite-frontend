@@ -69,7 +69,7 @@ const AddChemist = () => {
         if ('chemist_name' in fieldValues)
             temp.chemist_name = returnValidation(['null', 'number', 'lessThan50', 'specialcharacter'], values.chemist_name)
         temp.chemist_category = returnValidation(['null'], values.chemist_category)
-        temp.mpo_name = returnValidation(['null'], values.mpo_name)
+        // temp.mpo_name = returnValidation(['null'], values.mpo_name)
         temp.chemist_territory = returnValidation(['null'], values.chemist_territory)
         temp.chemist_contact_person = returnValidation(['null', 'lessThan50', 'specialcharacter', 'minLength3'], values.chemist_contact_person)
         temp.chemist_phone_number = returnValidation(['null', 'phonenumber', 'specialcharacter'], values.chemist_phone_number)
@@ -79,7 +79,7 @@ const AddChemist = () => {
         setErrors({
             ...temp
         })
-        
+
 
         if (fieldValues === values)
             return Object.values(temp).every(x => x == "")
@@ -89,7 +89,6 @@ const AddChemist = () => {
         is_invested: false,
         chemist_name: "",
         chemist_address: "",
-        mpo_name: "",
         chemist_territory: "",
         chemist_contact_person: "",
         chemist_phone_number: "",
@@ -108,13 +107,12 @@ const AddChemist = () => {
         validate();
 
     }, [values.chemist_name,
+    values.chemist_territory,
+    values.chemist_phone_number,
+    values.chemist_contact_person,
+    values.chemist_pan_number,
     values.chemist_category,
     values.chemist_address,
-    values.mpo_name,
-    values.chemist_territory,
-    values.chemist_contact_person,
-    values.chemist_phone_number,
-    values.chemist_pan_number,
     ])
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -126,7 +124,6 @@ const AddChemist = () => {
     }, [values.chemist_name,
     values.chemist_category,
     values.chemist_address,
-    values.mpo_name,
     values.chemist_territory,
     values.chemist_contact_person,
     values.chemist_phone_number,
@@ -148,6 +145,8 @@ const AddChemist = () => {
     const [loading, setLoading] = useState(false);
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
     const [ErrorMessage, setErrorMessage] = useState({ show: false, message: '' });
+
+    console.log(errors)
 
     //!Modal wala ko click event
     const onAddChemists = useCallback(async (e) => {

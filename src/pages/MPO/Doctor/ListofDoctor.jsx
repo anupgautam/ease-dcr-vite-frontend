@@ -5,7 +5,8 @@ import {
     Container,
     Stack,
     useMediaQuery,
-    useTheme
+    useTheme,
+    Typography
 } from '@mui/material';
 
 import DoctorCount from './DoctorCount';
@@ -26,7 +27,9 @@ const ListOfDoctor = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={9}>
                             <Box style={{ marginTop: '10px' }}>
-                                <DoctorCount />
+                                <Typography variant="h4" sx={{ mb: 5 }}>
+                                    Doctors
+                                </Typography>
                             </Box>
                         </Grid>
 

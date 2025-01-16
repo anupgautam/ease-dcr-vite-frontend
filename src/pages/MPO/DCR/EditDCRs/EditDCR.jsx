@@ -6,13 +6,14 @@ import {
     CircularProgress,
     Autocomplete,
     TextField,
-    Stack, 
+    Stack,
     Button
 } from '@mui/material'
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import 'react-datepicker/dist/react-datepicker.css';
+import { usePostHigherLevelExecutiveGetDataMutation } from "@/api/CompanySlices/companyUserRoleSlice";
 
 //! Reusable Component
 import { useForm, Form } from '../../../../reusable/forms/useForm'
@@ -43,6 +44,7 @@ import {
     useGetRewardsByIdQuery,
     usePostRewardForDcrMutation
 } from "@/api/DCRs Api Slice/rewardsAPISlice"
+import { toast } from 'react-toastify';
 
 const EditDCR = ({ idharu, onClose }) => {
     const { company_id, user_role, company_user_id, company_user_role_id } = useSelector((state) => state.cookie);
@@ -54,8 +56,6 @@ const EditDCR = ({ idharu, onClose }) => {
     const shifts = useSelector(state => state.dcrData.shifts);
     const mpo_id = useSelector(state => state.dcrData.selected_user);
     const DCRAll = useGetDoctorDcrByIdQuery(idharu);
-
-    console.log("DCRAll Doctor", DCRAll?.data)
 
     const shiftWiseDCR = useGetShiftWiseDoctorDCRByIdQuery(idharu);
 
@@ -84,6 +84,30 @@ const EditDCR = ({ idharu, onClose }) => {
         }
         return [];
     }, [rewardAllData]);
+
+    //! Visited With Options
+    const [executiveOptions, setExecutiveOptions] = useState([]);
+    const [executiveUsers] = usePostHigherLevelExecutiveGetDataMutation();
+    useEffect(() => {
+        executiveUsers({ id: DCRAll?.data?.mpo_name?.id }, {
+            skip: !DCRAll?.data?.mpo_name?.id
+        })
+            .then(res => {
+                if (res.data) {
+                    const executive = [];
+                    res.data.forEach(keyData => {
+                        executive.push({
+                            id: keyData.id,
+                            title: keyData?.user_name?.first_name + " " + keyData?.user_name?.middle_name + " " + keyData?.user_name?.last_name,
+                        });
+                    });
+                    setExecutiveOptions(executive);
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            });
+    }, [DCRAll?.data?.mpo_name?.id]);
 
     const [multipleProducts, setMultipleProducts] = useState([])
     const handleMultipleProducts = (e, value) => {
@@ -140,6 +164,7 @@ const EditDCR = ({ idharu, onClose }) => {
                 edit: true,
                 date: DCRAll?.data?.date,
                 shift: DCRAll?.data?.shift?.id,
+                
                 mpo_name: DCRAll?.data?.mpo_name?.id,
                 visited_area: DCRAll?.data?.dcr?.visited_area?.id,
                 visited_doctor: DCRAll?.data?.dcr?.visited_doctor?.id,
@@ -149,7 +174,9 @@ const EditDCR = ({ idharu, onClose }) => {
                 company_product: DCRAll?.data?.company_product,
                 rewards: DCRAll?.data?.rewards,
                 company_roles: DCRAll?.data?.company_roles,
-                // dcr_id: DCRAll?.data?.dcr?.dcr?.id
+                year: DCRAll?.data?.dcr?.year,
+                month: DCRAll?.data?.dcr?.month,
+                id: DCRAll?.data?.id
             });
             setDateData(DCRAll?.data?.dcr?.date);
             setMultipleProducts(selectedPromotedProducts)
@@ -204,30 +231,30 @@ const EditDCR = ({ idharu, onClose }) => {
 
     const [updateDCRAll] = useAddDoctorsAllDCRMutation();
 
-    useEffect(() => {
-        if (DCRAll.data) {
-            editWithoutImage(noLoop, setNoLoop, updateDCRAll, values, idharu, context);
-        }
-    }, [
-        values.date,
-        values.visited_area,
-        values.visited_doctor,
-        useDebounce(values.expenses_name, 3000),
-        useDebounce(values.expenses, 3000),
-        useDebounce(values.expenses_reasoning, 3000),
-        values.company_product,
-        values.rewards,
-        values.company_roles,
+    // useEffect(() => {
+    //     if (DCRAll.data) {
+    //         editWithoutImage(noLoop, setNoLoop, updateDCRAll, values, idharu, context);
+    //     }
+    // }, [
+    //     values.date,
+    //     values.visited_area,
+    //     values.visited_doctor,
+    //     useDebounce(values.expenses_name, 3000),
+    //     useDebounce(values.expenses, 3000),
+    //     useDebounce(values.expenses_reasoning, 3000),
+    //     values.company_product,
+    //     values.rewards,
+    //     values.company_roles,
 
-    ]);
-    const changeShift = (e) => {
-        const form = new FormData();
-        form.append('id', shiftWiseDCR?.data?.results[0]?.id)
-        form.append('shift', e.target.value);
-        form.append('dcr_id', idharu);
-        form.append('mpo_name', mpo_id);
-        updateShiftWiseDCR(form);
-    }
+    // ]);
+    // const changeShift = (e) => {
+    //     const form = new FormData();
+    //     form.append('id', shiftWiseDCR?.data?.results[0]?.id)
+    //     form.append('shift', e.target.value);
+    //     form.append('dcr_id', idharu);
+    //     form.append('mpo_name', mpo_id);
+    //     updateShiftWiseDCR(form);
+    // }
 
     const handleInputChangeLoop = (e) => {
 
@@ -242,14 +269,47 @@ const EditDCR = ({ idharu, onClose }) => {
     }
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         setLoading(true)
-        const jsonData = {
-            date: values.date,
-            promoted_product: multipleProducts.map(key => key.id),
+        const data = {
+            date: dateData,
+            company_product: multipleProducts.map(key => key.id),
             rewards: multipleRewards.map(key => key.id),
-            visited_with: multipleVisitedWith.map(key => key.id),
+            company_roles: multipleVisitedWith.map(key => key.id),
+            
+            expenses: values.expenses,
+            expenses_name: values.expenses_name,
+            expenses_reasoning: values.expenses_reasoning,
+            mpo_name: values.mpo_name,
+            shift: values.shift,
+            visited_area: values.visited_area,
+            visited_doctor: values.visited_doctor,
+            year: values.year,
+            month: values.month,
+            id: values.id
+        }
+        try {
+            const response = await updateDCRAll(data)
+            if (response?.data) {
+                toast.success(`${response?.data?.message}`)
+                // setIsButtonDisabled(true)
+                setLoading(false);
+                onClose();
+            } else if (response?.error) {
+                toast.error(`${response?.error?.data?.message}`)
+                setLoading(false);
+            } else {
+                toast.error(`Some Error Occured`)
+            }
+        }
+        catch (error) {
+            console.log(error)
+            toast.error('Backend Error')
+        } finally {
+            setLoading(false)
         }
     }
+
 
     return (
         <>
@@ -368,7 +428,7 @@ const EditDCR = ({ idharu, onClose }) => {
                             {/* <NepaliDatePicker disable={true} value={dateData} format="YYYY-MM-DD" onChange={(value) => setDateData(value)} /> */}
                         </Box>
 
-                        <Box marginBottom={2}>
+                        {/* <Box marginBottom={2}>
                             <EditDoctorDCRProducts
                                 name="company_product"
                                 value={values.company_product}
@@ -397,7 +457,7 @@ const EditDCR = ({ idharu, onClose }) => {
                                 id={idharu}
                                 context={context}
                                 editApi={useAddDoctorsAllDCRMutation} />
-                        </Box>
+                        </Box> */}
 
 
                         {/* //! New Multiple Wala  */}
@@ -424,7 +484,7 @@ const EditDCR = ({ idharu, onClose }) => {
                             <Autocomplete
                                 multiple
                                 value={multipleVisitedWith || []}
-                                options={promotedArray}
+                                options={executiveOptions}
                                 getOptionLabel={(option) => option.title}
                                 onChange={handleMultipleVisitedWith}
                                 renderInput={(params) => (

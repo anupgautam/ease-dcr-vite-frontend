@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { NavLink as RouterLink } from 'react-router-dom';
+import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 // @mui
 import { Box, List, ListItemText } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
@@ -32,15 +32,21 @@ NavItem.propTypes = {
 function NavItem({ item }) {
   const { title, path, icon, info } = item;
 
+  const location = useLocation();
+
+  // Check if the current path matches exactly
+  const isActive = location.pathname === path;
+  console.log(isActive)
+
   return (
     <StyledNavItem
       component={RouterLink}
       to={path}
       sx={{
         '&.active': {
-          color: 'text.primary',
-          bgcolor: 'action.selected',
-          fontWeight: 'fontWeightBold',
+          color: isActive ? 'text.primary' : 'inherit',
+          bgcolor: isActive ? 'action.selected' : 'inherit',
+          fontWeight: isActive ? 'fontWeightBold' : 'inherit',
         },
       }}
     >

@@ -170,7 +170,15 @@ export const CompanyUserRoleSlice = apiSlice.injectEndpoints({
                 }
             },
             invalidatesTags: ['CompanyUserRoles,ChemistOrderedProduct']
+        }),
 
+        getHigherLevelExecutiveGetData: builder.query({
+            query: (id) => {
+                return {
+                    url: `/user/get-all-upper-level-user-from-company-user-role/`,
+                    method: 'GET',
+                }
+            }
         }),
 
         //! POST users 

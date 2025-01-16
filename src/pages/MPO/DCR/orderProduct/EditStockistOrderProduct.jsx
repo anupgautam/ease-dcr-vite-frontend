@@ -33,9 +33,11 @@ import { useUpdateDcrForStockistValuesMutation, usePostStockistOrderedProductMut
 import { useGetStockistsByCompanyAreaQuery } from '@/api/MPOSlices/StockistSlice';
 import { useDeleteStockistOrderedProductByIdMutation } from '../../../../api/DCRs Api Slice/chemistDCR/chemistOrderedProductInformation';
 
-const StockistOrderedProduct = ({ id, allData }) => {
+const EditStockistOrderProduct = ({ id, allData }) => {
 
     const { company_id, user_role, company_user_id, company_user_role_id, company_division_name, company_area_id } = useSelector((state) => state.cookie);
+
+    const newId = allData?.id ? allData?.id : allData?.data?.id;
 
     const [OrderedProductState, setOrderedProductState] = useState({
         dcr_id: id,
@@ -49,7 +51,9 @@ const StockistOrderedProduct = ({ id, allData }) => {
     //     skip: !company_user_role_id
     // });
 
-    const { data: stockistOrderedProducts } = useGetStockistOrderedProductsByDCRIdQuery({ dcr_id: id, company_name: company_id })
+    const { data: stockistOrderedProducts } = useGetStockistOrderedProductsByDCRIdQuery({ dcr_id: newId, company_name: company_id })
+
+    console.log(stockistOrderedProducts)
 
     const [deleteOrderedProducts] = useDeleteStockistOrderedProductByIdMutation()
 
@@ -120,9 +124,7 @@ const StockistOrderedProduct = ({ id, allData }) => {
 
     const [PostStockistOrderProduct] = usePostStockistOrderedProductMutation();
 
-    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: company_division_name }, {
-        skip: !company_id || !company_division_name
-    })
+
 
     const handleOrderedProductChange = (e) => {
         const { name, value } = e.target;
@@ -131,17 +133,18 @@ const StockistOrderedProduct = ({ id, allData }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        PostStockistOrderProduct({ dcr_id: id, product_id: OrderedProductState.product_id, ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id, mpo_name: company_user_role_id, })
+        PostStockistOrderProduct({ dcr_id: allData.id?allData.id:allData.data.id, product_id: OrderedProductState.product_id, ordered_quantity: OrderedProductState.ordered_quantity, company_name: company_id, mpo_name: allData?.mpo_name?allData.mpo_name.id:allData.data.mpo_name.id, })
             .then((res) => {
                 if (res?.data) {
                     toast.success("Successfully Order Product")
                     // setSuccessMessage({ show: true, message: 'Successfully Order Product.' });
                     setOrderedProductState({
-                        dcr_id: id,
+                        dcr_id: allData.id,
                         product_id: "",
                         ordered_quantity: "",
                         company_name: company_id,
                         select_the_stockist: "",
+                        mpo_name: company_user_role_id,
                     });
                 } else {
                     // setErrorMessage({ show: true, message: extractErrorMessage(res.error) });
@@ -170,6 +173,9 @@ const StockistOrderedProduct = ({ id, allData }) => {
         }
     }, [allData?.Formdata?.ordered_products, id])
 
+    const { data: productData } = useGetAllProductsOptionsWithDivisionQuery({ company_name: company_id, division_name: user_role === "admin" ? allData?.data?.mpo_name?.division_name?.id : company_division_name }, {
+        skip: !company_id || !company_division_name
+    })
 
     const companyProducts = useMemo(() => {
         if (productData !== undefined) {
@@ -180,6 +186,7 @@ const StockistOrderedProduct = ({ id, allData }) => {
         }
         return [];
     }, [productData])
+
 
     const { data: StockistsData } = useGetStockistsByCompanyAreaQuery({ company_name: company_id, company_area: company_area_id }, {
         skip: !company_user_role_id || !company_area_id
@@ -198,10 +205,6 @@ const StockistOrderedProduct = ({ id, allData }) => {
 
     const [OrderProduct] = useAddStockistOrderedProductMutation();
     const [AddProduct, setAddProduct] = useState([]);
-
-
-
-
 
 
     const [SuccessMessage, setSuccessMessage] = useState({ show: false, message: '' });
@@ -247,7 +250,7 @@ const StockistOrderedProduct = ({ id, allData }) => {
         try {
             for (const product of AddProduct) {
                 const response = await OrderProduct(product);
-                if (response.data) {
+                if (response?.data) {
                     toast.success("Successfully Order Product")
                     // setSuccessMessage({ show: true, message: 'Successfully Order Product.' });
                     setTimeout(() => {
@@ -534,4 +537,4 @@ const StockistOrderedProduct = ({ id, allData }) => {
     )
 }
 
-export default React.memo(StockistOrderedProduct);
+export default React.memo(EditStockistOrderProduct);

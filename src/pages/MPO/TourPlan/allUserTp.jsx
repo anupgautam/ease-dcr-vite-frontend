@@ -163,6 +163,8 @@ const AllUserTp = () => {
         setOpenDialogue(false)
     }, [])
 
+    console.log(userList)
+
     return (
         <>
             <Card>
